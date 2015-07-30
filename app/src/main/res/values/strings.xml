@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">去哪儿钓</string>
+    <string name="base_ui_close">关闭</string>
+    <string name="rule_link">http://www.baidu.com</string>
+    <string name="help_link">http://qiushibaike.com</string>
+
+    <!-- welcome页面 begin -->
+    <string name="wel_reg">注册</string>
+    <string name="wel_login">立即登陆</string>
+    <!-- welcome end -->
+
+
+    <!-- 注册页面 begin -->
+    <string name="reg_title">会员注册</string>
+    <string name="reg_phone_num">手机号</string>
+    <string name="reg_pswd">密码</string>
+    <string name="reg_check_code">验证码</string>
+    <string name="reg_reg_and_rule">注册协议/服务条款</string>
+    <string name="reg_get_check_code">获取验证码</string>
+    <string name="reg_input_phone_num">输入手机号</string>
+    <string name="reg_set_pswd">设置密码</string>
+    <string name="reg_input_check_code">输入验证码</string>
+    <string name="reg_next">下一步</string>
+    <string name="reg_next_title">完善资料</string>
+    <string name="reg_next_account_text">账号:</string>
+    <string name="reg_next_phone_num_text">手机:</string>
+    <string name="reg_next_nick">昵称</string>
+    <string name="reg_next_release_input">请填写</string>
+    <string name="reg_next_release_chose">请选择</string>
+    <string name="reg_next_fishing_years">钓龄</string>
+    <string name="reg_next_fishing_times">出钓频次</string>
+    <string name="reg_next_location">定位</string>
+    <string name="reg_next_get_location">获取</string>
+    <string name="reg_next_skip">跳过，先看看~~</string>
+
+    <string-array name="reg_next_fishing_years_spinner">
+        <item>1年龄</item>
+        <item>2年龄</item>
+        <item>3年龄</item>
+        <item>4年龄</item>
+        <item>5年龄</item>
+        <item>6年龄</item>
+        <item>7年龄</item>
+        <item>8年龄</item>
+        <item>9年龄</item>
+        <item>10年龄</item>
+        <item>11年龄</item>
+    </string-array>
+    <string-array name="reg_next_fishing_times_spinner">
+        <item>天次</item>
+        <item>周次</item>
+        <item>月次</item>
+        <item>年圳</item>
+    </string-array>
+
+    <!-- 注册页面 end -->
+
+
+    <!-- 登陆页面 begin -->
+    <string name="login_account">账号:</string>
+    <string name="login_account_phone_num">手机号/账号</string>
+    <string name="login_pswd">密码:</string>
+    <string name="login_forgot_pswd">忘记密码</string>
+    <string name="login_reg_new_account">注册新用户</string>
+    <string name="login_title">登陆</string>
+    <string name="login_help">帮助</string>
+    <!-- 登陆页面 end -->
+
+
+    <!-- 忘记密码页面 begin -->
+    <string name="forget_pswd_title">忘记密码</string>
+    <string name="forget_pswd_text_phone_num">手机号</string>
+    <string name="forget_pswd_input_phone_num">输入手机号</string>
+    <string name="forget_pswd_account_phone_num">手机号/账号</string>
+    <string name="forget_pswd_text_new_pswd">新密码</string>
+    <string name="forget_pswd_input_new_pswd">输入新密码</string>
+    <string name="forget_pswd_text_check_code">验证码</string>
+    <string name="forget_pswd_input_check_code">输入验证码</string>
+    <string name="forget_pswd_help">帮助</string>
+    <string name="forget_pswd_ok">确定</string>
+    <!-- 忘记页面 end -->
+
+
+    <!-- Home页面 begin -->
+    <string name="home_fishing_place">钓场</string>
+    <string name="home_care">关注</string>
+    <string name="home_appear">发现</string>
+    <string name="home_fishing_news">钓播</string>
+    <string name="home_my">我的</string>
+    
+    <string name="home_fishing_place_title">钓场地图</string>
+    <string name="home_care_title">我关注的钓场</string>
+    <string name="home_appear_title">发现</string>
+    <string name="home_fishing_news_title">钓播</string>
+    <string name="home_my_title">我的</string>
+    
+    
+    <!-- Home页面 end -->
+
+</resources>

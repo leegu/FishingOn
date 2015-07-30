@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/foot_bar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/foot_bar_height"
+    android:background="@color/head_bar"
+    android:gravity="center"
+    android:orientation="horizontal">
+    <!-- 钓场 -->
+    <LinearLayout
+        android:id="@+id/foot_bar_fishing_place"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/foot_bar_icon_width_height"
+            android:layout_height="@dimen/foot_bar_icon_width_height" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="1dp"
+            android:text="@string/home_fishing_place"
+            android:textSize="10dp" />
+    </LinearLayout>
+
+    <!-- 关注 -->
+    <LinearLayout
+        android:id="@+id/foot_bar_care"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/foot_bar_icon_width_height"
+            android:layout_height="@dimen/foot_bar_icon_width_height" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="1dp"
+            android:text="@string/home_care"
+            android:textSize="10dp" />
+    </LinearLayout>
+    <!-- 发现 -->
+    <LinearLayout
+        android:id="@+id/foot_bar_appear"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/foot_bar_icon_width_height"
+            android:layout_height="@dimen/foot_bar_icon_width_height" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="1dp"
+            android:text="@string/home_appear"
+            android:textSize="10dp" />
+    </LinearLayout>
+    <!-- 钓播 -->
+    <LinearLayout
+        android:id="@+id/foot_bar_fishing_news"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/foot_bar_icon_width_height"
+            android:layout_height="@dimen/foot_bar_icon_width_height" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="1dp"
+            android:text="@string/home_fishing_news"
+            android:textSize="10dp" />
+    </LinearLayout>
+
+    <!-- 我的 -->
+    <LinearLayout
+        android:id="@+id/foot_bar_my"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/foot_bar_icon_width_height"
+            android:layout_height="@dimen/foot_bar_icon_width_height" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="1dp"
+            android:text="@string/home_my"
+            android:textSize="10dp" />
+    </LinearLayout>
+</LinearLayout>
