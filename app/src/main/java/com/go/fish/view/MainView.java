@@ -42,7 +42,7 @@ public class MainView extends Fragment {
 		default:
 			break;
 		}
-        View view = inflater.inflate(layoutId,null);
+        View view = inflater.inflate(layoutId,container,false);
         return view;
     }
     
