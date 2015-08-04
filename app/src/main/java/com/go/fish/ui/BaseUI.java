@@ -1,6 +1,9 @@
 package com.go.fish.ui;
 
 import com.go.fish.R;
+import com.go.fish.util.Location;
+import com.go.fish.util.Location.LocationData;
+import com.go.fish.util.Location.OnGetLocationListener;
 import com.go.fish.view.Switcher;
 
 import android.app.Activity;
@@ -26,8 +29,6 @@ public class BaseUI extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-//		proxy = new BaseUIProxy(this);
-//		proxy.onCreate();
 		int layout_id = getIntent().getIntExtra(LAYOUT_ID, 0); 
 		setContentView(layout_id);
 		switch (layout_id) {
@@ -36,79 +37,19 @@ public class BaseUI extends Activity {
 			initWebview(wb);
 			wb.loadUrl("http://www.baidu.com");
 			break;
-		case R.layout.reg:
-			initRegisterUI();
 		default:
 			break;
 		}
 	}
 	
-	private void initRegisterUI(){
-//		final Switcher switcher = (Switcher)findViewById(R.id.reg_save_pswd);
-//		Switcher.OnSwitcherChanged listener = new Switcher.OnSwitcherChanged() {
-//			@Override
-//			public void onChanage(View view) {
-//				EditText v = (EditText)findViewById(R.id.reg_input_pswd);
-//				if(switcher.isTurnOn()){
-//					v.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-//				}else{
-//					v.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-//				}
-//			}
-//		};
-//		switcher.setChangedListener(listener);
-	}
-	
 	public void onClick(View view) {
 		int id = view.getId();
 		switch (id) {
-		case R.id.reg_get_check_code:
-			SmsManager smsManager = SmsManager.getDefault();
-			smsManager.sendTextMessage("10086" , null, "cxyl", null, null);
-			break;
 		case R.id.base_ui_help:{
 			Intent i = new Intent();
 			i.putExtra("layout_id", R.layout.rule);
 			i.putExtra("url", getResources().getString(R.string.help_link));
 			showActivity(i);
-			break;
-		}
-		case R.id.reg_agree_rule:{
-			TextView tv = ((TextView)view);
-			Button nextBtn = (Button)findViewById(R.id.reg_next);
-			if(tv.getText().equals("√")){
-				tv.setText("");
-				nextBtn.setClickable(false);
-				nextBtn.setBackgroundResource(R.drawable.gray_shape);
-			}else{
-				tv.setText("√");
-				nextBtn.setClickable(true);
-				nextBtn.setBackgroundResource(R.drawable.green_shape);
-			}
-			break;
-		}
-		case R.id.reg_next:{
-			showActivity(R.layout.reg_next);
-			break;
-		}
-		case R.id.reg_agree_rule_text:{
-			Intent i = new Intent();
-			i.putExtra("layout_id", R.layout.rule);
-			i.putExtra("url", getResources().getString(R.string.rule_link));
-			showActivity(i);
-			break;
-		}
-		case R.id.reg_save_pswd:{
-			Switcher switcher = (Switcher)findViewById(R.id.reg_save_pswd);
-			switcher.change();
-			break;
-		}
-		case R.id.reg_next_skip_btn:{
-			Intent i = new Intent();
-			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			i.putExtra("layout_id", R.layout.main);
-			showActivity(i,HomeUI.class.getName());
-//			finish();
 			break;
 		}
 		case R.id.base_ui_close:{

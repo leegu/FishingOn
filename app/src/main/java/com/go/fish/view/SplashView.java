@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import com.go.fish.IOnWelcomedListener;
 import com.go.fish.R;
 import com.go.fish.ui.BaseUI;
+import com.go.fish.ui.RegisterUI;
 
 public class SplashView {
 	Activity mSplashActivity = null;
@@ -57,7 +58,7 @@ public class SplashView {
 	private void showRegisterUI(){
 		Intent i = new Intent();
 		i.putExtra(BaseUI.LAYOUT_ID, R.layout.reg);
-		i.setClassName(mSplashActivity, BaseUI.class.getName());
+		i.setClassName(mSplashActivity, RegisterUI.class.getName());
 		mSplashActivity.startActivity(i);
 		clickListener.onClick();
 		mSplashActivity.finish();

@@ -23,6 +23,10 @@ public class MainView extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int layoutId = 0;
         int id = getId();
+        Bundle b = getArguments();
+        if(b != null && b.getInt(BaseUI.LAYOUT_ID) == R.layout.fishing_place){
+        	id = R.id.home_fishing_place;
+        }
         switch (id) {
 		case R.id.home_fishing_place:
 			layoutId = R.layout.fishing_place;

@@ -26,6 +26,8 @@
     <dimen name="list_item_base_text_size">17dp</dimen>
     <dimen name="list_item_hint_text_size">14dp</dimen>
     
+    <dimen name="pop_win_list_width">70dp</dimen>
+    
     <dimen name="button_margin_left_right_match_parent">20dp</dimen>
     
     <dimen name="hint_background_padding">3dp</dimen>

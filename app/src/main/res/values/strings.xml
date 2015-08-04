@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">去哪儿钓</string>
+    <string name="app_name">Demo</string>
     <string name="base_ui_close">关闭</string>
     <string name="rule_link">http://www.baidu.com</string>
     <string name="help_link">http://qiushibaike.com</string>
@@ -26,13 +26,13 @@
     <string name="reg_next_title">完善资料</string>
     <string name="reg_next_account_text">账号:</string>
     <string name="reg_next_phone_num_text">手机:</string>
-    <string name="reg_next_nick">昵称</string>
+    <string name="reg_next_nick_text">昵称</string>
     <string name="reg_next_release_input">请填写</string>
     <string name="reg_next_release_chose">请选择</string>
     <string name="reg_next_fishing_years">钓龄</string>
     <string name="reg_next_fishing_times">出钓频次</string>
-    <string name="reg_next_location">定位</string>
-    <string name="reg_next_get_location">获取</string>
+    <string name="reg_next_location_text">定位</string>
+    <string name="reg_next_get_location_btn">获取</string>
     <string name="reg_next_skip">跳过，先看看~~</string>
 
     <string-array name="reg_next_fishing_years_spinner">
@@ -90,12 +90,20 @@
     <string name="home_fishing_news">钓播</string>
     <string name="home_my">我的</string>
     
-    <string name="home_fishing_place_title">钓场地图</string>
+    <string name="home_fishing_place_title">附近钓场</string>
     <string name="home_care_title">我关注的钓场</string>
     <string name="home_appear_title">发现</string>
     <string name="home_fishing_news_title">钓播</string>
     <string name="home_my_title">我的</string>
     
+    <string name="hfs_splace_type">场景</string>
+    
+     <string-array name="hfs_splace_type">
+        <item>野钓</item>
+        <item>高钓</item>
+        <item>舒适家人行</item>
+        <item>黑坑</item>
+    </string-array>
     
     <!-- Home页面 end -->
 

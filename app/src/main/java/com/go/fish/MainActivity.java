@@ -16,6 +16,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//0ByhEGDFPEuV7VOvfm8ih0HS
 		final SharedPreferences sp = getSharedPreferences("welcome", MODE_PRIVATE);
 		boolean welcome_ed = sp.getBoolean("welcome_ed", false);
 		if(welcome_ed && isLogined()){
@@ -36,7 +37,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private boolean isLogined(){
-		return false;
+		return true;
 	}
 	private void showHomeUI(){
 		Intent intent = new Intent();

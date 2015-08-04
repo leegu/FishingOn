@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pop_list_item_text"
+    android:layout_width="@dimen/pop_win_list_width"
+    android:layout_height="@dimen/list_item_height"
+    android:layout_gravity="center"
+ >
+
+</TextView>
+

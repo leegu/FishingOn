@@ -17,9 +17,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:gravity="center_vertical"
             android:layout_margin="0dp"
             android:clickable="true"
+            android:gravity="center_vertical"
             android:onClick="onClick"
             android:paddingLeft="@dimen/list_item_padding_left"
             android:text="@string/base_ui_close" />
@@ -102,6 +102,7 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- 昵称 -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_height"
@@ -110,29 +111,31 @@
         android:paddingRight="@dimen/list_item_padding_right" >
 
         <TextView
-            android:id="@+id/reg_text_phone_num"
+            android:id="@+id/reg_next_nick_text"
             android:layout_width="@dimen/reg_3_width"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/reg_next_nick"
+            android:text="@string/reg_next_nick_text"
             android:textColor="#000000"
             android:textSize="@dimen/list_item_base_text_size" />
 
         <EditText
-            android:id="@+id/reg_text_nick"
+            android:id="@+id/reg_next_nick_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:layout_toLeftOf="@id/reg_text_phone_num"
+            android:layout_toRightOf="@id/reg_next_nick_text"
             android:cursorVisible="true"
             android:hint="@string/reg_next_release_input"
             android:singleLine="true"
+            android:background="@null"
             android:textColor="#999999"
             android:textColorHint="#999999"
             android:textSize="@dimen/list_item_hint_text_size" />
     </RelativeLayout>
-
+    
+    <!-- 钓龄 -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_height"
@@ -142,7 +145,7 @@
         android:paddingRight="@dimen/list_item_padding_right" >
 
         <TextView
-            android:id="@+id/reg_next_fishing_years"
+            android:id="@+id/reg_next_fishing_years_text"
             android:layout_width="@dimen/reg_3_width"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -153,17 +156,18 @@
         <Spinner
             android:id="@+id/reg_next_fishing_years_spinner"
             android:layout_width="match_parent"
-            android:textColor="#999999"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:spinnerMode="dialog"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/reg_3_width"
-            android:layout_toLeftOf="@id/reg_next_fishing_years"
+            android:layout_toLeftOf="@id/reg_next_fishing_years_text"
             android:entries="@array/reg_next_fishing_years_spinner"
-            android:hint="@string/reg_next_release_chose" />
+            android:hint="@string/reg_next_release_chose"
+            android:spinnerMode="dialog"
+            android:textColor="#999999" />
     </RelativeLayout>
-
+    
+    <!-- 出钓频次 -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_height"
@@ -173,7 +177,7 @@
         android:paddingRight="@dimen/list_item_padding_right" >
 
         <TextView
-            android:id="@+id/reg_next_fishing_times"
+            android:id="@+id/reg_next_fishing_times_text"
             android:layout_width="@dimen/reg_3_width"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -189,13 +193,15 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/reg_3_width"
-            android:layout_toLeftOf="@id/reg_next_fishing_times"
-            android:spinnerMode="dialog"
-            android:textColor="#999999"
+            android:layout_toLeftOf="@id/reg_next_fishing_times_text"
             android:entries="@array/reg_next_fishing_times_spinner"
-            android:hint="@string/reg_next_release_chose" />
+            android:hint="@string/reg_next_release_chose"
+             android:textSize="@dimen/list_item_hint_text_size" 
+            android:spinnerMode="dialog"
+            android:textColor="#999999" />
     </RelativeLayout>
-
+    
+    <!-- 定位 -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_height"
@@ -205,16 +211,16 @@
         android:paddingRight="@dimen/list_item_padding_right" >
 
         <TextView
-            android:id="@+id/reg_next_location"
+            android:id="@+id/reg_next_location_text"
             android:layout_width="@dimen/reg_3_width"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/reg_next_location"
+            android:text="@string/reg_next_location_text"
             android:textColor="#000000"
             android:textSize="@dimen/list_item_base_text_size" />
 
         <Button
-            android:id="@+id/reg_next_get_location"
+            android:id="@+id/reg_next_get_location_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -227,25 +233,28 @@
             android:onClick="onClick"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:text="@string/reg_next_get_location"
+            android:text="@string/reg_next_get_location_btn"
             android:textColor="#ffffff"
             android:textSize="@dimen/list_item_hint_text_size" />
 
         <EditText
+            android:id="@+id/reg_next_location_input"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:layout_toLeftOf="@id/reg_next_get_location"
-            android:layout_toRightOf="@id/reg_next_location"
+            android:layout_toLeftOf="@id/reg_next_get_location_btn"
+            android:layout_toRightOf="@id/reg_next_location_text"
             android:background="@null"
             android:cursorVisible="true"
             android:maxEms="11"
             android:singleLine="true"
             android:textColor="#999999"
+             android:textSize="@dimen/list_item_hint_text_size" 
             android:textColorHint="#999999" />
     </RelativeLayout>
 
+    <!-- 跳过，先看看 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

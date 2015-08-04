@@ -18,9 +18,11 @@
             android:textColor="#ffffff"
             android:textSize="@dimen/head_bar_font_hegiht" />
     </RelativeLayout>
-    <LinearLayout
+
+    <FrameLayout
+        android:id="@+id/fishing_place_bmap_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></LinearLayout>
-  
+        android:layout_height="match_parent" >
+    </FrameLayout>
 
 </LinearLayout>
