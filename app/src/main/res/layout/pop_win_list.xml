@@ -2,7 +2,10 @@
 <ListView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/pop_win_list_width"
     android:layout_height="wrap_content"
-    android:background="#333303"
- >
+    android:dividerHeight="@dimen/list_item_divider"
+    android:layout_gravity="center"
+    android:footerDividersEnabled="false"
+    android:headerDividersEnabled="false"
+    android:textFilterEnabled="false" >
 
 </ListView>

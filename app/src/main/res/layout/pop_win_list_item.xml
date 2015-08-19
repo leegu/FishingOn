@@ -1,10 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/pop_list_item_text"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/pop_win_list_width"
-    android:layout_height="@dimen/list_item_height"
-    android:layout_gravity="center"
- >
+    android:layout_height="@dimen/pop_win_list_item_height"
+    android:background="#ee333333"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/list_item_height"
+    android:orientation="horizontal" >
 
-</TextView>
+    <TextView
+        android:id="@+id/pop_list_item_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/list_item_space_mid"
+        android:textColor="#fff"
+        android:textSize="@dimen/base_font_size_h4" >
+    </TextView>
 
+    <TextView
+        android:id="@+id/pop_list_item_status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:paddingRight="@dimen/list_item_space_mid"
+        android:textSize="@dimen/base_font_size_h5" >
+    </TextView>
+
+</RelativeLayout>

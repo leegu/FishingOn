@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+    format 值
+    "reference" //引用
+	"color" //颜色
+	"boolean" //布尔值
+	"dimension" //尺寸值
+	"float" //浮点值
+	"integer" //整型值
+	"string" //字符串
+	"fraction" //百分数,比如200%
+    -->
+    <declare-styleable name="LeeTextView">
+        <attr name="background_gravity">
+            <enum name="strech" value="0" />
+            <enum name="center" value="1" />
+        </attr>
+        <attr name="textColor_pressed" format="color|integer"></attr>
+        <attr name="textColor" format="color|integer"></attr>
+        <attr name="background_pressed" format="color|integer"></attr>
+        <attr name="background" format="color|integer"></attr>
+        <attr name="text" format="reference|string"></attr>
+    </declare-styleable>
+
+</resources>

@@ -4,6 +4,15 @@
     android:layout_height="match_parent" 
     android:cacheColorHint="#00000000"
     android:fadingEdge="none">
-    
+    <TextView  
+            android:id="@+id/list_empty"  
+            android:layout_width="match_parent"  
+            android:layout_height="match_parent"  
+            android:layout_weight="1"  
+            android:gravity="center"  
+            android:padding="15dip"  
+            android:text="无内容"  
+            android:textSize="22sp"  
+            android:visibility="gone" />  
 
 </ListView>

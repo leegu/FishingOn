@@ -1,47 +1,46 @@
 package com.go.fish.ui;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import android.app.ActionBar.LayoutParams;
-import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapView;
 import com.go.fish.R;
+import com.go.fish.util.Const;
+import com.go.fish.util.ImageLoader;
+import com.go.fish.util.MapUtil;
 
-public class HomeUI extends FragmentActivity {
+public class HomeUI extends FragmentActivity implements IHasHeadBar{
 
 	FragmentManager fragmentMgr = null;
 	MapView mMapView;
 	RelativeLayout floatView = null;
-
+	ViewGroup mHomeMainView = null;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		int layout_id = getIntent().getIntExtra(BaseUI.LAYOUT_ID, 0);
+		int layout_id = getIntent().getIntExtra(Const.LAYOUT_ID, 0);
 		setContentView(layout_id);
+		mHomeMainView = (ViewGroup)findViewById(R.id.home_main_view);
 		fragmentMgr = getSupportFragmentManager();
 		initFirstTabItem();
 	}
@@ -57,7 +56,7 @@ public class HomeUI extends FragmentActivity {
 		}
 		{// 初始化地图
 			ViewGroup vg = (ViewGroup) findViewById(R.id.fishing_place_bmap_view);
-			mMapView = new MapView(this, new BaiduMapOptions());
+			mMapView = MapUtil.newMap(this);
 			vg.addView(mMapView);
 			
 			LayoutInflater.from(this).inflate(R.layout.hfs_float_view, vg);
@@ -128,29 +127,71 @@ public class HomeUI extends FragmentActivity {
 		}
 	}
 	
-	public void onFishingSplachClick(View view){
+	public void onFishingPlaceClick(View view){
 		int id = view.getId();
 		switch (id) {
+		case R.id.hfs_fishing_tools_store_btn:
+			showFishingToolsStore();
+			break;
 		case R.id.hfs_hfs_splace_type_btn:
-			PopWinListItemAdapter adapter = new PopWinListItemAdapter(R.array.hfs_splace_type);
-			showPopWin(view, adapter);
+			if(splaceTypePopWinView == null){
+				ListView list = (ListView)LayoutInflater.from(this).inflate(R.layout.pop_win_list, null);
+				splaceTypePopWinView = list;
+				PopWinListItemAdapter adapter = new PopWinListItemAdapter(R.array.hfs_splace_type);
+				list.setAdapter(adapter);
+				list.setDivider(new ColorDrawable(Color.GRAY));
+				list.setDividerHeight(getResources().getDimensionPixelSize(R.dimen.list_item_divider));
+				list.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						// TODO Auto-generated method stub
+						TextView tv = (TextView)((ViewGroup)view).getChildAt(1);//.findViewById(R.id.pop_list_item_status_text);
+						if(tv.getTag() != null && tv.getTag().equals("1")){
+							tv.setTag("0");
+							tv.setTextColor(Color.GRAY);
+						}else{
+							tv.setTag("1");
+							tv.setTextColor(Color.GREEN);
+						}
+//						popupWindow.dismiss();
+					}
+				});
+			}
+			showPopWin(view,splaceTypePopWinView);
 			break;
 		}
 	}
 	
-	private void showPopWin(View view,ListAdapter adapter){
-		ListView list = (ListView)LayoutInflater.from(this).inflate(R.layout.pop_win_list, null);
-		list.setAdapter(adapter);
-		PopupWindow pw = new PopupWindow(list,LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,true);
-		pw.setOutsideTouchable(false);
-//		FrameLayout list = new FrameLayout(this);
-//		list.setBackgroundColor(Color.RED);
-		pw.setContentView(list);
-//		pw.showAtLocation(view, Gravity.LEFT, 0,0);
-		pw.showAtLocation(view, Gravity.LEFT,(int)getResources().getDimension(R.dimen.pop_win_list_width), 0);  
-//		pw.showAsDropDown(view);
+	private void showSearchView(){
+		UIMgr.showActivity(this, R.layout.search,SearchUI.class.getName());
+	}
+	private void showFishingToolsStore(){
+		Toast.makeText(this,"显示渔具店",0).show();
+	}
+	View splaceTypePopWinView = null;
+	PopupWindow popupWindow = null;
+	private void showPopWin(View anchor,View view){
+		int width = getResources().getDimensionPixelSize(R.dimen.pop_win_list_width);
+		if(popupWindow == null){
+			popupWindow = new PopupWindow();
+			popupWindow.setWidth(width);
+			popupWindow.setHeight(-2);
+			// 使其聚集
+	        popupWindow.setFocusable(true);
+	        // 设置允许在外点击消失
+	        popupWindow.setOutsideTouchable(true);
+	        // 这个是为了点击“返回Back”也能使其消失，并且并不会影响你的背景
+	        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+		}
+        popupWindow.setContentView(view);
+        popupWindow.showAsDropDown(anchor, -width, -anchor.getHeight());
 	}
 	
+//	private void changeStatus(ListView list,int position){
+//		list.getAdapter().
+//	}
 	
 	
 	class PopWinListItemData{
@@ -195,21 +236,32 @@ public class HomeUI extends FragmentActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = null;
+			PopWinListItemData data = itemsData.get(position);
 			if (convertView == null) {
-//				TextView textview = (TextView)LayoutInflater.from(getBaseContext()).inflate(R.layout.pop_win_list_item, null);
-				TextView textview = new TextView(HomeUI.this);
-				PopWinListItemData data = itemsData.get(position);
-				textview.setTag(data);
-				textview.setTextColor(0xff0000);
-				textview.setText(data.text);
-				view = textview;
+				view = LayoutInflater.from(getBaseContext()).inflate(R.layout.pop_win_list_item, null);
+//				 view = new TextView(HomeUI.this);
+				((TextView)view.findViewById(R.id.pop_list_item_text)).setText(data.text);
+				TextView status =(TextView)view.findViewById(R.id.pop_list_item_status_text);
+				status.setText("√");
+				status.setTextColor(Color.GRAY);
 			}else{
 				view = convertView;
 			}
+			view.setTag(data);
 			return view;
 		}
 
 		
 		
+	}
+
+	@Override
+	public void onHeadClick(View view) {
+		int id = view.getId();
+		switch (id) {
+		case R.id.fishing_place_head_search_btn:
+			showSearchView();
+			break;
+		}
 	}
 }

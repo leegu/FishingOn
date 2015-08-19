@@ -10,8 +10,8 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.SDKInitializer;
-import com.go.fish.util.Location.LocationData;
-import com.go.fish.util.Location.OnGetLocationListener;
+import com.go.fish.util.MapUtil.LocationData;
+import com.go.fish.util.MapUtil.OnGetLocationListener;
 
 public class MainApplication extends Application {
     public LocationClient mLocationClient;

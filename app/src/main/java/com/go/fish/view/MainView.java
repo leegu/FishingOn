@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.go.fish.R;
-import com.go.fish.ui.BaseUI;
+import com.go.fish.util.Const;
 
 public class MainView extends Fragment {
     private static final String TAG = "MainView";
@@ -24,24 +24,24 @@ public class MainView extends Fragment {
         int layoutId = 0;
         int id = getId();
         Bundle b = getArguments();
-        if(b != null && b.getInt(BaseUI.LAYOUT_ID) == R.layout.fishing_place){
+        if(b != null && b.getInt(Const.LAYOUT_ID) == R.layout.ui_fishing_place){
         	id = R.id.home_fishing_place;
         }
         switch (id) {
 		case R.id.home_fishing_place:
-			layoutId = R.layout.fishing_place;
+			layoutId = R.layout.ui_fishing_place;
 			break;
 		case R.id.home_care:
-			layoutId = R.layout.care;
+			layoutId = R.layout.ui_care;
 			break;
 		case R.id.home_appear:
-			layoutId = R.layout.appear;
+			layoutId = R.layout.ui_appear;
 			break;
 		case R.id.home_fishing_news:
 			layoutId = R.layout.fishing_news;
 			break;
 		case R.id.home_my:
-			layoutId = R.layout.my;
+			layoutId = R.layout.ui_my;
 			break;
 		default:
 			break;

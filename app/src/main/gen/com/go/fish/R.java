@@ -28,145 +28,325 @@ public final class R {
         public static final int reg_next_fishing_years_spinner=0x7f090000;
     }
     public static final class attr {
+        /** <p>May be an integer value, such as "<code>100</code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int background=0x7f010004;
+        /** <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>strech</code></td><td>0</td><td></td></tr>
+<tr><td><code>center</code></td><td>1</td><td></td></tr>
+</table>
+         */
+        public static final int background_gravity=0x7f010000;
+        /** <p>May be an integer value, such as "<code>100</code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int background_pressed=0x7f010003;
+        /** <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+         */
+        public static final int text=0x7f010005;
+        /** <p>May be an integer value, such as "<code>100</code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int textColor=0x7f010002;
+        /** <p>May be an integer value, such as "<code>100</code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int textColor_pressed=0x7f010001;
     }
     public static final class color {
-        public static final int app_base_btn_color=0x7f060002;
+        public static final int app_base_btn_color=0x7f060004;
+        public static final int app_base_btn_color_red=0x7f060005;
         public static final int app_base_color=0x7f060000;
-        public static final int content_bar=0x7f060005;
-        public static final int foot_bar=0x7f060006;
-        public static final int foot_bar_focus_text_color=0x7f060008;
-        public static final int foot_bar_text_color=0x7f060007;
-        public static final int head_bar=0x7f060001;
-        public static final int list_item_backgroud=0x7f060009;
-        public static final int list_item_hint_text_color=0x7f06000b;
-        public static final int list_item_text_color=0x7f06000a;
-        public static final int reg_get_cc=0x7f060003;
-        public static final int reg_next_cc=0x7f060004;
+        public static final int app_base_color_alpha=0x7f060001;
+        public static final int app_base_color_light_font=0x7f060002;
+        public static final int content_bar=0x7f060008;
+        public static final int fishing_splace_item_content_text_color=0x7f06000f;
+        public static final int foot_bar=0x7f060009;
+        public static final int foot_bar_focus_text_color=0x7f06000b;
+        public static final int foot_bar_text_color=0x7f06000a;
+        public static final int head_bar=0x7f060003;
+        public static final int list_item_backgroud=0x7f06000c;
+        public static final int list_item_hint_text_color=0x7f06000e;
+        public static final int list_item_text_color=0x7f06000d;
+        public static final int reg_get_cc=0x7f060006;
+        public static final int reg_next_cc=0x7f060007;
     }
     public static final class dimen {
-        public static final int base_icon_width=0x7f070007;
-        public static final int base_icon_width_user=0x7f070006;
-        public static final int button_margin_left_right_match_parent=0x7f070013;
-        public static final int foot_bar_height=0x7f070002;
-        public static final int foot_bar_icon_width_height=0x7f070003;
-        public static final int head_bar_font_hegiht=0x7f070000;
-        public static final int head_bar_height=0x7f070001;
-        public static final int hint_background_corners_radius=0x7f070015;
-        public static final int hint_background_padding=0x7f070014;
-        public static final int list_item_base_text_size=0x7f070010;
-        public static final int list_item_height=0x7f07000f;
-        public static final int list_item_hint_text_size=0x7f070011;
-        public static final int list_item_padding_left=0x7f07000d;
-        public static final int list_item_padding_right=0x7f07000e;
-        public static final int list_item_space=0x7f07000c;
-        public static final int list_item_space_max=0x7f07000a;
-        public static final int list_item_space_mid=0x7f07000b;
-        public static final int pop_win_list_width=0x7f070012;
-        public static final int reg_3_width=0x7f070008;
-        public static final int reg_next_1=0x7f070009;
-        public static final int wel_login_height=0x7f070005;
-        public static final int wel_login_width=0x7f070004;
+        public static final int base_font_size_h1=0x7f070000;
+        public static final int base_font_size_h2=0x7f070001;
+        public static final int base_font_size_h3=0x7f070002;
+        public static final int base_font_size_h4=0x7f070003;
+        public static final int base_font_size_h5=0x7f070004;
+        public static final int base_font_size_h6=0x7f070005;
+        public static final int base_icon_width=0x7f070011;
+        public static final int base_icon_width_user=0x7f070010;
+        public static final int base_pic_icon_height=0x7f070008;
+        public static final int base_pic_icon_width=0x7f070007;
+        public static final int base_space=0x7f070006;
+        public static final int button_margin_left_right_match_parent=0x7f070021;
+        public static final int foot_bar_height=0x7f07000c;
+        public static final int foot_bar_icon_width_height=0x7f07000d;
+        public static final int head_bar_font_hegiht=0x7f070009;
+        public static final int head_bar_height=0x7f07000a;
+        public static final int head_bar_width=0x7f07000b;
+        public static final int hint_background_corners_radius=0x7f070023;
+        public static final int hint_background_padding=0x7f070022;
+        public static final int list_item_base_text_size=0x7f07001d;
+        public static final int list_item_divider=0x7f070017;
+        public static final int list_item_height=0x7f07001a;
+        public static final int list_item_height_2=0x7f07001b;
+        public static final int list_item_height_3=0x7f07001c;
+        public static final int list_item_hint_text_size=0x7f07001e;
+        public static final int list_item_padding_left=0x7f070018;
+        public static final int list_item_padding_right=0x7f070019;
+        public static final int list_item_space=0x7f070016;
+        public static final int list_item_space_max=0x7f070014;
+        public static final int list_item_space_mid=0x7f070015;
+        public static final int pop_win_list_item_height=0x7f070020;
+        public static final int pop_win_list_width=0x7f07001f;
+        public static final int reg_3_width=0x7f070012;
+        public static final int reg_next_1=0x7f070013;
+        public static final int tab_arrow_left=0x7f070026;
+        public static final int tab_arrow_right=0x7f070027;
+        public static final int tab_height=0x7f070024;
+        public static final int tab_item_space=0x7f070025;
+        public static final int wel_login_height=0x7f07000f;
+        public static final int wel_login_width=0x7f07000e;
     }
     public static final class drawable {
-        public static final int circle=0x7f020000;
-        public static final int gray_shape=0x7f020001;
-        public static final int green_shape=0x7f020002;
-        public static final int icon=0x7f020003;
-        public static final int off_btn=0x7f020004;
-        public static final int on_btn=0x7f020005;
-        public static final int welcome1=0x7f020006;
-        public static final int welcome2=0x7f020007;
-        public static final int welcome3=0x7f020008;
-        public static final int white_btn=0x7f020009;
+        public static final int arrow_right=0x7f020000;
+        public static final int base_back=0x7f020001;
+        public static final int bg_edit=0x7f020002;
+        public static final int circle=0x7f020003;
+        public static final int gray_shape=0x7f020004;
+        public static final int green_shape=0x7f020005;
+        public static final int icon=0x7f020006;
+        public static final int menu=0x7f020007;
+        public static final int off_btn=0x7f020008;
+        public static final int on_btn=0x7f020009;
+        public static final int pic=0x7f02000a;
+        public static final int point=0x7f02000b;
+        public static final int red_shape=0x7f02000c;
+        public static final int search=0x7f02000d;
+        public static final int search_edit_shape=0x7f02000e;
+        public static final int share=0x7f02000f;
+        public static final int welcome1=0x7f020010;
+        public static final int welcome2=0x7f020011;
+        public static final int welcome3=0x7f020012;
+        public static final int white_btn=0x7f020013;
+        public static final int white_shape=0x7f020014;
     }
     public static final class id {
-        public static final int base_ui_close=0x7f0b002e;
-        public static final int base_ui_help=0x7f0b0008;
-        public static final int base_ui_webview=0x7f0b0025;
-        public static final int content_bar=0x7f0b001f;
-        public static final int fishing_place_bmap_view=0x7f0b0001;
-        public static final int foot_bar=0x7f0b0002;
-        public static final int foot_bar_appear=0x7f0b0005;
-        public static final int foot_bar_care=0x7f0b0004;
-        public static final int foot_bar_fishing_news=0x7f0b0006;
-        public static final int foot_bar_fishing_place=0x7f0b0003;
-        public static final int foot_bar_my=0x7f0b0007;
-        public static final int forget_pswd_get_check_code=0x7f0b000a;
-        public static final int forget_pswd_input_check_code=0x7f0b000f;
-        public static final int forget_pswd_input_pswd=0x7f0b000d;
-        public static final int forget_pswd_text_check_code=0x7f0b000e;
-        public static final int forget_pswd_text_phone_num=0x7f0b0009;
-        public static final int head_bar=0x7f0b0011;
-        public static final int head_title=0x7f0b0013;
-        public static final int hfs_hfs_splace_type_btn=0x7f0b0014;
-        public static final int home_appear=0x7f0b0022;
-        public static final int home_care=0x7f0b0021;
-        public static final int home_fishing_news=0x7f0b0023;
-        public static final int home_fishing_place=0x7f0b0020;
-        public static final int home_my=0x7f0b0024;
-        public static final int list_item_icon=0x7f0b0016;
-        public static final int list_item_msg_num=0x7f0b0018;
-        public static final int list_item_space_bottom=0x7f0b0019;
-        public static final int list_item_space_top=0x7f0b0015;
-        public static final int list_item_text=0x7f0b0017;
-        public static final int login_login_btn=0x7f0b0010;
-        public static final int login_pswd_forget=0x7f0b001c;
-        public static final int login_pswd_input=0x7f0b001d;
-        public static final int login_pswd_text=0x7f0b001b;
-        public static final int login_reg_new_account_btn=0x7f0b001e;
-        public static final int login_text_phone_num=0x7f0b001a;
-        public static final int name=0x7f0b0012;
-        public static final int pop_list_item_text=0x7f0b0026;
-        public static final int reg_agree_rule=0x7f0b002b;
-        public static final int reg_agree_rule_text=0x7f0b002c;
-        public static final int reg_fragment=0x7f0b0027;
-        public static final int reg_get_check_code=0x7f0b0029;
-        public static final int reg_input_pswd=0x7f0b002a;
-        public static final int reg_next=0x7f0b002d;
-        public static final int reg_next_account=0x7f0b0031;
-        public static final int reg_next_account_text=0x7f0b0030;
-        public static final int reg_next_fishing_times_spinner=0x7f0b0039;
-        public static final int reg_next_fishing_times_text=0x7f0b0038;
-        public static final int reg_next_fishing_years_spinner=0x7f0b0037;
-        public static final int reg_next_fishing_years_text=0x7f0b0036;
-        public static final int reg_next_get_location_btn=0x7f0b003b;
-        public static final int reg_next_location_input=0x7f0b003c;
-        public static final int reg_next_location_text=0x7f0b003a;
-        public static final int reg_next_nick_input=0x7f0b0035;
-        public static final int reg_next_nick_text=0x7f0b0034;
-        public static final int reg_next_phone_num=0x7f0b0033;
-        public static final int reg_next_phone_num_text=0x7f0b0032;
-        public static final int reg_next_photo=0x7f0b002f;
-        public static final int reg_next_skip_btn=0x7f0b003d;
-        public static final int reg_pswd_text=0x7f0b000b;
-        public static final int reg_save_pswd=0x7f0b000c;
-        public static final int reg_text_phone_num_text=0x7f0b0028;
-        public static final int viewpager=0x7f0b0000;
-        public static final int wel_login=0x7f0b003e;
-        public static final int wel_reg=0x7f0b003f;
+        public static final int TextView01=0x7f0b004c;
+        public static final int appear_item_icon=0x7f0b0002;
+        public static final int appear_listitem_detail=0x7f0b000a;
+        public static final int base_ui_close=0x7f0b0055;
+        public static final int base_ui_help=0x7f0b001a;
+        public static final int base_ui_webview=0x7f0b0086;
+        public static final int button=0x7f0b0052;
+        public static final int center=0x7f0b0000;
+        public static final int comment_has_len=0x7f0b0057;
+        public static final int comment_head_btn=0x7f0b000e;
+        public static final int comment_listitem_icon=0x7f0b0008;
+        public static final int comment_listitem_name=0x7f0b0009;
+        public static final int comment_listitem_text=0x7f0b000b;
+        public static final int comment_listitem_time=0x7f0b000c;
+        public static final int comment_location=0x7f0b0059;
+        public static final int comment_pics=0x7f0b0058;
+        public static final int comment_text=0x7f0b0056;
+        public static final int content_bar=0x7f0b0034;
+        public static final int editText=0x7f0b004e;
+        public static final int editText2=0x7f0b004f;
+        public static final int et=0x7f0b000f;
+        public static final int fishing_place_bmap_view=0x7f0b006b;
+        public static final int fishing_place_head_search_btn=0x7f0b006a;
+        public static final int float_view_care_btn=0x7f0b0007;
+        public static final int float_view_detail_btn=0x7f0b0003;
+        public static final int float_view_distance=0x7f0b0005;
+        public static final int float_view_nav_btn=0x7f0b0006;
+        public static final int float_view_title=0x7f0b0004;
+        public static final int foot_bar=0x7f0b0014;
+        public static final int foot_bar_appear=0x7f0b0017;
+        public static final int foot_bar_care=0x7f0b0016;
+        public static final int foot_bar_fishing_news=0x7f0b0018;
+        public static final int foot_bar_fishing_place=0x7f0b0015;
+        public static final int foot_bar_my=0x7f0b0019;
+        public static final int forget_pswd_get_check_code=0x7f0b001c;
+        public static final int forget_pswd_input_check_code=0x7f0b0021;
+        public static final int forget_pswd_input_pswd=0x7f0b001f;
+        public static final int forget_pswd_text_check_code=0x7f0b0020;
+        public static final int forget_pswd_text_phone_num=0x7f0b001b;
+        public static final int head_bar=0x7f0b0023;
+        public static final int head_title=0x7f0b0025;
+        public static final int hfs_fishing_tools_store_btn=0x7f0b0027;
+        public static final int hfs_hfs_splace_type_btn=0x7f0b0026;
+        public static final int home_appear=0x7f0b0037;
+        public static final int home_care=0x7f0b0036;
+        public static final int home_fishing_news=0x7f0b0038;
+        public static final int home_fishing_place=0x7f0b0035;
+        public static final int home_main_view=0x7f0b0033;
+        public static final int home_my=0x7f0b0039;
+        public static final int imageView=0x7f0b004d;
+        public static final int listView=0x7f0b0050;
+        public static final int listView_setting=0x7f0b0051;
+        public static final int list_empty=0x7f0b0028;
+        public static final int list_item_icon=0x7f0b002a;
+        public static final int list_item_msg_num=0x7f0b002c;
+        public static final int list_item_space_bottom=0x7f0b002d;
+        public static final int list_item_space_top=0x7f0b0029;
+        public static final int list_item_text=0x7f0b002b;
+        public static final int login_login_btn=0x7f0b0022;
+        public static final int login_pswd_forget=0x7f0b0030;
+        public static final int login_pswd_input=0x7f0b0031;
+        public static final int login_pswd_text=0x7f0b002f;
+        public static final int login_reg_new_account_btn=0x7f0b0032;
+        public static final int login_text_phone_num=0x7f0b002e;
+        public static final int my_fishing=0x7f0b004a;
+        public static final int my_fishing_item_13=0x7f0b003f;
+        public static final int my_fishing_item_friend_detail=0x7f0b003b;
+        public static final int my_fishing_item_good_count=0x7f0b0048;
+        public static final int my_fishing_item_icon=0x7f0b003a;
+        public static final int my_fishing_item_pics_gridview=0x7f0b0044;
+        public static final int my_fishing_item_share=0x7f0b0045;
+        public static final int my_fishing_item_time=0x7f0b003d;
+        public static final int my_fishing_item_times_text=0x7f0b0042;
+        public static final int my_fishing_item_years_text=0x7f0b0040;
+        public static final int my_icon=0x7f0b006c;
+        public static final int my_list_1=0x7f0b006e;
+        public static final int my_list_2=0x7f0b006f;
+        public static final int my_next_btn=0x7f0b003c;
+        public static final int name=0x7f0b0024;
+        public static final int pop_list_item_status_text=0x7f0b0054;
+        public static final int pop_list_item_text=0x7f0b0053;
+        public static final int reg_agree_rule=0x7f0b0074;
+        public static final int reg_agree_rule_text=0x7f0b0075;
+        public static final int reg_fragment=0x7f0b0070;
+        public static final int reg_get_check_code=0x7f0b0072;
+        public static final int reg_input_pswd=0x7f0b0073;
+        public static final int reg_next=0x7f0b0076;
+        public static final int reg_next_account=0x7f0b0079;
+        public static final int reg_next_account_text=0x7f0b0078;
+        public static final int reg_next_fishing_times_spinner=0x7f0b0081;
+        public static final int reg_next_fishing_times_text=0x7f0b0080;
+        public static final int reg_next_fishing_years_spinner=0x7f0b007f;
+        public static final int reg_next_fishing_years_text=0x7f0b007e;
+        public static final int reg_next_get_location_btn=0x7f0b0083;
+        public static final int reg_next_location_input=0x7f0b0084;
+        public static final int reg_next_location_text=0x7f0b0082;
+        public static final int reg_next_nick_input=0x7f0b007d;
+        public static final int reg_next_nick_text=0x7f0b007c;
+        public static final int reg_next_phone_num=0x7f0b007b;
+        public static final int reg_next_phone_num_text=0x7f0b007a;
+        public static final int reg_next_photo=0x7f0b0077;
+        public static final int reg_next_skip_btn=0x7f0b0085;
+        public static final int reg_pswd_text=0x7f0b001d;
+        public static final int reg_save_pswd=0x7f0b001e;
+        public static final int reg_text_phone_num_text=0x7f0b0071;
+        public static final int search_content=0x7f0b005a;
+        public static final int search_head_back=0x7f0b000d;
+        public static final int search_head_btn=0x7f0b0062;
+        public static final int search_item_detail_banner=0x7f0b005e;
+        public static final int search_item_detail_comment_list=0x7f0b0061;
+        public static final int search_item_detail_head_back=0x7f0b005b;
+        public static final int search_item_detail_head_menu=0x7f0b005c;
+        public static final int search_item_detail_menu_tabitem_contents=0x7f0b0060;
+        public static final int search_item_detail_menu_tabs=0x7f0b005f;
+        public static final int search_item_detail_title=0x7f0b005d;
+        public static final int search_list_in_map_bmap_view=0x7f0b0066;
+        public static final int search_list_in_map_edit=0x7f0b0065;
+        public static final int search_list_in_map_head_back=0x7f0b0063;
+        public static final int search_list_in_map_head_btn=0x7f0b0064;
+        public static final int search_tab_content=0x7f0b0012;
+        public static final int search_tab_left=0x7f0b0010;
+        public static final int search_tab_right=0x7f0b0011;
+        public static final int search_tabitem_status=0x7f0b0068;
+        public static final int search_tabitem_text=0x7f0b0067;
+        public static final int search_viewpager=0x7f0b0013;
+        public static final int strech=0x7f0b0001;
+        public static final int t1=0x7f0b0046;
+        public static final int textView=0x7f0b0043;
+        public static final int textView1=0x7f0b006d;
+        public static final int textView10=0x7f0b004b;
+        public static final int textView4=0x7f0b003e;
+        public static final int textView5=0x7f0b0041;
+        public static final int textView6=0x7f0b0047;
+        public static final int textView8=0x7f0b0049;
+        public static final int viewpager=0x7f0b0069;
+        public static final int wel_login=0x7f0b0087;
+        public static final int wel_reg=0x7f0b0088;
     }
     public static final class layout {
-        public static final int activity_splash=0x7f030000;
-        public static final int appear=0x7f030001;
-        public static final int care=0x7f030002;
-        public static final int fishing_news=0x7f030003;
-        public static final int fishing_place=0x7f030004;
-        public static final int foot_bar=0x7f030005;
-        public static final int forget_pswd=0x7f030006;
-        public static final int head_bar=0x7f030007;
-        public static final int hfs_float_view=0x7f030008;
-        public static final int list=0x7f030009;
-        public static final int listitem=0x7f03000a;
-        public static final int login=0x7f03000b;
-        public static final int main=0x7f03000c;
-        public static final int my=0x7f03000d;
-        public static final int pop_win_list=0x7f03000e;
-        public static final int pop_win_list_item=0x7f03000f;
-        public static final int reg=0x7f030010;
-        public static final int reg1=0x7f030011;
-        public static final int reg_next=0x7f030012;
-        public static final int rule=0x7f030013;
-        public static final int wel=0x7f030014;
+        public static final int appear_item=0x7f030000;
+        public static final int appear_listitem=0x7f030001;
+        public static final int care_fishing_place_item=0x7f030002;
+        public static final int comment=0x7f030003;
+        public static final int comment_listitem=0x7f030004;
+        public static final int fishing_news=0x7f030005;
+        public static final int foot_bar=0x7f030006;
+        public static final int forget_pswd=0x7f030007;
+        public static final int head_bar=0x7f030008;
+        public static final int hfs_float_view=0x7f030009;
+        public static final int list=0x7f03000a;
+        public static final int listitem=0x7f03000b;
+        public static final int login=0x7f03000c;
+        public static final int main=0x7f03000d;
+        public static final int my_fishing=0x7f03000e;
+        public static final int my_fishing_listitem=0x7f03000f;
+        public static final int my_next=0x7f030010;
+        public static final int pop_win_list=0x7f030011;
+        public static final int pop_win_list_item=0x7f030012;
+        public static final int publish_comment=0x7f030013;
+        public static final int search=0x7f030014;
+        public static final int search_item_detail=0x7f030015;
+        public static final int search_list=0x7f030016;
+        public static final int search_list_fragment=0x7f030017;
+        public static final int search_list_in_map=0x7f030018;
+        public static final int search_list_in_map_float_view=0x7f030019;
+        public static final int search_listitem=0x7f03001a;
+        public static final int search_tabitem=0x7f03001b;
+        public static final int ui_activity_splash=0x7f03001c;
+        public static final int ui_appear=0x7f03001d;
+        public static final int ui_care=0x7f03001e;
+        public static final int ui_fishing_place=0x7f03001f;
+        public static final int ui_my=0x7f030020;
+        public static final int ui_reg=0x7f030021;
+        public static final int ui_reg_first=0x7f030022;
+        public static final int ui_reg_next=0x7f030023;
+        public static final int ui_rule=0x7f030024;
+        public static final int viewpager_imageview=0x7f030025;
+        public static final int wel=0x7f030026;
     }
     public static final class string {
         public static final int app_name=0x7f080000;
@@ -185,6 +365,11 @@ public final class R {
          */
         public static final int forget_pswd_title=0x7f080022;
         public static final int help_link=0x7f080003;
+        public static final int hfs_care=0x7f080039;
+        public static final int hfs_detail=0x7f080038;
+        public static final int hfs_distance_format=0x7f08003b;
+        public static final int hfs_fishing_tools_store=0x7f080037;
+        public static final int hfs_nav=0x7f08003a;
         public static final int hfs_splace_type=0x7f080036;
         public static final int home_appear=0x7f08002e;
         public static final int home_appear_title=0x7f080033;
@@ -199,6 +384,7 @@ public final class R {
         public static final int home_fishing_place_title=0x7f080031;
         public static final int home_my=0x7f080030;
         public static final int home_my_title=0x7f080035;
+        public static final int home_search_btn=0x7f08003c;
         /**  注册页面 end 
  登陆页面 begin 
          */
@@ -250,4 +436,133 @@ public final class R {
          */
         public static final int TranslucentTheme=0x7f0a0001;
     }
+    public static final class styleable {
+        /** 
+    format 值
+    "reference" //引用
+	"color" //颜色
+	"boolean" //布尔值
+	"dimension" //尺寸值
+	"float" //浮点值
+	"integer" //整型值
+	"string" //字符串
+	"fraction" //百分数,比如200%
+
+    
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #LeeTextView_background com.go.fish:background}</code></td><td></td></tr>
+           <tr><td><code>{@link #LeeTextView_background_gravity com.go.fish:background_gravity}</code></td><td></td></tr>
+           <tr><td><code>{@link #LeeTextView_background_pressed com.go.fish:background_pressed}</code></td><td></td></tr>
+           <tr><td><code>{@link #LeeTextView_text com.go.fish:text}</code></td><td></td></tr>
+           <tr><td><code>{@link #LeeTextView_textColor com.go.fish:textColor}</code></td><td></td></tr>
+           <tr><td><code>{@link #LeeTextView_textColor_pressed com.go.fish:textColor_pressed}</code></td><td></td></tr>
+           </table>
+           @see #LeeTextView_background
+           @see #LeeTextView_background_gravity
+           @see #LeeTextView_background_pressed
+           @see #LeeTextView_text
+           @see #LeeTextView_textColor
+           @see #LeeTextView_textColor_pressed
+         */
+        public static final int[] LeeTextView = {
+            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
+            0x7f010004, 0x7f010005
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.go.fish.R.attr#background}
+          attribute's value can be found in the {@link #LeeTextView} array.
+
+
+          <p>May be an integer value, such as "<code>100</code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.go.fish:background
+        */
+        public static final int LeeTextView_background = 4;
+        /**
+          <p>This symbol is the offset where the {@link com.go.fish.R.attr#background_gravity}
+          attribute's value can be found in the {@link #LeeTextView} array.
+
+
+          <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>strech</code></td><td>0</td><td></td></tr>
+<tr><td><code>center</code></td><td>1</td><td></td></tr>
+</table>
+          @attr name com.go.fish:background_gravity
+        */
+        public static final int LeeTextView_background_gravity = 0;
+        /**
+          <p>This symbol is the offset where the {@link com.go.fish.R.attr#background_pressed}
+          attribute's value can be found in the {@link #LeeTextView} array.
+
+
+          <p>May be an integer value, such as "<code>100</code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.go.fish:background_pressed
+        */
+        public static final int LeeTextView_background_pressed = 3;
+        /**
+          <p>This symbol is the offset where the {@link com.go.fish.R.attr#text}
+          attribute's value can be found in the {@link #LeeTextView} array.
+
+
+          <p>May be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+<p>May be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+          @attr name com.go.fish:text
+        */
+        public static final int LeeTextView_text = 5;
+        /**
+          <p>This symbol is the offset where the {@link com.go.fish.R.attr#textColor}
+          attribute's value can be found in the {@link #LeeTextView} array.
+
+
+          <p>May be an integer value, such as "<code>100</code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.go.fish:textColor
+        */
+        public static final int LeeTextView_textColor = 2;
+        /**
+          <p>This symbol is the offset where the {@link com.go.fish.R.attr#textColor_pressed}
+          attribute's value can be found in the {@link #LeeTextView} array.
+
+
+          <p>May be an integer value, such as "<code>100</code>".
+<p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.go.fish:textColor_pressed
+        */
+        public static final int LeeTextView_textColor_pressed = 1;
+    };
 }

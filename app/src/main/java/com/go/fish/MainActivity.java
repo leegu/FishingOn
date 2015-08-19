@@ -7,8 +7,8 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
-import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.HomeUI;
+import com.go.fish.util.Const;
 import com.go.fish.view.SplashView;
 
 public class MainActivity extends Activity {
@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
 		if(welcome_ed && isLogined()){
 			showHomeUI();
 		}else{
-			setContentView(R.layout.activity_splash);
+			setContentView(R.layout.ui_activity_splash);
 			ViewPager vp = (ViewPager)findViewById(R.id.viewpager);
 			new SplashView(this,new IOnWelcomedListener(){
 				@Override
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 	}
 	private void showHomeUI(){
 		Intent intent = new Intent();
-		intent.putExtra(BaseUI.LAYOUT_ID, R.layout.main);
+		intent.putExtra(Const.LAYOUT_ID, R.layout.main);
 		intent.setClass(MainActivity.this, HomeUI.class);
 		startActivity(intent);
 		finish();

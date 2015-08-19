@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="app_base_color">#B9B9B9</color>
+    <color name="app_base_color_alpha">#B9B9B9</color>
+    <color name="app_base_color_light_font">#53AECE</color>
     
     <color name="head_bar">#999999</color>
     
     <color name="app_base_btn_color">#009900</color>
+    <color name="app_base_btn_color_red">#ff0000</color>
     
     <color name="reg_get_cc">#ffcccccc</color>
     <color name="reg_next_cc">#53AECE</color>
@@ -18,4 +21,6 @@
     <color name="list_item_backgroud">#ffffffff</color>
     <color name="list_item_text_color">#ff000000</color>
     <color name="list_item_hint_text_color">#ffffffff</color>
+    
+    <color name="fishing_splace_item_content_text_color">#000000</color>
 </resources>

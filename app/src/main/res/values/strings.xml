@@ -97,6 +97,11 @@
     <string name="home_my_title">我的</string>
     
     <string name="hfs_splace_type">场景</string>
+    <string name="hfs_fishing_tools_store">渔具店</string>
+    <string name="hfs_detail">详情</string>
+    <string name="hfs_care">关注</string>
+    <string name="hfs_nav">导航</string>
+    <string name="hfs_distance_format">距您%f公里</string>
     
      <string-array name="hfs_splace_type">
         <item>野钓</item>
@@ -104,6 +109,8 @@
         <item>舒适家人行</item>
         <item>黑坑</item>
     </string-array>
+    
+    <string name="home_search_btn">搜索</string>
     
     <!-- Home页面 end -->
 

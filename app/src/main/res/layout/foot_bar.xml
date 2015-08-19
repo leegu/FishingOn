@@ -30,7 +30,7 @@
             android:padding="1dp"
             android:text="@string/home_fishing_place"
             android:textColor="@color/foot_bar_text_color"
-            android:textSize="10dp" />
+            android:textSize="@dimen/base_font_size_h1" />
     </LinearLayout>
 
     <!-- 关注 -->
@@ -56,7 +56,7 @@
             android:padding="1dp"
             android:text="@string/home_care"
             android:textColor="@color/foot_bar_text_color"
-            android:textSize="10dp" />
+            android:textSize="@dimen/base_font_size_h1" />
     </LinearLayout>
     <!-- 发现 -->
 
@@ -81,7 +81,7 @@
             android:padding="1dp"
             android:text="@string/home_appear"
             android:textColor="@color/foot_bar_text_color"
-            android:textSize="10dp" />
+            android:textSize="@dimen/base_font_size_h1" />
     </LinearLayout>
     <!-- 钓播 -->
 
@@ -106,7 +106,7 @@
             android:padding="1dp"
             android:text="@string/home_fishing_news"
             android:textColor="@color/foot_bar_text_color"
-            android:textSize="10dp" />
+            android:textSize="@dimen/base_font_size_h1" />
     </LinearLayout>
 
     <!-- 我的 -->
@@ -132,7 +132,7 @@
             android:padding="1dp"
             android:text="@string/home_my"
             android:textColor="@color/foot_bar_text_color"
-            android:textSize="10dp" />
+            android:textSize="@dimen/base_font_size_h1" />
     </LinearLayout>
 
 </LinearLayout>

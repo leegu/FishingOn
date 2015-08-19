@@ -12,9 +12,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.go.fish.R;
-import com.go.fish.util.Location;
-import com.go.fish.util.Location.LocationData;
-import com.go.fish.util.Location.OnGetLocationListener;
+import com.go.fish.util.Const;
+import com.go.fish.util.MapUtil;
+import com.go.fish.util.MapUtil.LocationData;
+import com.go.fish.util.MapUtil.OnGetLocationListener;
 import com.go.fish.view.ReplaceFragment;
 import com.go.fish.view.Switcher;
 
@@ -26,20 +27,20 @@ public class RegisterUI extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		int layout_id = getIntent().getIntExtra(BaseUI.LAYOUT_ID, 0);
+		int layout_id = getIntent().getIntExtra(Const.LAYOUT_ID, 0);
 		setContentView(layout_id);
 		fragmentMgr = getSupportFragmentManager();
 		{
 			reg1Fragment = new ReplaceFragment();
 			Bundle b = new Bundle();
-			b.putInt(BaseUI.LAYOUT_ID, R.layout.reg1);
+			b.putInt(Const.LAYOUT_ID, R.layout.ui_reg_first);
 			reg1Fragment.setArguments(b);
 			replace(reg1Fragment);
 		}
 		{
 			regNextFragment = new ReplaceFragment();
 			Bundle b = new Bundle();
-			b.putInt(BaseUI.LAYOUT_ID, R.layout.reg_next);
+			b.putInt(Const.LAYOUT_ID, R.layout.ui_reg_next);
 			regNextFragment.setArguments(b);
 		}
 	}
@@ -95,7 +96,7 @@ public class RegisterUI extends FragmentActivity {
 		}
 		case R.id.reg_agree_rule_text: {
 			Intent i = new Intent();
-			i.putExtra("layout_id", R.layout.rule);
+			i.putExtra("layout_id", R.layout.ui_rule);
 			i.putExtra("url", getResources().getString(R.string.rule_link));
 			showActivity(i);
 			break;
@@ -114,7 +115,7 @@ public class RegisterUI extends FragmentActivity {
 			break;
 		}
 		case R.id.reg_next_get_location_btn: {
-			Location.getLocation(this, new OnGetLocationListener() {
+			MapUtil.getLocation(this, new OnGetLocationListener() {
 				@Override
 				public void onGetLocation(LocationData data) {
 					TextView tv = (TextView) findViewById(R.id.reg_next_location_input);

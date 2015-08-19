@@ -15,6 +15,7 @@ import com.go.fish.IOnWelcomedListener;
 import com.go.fish.R;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.RegisterUI;
+import com.go.fish.util.Const;
 
 public class SplashView {
 	Activity mSplashActivity = null;
@@ -51,13 +52,13 @@ public class SplashView {
 				viewPagerList.add(fl);
 			}
 		}
-		viewPager.setAdapter(new SplashAdapter(viewPagerList));
+		viewPager.setAdapter(new MyPagerAdapter(viewPagerList));
 		viewPager.setBackgroundColor(0xffff0000);
 	}
 	
 	private void showRegisterUI(){
 		Intent i = new Intent();
-		i.putExtra(BaseUI.LAYOUT_ID, R.layout.reg);
+		i.putExtra(Const.LAYOUT_ID, R.layout.ui_reg);
 		i.setClassName(mSplashActivity, RegisterUI.class.getName());
 		mSplashActivity.startActivity(i);
 		clickListener.onClick();
@@ -66,7 +67,7 @@ public class SplashView {
 	
 	private void showLoginUI(){
 		Intent i = new Intent();
-		i.putExtra(BaseUI.LAYOUT_ID, R.layout.login);
+		i.putExtra(Const.LAYOUT_ID, R.layout.login);
 		i.setClassName(mSplashActivity, BaseUI.class.getName());
 		mSplashActivity.startActivity(i);
 		clickListener.onClick();
