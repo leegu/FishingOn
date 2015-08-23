@@ -33,6 +33,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import android.support.v4.util.ArrayMap;
 import android.util.Log;
@@ -185,7 +186,7 @@ public class NetTool {
 		String url;
 		private ArrayMap<String, String> mParams = null;
 		RequestListener mListener = null;
-		public RequestData(String url,RequestListener listener){
+		private RequestData(String url,RequestListener listener){
 			this.url = url;
 			mListener = listener;
 		}
@@ -198,6 +199,13 @@ public class NetTool {
 				mParams = new ArrayMap<String, String>();
 			}
 			mParams.put(key, value);
+		}
+		
+		public static RequestData newInstance(RequestListener listener,JSONObject json){
+			return new RequestData(Const.HOST + json.toString(), listener);
+		}
+		public static RequestData newInstance(RequestListener listener,String json){
+			return new RequestData(Const.HOST + json, listener);
 		}
 	}
 	

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_base_color"
+    android:background="@color/base_color"
     android:orientation="vertical"
     tools:context=".ui.RegisterUI" >
 
@@ -18,7 +18,7 @@
             android:layout_centerInParent="true"
             android:text="@string/reg_title"
             android:textColor="#ffffff"
-            android:textSize="@dimen/head_bar_font_hegiht" />
+            android:textSize="@dimen/base_font_size_h7" />
     </RelativeLayout>
 
     <LinearLayout
@@ -30,9 +30,9 @@
         android:paddingRight="@dimen/base_space" >
 
         <ImageView
-            android:layout_width="@dimen/base_icon_width"
-            android:layout_height="@dimen/base_icon_width"
-            android:background="@drawable/circle"
+            android:layout_width="@dimen/base_user_icon_size"
+            android:layout_height="@dimen/base_user_icon_size"
+            android:background="@drawable/circle_solid"
             android:src="@drawable/icon" />
     </LinearLayout>
 
@@ -181,7 +181,7 @@
             android:id="@+id/reg_agree_rule"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:background="@color/app_base_btn_color"
+            android:background="@color/base_btn_color"
             android:clickable="true"
             android:gravity="center"
             android:onClick="onClick"
@@ -197,7 +197,7 @@
             android:gravity="center_vertical"
             android:onClick="onClick"
             android:text="@string/reg_reg_and_rule"
-            android:textColor="@color/app_base_btn_color" />
+            android:textColor="@color/base_btn_color" />
     </LinearLayout>
 
     <LinearLayout
@@ -212,7 +212,8 @@
             android:layout_height="@dimen/list_item_height"
             android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
             android:layout_marginRight="@dimen/button_margin_left_right_match_parent"
-            android:background="@drawable/green_shape"
+            android:background="@drawable/green_btn_background"
+            android:textColor="@color/base_btn_text_color"
             android:onClick="onClick"
             android:text="@string/reg_next" />
     </LinearLayout>

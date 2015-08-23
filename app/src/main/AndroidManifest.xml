@@ -37,11 +37,14 @@
         </activity>
         <activity
             android:name="com.go.fish.ui.BaseUI"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.go.fish.ui.SearchUI"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" 
+            android:windowSoftInputMode="adjustNothing"
+            >
         </activity>
         <activity
             android:name="com.go.fish.ui.RegisterUI"

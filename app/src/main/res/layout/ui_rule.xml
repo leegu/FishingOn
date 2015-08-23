@@ -21,6 +21,8 @@
             android:gravity="center_vertical"
             android:onClick="onClick"
             android:paddingLeft="@dimen/base_space"
+            android:paddingRight="@dimen/base_space"
+            android:textSize="@dimen/base_font_size_h4" 
             android:text="@string/base_ui_close" />
 
         <TextView
@@ -28,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/reg_reg_and_rule"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/head_bar_font_hegiht" />
+            android:textColor="@color/head_bar_title_color"
+            android:textSize="@dimen/base_font_size_h7" />
     </RelativeLayout>
 
     <android.webkit.WebView

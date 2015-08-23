@@ -7,9 +7,11 @@ import java.util.HashSet;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
+import android.widget.ImageView;
 
 public class ImageLoader {
 	static ImageLoader instance = null;
@@ -53,12 +55,16 @@ public class ImageLoader {
 		mLruCache.put(key, bitmap);
 	}
 
-	public void executeBitmapLoad(DownloadTask task) {
+	public void executeBitmapLoad(DownloadTask<ImageView> task) {
+		Bitmap bitmap = getBitmapFromLruCache(task.downUrl);
+		if(bitmap != null && !bitmap.isRecycled()){
+			task.onEnd(task.downUrl, bitmap);
+			return;
+		}
+//		else if((bitmap == ))
 		DownloadBitmapAsyncTask downloadBitmapAsyncTask = new DownloadBitmapAsyncTask();
 		mDownloadBitmapAsyncTaskHashSet.add(downloadBitmapAsyncTask);
-		if(task.listener != null){
-			task.listener.onStart();
-		}
+		task.onStart();
 		downloadBitmapAsyncTask.execute(task);
 	}
 
@@ -71,18 +77,28 @@ public class ImageLoader {
 			}
 		}
 	}
-
-	public static class DownloadTask {
+	/**
+	 * 
+	 * @author DCloud
+	 *
+	 * @param <T> 下载完成后数据的接收者
+	 */
+	public static class DownloadTask<T> {
 		String downUrl = null;
-		DownloadTaskListener listener = null;
-		public DownloadTask(String url,DownloadTaskListener listener) {
+		T receiver = null;
+		public DownloadTask(String url,T receiver) {
 			downUrl = url;
-			this.listener = listener;
+			this.receiver = receiver;
 		}
-	}
-	public static interface DownloadTaskListener{
-		void onEnd(String downUrl,Bitmap bitmap);
-		void onStart();
+		void onEnd(String downUrl,Bitmap bitmap){
+			if(receiver instanceof ImageView){
+				((ImageView)receiver).setBackgroundDrawable(new BitmapDrawable(bitmap));
+//				((ImageView)receiver).setImageBitmap(bitmap);
+			}
+		}
+		void onStart(){
+			
+		}
 	}
 	
 	private class DownloadBitmapAsyncTask extends AsyncTask<DownloadTask, Void, Bitmap> {
@@ -101,9 +117,7 @@ public class ImageLoader {
 		@Override
 		protected void onPostExecute(Bitmap bitmap) {
 			super.onPostExecute(bitmap);
-			if(task.listener != null){
-				task.listener.onEnd(task.downUrl, bitmap);
-			}
+			task.onEnd(task.downUrl, bitmap);
 			addBitmapToLruCache(task.downUrl, bitmap);
 			mDownloadBitmapAsyncTaskHashSet.remove(this);
 		}
@@ -113,9 +127,7 @@ public class ImageLoader {
 		Bitmap bitmap = null;
 		HttpURLConnection conn = null;
 		try {
-
 			conn = createConnection(imageUrl);
-
 			int redirectCount = 0;
 			while ((conn.getResponseCode() / 100 == 3) && (redirectCount < 5)) {
 				conn = createConnection(conn.getHeaderField("Location"));

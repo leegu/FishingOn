@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@color/app_base_color"
-    android:orientation="vertical" >
+    android:background="@color/base_color"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar" >
+        android:background="@color/head_bar">
 
         <TextView
             android:layout_width="wrap_content"
@@ -17,94 +17,114 @@
             android:layout_centerInParent="true"
             android:text="@string/home_my"
             android:textColor="#ffffff"
-            android:textSize="@dimen/head_bar_font_hegiht" />
+            android:textSize="@dimen/base_font_size_h7" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:padding="@dimen/list_item_padding_left" >
-
-        <ImageView
-            android:id="@+id/my_icon"
-            android:layout_width="@dimen/base_pic_icon_width"
-            android:layout_height="@dimen/base_pic_icon_height"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:layout_toLeftOf="@id/my_icon"
-            android:background="@drawable/circle"
-            android:src="@drawable/icon" />
-
-        <TextView
-            android:id="@+id/my_next_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:drawableRight="@drawable/arrow_right"
-            android:gravity="center_vertical"
-            android:text="完善资料" />
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_toLeftOf="@id/my_next_btn"
-            android:layout_toRightOf="@id/my_icon"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/list_item_padding_left"
-            android:paddingRight="@dimen/list_item_padding_right" >
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="13523459876"
-                android:textColor="@color/app_base_color_light_font" />
-
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/ui_f_my_go_next"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" >
+                android:background="@drawable/base_listitem_background"
+                android:clickable="true"
+                android:onClick="onMyClick"
+                android:padding="@dimen/base_space">
+
+                <ImageView
+                    android:id="@+id/my_icon"
+                    android:layout_width="@dimen/base_user_icon_size"
+                    android:layout_height="@dimen/base_user_icon_size"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/circle_solid"
+                    android:src="@drawable/icon" />
 
                 <TextView
-                    android:id="@+id/editText"
+                    android:id="@+id/my_next_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="账号："
-                    android:textColor="@color/app_base_color_light_font" />
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawableRight="@drawable/arrow_right"
+                    android:gravity="center_vertical"
+                    android:text="完善资料" />
 
-                <TextView
-                    android:id="@+id/editText2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@id/my_next_btn"
+                    android:layout_toRightOf="@id/my_icon"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/base_space"
+                    android:paddingRight="@dimen/base_space">
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="13523459876"
+                        android:textColor="@color/base_color_light_font" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/editText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="账号："
+                            android:textColor="@color/base_color_light_font" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <ListView
+                android:id="@+id/ui_f_my_listview1"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/base_color"></ListView>
+
+            <ListView
+                android:id="@+id/ui_f_my_listview2"
+                android:layout_width="match_parent"
+                android:layout_height="132dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/base_color"></ListView>
+
+            <Button
+                android:id="@+id/ui_f_my_exit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_item_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
+                android:layout_marginRight="@dimen/button_margin_left_right_match_parent"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/red_btn_background"
+                android:clickable="true"
+                android:onClick="onMyClick"
+                android:text="退出"
+                android:textColor="@color/base_btn_text_color" />
+
         </LinearLayout>
-    </RelativeLayout>
-
-    <ListView
-        android:id="@+id/my_list_1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" />
-
-    <ListView
-        android:id="@+id/my_list_2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
-        android:layout_marginRight="@dimen/button_margin_left_right_match_parent"
-        android:layout_marginTop="40dp"
-        android:textColor="#ffffff"
-        android:background="@drawable/red_shape"
-        android:text="退出" />
-
+    </ScrollView>
 </LinearLayout>

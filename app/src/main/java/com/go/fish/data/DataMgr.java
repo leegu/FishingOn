@@ -6,24 +6,27 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.go.fish.R;
+
 public class DataMgr {
 
 	
-	public static ArrayList<FishingPlaceData> makeFishPlaceDatas(byte[] bytes){
+	public static ArrayList<FPlaceData> makeFPlaceDatas(int layoutId, byte[] bytes){
 		
-		ArrayList<FishingPlaceData> arr = new ArrayList<FishingPlaceData>();
+		ArrayList<FPlaceData> arr = new ArrayList<FPlaceData>();
 		try {
-			String strJson = "[{title:'海淀区驾驭钓鱼休闲区'},{title:'海淀区驾驭钓鱼休闲区海淀区驾驭钓鱼休海淀区驾驭钓鱼休'}]";
-//			String strJson = new String(bytes,"UTF-8");
+			String strJson = new String(bytes,"UTF-8");
 			JSONArray jsonArr = new JSONArray(strJson);
 			for(int i = 0;i < jsonArr.length(); i++){
 				JSONObject json = jsonArr.getJSONObject(i);
-				FishingPlaceData ld = new FishingPlaceData();
+				FPlaceData ld = new FPlaceData();
+				ld.layout_id = layoutId;
 				ld.orderId = i + 1;
 				ld.text = json.getString("title");
+				ld.sid = json.getString("id");
 				arr.add(ld);
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return arr;

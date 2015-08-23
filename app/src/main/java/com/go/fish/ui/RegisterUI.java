@@ -19,7 +19,7 @@ import com.go.fish.util.MapUtil.OnGetLocationListener;
 import com.go.fish.view.ReplaceFragment;
 import com.go.fish.view.Switcher;
 
-public class RegisterUI extends FragmentActivity {
+public class RegisterUI extends BaseUI {
 
 	FragmentManager fragmentMgr = null;
 	boolean showRegNext = false;
@@ -27,8 +27,8 @@ public class RegisterUI extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		int layout_id = getIntent().getIntExtra(Const.LAYOUT_ID, 0);
-		setContentView(layout_id);
+//		int layout_id = getIntent().getIntExtra(Const.LAYOUT_ID, 0);
+//		setContentView(layout_id);
 		fragmentMgr = getSupportFragmentManager();
 		{
 			reg1Fragment = new ReplaceFragment();
@@ -40,7 +40,7 @@ public class RegisterUI extends FragmentActivity {
 		{
 			regNextFragment = new ReplaceFragment();
 			Bundle b = new Bundle();
-			b.putInt(Const.LAYOUT_ID, R.layout.ui_reg_next);
+			b.putInt(Const.LAYOUT_ID, R.layout.ui_my_sec);
 			regNextFragment.setArguments(b);
 		}
 	}
@@ -109,7 +109,7 @@ public class RegisterUI extends FragmentActivity {
 		case R.id.reg_next_skip_btn: {
 			Intent i = new Intent();
 			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			i.putExtra("layout_id", R.layout.main);
+			i.putExtra("layout_id", R.layout.ui_main);
 			showActivity(i, HomeUI.class.getName());
 			 finish();
 			break;

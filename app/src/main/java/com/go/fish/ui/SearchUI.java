@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.go.fish.R;
 import com.go.fish.data.DataMgr;
-import com.go.fish.data.FishingPlaceData;
+import com.go.fish.data.FPlaceData;
 import com.go.fish.util.Const;
 import com.go.fish.util.IME;
 import com.go.fish.util.MessageHandler;
@@ -22,20 +22,20 @@ import com.go.fish.util.NetTool.RequestData;
 import com.go.fish.util.NetTool.RequestListener;
 import com.go.fish.view.BaseFragment;
 import com.go.fish.view.BaseFragment.ResultForActivityCallback;
-import com.go.fish.view.ListFragment;
+import com.go.fish.view.FPlaceListFragment;
 
-public class SearchUI extends FragmentActivity implements ResultForActivityCallback,IHasHeadBar{
+public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHeadBar{
 	FragmentManager fragmentMgr = null;
 	BaseFragment searchFragment = null,detailFragment = null,searchInMapFragment = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		int layout_id = getIntent().getIntExtra(Const.LAYOUT_ID, 0);
-		setContentView(layout_id);
+//		int layout_id = getIntent().getIntExtra(Const.LAYOUT_ID, 0);
+//		setContentView(layout_id);
 		fragmentMgr = getSupportFragmentManager();
 		{
-			searchFragment = BaseFragment.newInstance(this, R.layout.search_list);
+			searchFragment = BaseFragment.newInstance(this, R.layout.ui_search_list);
 			searchFragment.isFront = true;
 			fragmentMgr.beginTransaction().add(R.id.search_content, searchFragment).commit();
 		}
@@ -54,24 +54,29 @@ public class SearchUI extends FragmentActivity implements ResultForActivityCallb
 			break;
 		case R.id.search_head_btn:
 			IME.hideIME(view);
-			NetTool.httpGet(new RequestData(Const.SEARCH_URL,new RequestListener() {
+			NetTool.httpGet(RequestData.newInstance(new RequestListener() {
 				@Override
 				public void onStart() {}
 				@Override
 				public void onEnd(byte[] datas) {
 					if(datas != null){
-						ViewPager viewPager = (ViewPager)searchFragment.getView().findViewById(R.id.search_viewpager);
-						final ListFragment listFragment = (ListFragment)viewPager.getAdapter().instantiateItem(viewPager, viewPager.getCurrentItem());
-						final ArrayList<FishingPlaceData> arr = DataMgr.makeFishPlaceDatas(datas);
-						MessageHandler.sendMessage(new MessageListener() {
+						MessageHandler.sendMessage(new MessageListener<ArrayList<FPlaceData>>() {
+							ArrayList<FPlaceData> arr = null;
+							@Override
+							public MessageListener<ArrayList<FPlaceData>> init(ArrayList<FPlaceData> args) {
+								this.arr = args;
+								return this;
+							}
 							@Override
 							public void onExecute() {
-								listFragment.updateData(arr);
+								ViewPager viewPager = (ViewPager)searchFragment.getView().findViewById(R.id.search_viewpager);
+								FPlaceListFragment listFragment = (FPlaceListFragment)viewPager.getAdapter().instantiateItem(viewPager, viewPager.getCurrentItem());
+								listFragment.updateData(this.arr);
 							}
-						});
+						}.init(DataMgr.makeFPlaceDatas(R.layout.listitem_search, datas)));
 					}
 				}
-			}));
+			},"search_fishing_place"));
 			break;
 		default:
 			break;
@@ -79,18 +84,18 @@ public class SearchUI extends FragmentActivity implements ResultForActivityCallb
 	}
 	private void initSearchMap(){
 		if(searchInMapFragment == null){
-			searchInMapFragment = BaseFragment.newInstance(this, R.layout.search_list_in_map);
+			searchInMapFragment = BaseFragment.newInstance(this, R.layout.ui_f_search_list_in_map);
 		}
 	}
 	private void initDetailFragment() {
 		if(detailFragment == null){
-			detailFragment = BaseFragment.newInstance(this,R.layout.search_item_detail);
+			detailFragment = BaseFragment.newInstance(this,R.layout.ui_f_search_item_detail);
 		}
 	}
 	
 
 	@Override
-	public void onItemClick(View view, FishingPlaceData data) {
+	public void onItemClick(View view, FPlaceData data) {
 		initSearchMap();
 		searchInMapFragment.setArguments(data.toBundle(searchInMapFragment.getArguments()));
 		showFragment(searchInMapFragment);

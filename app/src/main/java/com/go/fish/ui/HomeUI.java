@@ -22,11 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapView;
 import com.go.fish.R;
 import com.go.fish.util.Const;
-import com.go.fish.util.ImageLoader;
 import com.go.fish.util.MapUtil;
 
 public class HomeUI extends FragmentActivity implements IHasHeadBar{
@@ -59,7 +57,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar{
 			mMapView = MapUtil.newMap(this);
 			vg.addView(mMapView);
 			
-			LayoutInflater.from(this).inflate(R.layout.hfs_float_view, vg);
+			LayoutInflater.from(this).inflate(R.layout.float_view_fplace, vg);
 //			vg.addView(floatView);
 			// {
 			// MapStatus ms = new MapStatus.Builder().overlook(-20).zoom(15).build();
@@ -135,7 +133,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar{
 			break;
 		case R.id.hfs_hfs_splace_type_btn:
 			if(splaceTypePopWinView == null){
-				ListView list = (ListView)LayoutInflater.from(this).inflate(R.layout.pop_win_list, null);
+				ListView list = (ListView)LayoutInflater.from(this).inflate(R.layout.list_pop_win, null);
 				splaceTypePopWinView = list;
 				PopWinListItemAdapter adapter = new PopWinListItemAdapter(R.array.hfs_splace_type);
 				list.setAdapter(adapter);
@@ -238,7 +236,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar{
 			View view = null;
 			PopWinListItemData data = itemsData.get(position);
 			if (convertView == null) {
-				view = LayoutInflater.from(getBaseContext()).inflate(R.layout.pop_win_list_item, null);
+				view = LayoutInflater.from(getBaseContext()).inflate(R.layout.listitem_pop_win, null);
 //				 view = new TextView(HomeUI.this);
 				((TextView)view.findViewById(R.id.pop_list_item_text)).setText(data.text);
 				TextView status =(TextView)view.findViewById(R.id.pop_list_item_status_text);
@@ -262,6 +260,19 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar{
 		case R.id.fishing_place_head_search_btn:
 			showSearchView();
 			break;
+		}
+	}
+	
+	public void onMyClick(View view){
+		int id = view.getId();
+		switch (id) {
+		case R.id.ui_f_my_exit:
+			finish();
+			break;
+		case R.id.ui_f_my_go_next:{
+			UIMgr.showActivity(this, R.layout.ui_my_sec, BaseUI.class.getName());
+			break;
+			}
 		}
 	}
 }

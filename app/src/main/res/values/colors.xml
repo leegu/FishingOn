@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="app_base_color">#B9B9B9</color>
-    <color name="app_base_color_alpha">#B9B9B9</color>
-    <color name="app_base_color_light_font">#53AECE</color>
     
-    <color name="head_bar">#999999</color>
-    
-    <color name="app_base_btn_color">#009900</color>
-    <color name="app_base_btn_color_red">#ff0000</color>
-    
+    <color name="base_color">#F3F2F1</color>
+    <color name="base_color_alpha">#B9B9B9</color>
+    <color name="base_color_light_font">#53AECE</color>
+
+    <color name="base_ui_background_color">#ffffff</color>
+    <color name="base_text_background_press">#F3F2F1</color>
+
+    <color name="base_float_view_normal_color">#ee9A9691</color>
+    <color name="base_float_view_press_color">#eeBBBBBB</color>
+    <color name="base_float_view_text_color">#ffffff</color>
+
+    <color name="base_btn_text_color">#ffffff</color>
+    <color name="base_btn_color">#009900</color>
+    <color name="base_btn_color_press">#00bb00</color>
+    <color name="base_btn_color_red">#dd0000</color>
+    <color name="base_btn_color_red_press">#ff0000</color>
+
+    <color name="head_bar">#9A9691</color>
+    <color name="head_bar_normal_color">#9A9691</color>
+    <color name="head_bar_press_color">#BBBBBB</color>
+
+    <color name="head_bar_title_color">#ffffff</color>
+    <color name="head_bar_left_color">#ffffff</color>
+    <color name="head_bar_right_color">#ffffff</color>
+
+
     <color name="reg_get_cc">#ffcccccc</color>
     <color name="reg_next_cc">#53AECE</color>
     <color name="content_bar">#ffcccccc</color>
@@ -19,8 +37,11 @@
     <color name="foot_bar_focus_text_color">#00ff00</color>
     
     <color name="list_item_backgroud">#ffffffff</color>
+    <color name="list_item_press_backgroud">#ffcccccc</color>
     <color name="list_item_text_color">#ff000000</color>
     <color name="list_item_hint_text_color">#ffffffff</color>
     
     <color name="fishing_splace_item_content_text_color">#000000</color>
+
+    <color name="tag_selected_color">#FF9024</color>
 </resources>

@@ -19,8 +19,15 @@ public class MessageHandler {
 		m.what = 0;
 		myHandler.sendMessage(m);
 	}
+	public static void sendMessage(MessageListener listener,int delayTime){
+		Message m = Message.obtain();
+		m.obj = listener;
+		m.what = 0;
+		myHandler.sendMessageDelayed(m,delayTime);
+	}
 	
-	public static interface MessageListener{
+	public static interface MessageListener<T>{
+		MessageListener init(T args);
 		void onExecute();
 	}
 }

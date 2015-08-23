@@ -67,7 +67,7 @@ public class SplashView {
 	
 	private void showLoginUI(){
 		Intent i = new Intent();
-		i.putExtra(Const.LAYOUT_ID, R.layout.login);
+		i.putExtra(Const.LAYOUT_ID, R.layout.ui_login);
 		i.setClassName(mSplashActivity, BaseUI.class.getName());
 		mSplashActivity.startActivity(i);
 		clickListener.onClick();
