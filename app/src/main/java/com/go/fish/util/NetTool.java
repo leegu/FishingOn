@@ -1,6 +1,7 @@
 package com.go.fish.util;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
@@ -51,7 +52,21 @@ public class NetTool {
 		new Thread(){
 			public void run() {
 				RequestListener listener = rData.mListener;
-				listener.onStart();
+				if(rData.synCallBack){
+					MessageHandler.sendMessage(new MessageHandler.MessageListener<byte[]>() {
+						@Override
+						public MessageHandler.MessageListener init(byte[] data) {
+							return this;
+						}
+						@Override
+						public void onExecute() {
+							rData.mListener.onStart();
+						}
+					});
+				}else {
+					listener.onStart();
+				}
+
 				HttpClient httpClient = getNewHttpClient();
 				HttpGet httpGet = new HttpGet(rData.url);
 				try {
@@ -64,11 +79,35 @@ public class NetTool {
 					}
 					
 					byte[] data = EntityUtils.toByteArray(resp.getEntity());
-					listener.onEnd(data);
-					
+					if(rData.synCallBack){
+						MessageHandler.sendMessage(new MessageHandler.MessageListener<byte[]>() {
+							byte data[] = null;
+							@Override
+							public MessageHandler.MessageListener init(byte[] data) {
+								this.data = data;
+								return this;
+							}
+							@Override
+							public void onExecute() {
+								rData.mListener.onEnd(this.data);
+							}
+						}.init(data));
+					}else {
+						listener.onEnd(data);
+					}
 				} catch (Exception e) {
 					Log.e(TAG, "httpGet exception, e = " + e.getMessage());
 					e.printStackTrace();
+					MessageHandler.sendMessage(new MessageHandler.MessageListener<byte[]>() {
+						@Override
+						public MessageHandler.MessageListener init(byte[] data) {
+							return this;
+						}
+						@Override
+						public void onExecute() {
+							rData.mListener.onError(RequestListener.ERROR_TIMEOUT);
+						}
+					});
 				}
 			};
 		}.start();
@@ -184,11 +223,18 @@ public class NetTool {
 
 	public static class RequestData {
 		String url;
+		boolean synCallBack = false;
 		private ArrayMap<String, String> mParams = null;
 		RequestListener mListener = null;
+		static String sHost = Const.HOST;
 		private RequestData(String url,RequestListener listener){
 			this.url = url;
 			mListener = listener;
+		}
+
+		public RequestData syncCallback(){
+			synCallBack = true;
+			return this;
 		}
 		
 		public boolean isValid(){
@@ -202,15 +248,18 @@ public class NetTool {
 		}
 		
 		public static RequestData newInstance(RequestListener listener,JSONObject json){
-			return new RequestData(Const.HOST + json.toString(), listener);
+			return new RequestData(RequestData.sHost + json.toString(), listener);
 		}
 		public static RequestData newInstance(RequestListener listener,String json){
-			return new RequestData(Const.HOST + json, listener);
+			return new RequestData(RequestData.sHost + json, listener);
 		}
 	}
 	
-	public static interface RequestListener{
-		void onStart();
-		void onEnd(byte[] data);
+	public static abstract class RequestListener{
+		public static final int ERROR_TIMEOUT = 0;
+		public abstract void onStart();
+		public void onError(int type){}
+		public void onSend(OutputStream os){}
+		public abstract void onEnd(byte[] data);
 	}
 }

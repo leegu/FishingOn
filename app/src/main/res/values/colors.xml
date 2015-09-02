@@ -26,6 +26,9 @@
     <color name="head_bar_left_color">#ffffff</color>
     <color name="head_bar_right_color">#ffffff</color>
 
+    <color name="head_btn_background_color">#BBBBBB</color>
+    <color name="head_btn_background_color_press">#444444</color>
+
 
     <color name="reg_get_cc">#ffcccccc</color>
     <color name="reg_next_cc">#53AECE</color>
@@ -44,4 +47,7 @@
     <color name="fishing_splace_item_content_text_color">#000000</color>
 
     <color name="tag_selected_color">#FF9024</color>
+
+    <color name="gradient_backgroud_start_color">#000000</color>
+    <color name="gradient_backgroud_end_color">#FFFFFF</color>
 </resources>

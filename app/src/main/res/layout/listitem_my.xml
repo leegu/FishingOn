@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_height"
+    android:background="@drawable/base_listitem_background"
+    android:paddingLeft="@dimen/base_space"
+    android:paddingRight="@dimen/base_space">
+
+    <TextView
+        android:id="@+id/ui_f_my_listitem_pic_left"
+        android:layout_width="@dimen/base_pic_drawable_x_width"
+        android:layout_height="@dimen/base_pic_drawable_x_height"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/search" />
+
+    <TextView
+        android:id="@+id/ui_f_my_listitem_pic_right"
+        android:layout_width="@dimen/base_pic_drawable_x_width"
+        android:layout_height="@dimen/base_pic_drawable_x_height"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:drawableRight="@drawable/arrow_right"
+        android:gravity="center_vertical" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/ui_f_my_listitem_pic_right"
+        android:layout_toRightOf="@id/ui_f_my_listitem_pic_left">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:paddingRight="@dimen/list_item_space_mid"
+            >
+            <TextView
+                android:visibility="invisible"
+                android:id="@+id/ui_f_my_listitem_bedger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/badger_background"
+                android:maxLength="3"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="99+"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/base_font_size_h2"></TextView>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ui_f_my_listitem_label"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:singleLine="true"
+                android:textSize="@dimen/list_item_base_text_size"
+                android:text="我的关注"></TextView>
+
+            <TextView
+                android:id="@+id/ui_f_my_listitem_sublabel"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="30dp"
+                android:singleLine="true"
+                android:text="钓场~播况~GO"
+                android:visibility="gone"></TextView>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>

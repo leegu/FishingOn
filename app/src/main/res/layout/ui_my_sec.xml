@@ -59,6 +59,7 @@
                     android:layout_width="@dimen/base_user_icon_size"
                     android:layout_height="@dimen/base_user_icon_size"
                     android:background="@drawable/circle_solid"
+                    android:onClick="onIconClick"
                     android:src="@drawable/icon" />
 
                 <LinearLayout
@@ -229,7 +230,7 @@
                     android:textSize="@dimen/list_item_base_text_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <include layout="@layout/w_tags"></include>
+                <include layout="@layout/w_tags" android:id="@+id/my_tags"></include>
             </LinearLayout>
             <!-- 定位 -->
             <RelativeLayout
@@ -289,10 +290,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/list_item_space_max"
+                android:layout_marginTop="@dimen/base_last_element_margin_top"
+                android:layout_marginBottom="@dimen/base_last_element_margin_bottom"
                 android:orientation="vertical">
                 <Button
-                    android:id="@+id/reg_next_skip_btn"
+                    android:id="@+id/ui_my_sec_next_skip_btn"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/list_item_height"
                     android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"

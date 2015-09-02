@@ -16,16 +16,18 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:layout_margin="0dp"
             android:clickable="true"
             android:gravity="center_vertical"
-            android:onClick="onClick"
+            android:onClick="onHeadClick"
             android:paddingLeft="@dimen/base_space"
             android:paddingRight="@dimen/base_space"
+            android:background="@drawable/base_background"
+            android:textColor="@color/head_bar_left_color"
             android:textSize="@dimen/base_font_size_h4" 
             android:text="@string/base_ui_close" />
 
         <TextView
+            android:id="@+id/base_ui_webview_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"

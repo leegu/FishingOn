@@ -26,6 +26,8 @@ import com.baidu.mapapi.map.MapView;
 import com.go.fish.R;
 import com.go.fish.util.Const;
 import com.go.fish.util.MapUtil;
+import com.go.fish.view.PopWinListItemAdapter;
+import com.go.fish.view.ViewHelper;
 
 public class HomeUI extends FragmentActivity implements IHasHeadBar{
 
@@ -135,10 +137,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar{
 			if(splaceTypePopWinView == null){
 				ListView list = (ListView)LayoutInflater.from(this).inflate(R.layout.list_pop_win, null);
 				splaceTypePopWinView = list;
-				PopWinListItemAdapter adapter = new PopWinListItemAdapter(R.array.hfs_splace_type);
-				list.setAdapter(adapter);
-				list.setDivider(new ColorDrawable(Color.GRAY));
-				list.setDividerHeight(getResources().getDimensionPixelSize(R.dimen.list_item_divider));
+				PopWinListItemAdapter adapter = PopWinListItemAdapter.newInstance(this,list,R.array.hfs_splace_type,R.layout.listitem_pop_win);
 				list.setOnItemClickListener(new OnItemClickListener() {
 
 					@Override
@@ -171,20 +170,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar{
 	View splaceTypePopWinView = null;
 	PopupWindow popupWindow = null;
 	private void showPopWin(View anchor,View view){
-		int width = getResources().getDimensionPixelSize(R.dimen.pop_win_list_width);
-		if(popupWindow == null){
-			popupWindow = new PopupWindow();
-			popupWindow.setWidth(width);
-			popupWindow.setHeight(-2);
-			// 使其聚集
-	        popupWindow.setFocusable(true);
-	        // 设置允许在外点击消失
-	        popupWindow.setOutsideTouchable(true);
-	        // 这个是为了点击“返回Back”也能使其消失，并且并不会影响你的背景
-	        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-		}
-        popupWindow.setContentView(view);
-        popupWindow.showAsDropDown(anchor, -width, -anchor.getHeight());
+		popupWindow = ViewHelper.showPopupWindow(this,popupWindow,anchor,view);
 	}
 	
 //	private void changeStatus(ListView list,int position){
@@ -192,66 +178,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar{
 //	}
 	
 	
-	class PopWinListItemData{
-		String text = null;
-		int destId = 0;
-	}
-	
-	class PopWinListItemAdapter extends BaseAdapter{
 
-		ArrayList<PopWinListItemData> itemsData = null;
-		PopWinListItemAdapter(ArrayList<PopWinListItemData> datas){
-			itemsData = datas;
-		}
-		PopWinListItemAdapter(int stringArrayId){
-			this(getResources().getStringArray(R.array.hfs_splace_type));
-		}
-		PopWinListItemAdapter(String[] sArrays){
-			ArrayList<PopWinListItemData> datas = new ArrayList<HomeUI.PopWinListItemData>();
-			String[] sDatas = getResources().getStringArray(R.array.hfs_splace_type);
-			for(String s : sDatas){
-				PopWinListItemData pwid = new PopWinListItemData();
-				pwid.text = s;
-				datas.add(pwid);
-			}
-			itemsData = datas;
-		}
-		@Override
-		public int getCount() {
-			return itemsData.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return itemsData.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View view = null;
-			PopWinListItemData data = itemsData.get(position);
-			if (convertView == null) {
-				view = LayoutInflater.from(getBaseContext()).inflate(R.layout.listitem_pop_win, null);
-//				 view = new TextView(HomeUI.this);
-				((TextView)view.findViewById(R.id.pop_list_item_text)).setText(data.text);
-				TextView status =(TextView)view.findViewById(R.id.pop_list_item_status_text);
-				status.setText("√");
-				status.setTextColor(Color.GRAY);
-			}else{
-				view = convertView;
-			}
-			view.setTag(data);
-			return view;
-		}
-
-		
-		
-	}
 
 	@Override
 	public void onHeadClick(View view) {

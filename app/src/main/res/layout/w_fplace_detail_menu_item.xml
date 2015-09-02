@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/title"
+        android:paddingLeft="@dimen/base_space"
+        android:paddingRight="@dimen/base_space"
+        android:paddingTop="@dimen/base_space"
+        android:paddingBottom="@dimen/base_space"
+        android:background="@drawable/gradient_shape"
+        android:text="钓场介绍"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/base_font_size_h4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:text="      钓鱼是捕捉鱼类的一种方法。钓鱼的主要工具有钓杆，鱼饵。钓杆一般由竹子或塑料轻而有力的杆状物质制成，钓杆和鱼饵用丝线联接。一般的鱼饵可以是蚯蚓、米饭、菜叶、苍蝇、蛆等，现代有专门制作好的鱼饵出售。鱼饵可以直接挂在丝线上，但有个鱼钩会更好，对不同的鱼有特殊的专制鱼钩。钓鱼也被喻为引诱的意思，欺骗行为亦被称之为钓鱼。同时，钓鱼也是一款社交游戏。"
+        android:id="@+id/value"
+        android:paddingLeft="@dimen/base_space"
+        android:paddingRight="@dimen/base_space"
+        android:paddingTop="@dimen/base_space"
+        android:paddingBottom="@dimen/base_space"
+        android:textSize="@dimen/base_font_size_h2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

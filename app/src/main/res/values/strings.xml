@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Demo</string>
     <string name="base_ui_close">关闭</string>
     <string name="rule_link">http://www.baidu.com</string>
-    <string name="help_link">http://qiushibaike.com</string>
+    <string name="help_link">http://www.baidu.com?q=help</string>
 
     <!-- welcome页面 begin -->
     <string name="wel_reg">注册</string>
@@ -65,7 +64,7 @@
     <string name="login_forgot_pswd">忘记密码</string>
     <string name="login_reg_new_account">注册新用户</string>
     <string name="login_title">登陆</string>
-    <string name="login_help">帮助</string>
+    <string name="help">帮助</string>
     <!-- 登陆页面 end -->
 
 
@@ -89,27 +88,27 @@
     <string name="home_appear">发现</string>
     <string name="home_fishing_news">钓播</string>
     <string name="home_my">我的</string>
-    
+
     <string name="home_fishing_place_title">附近钓场</string>
     <string name="home_care_title">我关注的钓场</string>
     <string name="home_appear_title">发现</string>
     <string name="home_fishing_news_title">钓播</string>
     <string name="home_my_title">我的</string>
-    
+
     <string name="hfs_splace_type">场景</string>
     <string name="hfs_fishing_tools_store">渔具店</string>
     <string name="hfs_detail">详情</string>
     <string name="hfs_care">关注</string>
     <string name="hfs_nav">导航</string>
     <string name="hfs_distance_format">距您%f公里</string>
-    
-     <string-array name="hfs_splace_type">
+
+    <string-array name="hfs_splace_type">
         <item>野钓</item>
         <item>高钓</item>
         <item>舒适家人行</item>
         <item>黑坑</item>
     </string-array>
-    
+
     <string name="home_search_btn">搜索</string>
 
     <string name="hmy_listview1_my_care_extra">钓场~播况~GO</string>
@@ -128,5 +127,22 @@
     </string-array>
     <!-- Home页面 end -->
 
+    <string-array name="hmy_listview1_icons">
+        <item>@drawable/search</item>
+        <item>@drawable/search</item>
+        <item>@drawable/search</item>
+        <item>@drawable/search</item>
+        <item>@drawable/search</item>
+    </string-array>
+    <string-array name="hmy_listview2_icons">
+        <item>@drawable/icon</item>
+        <item>@drawable/icon</item>
+        <item>@drawable/icon</item>
+    </string-array>
+    
+    
+    <string name="viewpager_indicator">%1$d/%2$d</string>
+    <string name="input_text_count">还可以输入%d个字</string>
 
+    <integer name="comment_max_count">10</integer>
 </resources>

@@ -26,8 +26,8 @@ public class MessageHandler {
 		myHandler.sendMessageDelayed(m,delayTime);
 	}
 	
-	public static interface MessageListener<T>{
-		MessageListener init(T args);
+	public interface MessageListener<T>{
+		MessageListener<T> init(T args);
 		void onExecute();
 	}
 }

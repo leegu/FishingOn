@@ -1,6 +1,7 @@
 package com.go.fish.ui;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 
 public class UIMgr {
@@ -16,7 +17,12 @@ public class UIMgr {
 		showActivity(act, i,className);
 	}
 	public static void showActivity(Activity act, Intent intent){
-		showActivity(act,intent, BaseUI.class.getName());
+		ComponentName cn = intent.getComponent();
+		if(cn == null) {
+			showActivity(act, intent, BaseUI.class.getName());
+		}else{
+			act.startActivity(intent);
+		}
 	}
 	public static void showActivity(Activity act,Intent intent, String className){
 		intent.setClassName(act, className);

@@ -1,0 +1,114 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/head_bar_height"
+        android:background="@color/head_bar" >
+
+        <RelativeLayout
+            android:id="@+id/base_ui_close"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/base_background"
+            android:clickable="true"
+            android:gravity="center"
+            android:minWidth="@dimen/head_bar_width"
+            android:onClick="onHeadClick"
+            android:paddingLeft="@dimen/base_space"
+            android:paddingRight="@dimen/base_space" >
+
+            <ImageView
+                android:layout_width="@dimen/head_bar_icon_width"
+                android:layout_height="@dimen/head_bar_icon_height"
+                android:clickable="false"
+                android:src="@drawable/arrow_left" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/base_head_bar_next"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/base_background"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onHeadClick"
+            android:paddingLeft="@dimen/base_space"
+            android:paddingRight="@dimen/base_space" >
+
+            <ImageView
+                android:layout_width="@dimen/head_bar_icon_width"
+                android:layout_height="@dimen/head_bar_icon_height"
+                android:clickable="false"
+                android:src="@drawable/search" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/base_head_bar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/base_head_bar_next"
+            android:layout_toRightOf="@id/base_head_bar_last"
+            android:background="@drawable/base_background"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="我是很长很长很长很长很长很长很长很长很长很长的标题"
+            android:textColor="@color/head_bar_title_color"
+            android:textSize="@dimen/base_font_size_h7" >
+        </TextView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <GridView
+            android:id="@+id/id_gridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@android:color/transparent"
+            android:clipChildren="true"
+            android:gravity="center"
+            android:horizontalSpacing="3dip"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="3dip" >
+        </GridView>
+
+        <RelativeLayout
+            android:id="@+id/id_bottom_ly"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:layout_alignParentBottom="true"
+            android:background="@color/base_float_view_press_color"
+            android:clickable="true" >
+
+            <TextView
+                android:id="@+id/id_choose_dir"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dip"
+                android:text="所有图片"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/id_total_count"
+                android:layout_width="50dip"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="0张"
+                android:textColor="@android:color/white" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ui_near_fplace_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/head_bar_height"
+        android:background="@color/head_bar" >
+
+        <TextView
+            android:id="@+id/base_ui_close"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/head_bar_height"
+            android:layout_alignParentLeft="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingLeft="@dimen/base_space"
+            android:paddingRight="@dimen/base_space"
+            android:background="@drawable/base_background"
+            android:onClick="onHeadClick"
+            android:textSize="@dimen/base_font_size_h4"
+            android:textColor="@color/head_bar_title_color"
+            android:text="@string/base_ui_close" />
+
+        <TextView
+            android:id="@+id/search_head_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/head_bar_height"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingLeft="@dimen/base_space"
+            android:paddingRight="@dimen/base_space"
+            android:background="@drawable/base_background"
+            android:textSize="@dimen/base_font_size_h4"
+            android:textColor="@color/head_bar_right_color"
+            android:onClick="onHeadClick"
+            android:text="@string/home_search_btn" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="6dp"
+            android:layout_toLeftOf="@id/search_head_btn"
+            android:layout_toRightOf="@id/base_ui_close"
+            android:background="@drawable/translucent_white_shape"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/base_space" >
+
+            <TextView
+                android:layout_width="@dimen/base_pic_drawable_x_width"
+                android:layout_height="@dimen/base_pic_drawable_x_height"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/search" />
+
+            <EditText
+                android:id="@+id/search_list_edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:hint="@string/home_search_btn"
+                android:padding="@dimen/base_edit_padding"
+                android:singleLine="true"
+                android:textSize="@dimen/base_font_size_h4" />
+        </LinearLayout>
+    </RelativeLayout>
+    <!--<ScrollView
+        android:id="@+id/ui_near_fplace_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ScrollView>-->
+<!-- tab  -->
+<!-- viewpager 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/search_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </android.support.v4.view.ViewPager>
+ -->
+</LinearLayout>

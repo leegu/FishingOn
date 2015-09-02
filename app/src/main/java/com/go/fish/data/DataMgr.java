@@ -11,12 +11,10 @@ import com.go.fish.R;
 public class DataMgr {
 
 	
-	public static ArrayList<FPlaceData> makeFPlaceDatas(int layoutId, byte[] bytes){
+	public static ArrayList<FPlaceData> makeFPlaceDatas(int layoutId, JSONArray jsonArr){
 		
 		ArrayList<FPlaceData> arr = new ArrayList<FPlaceData>();
 		try {
-			String strJson = new String(bytes,"UTF-8");
-			JSONArray jsonArr = new JSONArray(strJson);
 			for(int i = 0;i < jsonArr.length(); i++){
 				JSONObject json = jsonArr.getJSONObject(i);
 				FPlaceData ld = new FPlaceData();

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/list_item_space"
+    android:background="@null" >
+
+    <Button
+        android:id="@+id/hfs_hfs_splace_type_btn"
+        android:layout_width="60dp"
+        android:layout_height="@dimen/pop_win_list_item_height"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="0dp"
+        android:background="@drawable/float_view_background"
+        android:gravity="center"
+        android:onClick="onFishingPlaceClick"
+        android:text="@string/hfs_splace_type"
+        android:textColor="@color/base_float_view_text_color"
+        android:textSize="@dimen/base_font_size_h5" />
+
+    <Button
+        android:id="@+id/hfs_fishing_tools_store_btn"
+        android:layout_width="60dp"
+        android:layout_height="@dimen/pop_win_list_item_height"
+        android:layout_alignLeft="@id/hfs_hfs_splace_type_btn"
+        android:layout_alignParentRight="true"
+        android:layout_alignStart="@id/hfs_hfs_splace_type_btn"
+        android:layout_below="@id/hfs_hfs_splace_type_btn"
+        android:layout_marginTop="@dimen/list_item_space_mid"
+        android:background="@drawable/float_view_background"
+        android:gravity="center"
+        android:onClick="onFishingPlaceClick"
+        android:text="@string/hfs_fishing_tools_store"
+        android:textColor="@color/base_float_view_text_color"
+        android:textSize="@dimen/base_font_size_h5" />
+
+</RelativeLayout>

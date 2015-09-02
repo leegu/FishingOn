@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/base_listitem_background"
+    android:padding="@dimen/base_space"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+       <ImageView
+           android:id="@+id/listitem_fplace_icon"
+           android:src="@drawable/icon"
+           android:background="@drawable/circle_solid"
+           android:layout_width="@dimen/base_user_icon_size"
+           android:layout_height="@dimen/base_user_icon_size" />
+        <LinearLayout
+            android:id="@+id/float_view_detail_btn"
+            android:layout_alignParentRight="true"
+            android:layout_margin="0dp"
+            android:background="@drawable/float_view_background_suit_parent"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:onClick="onMapFloatViewClick"
+            android:padding="@dimen/base_space"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="详情"
+                android:textSize="@dimen/base_font_size_h4" />
+            <TextView
+                android:layout_width="@dimen/base_pic_drawable_x_width"
+                android:layout_height="@dimen/base_pic_drawable_x_height"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/arrow_right" />
+        </LinearLayout>
+        <TextView
+            android:paddingLeft="@dimen/base_space"
+            android:paddingRight="@dimen/base_space"
+            android:text="我是浴场的简单介绍"
+            android:layout_toLeftOf="@id/float_view_detail_btn"
+            android:layout_toRightOf="@id/listitem_fplace_icon"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_gravity="center_vertical" >
+
+        <TextView
+            android:id="@+id/float_view_distance"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:padding="@dimen/base_space"
+            android:text="@string/hfs_distance_format"
+            android:textSize="@dimen/base_font_size_h4" />
+
+        <TextView
+            android:id="@+id/float_view_nav_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:clickable="true"
+            android:drawableLeft="@drawable/point"
+            android:background="@drawable/float_view_background_suit_parent"
+            android:gravity="center_vertical"
+            android:onClick="onMapFloatViewClick"
+            android:padding="@dimen/base_space"
+            android:text="@string/hfs_nav"
+            android:textSize="@dimen/base_font_size_h4" />
+
+        <LinearLayout
+            android:layout_alignParentRight="true"
+            android:layout_margin="0dp"
+            android:background="@drawable/float_view_background_suit_parent"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:onClick="onMapFloatViewClick"
+            android:padding="@dimen/base_space"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/float_view_care_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hfs_care"
+                android:textSize="@dimen/base_font_size_h4" />
+            <TextView
+                android:layout_width="@dimen/base_pic_drawable_x_width"
+                android:layout_height="@dimen/base_pic_drawable_x_height"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/share" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

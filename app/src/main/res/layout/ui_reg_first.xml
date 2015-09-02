@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/base_color"
     android:orientation="vertical"
-    tools:context=".ui.RegisterUI" >
+    tools:context=".ui.RegisterUI">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar" >
+        android:background="@color/head_bar">
 
         <TextView
             android:layout_width="wrap_content"
@@ -21,201 +21,211 @@
             android:textSize="@dimen/base_font_size_h7" />
     </RelativeLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/base_space"
-        android:paddingRight="@dimen/base_space" >
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="@dimen/base_user_icon_size"
-            android:layout_height="@dimen/base_user_icon_size"
-            android:background="@drawable/circle_solid"
-            android:src="@drawable/icon" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height"
-        android:background="@color/list_item_backgroud"
-        android:paddingLeft="@dimen/base_space"
-        android:paddingRight="@dimen/base_space" >
-
-        <TextView
-            android:id="@+id/reg_text_phone_num_text"
-            android:layout_width="@dimen/reg_3_width"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/reg_phone_num"
-            android:textColor="#000000"
-            android:textSize="@dimen/list_item_base_text_size" />
-
-        <Button
-            android:id="@+id/reg_get_check_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="right"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/gray_shape"
-            android:onClick="onClick"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/reg_get_check_code"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/list_item_hint_text_size" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:layout_toLeftOf="@id/reg_get_check_code"
-            android:layout_toRightOf="@id/reg_text_phone_num_text"
-            android:background="@null"
-            android:cursorVisible="true"
-            android:hint="@string/reg_input_phone_num"
-            android:inputType="phone"
-            android:maxLength="11"
-            android:singleLine="true"
-            android:textColor="#999999"
-            android:textColorHint="#999999"
-            android:textSize="@dimen/list_item_hint_text_size" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height"
-        android:layout_marginTop="@dimen/list_item_divider"
-        android:background="@color/list_item_backgroud"
-        android:paddingLeft="@dimen/base_space"
-        android:paddingRight="@dimen/base_space" >
-
-        <TextView
-            android:id="@+id/reg_pswd_text"
-            android:layout_width="@dimen/reg_3_width"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/reg_pswd"
-            android:textColor="#000000"
-            android:textSize="@dimen/list_item_base_text_size" />
-
-        <com.go.fish.view.Switcher
-            android:id="@+id/reg_save_pswd"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="right"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:layout_marginTop="8dp"
-            android:clickable="true"
-            android:onClick="onClick" />
-
-        <EditText
-            android:id="@+id/reg_input_pswd"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:layout_toLeftOf="@id/reg_save_pswd"
-            android:layout_toRightOf="@id/reg_pswd_text"
-            android:background="@null"
-            android:cursorVisible="true"
-            android:hint="@string/reg_set_pswd"
-            android:inputType="textPassword"
-            android:singleLine="true"
-            android:textColor="#999999"
-            android:textColorHint="#999999"
-            android:textSize="@dimen/list_item_hint_text_size" />
-    </RelativeLayout>
+            android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height"
-        android:layout_marginTop="@dimen/list_item_divider"
-        android:background="@color/list_item_backgroud"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/base_space"
-        android:paddingRight="@dimen/base_space" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/base_space"
+                android:paddingRight="@dimen/base_space">
 
-        <TextView
-            android:layout_width="@dimen/reg_3_width"
-            android:layout_height="wrap_content"
-            android:text="@string/reg_check_code"
-            android:textColor="#000000"
-            android:textColorHint="#999999"
-            android:textSize="@dimen/list_item_base_text_size" />
+                <ImageView
+                    android:layout_width="@dimen/base_user_icon_size"
+                    android:layout_height="@dimen/base_user_icon_size"
+                    android:background="@drawable/circle_solid"
+                    android:src="@drawable/icon" />
+            </LinearLayout>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:background="@null"
-            android:cursorVisible="true"
-            android:hint="@string/reg_input_check_code"
-            android:imeActionLabel="@string/reg_next"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="6"
-            android:singleLine="true"
-            android:textColor="#999999"
-            android:textSize="@dimen/list_item_hint_text_size" />
-    </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_item_height"
+                android:background="@color/list_item_backgroud"
+                android:paddingLeft="@dimen/base_space"
+                android:paddingRight="@dimen/base_space">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
-        android:layout_marginTop="@dimen/list_item_space_max"
-        android:orientation="horizontal" >
+                <TextView
+                    android:id="@+id/reg_text_phone_num_text"
+                    android:layout_width="@dimen/reg_3_width"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/reg_phone_num"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/list_item_base_text_size" />
 
-        <TextView
-            android:id="@+id/reg_agree_rule"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@color/base_btn_color"
-            android:clickable="true"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:text="√"
-            android:textColor="#ffffff" />
+                <Button
+                    android:id="@+id/reg_get_check_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="@dimen/list_item_space_mid"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/corner_text_background"
+                    android:onClick="onClick"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/reg_get_check_code"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/list_item_hint_text_size" />
 
-        <TextView
-            android:id="@+id/reg_agree_rule_text"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginLeft="@dimen/list_item_divider"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:onClick="onClick"
-            android:text="@string/reg_reg_and_rule"
-            android:textColor="@color/base_btn_color" />
-    </LinearLayout>
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/list_item_space_mid"
+                    android:layout_toLeftOf="@id/reg_get_check_code"
+                    android:layout_toRightOf="@id/reg_text_phone_num_text"
+                    android:background="@null"
+                    android:cursorVisible="true"
+                    android:hint="@string/reg_input_phone_num"
+                    android:inputType="phone"
+                    android:maxLength="11"
+                    android:singleLine="true"
+                    android:textColor="#999999"
+                    android:textColorHint="#999999"
+                    android:textSize="@dimen/list_item_hint_text_size" />
+            </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/list_item_divider"
-        android:orientation="vertical" >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_item_height"
+                android:layout_marginTop="@dimen/list_item_divider"
+                android:background="@color/list_item_backgroud"
+                android:paddingLeft="@dimen/base_space"
+                android:paddingRight="@dimen/base_space">
 
-        <Button
-            android:id="@+id/reg_next"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/list_item_height"
-            android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
-            android:layout_marginRight="@dimen/button_margin_left_right_match_parent"
-            android:background="@drawable/green_btn_background"
-            android:textColor="@color/base_btn_text_color"
-            android:onClick="onClick"
-            android:text="@string/reg_next" />
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/reg_pswd_text"
+                    android:layout_width="@dimen/reg_3_width"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/reg_pswd"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/list_item_base_text_size" />
 
+                <com.go.fish.view.Switcher
+                    android:id="@+id/reg_save_pswd"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="@dimen/list_item_space_mid"
+                    android:layout_marginTop="8dp"
+                    android:clickable="true"
+                    android:onClick="onClick" />
+
+                <EditText
+                    android:id="@+id/reg_input_pswd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/list_item_space_mid"
+                    android:layout_toLeftOf="@id/reg_save_pswd"
+                    android:layout_toRightOf="@id/reg_pswd_text"
+                    android:background="@null"
+                    android:cursorVisible="true"
+                    android:hint="@string/reg_set_pswd"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:textColor="#999999"
+                    android:textColorHint="#999999"
+                    android:textSize="@dimen/list_item_hint_text_size" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_item_height"
+                android:layout_marginTop="@dimen/list_item_divider"
+                android:background="@color/list_item_backgroud"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/base_space"
+                android:paddingRight="@dimen/base_space">
+
+                <TextView
+                    android:layout_width="@dimen/reg_3_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reg_check_code"
+                    android:textColor="#000000"
+                    android:textColorHint="#999999"
+                    android:textSize="@dimen/list_item_base_text_size" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/list_item_space_mid"
+                    android:background="@null"
+                    android:cursorVisible="true"
+                    android:hint="@string/reg_input_check_code"
+                    android:imeActionLabel="@string/reg_next"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:singleLine="true"
+                    android:textColor="#999999"
+                    android:textSize="@dimen/list_item_hint_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
+                android:layout_marginTop="@dimen/list_item_space_max"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/reg_agree_rule"
+                    android:layout_width="@dimen/base_pic_drawable_x_width"
+                    android:layout_height="@dimen/base_pic_drawable_x_width"
+                    android:background="@color/base_btn_color"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="√"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:id="@+id/reg_agree_rule_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/base_space"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:onClick="onClick"
+                    android:text="@string/reg_reg_and_rule"
+                    android:textColor="@color/base_btn_color" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_item_divider"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/reg_next"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/list_item_height"
+                    android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
+                    android:layout_marginRight="@dimen/button_margin_left_right_match_parent"
+                    android:background="@drawable/green_btn_background"
+                    android:onClick="onClick"
+                    android:text="@string/reg_next"
+                    android:textColor="@color/base_btn_text_color" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

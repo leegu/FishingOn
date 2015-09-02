@@ -3,7 +3,6 @@ package com.go.fish.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.telephony.SmsManager;
@@ -79,26 +78,30 @@ public class RegisterUI extends BaseUI {
 			Button nextBtn = (Button) findViewById(R.id.reg_next);
 			if (tv.getText().equals("√")) {
 				tv.setText("");
+				tv.setBackgroundResource(R.drawable.gray_border);
 				nextBtn.setClickable(false);
 				nextBtn.setBackgroundResource(R.drawable.gray_shape);
 			} else {
 				tv.setText("√");
+				tv.setBackgroundColor(getResources().getColor(R.color.base_btn_color));
 				nextBtn.setClickable(true);
 				nextBtn.setBackgroundResource(R.drawable.green_shape);
 			}
 			break;
 		}
 		case R.id.reg_next: {
-			showRegNext = true;
-			replace(regNextFragment);
-//			showActivity(R.layout.reg_next);
+			if(canDoNext()) {
+				showRegNext = true;
+				replace(regNextFragment);
+			}
 			break;
 		}
 		case R.id.reg_agree_rule_text: {
 			Intent i = new Intent();
-			i.putExtra("layout_id", R.layout.ui_rule);
-			i.putExtra("url", getResources().getString(R.string.rule_link));
-			showActivity(i);
+			i.putExtra(Const.LAYOUT_ID, R.layout.ui_webview_left_close);
+			i.putExtra(Const.URL, getResources().getString(R.string.rule_link));
+			i.putExtra(Const.TITLE, getResources().getString(R.string.reg_reg_and_rule));
+			UIMgr.showActivity(this,i);
 			break;
 		}
 		case R.id.reg_save_pswd: {
@@ -106,12 +109,12 @@ public class RegisterUI extends BaseUI {
 			switcher.change();
 			break;
 		}
-		case R.id.reg_next_skip_btn: {
+		case R.id.ui_my_sec_next_skip_btn: {
 			Intent i = new Intent();
 			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			i.putExtra("layout_id", R.layout.ui_main);
-			showActivity(i, HomeUI.class.getName());
-			 finish();
+			i.putExtra(Const.LAYOUT_ID, R.layout.ui_main);
+			UIMgr.showActivity(this, i,HomeUI.class.getName());
+			finish();
 			break;
 		}
 		case R.id.reg_next_get_location_btn: {
@@ -124,21 +127,27 @@ public class RegisterUI extends BaseUI {
 			}, 0);
 			break;
 		}
+		default:
+			super.onClick(view);
 		}
 	}
 
-	public void showActivity(int layoutId) {
-		Intent i = new Intent();
-		i.putExtra("layout_id", layoutId);
-		showActivity(i);
+	private boolean canDoNext() {
+		return true;
 	}
 
-	public void showActivity(Intent intent) {
-		showActivity(intent, BaseUI.class.getName());
-	}
-
-	public void showActivity(Intent intent, String className) {
-		intent.setClassName(this, className);
-		startActivity(intent);
-	}
+//	public void showActivity(int layoutId) {
+//		Intent i = new Intent();
+//		i.putExtra("layout_id", layoutId);
+//		showActivity(i);
+//	}
+//
+//	public void showActivity(Intent intent) {
+//		showActivity(intent, BaseUI.class.getName());
+//	}
+//
+//	public void showActivity(Intent intent, String className) {
+//		intent.setClassName(this, className);
+//		startActivity(intent);
+//	}
 }

@@ -1,30 +1,20 @@
 package com.go.fish.view;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.baidu.mapapi.map.MapView;
@@ -32,13 +22,12 @@ import com.go.fish.R;
 import com.go.fish.data.FPlaceData;
 import com.go.fish.util.Const;
 import com.go.fish.util.ImageLoader;
-import com.go.fish.util.ImageLoader.DownloadTask;
 import com.go.fish.util.MapUtil;
-import com.go.fish.util.MessageHandler;
-import com.go.fish.util.MessageHandler.MessageListener;
-import com.go.fish.util.NetTool;
-import com.go.fish.util.NetTool.RequestData;
-import com.go.fish.util.NetTool.RequestListener;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class BaseFragment extends Fragment {
 	private static final String TAG = "MainView";
@@ -47,15 +36,12 @@ public class BaseFragment extends Fragment {
 
 	public static BaseFragment newInstance(ResultForActivityCallback callback,
 			int layoutId) {
-		BaseFragment f = new BaseFragment(callback);
+		BaseFragment f = new BaseFragment();
+		f.mCallback = callback;
 		Bundle b = new Bundle();
 		b.putInt(Const.LAYOUT_ID, layoutId);
 		f.setArguments(b);
 		return f;
-	}
-
-	private BaseFragment(ResultForActivityCallback callback) {
-		mCallback = callback;
 	}
 
 	@Override
@@ -97,128 +83,132 @@ public class BaseFragment extends Fragment {
 	private void onCreateSearchViewPager(View view) {
 		// TODO Auto-generated method stub
 		String[] tabItemsTitle = getResources().getStringArray(R.array.hfs_splace_type);
-		((ViewGroup)view).addView(ViewHelper.newMainView(getActivity(), getChildFragmentManager(),mCallback, tabItemsTitle, R.layout.list_fragment));
+		((ViewGroup)view).addView(ViewHelper.newMainView(getActivity(), getChildFragmentManager(),mCallback, tabItemsTitle));
 	}
 
+	String[] strMenuLables = null;
+	ViewGroup menuContent = null;
+	PopupWindow menuPopupWindow = null;
+	public void onHeadClick(View view){
+		if(menuContent == null){
+			ListView list = (ListView) LayoutInflater.from(getActivity()).inflate(R.layout.list_pop_win, null);
+			menuContent = list;
+			list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+										int position, long id) {
+					ViewGroup vg = (ViewGroup) getActivity().findViewById(R.id.menu_contents);
+					for (int i = 0; i < vg.getChildCount(); i++) {
+						ViewGroup menuItem = (ViewGroup) vg.getChildAt(i);
+						TextView contentTitle = ((TextView) menuItem.getChildAt(0));
+						TextView item = ((TextView) ((ViewGroup)view).getChildAt(0));
+
+						if (contentTitle.getText().equals(item.getText())) {
+							int[] loc = new int[2];
+							menuItem.getLocationOnScreen(loc);
+							ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.ui_f_search_item_detail_root_scrollview);
+							int offset = loc[1] /*- scrollView.getMeasuredHeight()*/;
+							if (offset < 0) {
+								offset = 0;
+							}
+							scrollView.smoothScrollTo(0, offset);
+							break;
+						}
+					}
+					menuPopupWindow.dismiss();
+				}
+			});
+			PopWinListItemAdapter.newInstance(getActivity(), list, strMenuLables);
+		}
+		menuPopupWindow = ViewHelper.showPopupWindow(getActivity(),menuPopupWindow,view,menuContent);
+	}
 	private void onCreateSearchDetail(final View view) {
 		Bundle b = getArguments();
-		((TextView) view.findViewById(R.id.search_item_detail_title)).setText(b
-				.getString(Const.TEXT));
-
-		String spId = b.getString(Const.FISHING_PLACE_ID);
-		RequestData rData = RequestData.newInstance(
-				new RequestListener() {
-
-					@Override
-					public void onStart() {
-						// TODO Auto-generated method stub
-
+		((TextView) view.findViewById(R.id.search_item_detail_title)).setText(b.getString(Const.TEXT));
+		try{
+			String jsonStr = b.getString(Const.JSON_DATA);
+			JSONObject json = new JSONObject(jsonStr);
+			{
+				if (json.has(Const.URLS)) {
+					JSONArray urlArr = json.getJSONArray(Const.URLS);
+					int len = urlArr.length();
+					if (len > 0) {
+						LayoutInflater inflator = LayoutInflater.from(getActivity());
+						ImageLoader iLoader = ImageLoader.initEnv();
+						final ViewPager banner = (ViewPager) view.findViewById(R.id.search_item_detail_banner);
+//						{
+//							View bannerParent = view.findViewById(R.id.search_item_detail_banner_parent);
+//							int viewPagerHeight = getResources().getDisplayMetrics().widthPixels * 9 /16;//保持16:9的比例
+//							bannerParent.getLayoutParams().height = viewPagerHeight;
+//						}
+						ArrayList<ImageView> pviews = new ArrayList<ImageView>(len);
+						final ViewGroup focusItems = (ViewGroup)view.findViewById(R.id.search_item_detail_banner_focus_items);
+						int focusItemSize = getActivity().getResources().getDimensionPixelSize(R.dimen.focus_item_size);
+						final MyPagerAdapter pageAdapter = new MyPagerAdapter(pviews);
+						for (int i = 0; i < len; i++) {
+							String url = urlArr.getString(i);
+							ImageView iv = (ImageView) inflator.inflate(R.layout.w_imageview,null);
+							iLoader.executeBitmapLoad(new ImageLoader.DownloadTask<ImageView>(url, iv));
+							pviews.add(iv);
+							TextView item = new TextView(getActivity());
+							item.setLayoutParams(new LayoutParams(focusItemSize,focusItemSize));
+							if(i == 0){
+								item.setBackgroundResource(R.drawable.circle_gray_solid);
+							}else{
+								item.setBackgroundResource(R.drawable.circle_gray);
+							}
+							focusItems.addView(item);
+						}
+						banner.setOnPageChangeListener(new OnPageChangeListener() {
+							@Override
+							public void onPageSelected(int arg0) {
+								ViewHelper.updateChildrenBackground(focusItems, arg0, R.drawable.circle_gray_solid, R.drawable.circle_gray);
+							}
+							@Override
+							public void onPageScrolled(int arg0, float arg1, int arg2) {}
+							@Override
+							public void onPageScrollStateChanged(int arg0) {}
+						});
+						banner.setAdapter(pageAdapter);
+//						banner.postDelayed(new Runnable() {
+//							@Override
+//							public void run() {
+//								banner.setCurrentItem(0);
+//							}
+//						},100);
 					}
+				}
+			}
+			if (json.has("menu_tabs")) {
+				view.findViewById(R.id.search_item_detail_head_menu).setVisibility(View.VISIBLE);
+				ViewGroup menus = (ViewGroup) view.findViewById(R.id.menu_contents);
+				JSONArray arr = json.getJSONArray("menu_tabs");
+				int len = arr.length();
+				strMenuLables = new String[len];
+				LayoutInflater inflater = LayoutInflater.from(getActivity());
+				for (int i = 0; i < len; i++) {
+					JSONObject ti = arr.getJSONObject(i);
+					View menuItem = inflater.inflate(R.layout.w_fplace_detail_menu_item, null);
+					{
+						TextView t = (TextView)menuItem.findViewById(R.id.title);
+						String title = ti.getString("title");
+						t.setText(title);
+						strMenuLables[i] = title;
+					}
+					{
+						TextView t = (TextView)menuItem.findViewById(R.id.value);
+						t.setText(ti.getString("content"));
+					}
+					menus.addView(menuItem);
+				}
+			}
+			if(json.has("comments")){
+				ListView commentListView = (ListView) view.findViewById(R.id.search_item_detail_comment_list);
+				CommentAdapter.fillToListView(commentListView,json.getJSONArray("comments"));
+			}
+		}catch (Exception e){
 
-					@Override
-					public void onEnd(byte[] data) {try{
-						// TODO Auto-generated method stub
-						MessageHandler.sendMessage(new MessageListener<byte[]>() {
-							String jsonStr = null;
-							@Override
-							public MessageListener init(byte[] args) {
-								try {
-									jsonStr =new String(args, "UTF-8");
-								} catch (UnsupportedEncodingException e) {
-									e.printStackTrace();
-								}
-								return this;
-							}
-							@Override
-							public void onExecute() {
-								try {
-									JSONObject json = new JSONObject(jsonStr);
-									{
-										if (json.has(Const.URLS)) {
-											JSONArray urlArr = json.getJSONArray(Const.URLS);
-											int len = urlArr.length();
-											if (len > 0) {
-												LayoutInflater inflator = LayoutInflater.from(getActivity());
-												ImageLoader iLoader = ImageLoader.initEnv();
-												final ViewPager banner = (ViewPager) view.findViewById(R.id.search_item_detail_banner);
-												{
-													View bannerParent = view.findViewById(R.id.search_item_detail_banner_parent);
-													int viewPagerHeight = getResources().getDisplayMetrics().widthPixels * 9 /16;//保持16:9的比例
-													bannerParent.getLayoutParams().height = viewPagerHeight;
-												}
-												ArrayList<ImageView> pviews = new ArrayList<ImageView>(len);
-												final ViewGroup focusItems = (ViewGroup)view.findViewById(R.id.search_item_detail_banner_focus_items);
-												int focusItemSize = getActivity().getResources().getDimensionPixelSize(R.dimen.focus_item_size);
-												final MyPagerAdapter pageAdapter = new MyPagerAdapter(pviews);
-												for (int i = 0; i < len; i++) {
-													String url = urlArr.getString(i);
-													ImageView iv = (ImageView) inflator.inflate(R.layout.viewpager_imageview,null);
-													iLoader.executeBitmapLoad(new ImageLoader.DownloadTask<ImageView>(url,iv));
-													pviews.add(iv);
-													TextView item = new TextView(getActivity());//.inflate(R.layout.viewpager_focus_item,null);
-													if(i == 0){
-														item.setBackgroundResource(R.drawable.circle_gray_solid);
-													}else{
-														item.setBackgroundResource(R.drawable.circle_gray);
-													}
-													focusItems.addView(item,new LayoutParams(focusItemSize, focusItemSize));
-													
-												}
-												banner.setOnPageChangeListener(new OnPageChangeListener() {
-													@Override
-													public void onPageSelected(int arg0) {
-														ViewHelper.updateChildrenBackground(focusItems, arg0, R.drawable.circle_gray_solid, R.drawable.circle_gray);
-													}
-													@Override
-													public void onPageScrolled(int arg0, float arg1, int arg2) {}
-													@Override
-													public void onPageScrollStateChanged(int arg0) {}
-												});
-												banner.setAdapter(pageAdapter);
-											}
-										}
-									}
-									if (json.has("menu_tabs")) {
-										ViewGroup menus = (ViewGroup) view
-												.findViewById(R.id.search_item_detail_menu_tabs);
-										ViewGroup tabitem_contents = (ViewGroup) view
-												.findViewById(R.id.search_item_detail_menu_tabitem_contents);
-										JSONArray arr = json
-												.getJSONArray("menu_tabs");
-										int len = arr.length();
-										for (int i = 0; i < len; i++) {
-											JSONObject ti = arr.getJSONObject(i);
-											{
-												TextView t = new TextView(getActivity());
-												t.setText(ti.getString("title"));
-												menus.addView(t);
-											}
-											{
-												TextView t = new TextView(getActivity());
-												t.setText(ti.getString("content"));
-												tabitem_contents.addView(t);
-											}
-										}
-									}
-									{
-										ListView commentListView = (ListView) view
-												.findViewById(R.id.search_item_detail_comment_list);
-
-									}
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-
-							}
-							
-							
-						}.init(data));
-					
-					}catch(Exception e){}}
-				},"fishing_place_" + spId);
-		rData.putValue(Const.FISHING_PLACE_ID, spId);
-		NetTool.httpGet(rData);
+		}
 	}
 
 	@Override
