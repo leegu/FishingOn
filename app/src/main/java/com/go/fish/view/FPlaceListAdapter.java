@@ -1,5 +1,7 @@
 package com.go.fish.view;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +11,6 @@ import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.data.FPlaceData;
-
-import java.util.ArrayList;
 
 public class FPlaceListAdapter extends BaseAdapter{
 
@@ -79,7 +79,7 @@ public class FPlaceListAdapter extends BaseAdapter{
 		} else {
 			item = (ViewGroup)convertView;
 		}
-		((TextView)item.getChildAt(1)).setText(fPlace.text);
+		((TextView)item.getChildAt(1)).setText(fPlace.title);
 		return item;
 	}
 }

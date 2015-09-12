@@ -100,7 +100,7 @@
     <string name="hfs_detail">详情</string>
     <string name="hfs_care">关注</string>
     <string name="hfs_nav">导航</string>
-    <string name="hfs_distance_format">距您%f公里</string>
+    <string name="hfs_distance_format">距您%d公里</string>
 
     <string-array name="hfs_splace_type">
         <item>野钓</item>

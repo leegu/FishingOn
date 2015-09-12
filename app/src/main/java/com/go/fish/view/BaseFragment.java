@@ -1,5 +1,10 @@
 package com.go.fish.view;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,11 +29,6 @@ import com.go.fish.util.Const;
 import com.go.fish.util.ImageLoader;
 import com.go.fish.util.MapUtil;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
 public class BaseFragment extends Fragment {
 	private static final String TAG = "MainView";
 	ResultForActivityCallback mCallback = null;
@@ -39,7 +39,7 @@ public class BaseFragment extends Fragment {
 		BaseFragment f = new BaseFragment();
 		f.mCallback = callback;
 		Bundle b = new Bundle();
-		b.putInt(Const.LAYOUT_ID, layoutId);
+		b.putInt(Const.PRI_LAYOUT_ID, layoutId);
 		f.setArguments(b);
 		return f;
 	}
@@ -54,7 +54,7 @@ public class BaseFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Bundle b = getArguments();
-		int layoutId = b.getInt(Const.LAYOUT_ID);
+		int layoutId = b.getInt(Const.PRI_LAYOUT_ID);
 		View view = inflater.inflate(layoutId, container, false);
 		if (layoutId == R.layout.ui_search_list) {
 			onCreateSearchViewPager(view);
@@ -76,8 +76,8 @@ public class BaseFragment extends Fragment {
 		TextView detail_text = (TextView) floatView
 				.findViewById(R.id.float_view_title);
 		Bundle data = getArguments();
-		int orderId = data.getInt(Const.ORDER_ID);
-		detail_text.setText(orderId + "." + data.getString(Const.TEXT));
+		int orderId = data.getInt(Const.STA_ORDER_ID);
+		detail_text.setText(orderId + "." + data.getString(Const.STA_TEXT));
 	}
 
 	private void onCreateSearchViewPager(View view) {
@@ -124,17 +124,17 @@ public class BaseFragment extends Fragment {
 	}
 	private void onCreateSearchDetail(final View view) {
 		Bundle b = getArguments();
-		((TextView) view.findViewById(R.id.search_item_detail_title)).setText(b.getString(Const.TEXT));
+		((TextView) view.findViewById(R.id.search_item_detail_title)).setText(b.getString(Const.STA_TITLE));
 		try{
-			String jsonStr = b.getString(Const.JSON_DATA);
+			String jsonStr = b.getString(Const.PRI_JSON_DATA);
 			JSONObject json = new JSONObject(jsonStr);
 			{
-				if (json.has(Const.URLS)) {
-					JSONArray urlArr = json.getJSONArray(Const.URLS);
+				if (json.has(Const.STA_URLS)) {
+					JSONArray urlArr = json.getJSONArray(Const.STA_URLS);
 					int len = urlArr.length();
 					if (len > 0) {
 						LayoutInflater inflator = LayoutInflater.from(getActivity());
-						ImageLoader iLoader = ImageLoader.initEnv();
+						ImageLoader iLoader = ImageLoader.self();
 						final ViewPager banner = (ViewPager) view.findViewById(R.id.search_item_detail_banner);
 //						{
 //							View bannerParent = view.findViewById(R.id.search_item_detail_banner_parent);
@@ -148,7 +148,7 @@ public class BaseFragment extends Fragment {
 						for (int i = 0; i < len; i++) {
 							String url = urlArr.getString(i);
 							ImageView iv = (ImageView) inflator.inflate(R.layout.w_imageview,null);
-							iLoader.executeBitmapLoad(new ImageLoader.DownloadTask<ImageView>(url, iv));
+							ViewHelper.load(iv, url);
 							pviews.add(iv);
 							TextView item = new TextView(getActivity());
 							item.setLayoutParams(new LayoutParams(focusItemSize,focusItemSize));

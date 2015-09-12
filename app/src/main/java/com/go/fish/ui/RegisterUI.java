@@ -32,14 +32,14 @@ public class RegisterUI extends BaseUI {
 		{
 			reg1Fragment = new ReplaceFragment();
 			Bundle b = new Bundle();
-			b.putInt(Const.LAYOUT_ID, R.layout.ui_reg_first);
+			b.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_reg_first);
 			reg1Fragment.setArguments(b);
 			replace(reg1Fragment);
 		}
 		{
 			regNextFragment = new ReplaceFragment();
 			Bundle b = new Bundle();
-			b.putInt(Const.LAYOUT_ID, R.layout.ui_my_sec);
+			b.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_my_sec);
 			regNextFragment.setArguments(b);
 		}
 	}
@@ -98,9 +98,9 @@ public class RegisterUI extends BaseUI {
 		}
 		case R.id.reg_agree_rule_text: {
 			Intent i = new Intent();
-			i.putExtra(Const.LAYOUT_ID, R.layout.ui_webview_left_close);
-			i.putExtra(Const.URL, getResources().getString(R.string.rule_link));
-			i.putExtra(Const.TITLE, getResources().getString(R.string.reg_reg_and_rule));
+			i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_webview_left_close);
+			i.putExtra(Const.STA_URL, getResources().getString(R.string.rule_link));
+			i.putExtra(Const.STA_TITLE, getResources().getString(R.string.reg_reg_and_rule));
 			UIMgr.showActivity(this,i);
 			break;
 		}
@@ -112,7 +112,7 @@ public class RegisterUI extends BaseUI {
 		case R.id.ui_my_sec_next_skip_btn: {
 			Intent i = new Intent();
 			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			i.putExtra(Const.LAYOUT_ID, R.layout.ui_main);
+			i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_main);
 			UIMgr.showActivity(this, i,HomeUI.class.getName());
 			finish();
 			break;

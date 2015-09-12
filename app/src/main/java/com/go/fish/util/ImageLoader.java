@@ -7,11 +7,14 @@ import java.util.HashSet;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.widget.ImageView;
+
+import com.go.fish.util.NetTool.RequestData;
+import com.go.fish.util.NetTool.RequestListener;
 
 public class ImageLoader {
 	static ImageLoader instance = null;
@@ -36,7 +39,7 @@ public class ImageLoader {
 		};
 	}
 
-	public static ImageLoader initEnv() {
+	public static ImageLoader self() {
 		if (instance == null) {
 			instance = new ImageLoader();
 		}
@@ -45,32 +48,69 @@ public class ImageLoader {
 
 	/**
 	 */
-	public Bitmap getBitmapFromLruCache(String key) {
+	public synchronized Bitmap getBitmapFromLruCache(String key) {
 		return mLruCache.get(key);
 	}
 
-	/**
-	 */
-	public void addBitmapToLruCache(String key, Bitmap bitmap) {
-		mLruCache.put(key, bitmap);
+
+	public void clearCache() {
+        if (mLruCache != null) {
+            if (mLruCache.size() > 0) {
+                Log.d("CacheUtils",
+                        "mLruCache.size() " + mLruCache.size());
+                mLruCache.evictAll();
+                Log.d("CacheUtils", "mLruCache.size()" + mLruCache.size());
+            }
+            mLruCache = null;
+        }
+    }
+
+    public synchronized void addBitmapToLruCache(String key, Bitmap bitmap) {
+        if (mLruCache.get(key) == null) {
+            if (key != null && bitmap != null)
+                mLruCache.put(key, bitmap);
+        } else
+            Log.w("ImageLoader", "the res is aready exits");
+    }
+
+    /**
+     * 移除缓存
+     * 
+     * @param key
+     */
+    public synchronized void removeImageCache(String key) {
+        if (key != null) {
+            if (mLruCache != null) {
+                Bitmap bm = mLruCache.remove(key);
+                if (bm != null)
+                    bm.recycle();
+            }
+        }
+    }
+	public void loadNetImage(final DownloadTask<ImageView> task) {
+//		DownloadBitmapAsyncTask downloadBitmapAsyncTask = new DownloadBitmapAsyncTask();
+//		mDownloadBitmapAsyncTaskHashSet.add(downloadBitmapAsyncTask);
+//		task.onStart();
+//		downloadBitmapAsyncTask.execute(task);
+		
+		RequestData rData = RequestData.newInstance(new RequestListener() {
+			@Override
+			public void onStart() {
+				task.onStart();
+			}
+			@Override
+			public void onEnd(byte[] data) {
+				// TODO Auto-generated method stub
+				Bitmap bitmap = toBitmap(data);
+				task.onEnd(task.downUrl,bitmap);
+			}
+		}, task.downUrl,null);
+		NetTool.bitmap().http(rData.syncCallback());
 	}
 
-	public void executeBitmapLoad(DownloadTask<ImageView> task) {
-		Bitmap bitmap = getBitmapFromLruCache(task.downUrl);
-		if(bitmap != null && !bitmap.isRecycled()){
-			task.onEnd(task.downUrl, bitmap);
-			return;
-		}
-//		else if((bitmap == ))
-		DownloadBitmapAsyncTask downloadBitmapAsyncTask = new DownloadBitmapAsyncTask();
-		mDownloadBitmapAsyncTaskHashSet.add(downloadBitmapAsyncTask);
-		task.onStart();
-		downloadBitmapAsyncTask.execute(task);
-	}
-
 	/**
 	 */
-	public void cancelAllTasks() {
+	private void cancelAllTasks() {
 		if (mDownloadBitmapAsyncTaskHashSet != null) {
 			for (DownloadBitmapAsyncTask task : mDownloadBitmapAsyncTaskHashSet) {
 				task.cancel(false);
@@ -83,19 +123,14 @@ public class ImageLoader {
 	 *
 	 * @param <T> 下载完成后数据的接收者
 	 */
-	public static class DownloadTask<T> {
-		String downUrl = null;
-		T receiver = null;
+	public static abstract class DownloadTask<T> {
+		public String downUrl = null;
+		public T taskReceiver = null;
 		public DownloadTask(String url,T receiver) {
 			downUrl = url;
-			this.receiver = receiver;
+			this.taskReceiver = receiver;
 		}
-		void onEnd(String downUrl,Bitmap bitmap){
-			if(receiver instanceof ImageView){
-				((ImageView)receiver).setBackgroundDrawable(new BitmapDrawable(bitmap));
-//				((ImageView)receiver).setImageBitmap(bitmap);
-			}
-		}
+		public abstract  void onEnd(String downUrl,Bitmap bitmap);
 		void onStart(){
 			
 		}
@@ -107,18 +142,13 @@ public class ImageLoader {
 		@Override
 		protected Bitmap doInBackground(DownloadTask... params) {
 			task = params[0];
-			Bitmap bitmap = downloadBitmap(task.downUrl);
-			if (bitmap != null) {
-				addBitmapToLruCache(task.downUrl, bitmap);
-			}
-			return bitmap;
+			return downloadBitmap(task.downUrl);
 		}
 
 		@Override
 		protected void onPostExecute(Bitmap bitmap) {
 			super.onPostExecute(bitmap);
 			task.onEnd(task.downUrl, bitmap);
-			addBitmapToLruCache(task.downUrl, bitmap);
 			mDownloadBitmapAsyncTaskHashSet.remove(this);
 		}
 	}
@@ -133,7 +163,6 @@ public class ImageLoader {
 				conn = createConnection(conn.getHeaderField("Location"));
 				redirectCount++;
 			}
-
 			bitmap = BitmapFactory.decodeStream(conn.getInputStream());
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -15,7 +15,7 @@ public class ReplaceFragment extends Fragment{
 	@Nullable
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		int layoutId = getArguments().getInt(Const.LAYOUT_ID);
+		int layoutId = getArguments().getInt(Const.PRI_LAYOUT_ID);
 		View view = inflater.inflate(layoutId,container,false);
         return view;
 	}

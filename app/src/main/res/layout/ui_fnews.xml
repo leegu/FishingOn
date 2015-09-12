@@ -55,7 +55,7 @@
             android:layout_toRightOf="@id/base_head_bar_last">
             <TextView
                 android:tag="true"
-                android:id="@+id/ui_my_care_head_fplace"
+                android:id="@+id/ui_fnews_head_last_news"
                 android:layout_marginLeft="@dimen/list_item_space_mid"
                 android:textSize="@dimen/base_font_size_h7"
                 android:textColor="@color/head_bar_title_color"
@@ -70,7 +70,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
             <TextView
-                android:id="@+id/ui_my_care_head_fnews"
+                android:id="@+id/ui_fnews_head_mynews"
                 android:layout_marginRight="@dimen/list_item_space_mid"
                 android:textSize="@dimen/base_font_size_h7"
                 android:textColor="@color/head_bar_title_color"

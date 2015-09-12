@@ -4,6 +4,8 @@ package com.go.fish.view;
  * Created by DCloud on 2015/8/23.
  */
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,8 +17,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.go.fish.R;
-
-import java.util.ArrayList;
 
 public class PopWinListItemAdapter extends BaseAdapter {
 

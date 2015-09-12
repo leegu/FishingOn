@@ -1,5 +1,7 @@
 package com.go.fish.view;
 
+import java.util.ArrayList;
+
 import android.content.res.TypedArray;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
@@ -12,8 +14,6 @@ import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.data.MyListitemData;
-
-import java.util.ArrayList;
 
 /**
  * Created by DCloud on 2015/8/23.

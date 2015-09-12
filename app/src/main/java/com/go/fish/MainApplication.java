@@ -1,5 +1,6 @@
 package com.go.fish;
 
+import test.net.fishserver.util.LocalServer;
 import android.app.Application;
 import android.app.Service;
 import android.os.Vibrator;
@@ -10,8 +11,10 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.SDKInitializer;
+import com.go.fish.util.LocalMgr;
 import com.go.fish.util.MapUtil.LocationData;
 import com.go.fish.util.MapUtil.OnGetLocationListener;
+import com.igexin.sdk.PushManager;
 
 public class MainApplication extends Application {
     public LocationClient mLocationClient;
@@ -30,7 +33,13 @@ public class MainApplication extends Application {
         mMyLocationListener = new MyLocationListener();
         mLocationClient.registerLocationListener(mMyLocationListener);
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
+        LocalMgr.initEnv(this);
+        PushManager.getInstance().initialize(this);
+        LocalServer server = new LocalServer(this, null);
+		server.start();
     }
+    
+    
 
 
     /**
@@ -44,6 +53,8 @@ public class MainApplication extends Application {
         	if( mOnGetLocationListener != null){
         		LocationData ld = new LocationData();
         		ld.address = location.getAddrStr();
+        		ld.lng = location.getLongitude();
+        		ld.lat = location.getLatitude();
         		mOnGetLocationListener.onGetLocation(ld);
         		return;
         	}

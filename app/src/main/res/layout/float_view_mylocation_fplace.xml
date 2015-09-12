@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/list_item_space"
+    android:background="@null" >
+
+    <TextView 
+        android:id="@+id/myloc"
+        android:padding="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="0dp"
+        android:background="@drawable/myloc"
+        android:gravity="bottom"
+        android:clickable="true"
+        android:onClick="onFishingPlaceClick"
+        />
+
+</RelativeLayout>

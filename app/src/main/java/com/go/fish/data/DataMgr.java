@@ -3,10 +3,9 @@ package com.go.fish.data;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.go.fish.R;
+import com.go.fish.util.Const;
 
 public class DataMgr {
 
@@ -20,8 +19,8 @@ public class DataMgr {
 				FPlaceData ld = new FPlaceData();
 				ld.layout_id = layoutId;
 				ld.orderId = i + 1;
-				ld.text = json.getString("title");
-				ld.sid = json.getString("id");
+				ld.title = json.getString(Const.STA_TITLE);
+				ld.sid = json.getString(Const.STA_FISHING_PLACE_ID);
 				arr.add(ld);
 			}
 		} catch (Exception e) {

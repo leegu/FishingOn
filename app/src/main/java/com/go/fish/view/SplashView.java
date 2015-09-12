@@ -58,7 +58,7 @@ public class SplashView {
 	
 	private void showRegisterUI(){
 		Intent i = new Intent();
-		i.putExtra(Const.LAYOUT_ID, R.layout.ui_reg);
+		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_reg);
 		i.setClassName(mSplashActivity, RegisterUI.class.getName());
 		mSplashActivity.startActivity(i);
 		clickListener.onClick();
@@ -67,7 +67,7 @@ public class SplashView {
 	
 	private void showLoginUI(){
 		Intent i = new Intent();
-		i.putExtra(Const.LAYOUT_ID, R.layout.ui_login);
+		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_login);
 		i.setClassName(mSplashActivity, BaseUI.class.getName());
 		mSplashActivity.startActivity(i);
 		clickListener.onClick();

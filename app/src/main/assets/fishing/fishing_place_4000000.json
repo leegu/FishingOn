@@ -1,0 +1,27 @@
+﻿{
+    urls: ['http://a.hiphotos.baidu.com/image/pic/item/5366d0160924ab18b7da6d3533fae6cd7a890be7.jpg', 'http://g.hiphotos.baidu.com/image/pic/item/1b4c510fd9f9d72aee889e1fd22a2834359bbbc0.jpg', 'http://cdnq.duitang.com/uploads/item/201407/26/20140726212046_2AWny.jpeg'],
+    menu_tabs: [{
+        title: '钓场介绍',
+        content: 'o1.'
+    },
+    {
+        title: '撒鱼信息',
+        content: 'o1.'
+    },
+    {
+        title: '周边配套设施',
+        content: 'o1.'
+    },
+    {
+        title: '场馆照片',
+        content: 'o1.'
+    },
+    {
+        title: '联系我们',
+        content: 'o1.'
+    },
+    {
+        title: '钓场评论',
+        content: 'o1.'
+    }]
+}

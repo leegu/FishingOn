@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 	}
 	private void showHomeUI(){
 		Intent intent = new Intent();
-		intent.putExtra(Const.LAYOUT_ID, R.layout.ui_main);
+		intent.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_main);
 		intent.setClass(MainActivity.this, HomeUI.class);
 		startActivity(intent);
 		finish();

@@ -3,21 +3,19 @@ package com.go.fish.view;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.go.fish.R;
 import com.go.fish.data.DataMgr;
 import com.go.fish.data.FPlaceData;
 import com.go.fish.util.Const;
-import com.go.fish.util.MessageHandler;
 import com.go.fish.util.NetTool;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
     private ArrayList<Fragment> fragmentsList;
@@ -75,8 +73,8 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
 								            listFragment.updateData(fPlaceArr);
 								        } else {
 								            Bundle bundle = listFragment.getArguments();
-								            bundle.putInt(Const.EXTRA_LAYOUT_ID,listitemLayoutid);
-								            bundle.putString(Const.EXTRA_DATA, arr.toString());
+								            bundle.putInt(Const.PRI_EXTRA_LAYOUT_ID,listitemLayoutid);
+								            bundle.putString(Const.PRI_EXTRA_DATA, arr.toString());
 								        }
 								    } catch (JSONException e) {
 								        e.printStackTrace();
@@ -94,6 +92,6 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
                     }
                 }, "fishing_place_near"
         );
-        NetTool.httpGet(rData.syncCallback());
+        NetTool.data().http(rData.syncCallback());
     }
 }

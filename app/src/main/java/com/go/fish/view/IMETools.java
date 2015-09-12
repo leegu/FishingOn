@@ -1,12 +1,12 @@
 package com.go.fish.view;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.content.Context;
 import android.os.IBinder;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by DCloud on 2015/8/30.

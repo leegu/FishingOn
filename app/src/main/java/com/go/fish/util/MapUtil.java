@@ -2,6 +2,7 @@ package com.go.fish.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.widget.CheckBox;
 
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
@@ -11,9 +12,24 @@ import com.go.fish.MainApplication;
 
 public class MapUtil {
 
+	private static String DISTANCE_KM = "距您%s公里";
+	private static String DISTANCE_M = "距您%s米";
+	public static String getDistance(double d_value){
+		if(d_value >= 10000){
+			int s = (int)(d_value / 1000);
+			int e = (int)(d_value % 1000) % 100;
+			return String.format(DISTANCE_KM,  + s + (e > 0 ? "." + e : ""));
+		}else{
+			return String.format(DISTANCE_M, (int)d_value + "");
+		}
+	}
 	public static MapView newMap(Context context){
-		MapView mapView = new MapView(context, new BaiduMapOptions());
+		BaiduMapOptions bmo = new BaiduMapOptions();
+		bmo.scaleControlEnabled(false); 
+		bmo.zoomControlsEnabled(false);
+		MapView mapView = new MapView(context, bmo);
 		mapView.showZoomControls(false);
+//		mapView.getMap().getUiSettings().setCompassEnabled(false);
 		return mapView;
 	}
  	
@@ -47,5 +63,6 @@ public class MapUtil {
 	
 	public static class LocationData{
 		public String address;
+		public double lng,lat;
 	}
 }

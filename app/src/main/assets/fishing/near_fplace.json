@@ -1,0 +1,51 @@
+﻿[{
+    name:'张三',
+    far:'50米',
+    year:2,
+    times:6
+},{
+    name:'李四',
+    far:'70米',
+    year:12,
+    times:16
+
+},{
+    name:'赵六',
+    far:'160米',
+    year:2,
+    times:6
+
+},{
+    name:'张三',
+    far:'190米',
+    year:2,
+    times:6
+},{
+    name:'刘大',
+    far:'500米',
+    year:32,
+    times:6
+
+},{
+    name:'张三',
+    far:'800米',
+    year:2,
+    times:6
+},{
+    name:'王五',
+    far:'1,000米',
+    year:12,
+    times:6
+},{
+    name:'赵六',
+    far:'2,000米',
+    year:2,
+    times:6
+
+},{
+    name:'刘大',
+    far:'10,000米',
+    year:2,
+    times:76
+
+}]

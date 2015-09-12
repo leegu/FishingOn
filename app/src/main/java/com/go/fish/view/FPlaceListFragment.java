@@ -3,7 +3,9 @@ package com.go.fish.view;
 import java.util.ArrayList;
 import java.util.Random;
 
-import android.app.Activity;
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -15,14 +17,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.go.fish.R;
 import com.go.fish.data.DataMgr;
 import com.go.fish.data.FPlaceData;
 import com.go.fish.util.Const;
 import com.go.fish.view.BaseFragment.ResultForActivityCallback;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 public class FPlaceListFragment extends Fragment implements OnItemClickListener{
 	public String name = null;
@@ -35,7 +33,7 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener{
 		FPlaceListFragment listFragment = new FPlaceListFragment();
 		listFragment.mCallback = callback;
 		Bundle b = new Bundle();
-		b.putInt(Const.LAYOUT_ID, layoutId);
+		b.putInt(Const.PRI_LAYOUT_ID, layoutId);
 		listFragment.setArguments(b);
 		return listFragment;
 	}
@@ -49,7 +47,7 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		if(mListView == null){
 			Bundle b = getArguments();
-			int layoutId = b.getInt(Const.LAYOUT_ID);
+			int layoutId = b.getInt(Const.PRI_LAYOUT_ID);
 			mListView = (ListView)inflater.inflate(layoutId, container, false);
 			updateAdapter();
 			if(mListAdapter.isEmpty()) {
@@ -83,10 +81,10 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener{
 
 	public void updateAdapter(){
 		Bundle bundle = getArguments();
-		if(bundle.containsKey(Const.EXTRA_DATA)){
+		if(bundle.containsKey(Const.PRI_EXTRA_DATA)){
 			try {
-				int listitemLayoutid = bundle.getInt(Const.EXTRA_LAYOUT_ID);
-				JSONArray jsonArr = new JSONArray(bundle.getString(Const.EXTRA_DATA));
+				int listitemLayoutid = bundle.getInt(Const.PRI_EXTRA_LAYOUT_ID);
+				JSONArray jsonArr = new JSONArray(bundle.getString(Const.PRI_EXTRA_DATA));
 				ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(listitemLayoutid, jsonArr);
 				if(mListAdapter == null) {
 					mListAdapter = new FPlaceListAdapter(getActivity(), fPlaceArr);
@@ -96,10 +94,10 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener{
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			bundle.remove(Const.EXTRA_DATA);
+			bundle.remove(Const.PRI_EXTRA_DATA);
 		}else{
 			if(mListAdapter == null) {
-				mListAdapter = new FPlaceListAdapter(getActivity(), new ArrayList<FPlaceData>());
+				mListAdapter = new FPlaceListAdapter(mListView.getContext(), new ArrayList<FPlaceData>());
 			}
 		}
 	}

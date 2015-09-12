@@ -3,6 +3,9 @@ package com.go.fish.ui;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -37,20 +40,21 @@ import com.go.fish.view.IMETools;
 import com.go.fish.view.Switcher;
 import com.go.fish.view.ViewHelper;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag {
 
-	 public void onPreCreate(Bundle savedInstanceState){
+	public void onPreCreate(Bundle savedInstanceState){
 	    	
     }
+	
+	public void onCreate_Super(Bundle savedInstanceState){
+		super.onCreate(savedInstanceState);
+	}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    	onCreate_Super(savedInstanceState);
         onPreCreate(savedInstanceState);
-        int layout_id = getIntent().getIntExtra(Const.LAYOUT_ID, 0);
+        int layout_id = getIntent().getIntExtra(Const.PRI_LAYOUT_ID, 0);
         if (layout_id != 0) setContentView(layout_id);
         switch (layout_id) {
             case R.layout.ui_webview_left_close:
@@ -113,7 +117,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag {
             fNewsList.setVisibility(View.GONE);
             vg.addView(fNewsList);
             //本地先获取显示
-            String careFPlace = LocalMgr.loadData(Const.DB_MY_CARE_FNEWS);
+            String careFPlace = LocalMgr.self().getString(Const.SIN_DB_MY_CARE_FNEWS);
             ArrayList<IBaseData> arr = new ArrayList<IBaseData>();
             JSONArray jsonArr = null;
             try {
@@ -134,32 +138,19 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag {
                 public void onStart() {
                 	ViewHelper.showGlobalWaiting(BaseUI.this, null);
                 }
-
                 @Override
                 public void onEnd(byte[] data) {
-                    try {
-                        String str = new String(data,"utf-8");
-                        JSONArray arr= new JSONArray(str);
-                        ArrayList<IBaseData> arrBaseData = new ArrayList<IBaseData>();
-                        arrBaseData.add(FNewsData.newInstance(""));
-                        arrBaseData.add(FNewsData.newInstance(""));
-                        mListAdapter.updateAdapter(arrBaseData);
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } finally {
-                        ViewHelper.closeGlobalWaiting();
-                    }
+                    mListAdapter.updateAdapter(AdapterExt.makePersonDataArray(toJSONArray(data)));
+                    ViewHelper.closeGlobalWaiting();
                 }
             }, "my_friend");
-            NetTool.httpGet(rd.syncCallback());
+            NetTool.data().http(rd.syncCallback());
         }
         {//钓场
             ListView fPlaceList = new ListView(this);
             vg.addView(fPlaceList);
             //本地先获取显示
-            String careFPlace = LocalMgr.loadData(Const.DB_MY_CARE_FPLACE);
+            String careFPlace = LocalMgr.self().getString(Const.SIN_DB_MY_CARE_FPLACE);
             JSONArray jsonArr = null;
             try {
                 if(!TextUtils.isEmpty(careFPlace)){
@@ -191,7 +182,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag {
                     }
                 }
             }, "fishing_place_near");
-            NetTool.httpGet(rd.syncCallback());
+            NetTool.data().http(rd.syncCallback());
         }
     }
 
@@ -230,29 +221,20 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag {
                 ViewHelper.closeGlobalWaiting();
             }
         },"near_friend");
-        NetTool.httpGet(rd.syncCallback());
+        NetTool.data().http(rd.syncCallback());
     }
     private void onCreateMyFNewsView(){//创建我的钓播
-        NetTool.RequestData rd = NetTool.RequestData.newInstance(new NetTool.RequestListener() {
-            @Override
-            public void onStart() {
-            }
+        //TODO 先加载本地数据
 
+        NetTool.RequestData rd = NetTool.RequestData.newInstance(new NetTool.RequestListener() {
             @Override
             public void onEnd(byte[] data) {
                 ListView list = (ListView)findViewById(R.id.my_f_news_list);
-                JSONArray arr = null;
-                try {
-                    arr = new JSONArray(new String(data,"utf-8"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                JSONArray arr = toJSONArray(data);
                 list.setAdapter(AdapterExt.newInstance(BaseUI.this,arr,R.layout.listitem_fnews ));
             }
         },"my_fnews");
-        NetTool.httpGet(rd.syncCallback());
+        NetTool.data().http(rd.syncCallback());
     }
    
 
@@ -269,9 +251,9 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag {
             }
             case R.id.base_ui_help: {
                 Intent i = new Intent();
-                i.putExtra(Const.LAYOUT_ID, R.layout.ui_webview_left_close);
-                i.putExtra(Const.URL, getResources().getString(R.string.help_link));
-                i.putExtra(Const.TITLE, getResources().getString(R.string.help));
+                i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_webview_left_close);
+                i.putExtra(Const.STA_URL, getResources().getString(R.string.help_link));
+                i.putExtra(Const.STA_TITLE, getResources().getString(R.string.help));
                 UIMgr.showActivity(BaseUI.this, i);
                 break;
             }
@@ -332,7 +314,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag {
             case R.id.login_login_btn: {
                 Intent i = new Intent();
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i.putExtra(Const.LAYOUT_ID, R.layout.ui_main);
+                i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_main);
                 UIMgr.showActivity(BaseUI.this, i, HomeUI.class.getName());
                 finish();
                 break;
@@ -345,7 +327,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag {
             case R.id.login_reg_new_account_btn: {
                 Intent i = new Intent();
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i.putExtra(Const.LAYOUT_ID, R.layout.ui_reg);
+                i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_reg);
                 UIMgr.showActivity(this, i, RegisterUI.class.getName());
                 break;
             }
@@ -353,6 +335,13 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag {
                 finish();
                 //应该还要触发显示附近钓场
                 break;
+            }
+            case R.id.listitem_fnews_share:{
+            	Intent sendIntent = new Intent(android.content.Intent.ACTION_SEND);
+            	sendIntent.putExtra(Intent.EXTRA_TEXT, "钓鱼帮的分享");
+            	sendIntent.setType("text/plain");
+            	startActivity(Intent.createChooser(sendIntent,"send to..."));
+            	break;
             }
         }
 
@@ -380,9 +369,9 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag {
             }
         });
         setting.setJavaScriptEnabled(true);
-        String url = getIntent().getStringExtra(Const.URL);
+        String url = getIntent().getStringExtra(Const.STA_URL);
         wb.loadUrl(url);
-        String title = getIntent().getStringExtra(Const.TITLE);
+        String title = getIntent().getStringExtra(Const.STA_TITLE);
         TextView titleView = (TextView) findViewById(R.id.base_ui_webview_title);
         titleView.setText(title);
     }

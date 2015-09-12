@@ -1,5 +1,10 @@
 package com.go.fish.view;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +14,6 @@ import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.data.CommentData;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.ArrayList;
 
 /**
  * Created by DCloud on 2015/8/23.
