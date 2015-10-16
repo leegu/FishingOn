@@ -2,138 +2,373 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar" >
+    <!-- copy  beign -->
 
-        <TextView
+    <RelativeLayout style="@style/head_bar_style">
+
+        <RelativeLayout
             android:id="@+id/search_item_detail_head_back"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/head_bar_height"
-            android:layout_alignParentLeft="true"
-            android:clickable="true"
-            android:gravity="center"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space"
-            android:background="@drawable/base_background"
-            android:onClick="onHeadClick"
-            android:text="@string/base_ui_close"
-            android:textColor="@color/head_bar_left_color"
-            android:textSize="@dimen/base_font_size_h4" />
+            style="@style/head_bar_pic_left_btn_style">
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/arrow_left" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/search_item_detail_share"
+            style="@style/head_bar_pic_right_btn_style">
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/share" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/search_item_detail_head_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/head_bar_height"
-            android:layout_alignParentRight="true"
-            android:clickable="true"
-            android:gravity="center"
-            android:minWidth="@dimen/head_bar_width"
-            android:onClick="onHeadClick"
-            android:text="菜单"
-            android:textColor="@color/head_bar_right_color"
-            android:visibility="invisible"
-            android:textSize="@dimen/base_font_size_h4" />
+            android:id="@+id/search_item_detail_title"
+            style="@style/head_bar_title_style"
+            android:layout_toLeftOf="@id/search_item_detail_share"
+            android:layout_toRightOf="@id/search_item_detail_head_back"
+            android:text="钓场详情"></TextView>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/search_item_detail_head_menu"
-            android:layout_toRightOf="@id/search_item_detail_head_back" >
-
-            <com.go.fish.view.MarqueeText
-                android:id="@+id/search_item_detail_title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:gravity="center"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:singleLine="true"
-                android:text="钓场详情"
-                android:textColor="@color/head_bar_title_color"
-                android:textSize="@dimen/base_font_size_h7" />
-        </LinearLayout>
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true"></TextView>
     </RelativeLayout>
+    <!-- copy  end -->
 
     <ScrollView
         android:id="@+id/ui_f_search_item_detail_root_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:background="@color/base_color"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/base_bg_color"
+            android:orientation="vertical">
+
+            <!-- banner begin-->
             <RelativeLayout
                 android:id="@+id/search_item_detail_banner_parent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="220dp"><!--android:layout_height="220dp"-->
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/search_item_detail_banner"
                     android:layout_width="match_parent"
-                    android:layout_height="220dp" >
-                </android.support.v4.view.ViewPager>
+                    android:layout_height="match_parent"></android.support.v4.view.ViewPager>
 
                 <LinearLayout
                     android:id="@+id/search_item_detail_banner_focus_items"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/search_item_detail_banner"
-                    android:paddingTop="@dimen/base_space"
-                    android:paddingBottom="@dimen/base_space"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/base_space"
                     android:gravity="center"
-                    android:orientation="horizontal" >
-                </LinearLayout>
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/base_space"
+                    android:paddingTop="@dimen/base_space"></LinearLayout>
             </RelativeLayout>
-
-            <!--<LinearLayout
+            <!-- banner end-->
+            <!-- 钓场介绍 begin-->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:padding="@dimen/base_space"
+                >
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/base_space"
+                    android:text="钓场介绍"
+                    android:textColor="#666666"
+                    android:textSize="@dimen/base_font_size_h5" />
+
+                <TextView
+                    android:id="@+id/value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/base_space_2"
+                    android:paddingTop="@dimen/base_space"
+                    android:text="钓鱼是捕捉鱼类的一种方法。钓鱼的主要工具有钓杆，鱼饵。钓杆一般由竹子或塑料轻而有力的杆状物质制成，钓杆和鱼饵用丝线联接。一般的鱼饵可以是蚯蚓、米饭、菜叶、苍蝇、蛆等，现代有专门制作好的鱼饵出售。鱼饵可以直接挂在丝线上，但有个鱼钩会更好，对不同的鱼有特殊的专制鱼钩。钓鱼也被喻为引诱的意思，欺骗行为亦被称之为钓鱼。同时，钓鱼也是一款社交游戏。"
+                    android:textColor="#888888"
+                    android:textSize="@dimen/base_font_size_h2" />
+            </LinearLayout>
+            <!-- 钓场介绍 end-->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:id="@+id/search_item_detail_menu_tabs"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/head_bar_height"
-                    android:orientation="horizontal" >
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <FrameLayout
-                    android:id="@+id/search_item_detail_menu_tabitem_contents"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-                </FrameLayout>
-            </LinearLayout>-->
+                    <TextView style="@style/head_bar_bottom_line_style"></TextView>
+
+                    <!-- menu 图标 begin-->
+                    <LinearLayout
+                        android:id="@+id/menu_contents"
+                        android:layout_width="match_parent"
+                        android:layout_height="66dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout style="@style/fplace_detail_menu_item">
+
+                            <include layout="@layout/fplace_detail_menu_item"></include>
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/fplace_detail_menu_item">
+
+                            <include layout="@layout/fplace_detail_menu_item"></include>
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/fplace_detail_menu_item">
+
+                            <include layout="@layout/fplace_detail_menu_item"></include>
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/fplace_detail_menu_item">
+
+                            <include layout="@layout/fplace_detail_menu_item"></include>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <!-- menu 图标 end-->
+                    <!-- menu 图标 对象介绍 begin-->
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ViewStub
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <ViewStub
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <ViewStub
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <ViewStub
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </FrameLayout>
+                    <!-- menu 图标 对象介绍 end-->
+                </LinearLayout>
+            </FrameLayout>
+            <!-- menu content end-->
+            <!-- 关注 begin -->
             <LinearLayout
-                android:id="@+id/menu_contents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/base_space_2"
+                android:paddingTop="@dimen/base_space_2">
+
+                <ImageView
+                    style="@style/fplace_detail_span_icon"
+                    android:src="@drawable/hart_red_solid" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/base_space"
+                    android:paddingTop="@dimen/base_space">
+
+                    <TextView
+                        android:id="@+id/care"
+                        style="@style/fplace_detail_span_text"
+                        android:text="关注" />
+
+                    <TextView
+                        android:id="@+id/care_left"
+                        style="@style/fplace_detail_span_line_left"
+                        android:layout_toLeftOf="@id/care" />
+
+                    <TextView
+                        android:id="@+id/care_right"
+                        style="@style/fplace_detail_span_line_right"
+                        android:layout_toRightOf="@id/care" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/base_space">
+
+                    <LinearLayout style="@style/average_width_weight_1">
+
+                        <include layout="@layout/circle_image_view"></include>
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/average_width_weight_1">
+
+                        <include layout="@layout/circle_image_view"></include>
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/average_width_weight_1">
+
+                        <include layout="@layout/circle_image_view"></include>
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/average_width_weight_1">
+
+                        <include layout="@layout/circle_image_view"></include>
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/average_width_weight_1">
+
+                        <include layout="@layout/circle_image_view"></include>
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/average_width_weight_1">
+
+                        <include layout="@layout/circle_image_view"></include>
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/average_width_weight_1">
+
+                        <include layout="@layout/circle_image_view"></include>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <!-- 关注 end -->
+
+            <!-- 评论 begin -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/base_space_2"
+                android:paddingTop="@dimen/base_space_2">
+
+                <ImageView
+                    style="@style/fplace_detail_span_icon"
+                    android:src="@drawable/comment_" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/base_space"
+                    android:paddingTop="@dimen/base_space">
+
+                    <TextView
+                        android:id="@+id/comment"
+                        style="@style/fplace_detail_span_text"
+                        android:text="评论" />
+
+                    <TextView
+                        android:id="@+id/comment_left"
+                        style="@style/fplace_detail_span_line_left"
+                        android:layout_toLeftOf="@id/comment" />
+
+                    <TextView
+                        android:id="@+id/comment_right"
+                        style="@style/fplace_detail_span_line_right"
+                        android:layout_toRightOf="@id/comment" />
+                </RelativeLayout>
+                <!---->
+            </LinearLayout>
+            <!-- 评论 end -->
+
+            <RelativeLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <!--<include layout="@layout/w_fplace_detail_menu_item"></include>-->
-            </LinearLayout>
-            <ListView
-                android:id="@+id/search_item_detail_comment_list"
-                android:layout_marginTop="@dimen/base_space"
-                android:layout_marginBottom="@dimen/base_space"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-            </ListView>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/last_comment"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <include layout="@layout/listitem_comment"></include>
+                        <include layout="@layout/listitem_comment"></include>
+                        <include layout="@layout/listitem_comment"></include>
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </FrameLayout>
 
-           <!-- <EditText
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/head_bar_height" />-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/action_sheet_bg"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/base_space"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:paddingTop="@dimen/base_space">
+
+                    <LinearLayout
+                        style="@style/average_width_weight_1"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            style="@style/detail_bottom_item">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/hart_red" />
+                        </LinearLayout>
+                        <TextView
+                            android:text="21"
+                            style="@style/detail_bottom_item_text"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/average_width_weight_1"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            style="@style/detail_bottom_item">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/zan" />
+                        </LinearLayout>
+                        <TextView
+                            android:text="21"
+                            style="@style/detail_bottom_item_text"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        style="@style/average_width_weight_1"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            style="@style/detail_bottom_item">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/comment" />
+                        </LinearLayout>
+                        <TextView
+                            android:text="21"
+                            style="@style/detail_bottom_item_text"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+            <!-- <EditText
+                 android:layout_width="match_parent"
+                 android:layout_height="@dimen/head_bar_height" />-->
         </LinearLayout>
     </ScrollView>
-
+    <!--<ListView-->
+    <!--android:id="@+id/search_item_detail_comment_list"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="@dimen/base_space"-->
+    <!--android:layout_marginTop="@dimen/base_space"></ListView>-->
 
 </LinearLayout>

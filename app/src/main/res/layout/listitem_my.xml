@@ -3,85 +3,101 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_item_height"
-    android:background="@drawable/base_listitem_background"
-    android:paddingLeft="@dimen/base_space"
-    android:paddingRight="@dimen/base_space">
+    android:background="@drawable/base_listitem_background">
 
-    <TextView
-        android:id="@+id/ui_f_my_listitem_pic_left"
-        android:layout_width="@dimen/base_pic_drawable_x_width"
-        android:layout_height="@dimen/base_pic_drawable_x_height"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical"
-        android:background="@drawable/search" />
+    <RelativeLayout
+        android:id="@+id/my_listitem_pic_left"
+        android:paddingLeft="@dimen/base_btn_radius_20"
+        android:paddingRight="@dimen/base_btn_radius_20"
+        android:layout_gravity = "center"
+        android:layout_width="70dp"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/ui_f_my_listitem_pic_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:background="@drawable/incon_155" />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/ui_f_my_listitem_pic_right"
-        android:layout_width="@dimen/base_pic_drawable_x_width"
-        android:layout_height="@dimen/base_pic_drawable_x_height"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:drawableRight="@drawable/arrow_right"
-        android:gravity="center_vertical" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toLeftOf="@id/ui_f_my_listitem_pic_right"
-        android:layout_toRightOf="@id/ui_f_my_listitem_pic_left">
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/my_listitem_pic_left">
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_border"
+            android:layout_alignParentBottom="true"
+            android:background="#dddddd" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="right|center_vertical"
-            android:paddingRight="@dimen/list_item_space_mid"
-            >
-            <TextView
-                android:visibility="invisible"
-                android:id="@+id/ui_f_my_listitem_bedger"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/badger_background"
-                android:maxLength="3"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="99+"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/base_font_size_h2"></TextView>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:orientation="vertical">
+            android:layout_alignBottom="@id/line">
 
             <TextView
-                android:id="@+id/ui_f_my_listitem_label"
+                android:id="@+id/ui_f_my_listitem_pic_right"
+                android:layout_width="@dimen/base_pic_drawable_x_width"
+                android:layout_height="@dimen/base_pic_drawable_x_height"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawableRight="@drawable/arrow_right"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/base_space_2"
+                android:paddingRight="@dimen/base_space_2" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="left|center_vertical"
-                android:singleLine="true"
-                android:textSize="@dimen/list_item_base_text_size"
-                android:text="我的关注"></TextView>
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/ui_f_my_listitem_pic_right"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/base_space"
+                android:paddingTop="@dimen/base_space">
 
-            <TextView
-                android:id="@+id/ui_f_my_listitem_sublabel"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="30dp"
-                android:singleLine="true"
-                android:text="钓场~播况~GO"
-                android:visibility="gone"></TextView>
-        </LinearLayout>
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
 
+                    <TextView
+                        android:id="@+id/ui_f_my_listitem_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="left|center_vertical"
+                        android:paddingRight="10dp"
+                        android:singleLine="true"
+                        android:text="我的关注"
+                        android:textColor="@color/my_listitem_text_color"
+                        android:textSize="@dimen/base_font_size_h5"></TextView>
 
-    </LinearLayout>
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/ui_f_my_listitem_bedger"
+                        style="@style/badger_style"
+                       ></TextView>
+                </FrameLayout>
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/ui_f_my_listitem_sublabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:paddingRight="@dimen/base_space"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="钓场~播况~GO"
+                    android:textColor="@color/my_listitem_sub_text_color"
+                    android:textSize="@dimen/base_font_size_h4"></TextView>
+            </LinearLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
 </RelativeLayout>

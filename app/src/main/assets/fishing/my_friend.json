@@ -1,51 +1,69 @@
 ﻿[{
-    name:'张三',
-    far:'50米',
-    year:2,
-    times:6
+    "photo_url":"http://d.lanrentuku.com/down/png/0904/AvatarGirl/girl_1.png",
+    "user_id":10003,    
+    "name":"张三",
+    "far":"50米",
+    "year":2,
+    "times":6
 },{
-    name:'李四',
-    far:'70米',
-    year:12,
-    times:16
+    "photo_url":"http://d.lanrentuku.com/down/png/0904/AvatarGirl/girl_10.png",
+    "user_id":10004,    
+    "name":"李四",
+    "far":"70米",
+    "year":12,
+    "times":16
 
 },{
-    name:'赵六',
-    far:'160米',
-    year:2,
-    times:6
+    "photo_url":"http://d.lanrentuku.com/down/png/0904/AvatarGirl/girl_3.png",
+    "user_id":10006,    
+    "name":"赵六",
+    "far":"160米",
+    "year":2,
+    "times":6
 
 },{
-    name:'张三',
-    far:'190米',
-    year:2,
-    times:6
+    "photo_url":"http://d.lanrentuku.com/down/png/0904/AvatarGirl/girl_9.png",
+    "user_id":10003,    
+    "name":"张三",
+    "far":"190米",
+    "year":2,
+    "times":6
 },{
-    name:'刘大',
-    far:'500米',
-    year:32,
-    times:6
+    "photo_url":"http://d.lanrentuku.com/down/png/0904/AvatarGirl/girl_7.png",
+    "user_id":10001,    
+    "name":"刘大",
+    "far":"500米",
+    "year":32,
+    "times":6
 
 },{
-    name:'张三',
-    far:'800米',
-    year:2,
-    times:6
+    "photo_url":"http://d.lanrentuku.com/down/png/0904/AvatarGirl/girl_4.png",
+    "user_id":10003,    
+    "name":"张三",
+    "far":"800米",
+    "year":2,
+    "times":6
 },{
-    name:'王五',
-    far:'1,000米',
-    year:12,
-    times:6
+    "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
+    "user_id":10005,    
+    "name":"王五",
+    "far":"1,000米",
+    "year":12,
+    "times":6
 },{
-    name:'赵六',
-    far:'2,000米',
-    year:2,
-    times:6
+    "photo_url":"http://d.lanrentuku.com/down/png/0904/AvatarGirl/girl_2.png",
+    "user_id":10006,    
+    "name":"赵六",
+    "far":"2,000米",
+    "year":2,
+    "times":6
 
 },{
-    name:'刘大',
-    far:'10,000米',
-    year:2,
-    times:76
+    "photo_url":"http://d.lanrentuku.com/down/png/0904/AvatarGirl/girl_8.png",
+    "user_id":10001,    
+    "name":"刘大",
+    "far":"10,000米",
+    "year":2,
+    "times":76
 
 }]

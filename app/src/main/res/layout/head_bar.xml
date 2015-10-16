@@ -9,7 +9,7 @@
         android:background="@color/head_bar" >
 
         <TextView
-            android:id="@+id/base_head_bar_last"
+            android:id="@+id/base_ui_close"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="@dimen/base_space"
@@ -43,7 +43,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_toLeftOf="@id/base_head_bar_next"
-            android:layout_toRightOf="@id/base_head_bar_last"
+            android:layout_toRightOf="@id/base_ui_close"
             android:background="@drawable/base_background"
             android:ellipsize="end"
             android:singleLine="true"

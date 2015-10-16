@@ -1,24 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@color/base_color"
+    android:background="@color/base_bg_color"
     android:orientation="vertical">
+    <!-- head begin -->
+    <RelativeLayout style="@style/head_bar_style">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar">
+        <RelativeLayout
+            android:id="@+id/base_head_bar_last"
+            style="@style/head_bar_pic_left_btn_style">
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/weather" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/base_ui_help"
+            style="@style/head_bar_pic_right_btn_style"
+            android:visibility="invisible">
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:background="@drawable/help" />
+        </RelativeLayout>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/home_my"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/base_font_size_h7" />
+            android:id="@+id/base_head_bar_title"
+            style="@style/head_bar_title_style"
+            android:layout_toLeftOf="@id/base_ui_help"
+            android:layout_toRightOf="@id/base_head_bar_last"
+            android:text="我的"></TextView>
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true"></TextView>
     </RelativeLayout>
+    <!-- head end -->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -36,16 +55,15 @@
                 android:background="@drawable/base_listitem_background"
                 android:clickable="true"
                 android:onClick="onMyClick"
-                android:padding="@dimen/base_space">
+                android:padding="@dimen/base_space_2">
 
-                <ImageView
-                    android:id="@+id/my_icon"
+                <com.go.fish.view.CircleImageView
+                    android:id="@+id/userIcon"
                     android:layout_width="@dimen/base_user_icon_size"
                     android:layout_height="@dimen/base_user_icon_size"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/circle_solid"
                     android:src="@drawable/icon" />
 
                 <TextView
@@ -54,76 +72,85 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:drawablePadding="@dimen/base_space"
                     android:drawableRight="@drawable/arrow_right"
                     android:gravity="center_vertical"
-                    android:text="完善资料" />
+                    android:text="完善资料"
+                    android:textColor="#aaaaaa"
+                    android:textSize="@dimen/base_font_size_h5" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_toLeftOf="@id/my_next_btn"
-                    android:layout_toRightOf="@id/my_icon"
+                    android:layout_toRightOf="@id/userIcon"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/base_space"
-                    android:paddingRight="@dimen/base_space">
+                    android:paddingLeft="@dimen/base_space_2"
+                    android:paddingRight="@dimen/base_space_2">
 
                     <TextView
-                        android:id="@+id/textView1"
+                        android:id="@+id/userName"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_gravity="center_vertical"
-                        android:text="13523459876"
-                        android:textColor="@color/base_color_light_font" />
+                        android:layout_marginBottom="@dimen/base_space"
+                        android:layout_weight="1.0"
+                        android:text="张三丰"
+                        android:textColor="@color/text_btn_color"
+                        android:textSize="@dimen/base_font_size_h5" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
-
-                        <TextView
-                            android:id="@+id/editText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="账号："
-                            android:textColor="@color/base_color_light_font" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/userPhoneNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="@dimen/base_space"
+                        android:layout_weight="1.0"
+                        android:text="135 0326 8866"
+                        android:textColor="@color/hint_text_color"
+                        android:textSize="@dimen/base_font_size_h5" />
 
                 </LinearLayout>
             </RelativeLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_space_2"
+                android:background="#dddddd" />
+
             <ListView
                 android:id="@+id/ui_f_my_listview1"
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/base_color"></ListView>
+                android:layout_height="@dimen/list_item_height_5"
+                android:background="@color/base_bg_color"></ListView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_space_2"
+                android:background="#dddddd" />
 
             <ListView
                 android:id="@+id/ui_f_my_listview2"
                 android:layout_width="match_parent"
-                android:layout_height="132dp"
-                android:layout_marginTop="15dp"
-                android:background="@color/base_color"></ListView>
+                android:layout_height="@dimen/list_item_height_3"
+                android:background="@color/base_bg_color"
+                ></ListView>
 
-            <Button
-                android:id="@+id/ui_f_my_exit"
+
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/list_item_height"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
-                android:layout_marginRight="@dimen/button_margin_left_right_match_parent"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/red_btn_background"
-                android:clickable="true"
-                android:onClick="onMyClick"
-                android:text="退出"
-                android:textColor="@color/base_btn_text_color" />
+                android:layout_height="wrap_content"
+                android:background="#dddddd">
+
+                <Button
+                    android:onClick="onExit"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    style="@style/red_btn_style"
+                    android:text="退出"
+                    />
+            </FrameLayout>
+
 
         </LinearLayout>
     </ScrollView>

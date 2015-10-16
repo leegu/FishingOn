@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/base_bg_color"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:padding="@dimen/base_space_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/listitem_fplace_icon"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/base_space"
+            android:layout_weight="2"
+            android:src="@drawable/incon_116" />
+
+        <LinearLayout
+            android:id="@+id/float_view_detail_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:background="@drawable/base_listitem_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onMapFloatViewClick"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/base_space"
+            android:paddingRight="@dimen/base_space">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/fplace_temp_title"
+                    android:singleLine="true"
+                    android:text="海淀区驾驭钓鱼休闲体验区"
+                    android:textColor="#555555"
+                    android:textSize="@dimen/base_font_size_h4" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/fplace_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:paddingBottom="@dimen/base_space"
+                android:paddingTop="@dimen/base_space"
+                android:text="海淀区驾驭钓鱼休闲体验区，钓鱼凭的是本事"
+                android:textColor="#888888"
+                android:textSize="@dimen/base_font_size_h1" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/float_view_nav_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/float_view_background_suit_parent"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/incon_80"
+                    android:drawablePadding="@dimen/base_space_m"
+                    android:gravity="center_vertical"
+                    android:onClick="onClick"
+                    android:padding="@dimen/base_space_m"
+                    android:text="120"
+                    android:textColor="#d2d2d2"
+                    android:textSize="@dimen/base_font_size_h2" />
+
+                <TextView
+                    android:id="@+id/float_view_distance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/float_view_nav_btn"
+                    android:drawableLeft="@drawable/zan"
+                    android:drawablePadding="@dimen/base_space_m"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="120"
+                    android:textColor="#d2d2d2"
+                    android:textSize="@dimen/base_font_size_h2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawablePadding="@dimen/base_space_m"
+                    android:text="3分钟前"
+                    android:textColor="#d2d2d2"
+                    android:textSize="@dimen/base_font_size_h2" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#f7f7f7" />
+
+</LinearLayout>

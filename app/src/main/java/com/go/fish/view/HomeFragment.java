@@ -27,6 +27,7 @@ import com.go.fish.data.FPlaceData;
 import com.go.fish.data.MyListitemData;
 import com.go.fish.ui.HomeUI;
 import com.go.fish.ui.SearchUI;
+import com.go.fish.ui.UICode;
 import com.go.fish.ui.UIMgr;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
@@ -112,7 +113,7 @@ public class HomeFragment extends Fragment {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			final AdapterExt mListAdapter = AdapterExt.newInstance(getActivity(), jsonArr, R.layout.listitem_fnews);
+			final AdapterExt mListAdapter = AdapterExt.newInstance(fNewsList, jsonArr, R.layout.listitem_fnews);
 			fNewsList.setAdapter(mListAdapter);
 		}
 		{//my钓播
@@ -132,7 +133,7 @@ public class HomeFragment extends Fragment {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			fPlaceList.setAdapter(AdapterExt.newInstance(getActivity(),jsonArr,R.layout.listitem_fnews ));
+			fPlaceList.setAdapter(AdapterExt.newInstance(fPlaceList,jsonArr,R.layout.listitem_fnews ));
 		}
 	}
 	
@@ -215,12 +216,12 @@ public class HomeFragment extends Fragment {
 			break;
 		case R.layout.ui_f_care:{
 	    	ViewPager viewPager = (ViewPager) contentView.findViewById(R.id.search_viewpager);
-			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_search);
+			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce);
 			break;
 		}
 		case R.layout.ui_f_appear:{
 			ViewPager viewPager = (ViewPager) contentView.findViewById(R.id.search_viewpager);
-			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_search);
+			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce);
 			break;
 		}
 		case R.layout.ui_fnews:
@@ -238,6 +239,7 @@ public class HomeFragment extends Fragment {
 	private void onCreateMyView(ViewGroup view) {
 		{
 			final ListView list1 = (ListView)view.findViewById(R.id.ui_f_my_listview1);
+			list1.setDividerHeight(0);
 			MyListitemAdapter.fillToListView(list1,R.array.hmy_listview1, R.array.hmy_listview1_icons);
 			MessageHandler.sendMessage(new MessageHandler.MessageListener() {
 				@Override
@@ -271,9 +273,10 @@ public class HomeFragment extends Fragment {
 							break;
 						case 4:
 							Intent i = new Intent();
-//							UIMgr.showActivity(getActivity(),R.layout.ui_my_f_news);
-							i.putExtra(Const.PRI_TO_QR_CONTENT,"我是一个兵");
-							UIMgr.showActivity(getActivity(),i,BarcodeUI.class.getName());
+							i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_barcode);
+//							i.putExtra(Const.PRI_TO_QR_CONTENT,"我是一个兵");
+							i.setClassName(getActivity(), BarcodeUI.class.getName());
+							UIMgr.showActivity(getActivity(),i,UICode.RequestCode.REQUEST_BARCODE);
 							break;
 					}
 				}
@@ -281,6 +284,7 @@ public class HomeFragment extends Fragment {
 		}
 		{
 			ListView list2 = (ListView)view.findViewById(R.id.ui_f_my_listview2);
+			list2.setDividerHeight(0);
 			MyListitemAdapter.fillToListView(list2, R.array.hmy_listview2, R.array.hmy_listview2_icons);
 			list2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
@@ -292,6 +296,12 @@ public class HomeFragment extends Fragment {
 							break;
 						case 1://清除缓存
 							LocalMgr.self().clearCache();
+							break;
+						case 2:
+							Intent i = new Intent();
+							i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_barcode);
+							i.putExtra(Const.PRI_TO_QR_CONTENT,"13245698756");
+							UIMgr.showActivity(getActivity(),i,BarcodeUI.class.getName());
 							break;
 					}
 				}

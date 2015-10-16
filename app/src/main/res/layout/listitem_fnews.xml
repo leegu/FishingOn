@@ -1,148 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/base_space"
-    android:layout_marginRight="@dimen/base_space"
-    android:background="@drawable/base_listitem_background"
-    android:orientation="vertical"
-    android:weightSum="1" >
-
-    <include layout="@layout/listitem_friend" >
-    </include>
+    android:layout_height="wrap_content"
+    android:background="#ffffffff"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="@dimen/base_space"
-        android:layout_marginRight="@dimen/base_space"
-        android:layout_weight="0.25"
-        android:orientation="horizontal" >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1" >
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Large TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge Text"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="@dimen/base_font_size_h3" />
-    </LinearLayout>
-
-   <!--  <GridView
-        android:id="@+id/my_fishing_item_pics_gridview"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:drawSelectorOnTop="false"
-        android:numColumns="3"
-        android:stretchMode="columnWidth" /> -->
-
-    <GridView  
-        android:id="@+id/my_fishing_item_pics_gridview"  
-        android:layout_width="match_parent"  
-        android:layout_height="wrap_content"  
-        android:columnWidth="90dip"  
-        android:gravity="center"  
-        android:numColumns="auto_fit"  
-        android:stretchMode="columnWidth"  
-        android:verticalSpacing="10dip"  
-    />  
-    
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height" >
-
-        <TextView
-            android:id="@+id/listitem_fnews_share"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:onClick="onClick"
-            android:paddingRight="@dimen/base_space"
-            android:text="分享" />
+        <include
+            android:id="@+id/listitem_friend_layout"
+            layout="@layout/listitem_friend_for_ui_zan" >
+        </include>
+        <!--  -->
 
         <LinearLayout
-            android:id="@+id/t1"
+            android:background="@drawable/base_listitem_background"
+            android:padding="@dimen/base_space"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/base_space"
-            android:layout_marginRight="@dimen/base_space"
-            android:layout_toLeftOf="@id/listitem_fnews_share"
-            android:layout_toStartOf="@id/listitem_fnews_share"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
             android:orientation="horizontal" >
 
-            <LinearLayout
-                android:id="@+id/listitem_fnews_good"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.0"
-                android:clickable="true"
-                android:gravity="left|center_vertical"
-                android:onClick="onClick" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:text="赞:" />
-
-                <TextView
-                    android:id="@+id/listitem_fnews_good_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/listitem_fnews_good"
-                    android:text="100" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/listitem_fnews_comment"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.0"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:onClick="onClick" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="评论:" />
-
-                <TextView
-                    android:id="@+id/listitem_fnews_comment_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1000" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/listitem_fnews_care"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.0"
-                android:clickable="true"
-                android:gravity="center_vertical|right"
-                android:onClick="onClick" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="关注:" />
-
-                <TextView
-                    android:id="@+id/listitem_fnews_care_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1000" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Large TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge Text"
+                android:textColor="#888888"
+                android:maxLines="7"
+                android:textSize="@dimen/base_font_size_h3" />
         </LinearLayout>
-    </RelativeLayout>
+        <ViewStub
+            android:id="@+id/fnews_image_contianer_view_stub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout="@layout/horizontal_scroll_image_image" />
 
+        <LinearLayout
+            android:layout_marginLeft="@dimen/base_space"
+            android:layout_marginRight="@dimen/base_space"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             >
+
+            <ImageView
+                android:id="@+id/listitem_fnews_share"
+                style="@style/fnew_bottom_item_style"
+                android:src="@drawable/share_" />
+
+            <ImageView
+                android:id="@+id/listitem_fnews_care"
+                style="@style/fnew_bottom_item_style"
+                android:src="@drawable/hart_red" />
+
+            <ImageView
+                android:id="@+id/listitem_fnews_good"
+                style="@style/fnew_bottom_item_style"
+                android:src="@drawable/zan" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" >
+
+                <ImageView
+                    android:id="@+id/listitem_fnews_comment"
+                    style="@style/fnew_bottom_item_style"
+                    android:src="@drawable/comment" />
+
+                <TextView
+                    android:layout_marginLeft="@dimen/base_space_4"
+                    android:layout_marginTop="@dimen/base_space"
+                    android:id="@+id/listitem_fnews_comment_count"
+                    style="@style/badger_style"
+                    android:text="60" />
+            </RelativeLayout>
+            <!-- #eeeeee -->
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView 
+        android:background="#eeeeee"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_space_2"
+        />
+    
 </LinearLayout>

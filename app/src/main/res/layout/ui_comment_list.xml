@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- copy  beign -->
+
+    <RelativeLayout style="@style/head_bar_style" >
+
+        <RelativeLayout
+            android:id="@+id/base_head_bar_last"
+            style="@style/head_bar_pic_left_btn_style" >
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/arrow_left" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:visibility="invisible"
+            android:id="@+id/base_head_bar_next"
+            style="@style/head_bar_pic_right_btn_style" >
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/search" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/base_head_bar_title"
+            style="@style/head_bar_title_style"
+            android:layout_toLeftOf="@id/base_head_bar_next"
+            android:layout_toRightOf="@id/base_head_bar_last"
+            android:text="评论" >
+        </TextView>
+        
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
+    </RelativeLayout>
+    <!-- copy  end -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/comment_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </ListView>
+        <RelativeLayout
+            style="@style/bottom_span_style"
+            >
+            <TextView
+                android:id="@+id/comment_list_publish"
+                android:textSize="@dimen/base_font_size_h5"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:onClick="onCommentReplyClick"
+                android:clickable="true"
+                android:paddingLeft="@dimen/base_space_2"
+                android:paddingRight="@dimen/base_space_2"
+                android:text="发布"
+                android:textColor="@drawable/base_text_color_press"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/comment_list_reply_text"
+                android:background="@null"
+                android:hint="我来评论一下"
+                android:textColor="#ffffff"
+                android:onClick="onCommentReplyClick"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:textCursorDrawable="@null"
+                android:textColorHint="#2d83a8"
+                android:drawablePadding="@dimen/base_space"
+                android:drawableLeft="@drawable/comment"
+                android:layout_toLeftOf="@id/comment_list_publish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</LinearLayout>

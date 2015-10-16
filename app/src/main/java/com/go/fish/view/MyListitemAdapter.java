@@ -69,35 +69,45 @@ public class MyListitemAdapter extends BaseAdapter {
         return position;
     }
 
+    class MyListItemViewHolder{
+        TextView labelView,bedgerNumberView,sublabelView,lineView;
+        TextView leftIcon;
+    }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewGroup item = null;
-        TextView mainLabeView = null;
-        if(convertView == null){
+        View item = convertView;
+        MyListItemViewHolder viewHolder = null;
+        if(item == null){
             item = (ViewGroup)inflater.inflate(R.layout.listitem_my,null);
             item.setLayoutParams(new ListView.LayoutParams(-1,itemHeight));
-            mainLabeView = (TextView)item.findViewById(R.id.ui_f_my_listitem_label);
+            viewHolder = new MyListItemViewHolder();
+            item.setTag(viewHolder);
+            viewHolder.labelView = (TextView)item.findViewById(R.id.ui_f_my_listitem_label);
+            viewHolder.leftIcon = (TextView)item.findViewById(R.id.ui_f_my_listitem_pic_left);
+            viewHolder.bedgerNumberView = (TextView)item.findViewById(R.id.ui_f_my_listitem_bedger);
+            viewHolder.sublabelView = (TextView)item.findViewById(R.id.ui_f_my_listitem_sublabel);
+            viewHolder.lineView = (TextView)item.findViewById(R.id.line);
         }else{
-            item = (ViewGroup)convertView;
-            mainLabeView = (TextView)item.findViewById(R.id.ui_f_my_listitem_label);
+            viewHolder = (MyListItemViewHolder)convertView.getTag();
         }
         MyListitemData itemData = listDatas.get(position);
-        mainLabeView.setText(itemData.label);
+        viewHolder.labelView.setText(itemData.label);
 
+        if(position == listDatas.size() - 1){
+            viewHolder.lineView.setVisibility(View.INVISIBLE);
+        }
         if(itemData.leftIconId > 0){
-            TextView leftIcon = (TextView)item.findViewById(R.id.ui_f_my_listitem_pic_left);
-            leftIcon.setBackgroundResource(itemData.leftIconId);
+            viewHolder.leftIcon.setBackgroundResource(itemData.leftIconId);
         }else if(itemData.leftIconBitmap != null && !itemData.leftIconBitmap.isRecycled()){
-            TextView leftIcon = (TextView)item.findViewById(R.id.ui_f_my_listitem_pic_left);
-            leftIcon.setBackgroundDrawable(new BitmapDrawable(itemData.leftIconBitmap));
+            viewHolder.leftIcon.setBackgroundDrawable(new BitmapDrawable(itemData.leftIconBitmap));
         }
         if(itemData.bedgerNumber > 0){
-            TextView label = (TextView)item.findViewById(R.id.ui_f_my_listitem_bedger);
+            TextView label = viewHolder.bedgerNumberView;
             label.setVisibility(View.VISIBLE);
             label.setText(String.valueOf(itemData.bedgerNumber));
         }
         if(!TextUtils.isEmpty(itemData.subLabel)){
-            TextView subLabel = (TextView)item.findViewById(R.id.ui_f_my_listitem_sublabel);
+            TextView subLabel = viewHolder.sublabelView;
             subLabel.setVisibility(View.VISIBLE);
             subLabel.setText(itemData.subLabel);
         }

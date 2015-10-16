@@ -65,9 +65,12 @@ public class CommentAdapter extends BaseAdapter {
         TextView mainLabeView = null;
         if(convertView == null){
             item = (ViewGroup)inflater.inflate(R.layout.listitem_comment,null);
+            ViewHolder holder = new ViewHolder();
+            holder.rootView = item;
+            item.setTag(holder);
 //            item.setLayoutParams(new ListView.LayoutParams(-1,itemHeight));
         }else{
-            item = (ViewGroup)convertView;
+            item = (ViewGroup)((ViewHolder)convertView.getTag()).rootView;
         }
         mainLabeView = (TextView)item.findViewById(R.id.comment_listitem_name);
         CommentData itemData = listDatas.get(position);

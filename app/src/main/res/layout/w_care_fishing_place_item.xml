@@ -73,11 +73,11 @@
             android:textSize="@dimen/base_font_size_h4" />
 
         <TextView
-            android:id="@+id/float_view_care_btn"
+            android:id="@+id/float_view_care_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_toRightOf="@id/float_view_care_btn"
+            android:layout_toRightOf="@id/float_view_care_text"
             android:drawableLeft="@drawable/share"
             android:gravity="center_vertical"
             android:onClick="onMapFloatViewClick"

@@ -109,9 +109,9 @@ final class DecodeHandler extends Handler {
     if (rawResult != null) {
       Message message = Message.obtain(activity.getHandler(), CaptureActivityHandler.CODE_DECODE_SUCCEEDED, rawResult);
       //返回图片信息---begin
-//      Bundle bundle = new Bundle();
-//      bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap(true));//因为相机预览获取的数据为为横屏模式下数据，此时需要进行翻转
-//      message.setData(bundle);
+      Bundle bundle = new Bundle();
+      bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap(true));//因为相机预览获取的数据为为横屏模式下数据，此时需要进行翻转
+      message.setData(bundle);
 //      //Log.d(TAG, "Sending decode succeeded message...");
       message.sendToTarget();
       //----------end

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/calender_item_style_with_parent">
+
+        <FrameLayout
+            android:id="@+id/calendar_pic_status"
+            style="@style/calender_item_status_style_with_parent"></FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/calendar_date"
+                style="@style/calender_item_date_style_with_parent"
+                android:layout_alignParentBottom="true" />
+
+            <TextView
+                android:id="@+id/calendar_money"
+                style="@style/calender_item_money_style_with_parent"
+                android:layout_above="@id/calendar_date" />
+        </RelativeLayout>
+    </FrameLayout>
+   </merge>

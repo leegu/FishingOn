@@ -3,229 +3,181 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/base_color"
+    android:background="@color/base_bg_color"
     android:orientation="vertical"
-    tools:context=".ui.RegisterUI">
+    tools:context=".ui.RegisterUI" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar">
+    <RelativeLayout style="@style/head_bar_style" >
+
+        <RelativeLayout
+            android:id="@+id/base_ui_close"
+            style="@style/head_bar_pic_left_btn_style" >
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/arrow_left" />
+        </RelativeLayout>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/base_next"
+            style="@style/head_bar_text_right_btn_style"
+            android:layout_alignParentRight="true"
+            android:text="@string/reg_next" />
+
+        <TextView
+            android:id="@+id/base_head_bar_title"
+            style="@style/head_bar_title_style"
             android:layout_centerInParent="true"
-            android:text="@string/reg_title"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/base_font_size_h7" />
+            android:text="@string/reg_title" >
+        </TextView>
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
     </RelativeLayout>
+    <!-- head end -->
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="130dp"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space">
+                android:orientation="horizontal" >
+
+                <ImageView style="@style/login_icon_style" />
+            </LinearLayout>
+
+            <RelativeLayout style="@style/login_listitem_style" >
 
                 <ImageView
-                    android:layout_width="@dimen/base_user_icon_size"
-                    android:layout_height="@dimen/base_user_icon_size"
-                    android:background="@drawable/circle_solid"
-                    android:src="@drawable/icon" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_item_height"
-                android:background="@color/list_item_backgroud"
-                android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space">
-
-                <TextView
                     android:id="@+id/reg_text_phone_num_text"
-                    android:layout_width="@dimen/reg_3_width"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/reg_phone_num"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/list_item_base_text_size" />
+                    style="@style/login_listitem_left_drawable_style"
+                    android:src="@drawable/phone" />
 
-                <Button
-                    android:id="@+id/reg_get_check_code"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/get_check_code"
+                    style="@style/base_border_btn_style"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="right"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="@dimen/list_item_space_mid"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/corner_text_background"
-                    android:onClick="onClick"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:text="@string/reg_get_check_code"
-                    android:textColor="#ffffff"
-                    android:textSize="@dimen/list_item_hint_text_size" />
+                    android:text="@string/reg_get_check_code" />
 
                 <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/list_item_space_mid"
-                    android:layout_toLeftOf="@id/reg_get_check_code"
+                    android:id="@+id/text_phone_num_input"
+                    style="@style/base_input_style"
+                    android:layout_marginLeft="@dimen/list_item_divider"
+                    android:layout_toLeftOf="@id/get_check_code"
                     android:layout_toRightOf="@id/reg_text_phone_num_text"
-                    android:background="@null"
-                    android:cursorVisible="true"
-                    android:hint="@string/reg_input_phone_num"
-                    android:inputType="phone"
+                    android:hint="@string/login_account_phone_num"
                     android:maxLength="11"
-                    android:singleLine="true"
-                    android:textColor="#999999"
-                    android:textColorHint="#999999"
-                    android:textSize="@dimen/list_item_hint_text_size" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_item_height"
-                android:layout_marginTop="@dimen/list_item_divider"
-                android:background="@color/list_item_backgroud"
-                android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space">
+                    android:inputType="number" />
 
                 <TextView
-                    android:id="@+id/reg_pswd_text"
-                    android:layout_width="@dimen/reg_3_width"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/reg_pswd"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/list_item_base_text_size" />
+                    style="@style/head_bar_bottom_line_style"
+                    android:layout_alignParentBottom="true" >
+                </TextView>
+            </RelativeLayout>
 
-                <com.go.fish.view.Switcher
-                    android:id="@+id/reg_save_pswd"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
+            <RelativeLayout style="@style/login_listitem_style" >
+
+                <ImageView
+                    android:id="@+id/sms"
+                    style="@style/login_listitem_left_drawable_style"
+                    android:src="@drawable/sms" />
+
+                <EditText
+                    android:id="@+id/checkCode"
+                    style="@style/base_input_style"
+                    android:layout_marginLeft="@dimen/list_item_divider"
+                    android:layout_toRightOf="@id/sms"
+                    android:hint="@string/forget_pswd_text_check_code"
+                    android:inputType="number" />
+
+                <TextView
+                    style="@style/head_bar_bottom_line_style"
+                    android:layout_alignParentBottom="true" >
+                </TextView>
+            </RelativeLayout>
+
+            <RelativeLayout style="@style/login_listitem_style" >
+
+                <ImageView
+                    android:id="@+id/login_pswd_text"
+                    style="@style/login_listitem_left_drawable_style"
+                    android:src="@drawable/lock" />
+
+                <ImageView
+                    android:id="@+id/hide_show_pwsd"
+                    style="@style/hide_show_pwsd"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="right"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="@dimen/list_item_space_mid"
-                    android:layout_marginTop="8dp"
-                    android:clickable="true"
-                    android:onClick="onClick" />
+                    android:layout_centerInParent="true" />
 
                 <EditText
-                    android:id="@+id/reg_input_pswd"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/list_item_space_mid"
-                    android:layout_toLeftOf="@id/reg_save_pswd"
-                    android:layout_toRightOf="@id/reg_pswd_text"
-                    android:background="@null"
-                    android:cursorVisible="true"
-                    android:hint="@string/reg_set_pswd"
-                    android:inputType="textPassword"
-                    android:singleLine="true"
-                    android:textColor="#999999"
-                    android:textColorHint="#999999"
-                    android:textSize="@dimen/list_item_hint_text_size" />
+                    android:id="@+id/login_pswd_input"
+                    style="@style/base_input_style"
+                    android:hint="@string/please_input_pswd"
+                    android:layout_toLeftOf="@id/hide_show_pwsd"
+                    android:layout_toRightOf="@id/login_pswd_text" />
+
+                <TextView
+                    style="@style/head_bar_bottom_line_style"
+                    android:layout_alignParentBottom="true" >
+                </TextView>
             </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_item_height"
-                android:layout_marginTop="@dimen/list_item_divider"
-                android:background="@color/list_item_backgroud"
-                android:gravity="center_vertical"
+            <LinearLayout style="@style/login_listitem_style"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space">
-
-                <TextView
-                    android:layout_width="@dimen/reg_3_width"
-                    android:layout_height="wrap_content"
-                    android:text="@string/reg_check_code"
-                    android:textColor="#000000"
-                    android:textColorHint="#999999"
-                    android:textSize="@dimen/list_item_base_text_size" />
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/list_item_space_mid"
-                    android:background="@null"
-                    android:cursorVisible="true"
-                    android:hint="@string/reg_input_check_code"
-                    android:imeActionLabel="@string/reg_next"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:maxLength="6"
-                    android:singleLine="true"
-                    android:textColor="#999999"
-                    android:textSize="@dimen/list_item_hint_text_size" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
-                android:layout_marginTop="@dimen/list_item_space_max"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/reg_agree_rule"
-                    android:layout_width="@dimen/base_pic_drawable_x_width"
-                    android:layout_height="@dimen/base_pic_drawable_x_width"
-                    android:background="@color/base_btn_color"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:onClick="onClick"
-                    android:text="√"
-                    android:textColor="#ffffff" />
-
-                <TextView
-                    android:id="@+id/reg_agree_rule_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="@dimen/base_space"
-                    android:clickable="true"
+                 >
+                <LinearLayout
+                    android:layout_gravity="bottom"
                     android:gravity="center_vertical"
-                    android:onClick="onClick"
-                    android:text="@string/reg_reg_and_rule"
-                    android:textColor="@color/base_btn_color" />
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/reg_agree_rule"
+                        android:layout_width="@dimen/base_pic_drawable_x_width"
+                        android:layout_height="@dimen/base_pic_drawable_x_width"
+                        android:background="@drawable/blue_border_shape_corners_low"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="onClick"
+                        android:text="√"
+                        android:textColor="@color/base_btn_color" />
+
+                    <TextView
+                        android:id="@+id/reg_agree_rule_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/base_space"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:onClick="onClick"
+                        android:text="@string/reg_reg_and_rule"
+                        android:textColor="@color/text_btn_color" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/list_item_divider"
-                android:orientation="vertical">
+                style="@style/login_listitem_style"
+                android:layout_marginTop="@dimen/base_space_2"
+                android:orientation="vertical" >
 
                 <Button
                     android:id="@+id/reg_next"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/list_item_height"
-                    android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
-                    android:layout_marginRight="@dimen/button_margin_left_right_match_parent"
-                    android:background="@drawable/green_btn_background"
-                    android:onClick="onClick"
-                    android:text="@string/reg_next"
-                    android:textColor="@color/base_btn_text_color" />
+                    style="@style/base_button_style"
+                    android:text="@string/reg_next" />
             </LinearLayout>
+            
         </LinearLayout>
     </ScrollView>
+
 </LinearLayout>

@@ -14,6 +14,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.go.fish.util.LocalMgr;
 import com.go.fish.util.MapUtil.LocationData;
 import com.go.fish.util.MapUtil.OnGetLocationListener;
+import com.go.fish.util.UrlUtils;
 import com.igexin.sdk.PushManager;
 
 public class MainApplication extends Application {
@@ -34,6 +35,7 @@ public class MainApplication extends Application {
         mLocationClient.registerLocationListener(mMyLocationListener);
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
         LocalMgr.initEnv(this);
+        UrlUtils.initEnv(this);
         PushManager.getInstance().initialize(this);
         LocalServer server = new LocalServer(this, null);
 		server.start();

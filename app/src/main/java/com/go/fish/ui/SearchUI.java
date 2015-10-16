@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.Toast;
 
 import com.go.fish.R;
 import com.go.fish.data.FPlaceData;
@@ -28,13 +29,14 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 		super.onCreate(savedInstanceState);
 		fragmentMgr = getSupportFragmentManager();
 		int layout = getIntent().getIntExtra(Const.PRI_EXTRA_LAYOUT_ID, 0);
-		initDetailFragment();
 		if(layout == R.layout.ui_f_search_item_detail){
+			initDetailFragment();
 			detailFragment.isFront = true;
 			Bundle dataBundle = getIntent().getExtras();
 			Bundle b = detailFragment.getArguments();
 			b.putString(Const.STA_FISHING_PLACE_ID, dataBundle.getString(Const.STA_FISHING_PLACE_ID));
 			b.putString(Const.STA_TEXT, dataBundle.getString(Const.STA_TEXT));
+			b.putString(Const.STA_TITLE, dataBundle.getString(Const.STA_TITLE));
 			b.putString(Const.PRI_JSON_DATA, dataBundle.getString(Const.PRI_JSON_DATA));
 			detailFragment.setArguments(b);
 			fragmentMgr.beginTransaction().add(R.id.search_content, detailFragment).commit();
@@ -60,15 +62,16 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 			case R.id.search_head_back:
 				finish();
 				break;
-			case R.id.search_item_detail_head_menu:
+			case R.id.search_item_detail_share:
 				if(detailFragment != null) {
-					detailFragment.onHeadClick(view);
+					Toast.makeText(this,"分享",Toast.LENGTH_LONG).show();
+//					detailFragment.onHeadClick(view);
 				}
 				break;
 			case R.id.search_head_btn:
 				IME.hideIME(view);
 				ViewPager viewPager = (ViewPager) searchFragment.getView().findViewById(R.id.search_viewpager);
-				BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_search);
+				BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce);
 				break;
 			default:
 				super.onClick(view);
@@ -100,6 +103,9 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		ft.addToBackStack(null);
 		ft.commit();
+	}
+	public void onShare(View view) {
+		ViewHelper.share(this, Const.DEFT_SHARE_CONTENT);
 	}
 	public void onMapFloatViewClick(View view) {
 		int id = view.getId();
@@ -135,7 +141,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
             rData.putData(Const.STA_FISHING_PLACE_ID, fPlaceId);
             NetTool.data().http(rData.syncCallback());
 			break;
-		case R.id.float_view_care_btn:
+		case R.id.float_view_care_text:
 			
 			break;
 		case R.id.float_view_nav_btn:
@@ -154,6 +160,6 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 
 	@Override
 	public void onCommentReplyClick(View view) {
-		UIMgr.showActivity(this,R.layout.ui_comment_publish);
+		UIMgr.showActivity(this,R.layout.ui_comment_list);
 	}
 }

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.go.fish.R;
+import com.go.fish.view.ViewHelper;
 
 /**
  * 单张图片显示Fragment
@@ -41,7 +42,8 @@ public class ImageDetailFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View v = inflater.inflate(R.layout.w_image_detail_fragment, container, false);
 		mImageView = (ImageView) v.findViewById(R.id.image);
-		mImageView.setImageResource(R.drawable.welcome1);
+		ViewHelper.load(mImageView, mImageUrl);
+//		mImageView.setImageResource(R.drawable.welcome1);
 		mAttacher = new PhotoViewAttacher(mImageView);
 		mAttacher.setOnPhotoTapListener(new OnPhotoTapListener() {
 			@Override

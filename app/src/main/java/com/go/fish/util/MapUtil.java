@@ -32,7 +32,9 @@ public class MapUtil {
 //		mapView.getMap().getUiSettings().setCompassEnabled(false);
 		return mapView;
 	}
- 	
+	public static void getLocation(Activity context,OnGetLocationListener listener){
+		getLocation(context,listener,0);
+	}
 	public static void getLocation(Activity context,OnGetLocationListener listener,int span){
 		MainApplication app = (MainApplication)context.getApplication();
 		app.mOnGetLocationListener = listener;

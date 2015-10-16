@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical"
+    android:background="@color/action_sheet_bg">
+    <!-- copy  beign -->
+    <RelativeLayout style="@style/action_sheet_head_bar_style">
+
+        <RelativeLayout
+            android:id="@+id/action_sheet_cancel"
+            style="@style/head_bar_pic_left_btn_style">
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/cancel" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/action_sheet_ok"
+            style="@style/head_bar_pic_right_btn_style">
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/ok" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/base_head_bar_title"
+            style="@style/head_bar_title_style"
+            android:layout_toLeftOf="@id/action_sheet_ok"
+            android:layout_toRightOf="@id/action_sheet_cancel"
+            android:textColor="@color/action_sheet_item_text_color"
+            android:text="请选择"></TextView>
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:background="#264D5F"
+            android:layout_alignParentBottom="true"></TextView>
+    </RelativeLayout>
+    <!-- copy  end -->
+
+    <ListView
+        android:id="@+id/action_sheet_list"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:scrollbars="none"
+        android:divider="#264D5F"
+        android:fadingEdge="none"
+        android:cacheColorHint="#FFF4F4F4"
+        android:dividerHeight="@dimen/base_border"></ListView>
+
+</LinearLayout>

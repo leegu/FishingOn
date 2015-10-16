@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="reg_and_login_btn_style">
+
+        <!-- 登录注册按钮样式 -->
+        <item name="android:background">@drawable/white_border_bg</item>
+        <item name="android:layout_width">@dimen/wel_login_width</item>
+        <item name="android:layout_height">@dimen/wel_login_height</item>
+        <item name="android:textSize">@dimen/base_font_size_h5</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="action_sheet_head_bar_style">
+
+        <!-- head样式 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/head_bar_height</item>
+        <!-- <item name="android:background">#ffffff</item> -->
+    </style>
+
+    <style name="head_bar_style">
+
+        <!-- head样式 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/head_bar_height</item>
+        <item name="android:background">#ffffff</item>
+        <!--  -->
+    </style>
+
+    <style name="head_bar_pic_style">
+
+        <!-- head 图片按钮大小样式 -->
+        <item name="android:layout_width">@dimen/head_bar_icon_width</item>
+        <item name="android:layout_height">@dimen/head_bar_icon_height</item>
+        <item name="android:clickable">false</item>
+    </style>
+
+    <style name="head_bar_bottom_line_style">
+
+        <!-- head 底部线样式 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#d0d0d0</item>
+        <!--
+        <item name="android:paddingTop">@dimen/base_space</item>
+        <item name="android:paddingBottom">@dimen/base_space</item>
+        -->
+    </style>
+
+    <style name="head_bar_title_style">
+
+        <!-- head标题文字按钮 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">@dimen/base_font_size_h7</item>
+        <item name="android:textColor">@color/head_bar_title_color</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="head_bar_text_left_btn_style">
+
+        <!-- head左边文字按钮 -->
+        <item name="android:background">@drawable/base_background</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minWidth">@dimen/head_bar_width</item>
+        <item name="android:textSize">@dimen/base_font_size_h5</item>
+        <item name="android:textColor">@color/base_btn_color</item>
+        <item name="android:paddingLeft">@dimen/base_space</item>
+        <item name="android:paddingRight">@dimen/base_space</item>
+        <item name="android:onClick">onHeadClick</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_alignParentLeft">false</item>
+    </style>
+
+    <style name="head_bar_text_right_btn_style" parent="head_bar_text_left_btn_style">
+
+        <!-- head右边文字按钮 -->
+        <item name="android:background">@drawable/base_background</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minWidth">@dimen/head_bar_width</item>
+        <item name="android:textSize">@dimen/base_font_size_h5</item>
+        <item name="android:textColor">@color/base_btn_color</item>
+        <item name="android:paddingLeft">@dimen/base_space</item>
+        <item name="android:paddingRight">@dimen/base_space</item>
+        <item name="android:onClick">onHeadClick</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="head_bar_pic_left_btn_style">
+
+        <!-- head左边图片按钮 -->
+        <item name="android:background">@drawable/base_background</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:minWidth">@dimen/head_bar_width</item>
+        <item name="android:paddingLeft">@dimen/base_space</item>
+        <item name="android:paddingRight">@dimen/base_space</item>
+        <item name="android:gravity">center</item>
+        <item name="android:onClick">onHeadClick</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="head_bar_pic_right_btn_style">
+
+        <!-- head右边图片按钮 -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:minWidth">@dimen/head_bar_width</item>
+        <item name="android:paddingLeft">@dimen/base_space</item>
+        <item name="android:paddingRight">@dimen/base_space</item>
+        <item name="android:gravity">center</item>
+        <item name="android:onClick">onHeadClick</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/base_background</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="login_icon_style">
+
+        <!-- icon -->
+        <item name="android:layout_width">@dimen/base_icon_width</item>
+        <item name="android:layout_height">@dimen/base_icon_width</item>
+        <item name="android:background">@drawable/icon</item>
+    </style>
+
+    <style name="login_listitem_style">
+
+        <!-- 登陆相关界面 listitem样式 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_item_height_1_2_5</item>
+        <item name="android:layout_marginTop">@dimen/list_item_divider</item>
+        <item name="android:layout_marginLeft">@dimen/list_item_space_mid</item>
+        <item name="android:layout_marginRight">@dimen/list_item_space_mid</item>
+    </style>
+
+    <style name="login_listitem_left_drawable_style">
+
+        <!-- 登陆相关界面 listitem样式 -->
+        <item name="android:layout_width">@dimen/reg_3_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="base_input_style">
+
+        <!-- 输入框样式 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:gravity">center_vertical|left</item>
+        <item name="android:background">@null</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/input_text_color</item>
+        <item name="android:textColorHint">@color/hint_text_color</item>
+        <item name="android:textSize">@dimen/base_font_size_h5</item>
+    </style>
+
+    <style name="hide_show_pwsd">
+
+        <!-- 输入框样式 -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/icon_switch_on</item>
+        <item name="android:tag">true</item>
+        <item name="android:paddingTop">@dimen/base_space</item>
+        <item name="android:paddingBottom">@dimen/base_space</item>
+        <item name="android:onClick">onChange</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="base_button_style">
+
+        <!-- 输入框样式 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_item_height</item>
+        <item name="android:background">@drawable/base_btn_bg</item>
+        <item name="android:onClick">onClick</item>
+        <item name="android:textColor">@color/base_btn_text_color</item>
+        <item name="android:textSize">@dimen/base_font_size_h7</item>
+    </style>
+
+    <style name="base_tips_style">
+
+        <!-- 输入框样式 -->
+        <item name="android:layout_width">@dimen/tips_input_text_space</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textColor">@color/text_btn_color</item>
+        <item name="android:textSize">@dimen/base_font_size_h6</item>
+    </style>
+
+    <style name="base_text_btn">
+
+        <!-- 输入框样式 -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/list_item_space_8</item>
+        <item name="android:background">@drawable/base_btn_bg</item>
+        <item name="android:textColor">@color/base_btn_color</item>
+        <item name="android:textSize">@dimen/base_font_size_h5</item>
+        <item name="android:onClick">onClick</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="base_border_btn_style">
+
+        <!-- border 按钮样式 -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/list_item_space_8</item>
+        <item name="android:background">@drawable/base_border_bg</item>
+        <item name="android:textColor">@color/base_btn_color</item>
+        <item name="android:textSize">@dimen/base_font_size_h3</item>
+        <item name="android:onClick">onClick</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="badger_style">
+
+        <!-- badger样式 -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">right|top</item>
+        <item name="android:background">@drawable/badger_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLength">5</item>
+        <item name="android:minHeight">16dp</item>
+        <item name="android:minWidth">16dp</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:text">1117</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">9dp</item>
+    </style>
+
+    <style name="red_btn_style">
+
+        <!-- red按钮样式 -->
+        <item name="android:layout_marginLeft">@dimen/base_space_2</item>
+        <item name="android:layout_marginRight">@dimen/base_space_2</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_item_height</item>
+        <item name="android:background">@drawable/red_btn_bg_no_corners</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textColor">@color/base_btn_text_color</item>
+    </style>
+
+    <style name="foot_bar_item_style">
+
+        <!-- foot item按钮样式 -->
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/foot_bar_item_bg</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:onClick">onFootItemClick</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="foot_bar_item_icon_style">
+
+        <!-- foot item icon 样式 -->
+        <item name="android:layout_width">@dimen/foot_bar_icon_width_height</item>
+        <item name="android:layout_height">@dimen/foot_bar_icon_width_height</item>
+    </style>
+
+    <style name="foot_bar_item_text_style">
+
+        <!-- foot item text 样式 -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:textColor">@color/foot_bar_text_color</item>
+        <item name="android:textSize">@dimen/base_font_size_h1</item>
+    </style>
+
+    <style name="float_map_pic_btn_style">
+
+        <!-- float map button 样式 -->
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/base_space_2</item>
+        <item name="android:background">@drawable/border_no_corners_bg</item>
+        <item name="android:layout_marginTop">@dimen/base_space_2</item>
+        <item name="android:gravity">center</item>
+        <item name="android:onClick">onLocation</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="calender_item_style">
+
+        <!-- calender item 样式 -->
+        <item name="android:background">@drawable/list_pop_win_bg</item>
+        <item name="android:layout_margin">@dimen/base_space</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:layout_width">@dimen/calender_item_width</item>
+        <item name="android:layout_height">@dimen/calender_item_height</item>
+    </style>
+
+    <style name="calender_item_money_style">
+
+        <!-- calender item money 样式 -->
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">@dimen/base_font_size_h3</item>
+        <item name="android:textColor">@color/calender_disable_money_text_color</item>
+        <item name="android:text">100￥</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="calender_item_date_style">
+
+        <!-- calender item date样式 -->
+        <item name="android:background">@color/calender_disable_bg_color</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/base_font_size_h1</item>
+        <item name="android:text">10月11日</item>
+        <item name="android:textColor">@color/calender_disable_text_color</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="calender_item_status_style">
+
+        <!-- calender item status样式 -->
+        <item name="android:layout_gravity">right|top</item>
+        <item name="android:background">@drawable/z_</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="calender_item_style_with_parent">
+
+        <!-- calender item 样式 -->
+        <item name="android:background">@drawable/list_pop_win_bg</item>
+        <item name="android:layout_margin">@dimen/base_space</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/calender_item_height_with_parent</item>
+    </style>
+
+    <style name="calender_item_money_style_with_parent">
+
+        <!-- calender item money 样式 -->
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">@dimen/base_font_size_h_9</item>
+        <item name="android:textColor">@color/calender_disable_money_text_color</item>
+        <item name="android:text">100￥</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="calender_item_date_style_with_parent">
+
+        <!-- calender item date样式 -->
+        <item name="android:background">@color/calender_disable_bg_color</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/base_font_size_h_8</item>
+        <item name="android:text">10月11日</item>
+        <item name="android:textColor">@color/calender_disable_text_color</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="calender_item_status_style_with_parent">
+
+        <!-- calender item status样式 -->
+        <item name="android:layout_gravity">right|top</item>
+        <item name="android:background">@drawable/z_</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="split_line_vertical">
+
+        <!-- 竖向分隔线样式 -->
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:background">#d0d0d0</item>
+        <item name="android:layout_width">0.5dp</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="fplace_detail_menu_item">
+
+        <!-- menu Item -->
+        <item name="android:background">@drawable/base_background</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="fplace_detail_menu_item_text">
+
+        <!-- 竖向分隔线样式 -->
+        <item name="android:textColor">#b4b4b4</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/base_space_2</item>
+        <item name="android:paddingBottom">@dimen/base_space</item>
+        <item name="android:paddingLeft">@dimen/base_space</item>
+        <item name="android:paddingRight">@dimen/base_space</item>
+        <item name="android:drawablePadding">@dimen/base_space</item>
+        <item name="android:drawableTop">@drawable/incon_114_</item>
+    </style>
+
+    <style name="fplace_detail_span_line_left">
+
+        <!-- 章节左分隔线 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#d0d0d0</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">@dimen/base_space_2</item>
+        <item name="android:layout_marginRight">@dimen/base_space_2</item>
+    </style>
+
+    <style name="fplace_detail_span_line_right">
+
+        <!-- 章节右分隔线 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#d0d0d0</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">@dimen/base_space_2</item>
+        <item name="android:layout_marginRight">@dimen/base_space_2</item>
+    </style>
+
+    <style name="fplace_detail_span_text">
+
+        <!-- 章节分隔文本 -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#b4b4b4</item>
+    </style>
+
+    <style name="fplace_detail_span_icon">
+
+        <!-- 章节分隔图标 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/comment</item>
+    </style>
+
+    <style name="average_width_weight_1">
+
+        <!-- weight 1 横向占有 -->
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:padding">@dimen/base_space</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="detail_bottom_item">
+
+        <!-- 钓场详情 底部item -->
+        <item name="android:layout_width">@dimen/detail_bottom_item_size</item>
+        <item name="android:layout_height">@dimen/detail_bottom_item_size</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/circle_gray_solid</item>
+    </style>
+
+    <style name="detail_bottom_item_text">
+
+        <!-- 钓场详情 底部item 文本 -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/base_space</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="friend_item_name_style">
+
+        <!-- 钓友 name -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:text">张三丰</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:textSize">@dimen/base_font_size_h5</item>
+    </style>
+
+    <style name="friend_item_text_style">
+
+        <!-- 钓友 text -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">#aaaaaa</item>
+        <item name="android:textSize">@dimen/base_font_size_h2</item>
+    </style>
+
+    <style name="fnew_bottom_item_style">
+
+        <!-- 钓播底部 分享、关注等项样式 -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">@dimen/base_space_2</item>
+        <item name="android:paddingTop">@dimen/base_space_2</item>
+        <item name="android:clickable">true</item>
+        <item name="android:onClick">onClick</item>
+        <item name="android:paddingRight">@dimen/base_space_4</item>
+    </style>
+
+    <style name="bottom_span_style">
+
+        <!-- 钓播底部 分享、关注等项样式 -->
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:background">@color/foot_bar_bg_color</item>
+        <item name="android:paddingLeft">@dimen/base_space_4</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/foot_bar_height</item>
+    </style>
+
+    <style name="tag_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/tag</item>
+        <item name="android:textSize">@dimen/base_font_size_h1</item>
+        <item name="android:paddingBottom">0.5dp</item>
+        <item name="android:paddingLeft">@dimen/base_space</item>
+        <item name="android:paddingRight">@dimen/base_space</item>
+        <item name="android:paddingTop">0.5dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:text">夜钓</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="dialog_btn_style">
+        <item name="android:layout_marginRight">@dimen/base_space</item>
+        <item name="android:background">@drawable/gray_no_corners_bg</item>
+        <item name="android:textColor">#aaaaaa</item>
+        <item name="android:clickable">true</item>
+        <item name="android:padding">@dimen/base_space_2</item>
+        <item name="android:layout_margin">@dimen/base_space</item>
+        <item name="android:textSize">@dimen/base_font_size_h5</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="dialog_title_style">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:padding">@dimen/base_space_4</item>
+        <item name="android:textSize">@dimen/base_font_size_h6</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="nav_btn_style">
+        <item name="android:visibility">invisible</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:background">@drawable/float_view_background_suit_parent</item>
+        <item name="android:clickable">true</item>
+        <item name="android:drawableLeft">@drawable/incon_45</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:onClick">onNav</item>
+        <item name="android:text">@string/hfs_nav</item>
+        <item name="android:textColor">@color/text_btn_color</item>
+        <item name="android:textSize">@dimen/base_font_size_h4</item>
+    </style>
+
+</resources>

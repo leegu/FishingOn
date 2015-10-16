@@ -1,27 +1,41 @@
 package com.go.fish.view;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.go.fish.R;
 import com.go.fish.util.Const;
@@ -77,47 +91,47 @@ public class ViewHelper {
 		}
 	}
 	
-	private static ViewGroup newCustomeTabGroup(Context context,String[] itemLabels){
-		LayoutInflater inflater = LayoutInflater.from(context);
-		ViewGroup tab = (ViewGroup)inflater.inflate(R.layout.tab_custome, null);
-		LinearLayout tabContent = (LinearLayout) tab.findViewById(R.id.search_tab_content);
-		Resources res = context.getResources();
-		int sw = res.getDisplayMetrics().widthPixels;
-		int leftOrRightWidth = res.getDimensionPixelSize(R.dimen.tab_arrow_left) + res.getDimensionPixelSize(R.dimen.tab_arrow_right);
-		int tabItemWidth = (sw - leftOrRightWidth) / 4;
-		for (String t : itemLabels) {
-			ViewGroup tabitemLinear = (ViewGroup) inflater.inflate(
-				R.layout.tabitem_fplace_type, null);
-			{
-				TextView tabitem = (TextView) tabitemLinear.getChildAt(0);
-				tabitem.setText(t);
-			}
-			{
-				TextView status = (TextView) tabitemLinear.getChildAt(1);
-				status.setBackgroundColor(Color.GRAY);
-			}
-			tabContent.addView(tabitemLinear, new LayoutParams(
-				tabItemWidth, LayoutParams.MATCH_PARENT));
-		}
-		tab.setLayoutParams(new LayoutParams(-1,res.getDimensionPixelSize(R.dimen.tab_height)));
-		return tab;
-	}
+//	private static ViewGroup newCustomeTabGroup(Context context,String[] itemLabels){
+//		LayoutInflater inflater = LayoutInflater.from(context);
+//		ViewGroup tab = (ViewGroup)inflater.inflate(R.layout.tab_custome, null);
+//		LinearLayout tabContent = (LinearLayout) tab.findViewById(R.id.search_tab_content);
+//		Resources res = context.getResources();
+//		int sw = res.getDisplayMetrics().widthPixels;
+//		int leftOrRightWidth = res.getDimensionPixelSize(R.dimen.tab_arrow_left) + res.getDimensionPixelSize(R.dimen.tab_arrow_right);
+//		int tabItemWidth = (sw - leftOrRightWidth) / 4;
+//		for (String t : itemLabels) {
+//			ViewGroup tabitemLinear = (ViewGroup) inflater.inflate(
+//				R.layout.tabitem_fplace_type, null);
+//			{
+//				TextView tabitem = (TextView) tabitemLinear.getChildAt(0);
+//				tabitem.setText(t);
+//			}
+//			{
+//				TextView status = (TextView) tabitemLinear.getChildAt(1);
+//				status.setBackgroundColor(Color.GRAY);
+//			}
+//			tabContent.addView(tabitemLinear, new LayoutParams(
+//				tabItemWidth, LayoutParams.MATCH_PARENT));
+//		}
+//		tab.setLayoutParams(new LayoutParams(-1,res.getDimensionPixelSize(R.dimen.tab_height)));
+//		return tab;
+//	}
 	
-	public static ViewGroup newMainView(Context context, FragmentManager fm, ResultForActivityCallback callback, String[] itemLabels){
+	public static ViewGroup newMainView(final Context context, FragmentManager fm, ResultForActivityCallback callback, String[] itemLabels){
 		LayoutInflater inflater = LayoutInflater.from(context);
 		ViewGroup vg = (ViewGroup)inflater.inflate(R.layout.view_main_content, null);
 		final LinearLayout tabContent = (LinearLayout) vg.findViewById(R.id.search_tab_content);
+		((HorizontalScrollView)tabContent.getParent()).setHorizontalFadingEdgeEnabled(false);
 		Resources res = context.getResources();
 		int sw = res.getDisplayMetrics().widthPixels;
-		int leftOrRightWidth = res.getDimensionPixelSize(R.dimen.tab_arrow_left) + res.getDimensionPixelSize(R.dimen.tab_arrow_right);
-		int tabItemWidth = (sw - leftOrRightWidth) / 4;
+		int leftOrRightWidth = res.getDimensionPixelSize(R.dimen.base_space) * 8;
+		int tabItemWidth = (sw - leftOrRightWidth) / 4 - 6;
 		final ViewPager viewPager = (ViewPager) vg.findViewById(R.id.search_viewpager);
 		final ArrayList<Fragment> fragmentArr = new ArrayList<Fragment>();
 		View.OnClickListener tabItemListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				int position = Integer.parseInt(String.valueOf(v.getTag()));
-//				updateChildrenBackground(tabContent, 1, 1, position, Color.GRAY, Color.WHITE);//触发viewpager的选择事件
 				viewPager.setCurrentItem(position);
 			}
 		};
@@ -132,10 +146,14 @@ public class ViewHelper {
 					tabitem.setTag(i);
 					tabitem.setOnClickListener(tabItemListener);
 					tabitem.setClickable(true);
+					if(i == 0) {//设置焦点状态
+						tabitem.setTextColor(context.getResources().getColor(R.color.tabitem_foucs_color));
+					}
 				}
 				if(i == 0){//设置焦点状态
+					tabContent.setTag(tabitemLinear);
 					TextView status = (TextView) tabitemLinear.getChildAt(1);
-					status.setBackgroundColor(Color.GRAY);
+					status.setVisibility(View.VISIBLE);
 				}
 				tabContent.addView(tabitemLinear, new LayoutParams(
 						tabItemWidth, LayoutParams.MATCH_PARENT));
@@ -152,8 +170,24 @@ public class ViewHelper {
 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
-				updateChildrenBackground(tabContent, 1, 1, position, Color.GRAY, Color.WHITE);
-				((FPlaceListFragment) fragmentArr.get(position)).updateAdapter();
+				if (tabContent.getChildAt(position) != tabContent.getTag()) {
+					{//修改老焦点
+						ViewGroup tabitemLinear = (ViewGroup) tabContent.getTag();
+						TextView tabitem = (TextView) tabitemLinear.getChildAt(0);
+						tabitem.setTextColor(context.getResources().getColor(R.color.text_btn_color));
+						TextView tabitemStatus = (TextView) tabitemLinear.getChildAt(1);
+						tabitemStatus.setVisibility(View.GONE);
+					}
+					{//设置新焦点
+						ViewGroup tabitemLinear = (ViewGroup) tabContent.getChildAt(position);
+						TextView tabitem = (TextView) tabitemLinear.getChildAt(0);
+						tabitem.setTextColor(context.getResources().getColor(R.color.tabitem_foucs_color));
+						TextView tabitemStatus = (TextView) tabitemLinear.getChildAt(1);
+						tabitemStatus.setVisibility(View.VISIBLE);
+						tabContent.setTag(tabitemLinear);
+					}
+					((FPlaceListFragment) fragmentArr.get(position)).updateAdapter();
+				}
 			}
 
 			@Override
@@ -203,7 +237,7 @@ public class ViewHelper {
 		popupWindow.showAtLocation(view, 0, x, y + floatView.getHeight());//(anchor, -width, -anchor.getHeight() * 3 / 4);
 	}
 
-	public static PopupWindow showPopupWindow(Context context,PopupWindow popupWindow,View anchor,View contentView){
+	public static PopupWindow showPopupWindow(Context context, PopupWindow popupWindow, View anchor, View contentView){
 		int width = context.getResources().getDimensionPixelSize(R.dimen.pop_win_list_width);
 		if(popupWindow == null){
 			popupWindow = new PopupWindow();
@@ -217,13 +251,84 @@ public class ViewHelper {
 			popupWindow.setBackgroundDrawable(new BitmapDrawable());
 		}
 		popupWindow.setContentView(contentView);
-		popupWindow.showAsDropDown(anchor, -width, -anchor.getHeight() * 3 / 4);
+		popupWindow.showAsDropDown(anchor, -(width  + context.getResources().getDimensionPixelSize(R.dimen.base_space_2) ), -anchor.getHeight()/* * 3 / 4*/);
 		return popupWindow;
 	}
 
+	public static void showConfrim(Context context,int layoutId,final OnClickListener listener){
+		showConfrim(context, layoutId, listener, null, null, null);
+	}
+	public static void showConfrim(Context context,int layoutId,final OnClickListener listener,String title,String leftBtn,String rightBtn){
+		final CustomeDialog dialog = new CustomeDialog(context, layoutId);
+		View view = dialog.getRootView();
+		OnClickListener l = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+				listener.onClick(v);
+			}
+		};
+		TextView titleView = ((TextView)view.findViewById(R.id.confirm_dialog_title));
+		if(!TextUtils.isEmpty(title)){
+			titleView.setText(title);
+		}
+		TextView leftBtnView = ((TextView)view.findViewById(R.id.confirm_dialog_btn_left));
+		if(!TextUtils.isEmpty(leftBtn)){
+			leftBtnView.setText(leftBtn);
+		}
+		leftBtnView.setOnClickListener(l);
+		TextView rightBtnView = ((TextView)view.findViewById(R.id.confirm_dialog_btn_right));
+		if(!TextUtils.isEmpty(rightBtn)){
+			rightBtnView.setText(rightBtn);
+		}
+		rightBtnView.setOnClickListener(l);
+		dialog.show();
+	}
+	/**
+	 *
+	 * 创建DefaultDialog,并设置slide-in-top\slide-out-top动画
+	 * @param context
+	 * @param alpha
+	 * @return
+	 */
+	public static Dialog createDefaultDialog(Context context, View contentView, int w, int h, float alpha){
+		final Dialog d = new Dialog(context,R.style.dialog_window_in_out);
+		d.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+		d.setContentView(contentView);
+		d.setCanceledOnTouchOutside(false);
+//        //设置触摸对话框意外的地方取消对话框
+//        setCanceledOnTouchOutside(true);
 
+		Window window = d.getWindow(); //得到对话框
+//        window.setBackgroundDrawable(CanvasHelper.getDrawable(0xff000000));
+		window.setWindowAnimations(R.style.dialog_window_in_out); //设置窗口弹出动画
+//        window.setBackgroundDrawableResource(R.color.dcloud_defalut_dialog_bg_color); //设置对话框背景为透明
+		WindowManager.LayoutParams wl = window.getAttributes();
+//        wl.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
+//        wl.verticalMargin = 0;
+		//根据x，y坐标设置窗口需要显示的位置
+		wl.x = 0; //x小于0左移，大于0右移
+		wl.y = 0; //y小于0上移，大于0下移
+		wl.width = (w == -1 ? context.getResources().getDisplayMetrics().widthPixels : w);
+//		wl.height = -2;
+        wl.height = h == -1 ? (context.getResources().getDisplayMetrics().heightPixels * 2 / 3) : h;
+        wl.alpha = alpha; //设置透明度
+		wl.gravity = Gravity.BOTTOM; //设置重力
+		window.setAttributes(wl);
+		return d;
+	}
+
+	public static void showToast(Context context,String text){
+		Toast.makeText(context,text,Toast.LENGTH_LONG).show();
+	}
 	public static ProgressDialog sPopupWindow = null;
 	public static void showGlobalWaiting(Context context,ProgressDialog.OnDismissListener listener){
+		showGlobalWaiting(context, listener,"数据加载中...",-1);
+	}
+	public static void showGlobalWaiting(Context context,ProgressDialog.OnDismissListener listener,String text){
+		showGlobalWaiting(context,null,text,-1);
+	}
+	public static void showGlobalWaiting(Context context,ProgressDialog.OnDismissListener listener,String text,int timeoutTime){
 		if(sPopupWindow != null){
 			sPopupWindow.dismiss();
 		}
@@ -231,29 +336,55 @@ public class ViewHelper {
 //		LayoutInflater li = LayoutInflater.from(context);
 //		sPopupWindow.addContentView(li.inflate(R.layout.ui_waiting, null),new LayoutParams(-1, -1));
 //		sPopupWindow.setOnDismissListener(listener);
-		sPopupWindow = ProgressDialog.show(context,null,"数据加载中...");
-		sPopupWindow.setCanceledOnTouchOutside(false);
-		sPopupWindow.setCancelable(true);
+		try {
+			sPopupWindow = ProgressDialog.show(context,null,text);
+			sPopupWindow.setCanceledOnTouchOutside(false);
+			sPopupWindow.setCancelable(true);
+			if(timeoutTime > 0){
+                Timer t = new Timer();
+                t.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        closeGlobalWaiting();
+                    }
+                },timeoutTime);
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void closeGlobalWaiting(){
-		if(sPopupWindow != null){
+		if(sPopupWindow != null && sPopupWindow.isShowing()){
 			sPopupWindow.dismiss();
 		}
 	}
 	
 	public static void load(ImageView view,String url){
+		load(view, url, true);
+	}
+	public static void load(ImageView view,String url,boolean allowNetLoad){
+		load(view, url, allowNetLoad, true);
+	}
+	public static void load(ImageView view,String url,boolean allowNetLoad,final boolean forBg){
 		Bitmap bm = ImageLoader.self().getBitmapFromLruCache(url);
-		if(bm == null){//从缓存取
+		if(bm == null && allowNetLoad){//从缓存取
 			bm = LocalMgr.self().getBitmap(url);
 			if(bm == null){//从本地取
 				ImageLoader.self().loadNetImage(new ImageLoader.DownloadTask<ImageView>(url, view){
 					@Override
+					public void onStart() {
+//						taskReceiver.setBackgroundResource(R.drawable.pic);
+					}
+					@Override
 					public void onEnd(String downUrl, Bitmap bitmap) {
 						if(bitmap != null){
 							if(taskReceiver instanceof ImageView){
-	//							((ImageView)taskReceiver).setImageBitmap(bitmap);
-								((ImageView)taskReceiver).setBackgroundDrawable(new BitmapDrawable(bitmap));
+								if(forBg){
+									((ImageView)taskReceiver).setBackgroundDrawable(new BitmapDrawable(bitmap));
+								}else{
+									((ImageView)taskReceiver).setImageBitmap(bitmap);
+								}
 								LocalMgr.self().save(downUrl, bitmap);
 							}
 							ImageLoader.self().addBitmapToLruCache(downUrl, bitmap);
@@ -261,11 +392,25 @@ public class ViewHelper {
 					}
 				});
 			}else{
-				view.setBackgroundDrawable(new BitmapDrawable(bm));
+				if(forBg){
+					view.setBackgroundDrawable(new BitmapDrawable(bm));
+				}else{
+					view.setImageBitmap(bm);
+				}
 			}
 		}else{
-			view.setBackgroundDrawable(new BitmapDrawable(bm));
+			if(forBg){
+				view.setBackgroundDrawable(new BitmapDrawable(bm));
+			}else{
+				view.setImageBitmap(bm);
+			}
 		}
 	}
 
+	public static void share(Activity activity,String text){
+		Intent sendIntent = new Intent(android.content.Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, text);
+		sendIntent.setType("text/plain");
+		activity.startActivity(Intent.createChooser(sendIntent, Const.DEFT_SHARE_TO));
+	}
 }

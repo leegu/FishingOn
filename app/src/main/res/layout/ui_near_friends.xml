@@ -4,47 +4,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar" >
+    <RelativeLayout style="@style/head_bar_style" >
 
-        <TextView
-            android:id="@+id/base_ui_close"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/head_bar_height"
-            android:layout_alignParentLeft="true"
-            android:clickable="true"
-            android:gravity="center"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space"
-            android:background="@drawable/base_background"
-            android:onClick="onHeadClick"
-            android:textSize="@dimen/base_font_size_h4"
-            android:textColor="@color/head_bar_title_color"
-            android:text="@string/base_ui_close" />
+        <RelativeLayout
+            android:id="@+id/search_head_back"
+            style="@style/head_bar_pic_left_btn_style"
+            >
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/arrow_left" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/search_head_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/head_bar_height"
             android:layout_alignParentRight="true"
-            android:clickable="true"
-            android:gravity="center"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space"
-            android:background="@drawable/base_background"
-            android:textSize="@dimen/base_font_size_h4"
-            android:textColor="@color/head_bar_right_color"
-            android:onClick="onHeadClick"
-            android:text="@string/home_search_btn" />
+            style="@style/head_bar_text_right_btn_style"
+            android:text="搜搜"
+            />
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="6dp"
             android:layout_toLeftOf="@id/search_head_btn"
-            android:layout_toRightOf="@id/base_ui_close"
+            android:layout_toRightOf="@id/search_head_back"
             android:background="@drawable/translucent_white_shape"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/base_space" >
@@ -66,6 +51,11 @@
                 android:singleLine="true"
                 android:textSize="@dimen/base_font_size_h4" />
         </LinearLayout>
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
     </RelativeLayout>
     <ListView
         android:id="@+id/ui_near_f_friends_listview"

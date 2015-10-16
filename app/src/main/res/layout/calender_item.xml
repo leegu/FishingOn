@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <FrameLayout style="@style/calender_item_style">
+
+        <FrameLayout
+            android:id="@+id/calendar_pic_status"
+            style="@style/calender_item_status_style"></FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/calendar_date"
+                style="@style/calender_item_date_style"
+                android:layout_alignParentBottom="true" />
+
+            <TextView
+                android:id="@+id/calendar_money"
+                style="@style/calender_item_money_style"
+                android:layout_above="@id/calendar_date" />
+        </RelativeLayout>
+    </FrameLayout>
+</FrameLayout>

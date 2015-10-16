@@ -92,6 +92,7 @@ public class BaseFragment extends Fragment {
 	public void onHeadClick(View view){
 		if(menuContent == null){
 			ListView list = (ListView) LayoutInflater.from(getActivity()).inflate(R.layout.list_pop_win, null);
+			list.setDividerHeight(0);
 			menuContent = list;
 			list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
@@ -153,16 +154,16 @@ public class BaseFragment extends Fragment {
 							TextView item = new TextView(getActivity());
 							item.setLayoutParams(new LayoutParams(focusItemSize,focusItemSize));
 							if(i == 0){
-								item.setBackgroundResource(R.drawable.circle_gray_solid);
+								item.setBackgroundResource(R.drawable.circle_gray_solid_focus);
 							}else{
-								item.setBackgroundResource(R.drawable.circle_gray);
+								item.setBackgroundResource(R.drawable.circle_gray_solid);
 							}
 							focusItems.addView(item);
 						}
 						banner.setOnPageChangeListener(new OnPageChangeListener() {
 							@Override
 							public void onPageSelected(int arg0) {
-								ViewHelper.updateChildrenBackground(focusItems, arg0, R.drawable.circle_gray_solid, R.drawable.circle_gray);
+								ViewHelper.updateChildrenBackground(focusItems, arg0, R.drawable.circle_gray_solid_focus, R.drawable.circle_gray_solid);
 							}
 							@Override
 							public void onPageScrolled(int arg0, float arg1, int arg2) {}
@@ -179,32 +180,32 @@ public class BaseFragment extends Fragment {
 					}
 				}
 			}
-			if (json.has("menu_tabs")) {
-				view.findViewById(R.id.search_item_detail_head_menu).setVisibility(View.VISIBLE);
-				ViewGroup menus = (ViewGroup) view.findViewById(R.id.menu_contents);
-				JSONArray arr = json.getJSONArray("menu_tabs");
-				int len = arr.length();
-				strMenuLables = new String[len];
-				LayoutInflater inflater = LayoutInflater.from(getActivity());
-				for (int i = 0; i < len; i++) {
-					JSONObject ti = arr.getJSONObject(i);
-					View menuItem = inflater.inflate(R.layout.w_fplace_detail_menu_item, null);
-					{
-						TextView t = (TextView)menuItem.findViewById(R.id.title);
-						String title = ti.getString("title");
-						t.setText(title);
-						strMenuLables[i] = title;
-					}
-					{
-						TextView t = (TextView)menuItem.findViewById(R.id.value);
-						t.setText(ti.getString("content"));
-					}
-					menus.addView(menuItem);
-				}
-			}
+//			if (json.has("menu_tabs")) {
+//				view.findViewById(R.id.search_item_detail_head_menu).setVisibility(View.VISIBLE);
+//				ViewGroup menus = (ViewGroup) view.findViewById(R.id.menu_contents);
+//				JSONArray arr = json.getJSONArray("menu_tabs");
+//				int len = arr.length();
+//				strMenuLables = new String[len];
+//				LayoutInflater inflater = LayoutInflater.from(getActivity());
+//				for (int i = 0; i < len; i++) {
+//					JSONObject ti = arr.getJSONObject(i);
+//					View menuItem = inflater.inflate(R.layout.w_fplace_detail_menu_item, null);
+//					{
+//						TextView t = (TextView)menuItem.findViewById(R.id.title);
+//						String title = ti.getString("title");
+//						t.setText(title);
+//						strMenuLables[i] = title;
+//					}
+//					{
+//						TextView t = (TextView)menuItem.findViewById(R.id.value);
+//						t.setText(ti.getString("content"));
+//					}
+//					menus.addView(menuItem);
+//				}
+//			}
 			if(json.has("comments")){
-				ListView commentListView = (ListView) view.findViewById(R.id.search_item_detail_comment_list);
-				CommentAdapter.fillToListView(commentListView,json.getJSONArray("comments"));
+//				ListView commentListView = (ListView) view.findViewById(R.id.search_item_detail_comment_list);
+//				CommentAdapter.fillToListView(commentListView,json.getJSONArray("comments"));
 			}
 		}catch (Exception e){
 

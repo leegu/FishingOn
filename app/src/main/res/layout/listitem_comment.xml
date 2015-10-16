@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_height_2"
-    android:background="@color/list_item_backgroud"
-    android:orientation="horizontal" >
-
-    <RelativeLayout
+    android:layout_height="wrap_content"
+    android:padding="@dimen/base_space"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/base_space" >
-
-        <ImageView
+        android:layout_height="wrap_content">
+        <com.go.fish.view.CircleImageView
             android:id="@+id/comment_listitem_icon"
             android:layout_width="@dimen/base_pic_icon_width"
             android:layout_height="@dimen/base_pic_icon_height"
@@ -20,45 +18,65 @@
             android:background="@drawable/circle_solid"
             android:src="@drawable/icon" />
 
-        <TextView
-            android:id="@+id/comment_listitem_name"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/comment_listitem_icon"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/list_item_space_mid"
-            android:text="磊"
-            android:textColor="@color/list_item_text_color" />
-    </RelativeLayout>
+            android:padding="@dimen/base_space" >
+            <RelativeLayout
+                android:paddingLeft="@dimen/base_space"
+                android:paddingRight="@dimen/base_space"
+                android:paddingBottom="@dimen/base_space"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/comment_listitem_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="磊"
+                    android:textColor="#888888" />
+                <TextView
+                    android:id="@+id/comment_listitem_time"
+                    android:layout_toRightOf="@id/comment_listitem_name"
+                    android:paddingLeft="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1分钟前"
+                    android:textColor="#d2d2d2" />
+                <ImageView
+                    android:clickable="true"
+                    android:onClick="onCommentReplyClick"
+                    android:layout_gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/comment" />
+            </RelativeLayout>
 
-    <RelativeLayout
+            <TextView
+                android:paddingLeft="@dimen/base_space"
+                android:paddingRight="@dimen/base_space"
+                android:id="@+id/comment_listitem_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onCommentReplyClick"
+                android:text="很长很评论"
+                android:textColor="#888888" />
+            <ViewStub
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:clickable="true"
+                android:onClick="onCommentReplyClick"
+                android:padding="@dimen/base_space" >
+            </ViewStub>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:background="@drawable/line"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:padding="@dimen/base_space" >
-        <TextView
-            android:id="@+id/comment_listitem_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:clickable="true"
-            android:onClick="onCommentReplyClick"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:text="很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的评论"
-            android:textColor="@color/list_item_text_color" />
-
-        <TextView
-            android:id="@+id/comment_listitem_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignRight="@id/comment_listitem_text"
-            android:text="1分钟前"
-            android:textColor="@color/list_item_text_color" />
-
-    </RelativeLayout>
-
+        android:layout_height="1dp" />
 </LinearLayout>

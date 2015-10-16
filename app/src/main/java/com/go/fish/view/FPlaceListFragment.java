@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -22,7 +23,7 @@ import com.go.fish.data.FPlaceData;
 import com.go.fish.util.Const;
 import com.go.fish.view.BaseFragment.ResultForActivityCallback;
 
-public class FPlaceListFragment extends Fragment implements OnItemClickListener{
+public class FPlaceListFragment extends Fragment implements OnItemClickListener,OnLongClickListener{
 	public String name = null;
 	FPlaceListAdapter mListAdapter = null;
 	ListView mListView = null;
@@ -58,6 +59,7 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener{
 				mListView.addFooterView(mFooterTextView, null, false);
 			}
 			mListView.setOnItemClickListener(this);
+			mListView.setOnLongClickListener(this);
 			mListView.setAdapter(mListAdapter);
 			mListView.setBackgroundColor((int)new Random().nextLong());
 		}
@@ -100,5 +102,11 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener{
 				mListAdapter = new FPlaceListAdapter(mListView.getContext(), new ArrayList<FPlaceData>());
 			}
 		}
+	}
+
+	@Override
+	public boolean onLongClick(View v) {
+		ViewHelper.showToast(getActivity(), "长按" + v);
+		return false;
 	}
 }

@@ -20,6 +20,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -59,12 +60,18 @@ import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+import android.widget.TextView;
 
+import com.go.fish.R;
+import com.go.fish.ui.RegisterUI;
 import com.go.fish.util.NetTool.RequestData.HttpOption;
+import com.go.fish.view.ViewHelper;
 
 public class NetTool {
 
@@ -88,11 +95,19 @@ public class NetTool {
 	public static NetTool bitmap() {
 		if (bitmapNetTool == null) {
 			bitmapNetTool = new NetTool();
-			bitmapNetTool.Handler = Executors.newFixedThreadPool(3);
+			bitmapNetTool.Handler = Executors.newFixedThreadPool(1);
 		}
 		return bitmapNetTool;
 	}
 
+	public void http(RequestListener listener,JSONObject jsonObject,String url){
+		RequestData rData = RequestData.newInstance(listener,jsonObject,url);
+		rData.addHeader(Const.STA_USER_AGENT, UrlUtils.self().getUserAgent());
+		if(!TextUtils.isEmpty(UrlUtils.self().getToken())){
+			rData.addHeader(Const.STA_CC_TOKEN, UrlUtils.self().getToken());
+		}
+		http(rData.syncCallback());
+	}
 	/***
 	 * 默认使用GET请求方式
 	 * 
@@ -142,7 +157,26 @@ public class NetTool {
 					if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
 						Log.e(TAG, "http fail, status code = "
 								+ resp.getStatusLine().getStatusCode());
-						listener.onEnd(null);
+						if (rData.synCallBack) {
+							MessageHandler
+									.sendMessage(new MessageHandler.MessageListener<byte[]>() {
+										byte data[] = null;
+
+										@Override
+										public MessageHandler.MessageListener init(
+												byte[] data) {
+											this.data = data;
+											return this;
+										}
+
+										@Override
+										public void onExecute() {
+											rData.mListener.onEnd(this.data);
+										}
+									}.init(null));
+						} else {
+							listener.onEnd(null);
+						}
 						return;
 					}
 
@@ -275,8 +309,6 @@ public class NetTool {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			httpPost.setHeader("Accept", "application/json");
-			httpPost.setHeader("Content-type", "application/json");
 		} else {//表单提交(文字数据、图片)
 			String mMainBoundry = getBoundry();
 			// 存储上传数据的输入流集合
@@ -319,6 +351,19 @@ public class NetTool {
 			// }
 			// });
 			httpPost.setEntity(ise);
+		}
+		if(!rData.mHeads.containsKey("Accept")){
+			httpPost.setHeader("Accept", "application/json");
+		}
+		if(!rData.mHeads.containsKey("Content-type")){
+			httpPost.setHeader("Content-type", "application/json;charset=UTF-8");
+		}
+		Iterator<String> _iterator = rData.mHeads.keySet().iterator();
+		String _name, _value;
+		while (_iterator.hasNext()) {
+			_name = _iterator.next();
+			_value = rData.mHeads.get(_name);
+			httpPost.setHeader(_name, _value);
 		}
 		return httpPost;
 	}
@@ -402,13 +447,13 @@ public class NetTool {
 		HttpOption option = HttpOption.GET;
 		String url;
 		boolean synCallBack = false;
-		private ArrayMap<String, String> mStringDataArr = null;
+		private HashMap<String, String> mStringDataArr = null;
 		private List<File> mFileDataList = null;
 		RequestListener mListener = null;
 		/** GET方式提交json字符串数据 */
 		JSONObject mJsonData = null;
 		static String sHost = Const.SIN_HOST;
-
+		HashMap<String,String> mHeads = new HashMap<String,String>();
 		private RequestData(String url, RequestListener listener) {
 			this(url, null, listener);
 		}
@@ -439,6 +484,11 @@ public class NetTool {
 				this.option = HttpOption.POST;
 			}
 		}
+		
+		public HashMap<String, String> addHeader(String key,String value){
+			mHeads.put(key, value);
+			return mHeads;
+		}
 
 		/**
 		 * 放入字符串数据(post请求有效)
@@ -448,7 +498,7 @@ public class NetTool {
 		 */
 		public void putData(String key, String value) {
 			if (mStringDataArr == null) {
-				mStringDataArr = new ArrayMap<String, String>();
+				mStringDataArr = new HashMap<String, String>();
 				this.option = HttpOption.POST;
 			}
 			mStringDataArr.put(key, value);
@@ -483,6 +533,10 @@ public class NetTool {
 		public static RequestData newInstance(RequestListener listener,
 				JSONObject json) {
 			return new RequestData(RequestData.sHost, json, listener);
+		}
+		public static RequestData newInstance(RequestListener listener,
+				JSONObject json,String url) {
+			return new RequestData(url, json, listener);
 		}
 
 		public static RequestData newInstance(RequestListener listener,
@@ -528,8 +582,10 @@ public class NetTool {
 
 		public JSONObject toJSONObject(byte[] data) {
 			try {
-				String json = new String(data, "utf-8");
-				return new JSONObject(json);
+				if(data != null){
+					String json = new String(data, "utf-8");
+					return new JSONObject(json);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -547,5 +603,35 @@ public class NetTool {
 		}
 
 		public abstract void onEnd(byte[] data);
+	}
+	
+	public static void doo(){
+		new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+//                return mTrafficFreeHelper.getSmsCode(phone);
+            	return false;//
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                if (aBoolean) {
+                	CountDownTimer mCountDownTimer = new CountDownTimer(100 * 1000, 1000) {
+
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+//                            mButtonGetSmsCode.setClickable(false);
+//                            mButtonGetSmsCode.setText(String.valueOf(millisUntilFinished / 1000 - 1) + "秒");
+                        }
+
+                        @Override
+                        public void onFinish() {
+//                            mButtonGetSmsCode.setClickable(true);
+//                            mButtonGetSmsCode.setText("获取验证码");
+                        }
+                    }.start();
+                }
+            }
+        }.execute();
 	}
 }

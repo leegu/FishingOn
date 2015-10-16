@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- copy  beign -->
+    <RelativeLayout style="@style/head_bar_style" >
+
+        <RelativeLayout
+            android:id="@+id/base_head_bar_last"
+            style="@style/head_bar_pic_left_btn_style" >
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/arrow_left" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:visibility="invisible"
+            android:id="@+id/base_head_bar_next"
+            style="@style/head_bar_pic_right_btn_style" >
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/search" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/base_head_bar_title"
+            style="@style/head_bar_title_style"
+            android:layout_toLeftOf="@id/base_head_bar_next"
+            android:layout_toRightOf="@id/base_head_bar_last"
+            android:text="点赞（100）" >
+        </TextView>
+        
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
+    </RelativeLayout>
+    <!-- copy  end -->
+
+    <ListView
+        android:id="@+id/zan_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ListView>
+</LinearLayout>

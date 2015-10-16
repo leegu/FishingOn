@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    >
+    <TextView
+        android:id="@+id/head_text_view_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@color/text_btn_color"
+        android:text="黑钓"
+        android:gravity="center"
+        android:textSize="@dimen/base_font_size_h4" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/head_text_view_status"
+        android:background="@color/tabitem_foucs_color"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
+        />
+</RelativeLayout>

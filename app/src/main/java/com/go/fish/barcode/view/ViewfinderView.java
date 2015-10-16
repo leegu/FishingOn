@@ -179,7 +179,7 @@ public final class ViewfinderView extends View {
 				public void run() {
 					updateScreen();
 				}
-			}, 0, 10);
+			}, 0, 3);
 			running = true;
 		}
 	}

@@ -9,8 +9,10 @@ public class DetectorViewConfig {
 	private static final int MAX_FRAME_HEIGHT = 360;
 	
 	public static int maskColor = 0x60000000;
-	public static int laserColor_ = 0x00ff0000;
-	public static int laserColor = 0xffff0000;
+//	public static int laserColor_ = 0x00ff0000;
+//	public static int laserColor = 0xffff0000;
+	public static int laserColor_ = 0x0000ff00;
+	public static int laserColor = 0xff00ff00;
 	public static int cornerColor = laserColor;
 	public static int resultPointColor = 0xc0ffff00;
 	

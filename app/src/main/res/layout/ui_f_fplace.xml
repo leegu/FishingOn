@@ -5,57 +5,43 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar" >
+    <!-- head begin -->
+    <RelativeLayout style="@style/head_bar_style" >
 
-        <TextView
-            android:id="@+id/search_head_back"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/head_bar_height"
-            android:clickable="true"
-            android:gravity="center"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space"
-            android:background="@drawable/base_background"
-            android:onClick="onHeadClick"
-            android:textSize="@dimen/base_font_size_h4"
-            android:textColor="@color/head_bar_left_color"
-            android:text="天气" />
+        <RelativeLayout
+            android:id="@+id/base_head_bar_weather"
+            style="@style/head_bar_pic_left_btn_style"
+            >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:background="@drawable/base_background"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="@string/home_fishing_place_title"
-            android:textColor="@color/head_bar_title_color"
-            android:textSize="@dimen/base_font_size_h7" >
-        </TextView>
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/weather" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/fishing_place_head_search_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:clickable="true"
-            android:gravity="center"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space"
-            android:background="@drawable/base_background"
-            android:onClick="onHeadClick" >
+            style="@style/head_bar_pic_right_btn_style" >
 
             <ImageView
-                android:layout_width="@dimen/head_bar_icon_width"
-                android:layout_height="@dimen/head_bar_icon_height"
-                android:clickable="false"
-                android:src="@drawable/search_white" />
+                style="@style/head_bar_pic_style"
+                android:background="@drawable/search"
+                />
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/base_head_bar_title"
+            style="@style/head_bar_title_style"
+            android:layout_toLeftOf="@id/fishing_place_head_search_btn"
+            android:layout_toRightOf="@id/base_head_bar_weather"
+            android:text="@string/home_fishing_place_title" >
+        </TextView>
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
     </RelativeLayout>
+    <!-- head end -->
 
     <FrameLayout
         android:id="@+id/fishing_place_bmap_view"

@@ -1,31 +1,197 @@
 ﻿[{
-    urls: ['https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3984140715,1665759755&fm=58', 'https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073'],
-    goodCount:40,
-    comment:20,
-    careCount:2,
-    text:'华为Mate S采用了一体化全金属设计，背部也采用了弧形设计，带来了更好的手感。除此之外，Mate S还进行了轻薄化设计，机身仅重156g，最薄处仅为2.65mm，整机尺寸稍微小于iPhone 6 Plus。配置方面，采用了2.5D的5.5英寸1080P屏幕，视觉体验和颜值上都得到了很大的提升，搭载自家麒麟935八核处理器，存储组合为3GB RAM+64GB ROM，最高支持128GB的内存卡扩展，前置800万像素（配备了一枚补光灯）+后置1300万像素摄像头，搭载4色RGBW传感器并支持光学防抖。'
+    "author":{
+        "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
+        "user_id":10003,
+        "name":"张三",
+        "far":"50米",
+        "year":2,
+        "times":6
+    },
+    "news_id":105002,
+    "urls": [],
+    "goodCount":14,
+    "commentCount":210,
+    "careCount":332,
+    "text":"华硕今天展示了34英寸弧形超广角玩家国度Swift显示器。这台显示器尺寸34英寸，采用曲面设计，具有超宽21:9的屏幕，具体型号为PG348Q。超宽屏显示器在玩家中已经变得越来越参加，可以为他们提供更身临其境的体验，LG，宏碁和华硕现在均已经推出自己的超宽屏显示器产品。"
 },{
-    urls: ['https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3984140715,1665759755&fm=58', 'https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073'],
-    goodCount:240,
-    comment:2,
-    careCount:12,
-    text:'围绕着主题“Touch”华为Mate S的指纹识别也进入了2.0时代，与Mate7相比，新一代的指纹感应技术的指纹识别效率提高了一倍，除此之外，指纹识别按键同时还支持查看下拉通知栏、接听电话、自拍快门等功能。'
+    "author":{
+         "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
+        "user_id":10003,
+        "name":"张三",
+        "far":"50米",
+        "year":2,
+        "times":6
+    },
+    "news_id":101002,
+    "urls": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
+            ,"http://img2.imgtn.bdimg.com/it/u=2527473326,1844263864&fm=206&gp=0.jpg","http://img4.imgtn.bdimg.com/it/u=1649033152,2058089280&fm=206&gp=0.jpg","http://pic.nipic.com/2008-05-26/2008526114122930_2.jpg"
+            ,"http://pic6.nipic.com/20100305/4248696_124524728708_2.jpg","http://img4.imgtn.bdimg.com/it/u=2740233851,218672123&fm=206&gp=0.jpg","http://pica.nipic.com/2008-06-06/20086675134534_2.jpg"
+
+    ],
+    "goodCount":14,
+    "commentCount":210,
+    "careCount":332,
+    "text":"日前联想官方微博发布了一张海报，海报中用Moto 360二代的表盘配上“It's time”的标语，充分证明了9月8日联想秋季新品发布会上，将正式发布Moto 360二代。"
 },{
-    urls: ['https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3984140715,1665759755&fm=58', 'https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073'],
-    goodCount:14,
-    comment:210,
-    careCount:332,
-    text:'华为Mate S将分为两个版本，分别是标准版和高配版，前者为3GB RAM+32GB ROM，提供银、灰两色选择，售价为649欧元（约合人民币4637元）；后者为3GB RAM+64GB ROM，提供金、粉两色选择，售价为699欧元（约合人民币4994元），9月15日将在32个国家和地区率先上市进行预售。'
+    "author":{
+         "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
+        "user_id":10003,
+        "name":"张三",
+        "far":"50米",
+        "year":2,
+        "times":6
+    },
+    "news_id":100002,
+    "urls": ["http://a0.att.hudong.com/78/32/01300000231518122137321626800_950.jpg", "http://pic15.nipic.com/20110812/5200151_031803723128_2.jpg","http://img.taopic.com/uploads/allimg/111109/53162-11110910454466.jpg"],
+    "goodCount":40,
+    "commentCount":20,
+    "careCount":2,
+    "text":"华为Mate S采用了一体化全金属设计，背部也采用了弧形设计，带来了更好的手感。除此之外，Mate S还进行了轻薄化设计，机身仅重156g，最薄处仅为2.65mm，整机尺寸稍微小于iPhone 6 Plus。配置方面，采用了2.5D的5.5英寸1080P屏幕，视觉体验和颜值上都得到了很大的提升，搭载自家麒麟935八核处理器，存储组合为3GB RAM+64GB ROM，最高支持128GB的内存卡扩展，前置800万像素（配备了一枚补光灯）+后置1300万像素摄像头，搭载4色RGBW传感器并支持光学防抖。"
 },{
-    urls: ['https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3984140715,1665759755&fm=58', 'https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073'],
-    goodCount:14,
-    comment:210,
-    careCount:332,
-    text:'华硕今天展示了34英寸弧形超广角玩家国度Swift显示器。这台显示器尺寸34英寸，采用曲面设计，具有超宽21:9的屏幕，具体型号为PG348Q。超宽屏显示器在玩家中已经变得越来越参加，可以为他们提供更身临其境的体验，LG，宏碁和华硕现在均已经推出自己的超宽屏显示器产品。'
+    "author":{
+         "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
+        "user_id":10003,
+        "name":"张三",
+        "far":"50米",
+        "year":2,
+        "times":6
+    },
+    "news_id":105002,
+    "urls": [],
+    "goodCount":14,
+    "commentCount":210,
+    "careCount":332,
+    "text":"华硕今天展示了34英寸弧形超广角玩家国度Swift显示器。这台显示器尺寸34英寸，采用曲面设计，具有超宽21:9的屏幕，具体型号为PG348Q。超宽屏显示器在玩家中已经变得越来越参加，可以为他们提供更身临其境的体验，LG，宏碁和华硕现在均已经推出自己的超宽屏显示器产品。"
 },{
-    urls: ['https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3984140715,1665759755&fm=58', 'https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073'],
-    goodCount:14,
-    comment:210,
-    careCount:332,
-    text:'日前联想官方微博发布了一张海报，海报中用Moto 360二代的表盘配上“It\'s time”的标语，充分证明了9月8日联想秋季新品发布会上，将正式发布Moto 360二代。'
+    "author":{
+         "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
+        "user_id":10003,
+        "name":"张三",
+        "far":"50米",
+        "year":2,
+        "times":6
+    },
+    "news_id":101002,
+    "urls": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
+            ,"http://img2.imgtn.bdimg.com/it/u=2527473326,1844263864&fm=206&gp=0.jpg","http://img4.imgtn.bdimg.com/it/u=1649033152,2058089280&fm=206&gp=0.jpg","http://pic.nipic.com/2008-05-26/2008526114122930_2.jpg"
+            ,"http://pic6.nipic.com/20100305/4248696_124524728708_2.jpg","http://img4.imgtn.bdimg.com/it/u=2740233851,218672123&fm=206&gp=0.jpg","http://pica.nipic.com/2008-06-06/20086675134534_2.jpg"
+
+    ],
+    "goodCount":14,
+    "commentCount":210,
+    "careCount":332,
+    "text":"日前联想官方微博发布了一张海报，海报中用Moto 360二代的表盘配上“It's time”的标语，充分证明了9月8日联想秋季新品发布会上，将正式发布Moto 360二代。"
+},{
+    "author":{
+         "photo_url":"http://img5.duitang.com/uploads/item/201404/04/20140404175033_VJzLi.thumb.600_0.jpeg",
+        "user_id":10001,
+        "name":"刘大",
+        "far":"10,000米",
+        "year":2,
+        "times":76
+    },
+    "news_id":105002,
+    "urls": [],
+    "goodCount":14,
+    "commentCount":210,
+    "careCount":332,
+    "text":"华硕今天展示了34英寸弧形超广角玩家国度Swift显示器。这台显示器尺寸34英寸，采用曲面设计，具有超宽21:9的屏幕，具体型号为PG348Q。超宽屏显示器在玩家中已经变得越来越参加，可以为他们提供更身临其境的体验，LG，宏碁和华硕现在均已经推出自己的超宽屏显示器产品。"
+},{
+    "author":{
+         "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
+        "user_id":10003,
+        "name":"张三",
+        "far":"50米",
+        "year":2,
+        "times":6
+    },
+    "news_id":108902,
+    "urls": ["https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3984140715,1665759755&fm=58", "http://a0.att.hudong.com/78/32/01300000231518122137321626800_950.jpg"],
+    "goodCount":240,
+    "commentCount":2,
+    "careCount":12,
+    "text":"围绕着主题“Touch”华为Mate S的指纹识别也进入了2.0时代，与Mate7相比，新一代的指纹感应技术的指纹识别效率提高了一倍，除此之外，指纹识别按键同时还支持查看下拉通知栏、接听电话、自拍快门等功能。"
+},{
+    "author":{
+         "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
+        "user_id":10003,
+        "name":"张三",
+        "far":"50米",
+        "year":2,
+        "times":6
+    },
+    "news_id":101002,
+    "urls": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
+            ,"http://img2.imgtn.bdimg.com/it/u=2527473326,1844263864&fm=206&gp=0.jpg","http://img4.imgtn.bdimg.com/it/u=1649033152,2058089280&fm=206&gp=0.jpg","http://pic.nipic.com/2008-05-26/2008526114122930_2.jpg"
+            ,"http://pic6.nipic.com/20100305/4248696_124524728708_2.jpg","http://img4.imgtn.bdimg.com/it/u=2740233851,218672123&fm=206&gp=0.jpg","http://pica.nipic.com/2008-06-06/20086675134534_2.jpg"
+
+    ],
+    "goodCount":14,
+    "commentCount":210,
+    "careCount":332,
+    "text":"日前联想官方微博发布了一张海报，海报中用Moto 360二代的表盘配上“It's time”的标语，充分证明了9月8日联想秋季新品发布会上，将正式发布Moto 360二代。"
+},{
+    "author":{
+         "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
+        "user_id":10003,
+        "name":"张三",
+        "far":"50米",
+        "year":2,
+        "times":6
+    },
+    "news_id":100902,
+    "urls": ["http://www.jydoc.com/uploads/jydoc/p42001/200912420103782877801.jpg"],
+    "goodCount":14,
+    "commentCount":210,
+    "careCount":332,
+    "text":"华为Mate S将分为两个版本，分别是标准版和高配版，前者为3GB RAM+32GB ROM，提供银、灰两色选择，售价为649欧元（约合人民币4637元）；后者为3GB RAM+64GB ROM，提供金、粉两色选择，售价为699欧元（约合人民币4994元），9月15日将在32个国家和地区率先上市进行预售。"
+},{
+    "author":{
+         "photo_url":"http://img3.imgtn.bdimg.com/it/u=3709009494,4126148509&fm=21&gp=0.jpg",
+        "user_id":10006,
+        "name":"赵六",
+        "far":"160米",
+        "year":2,
+        "times":6
+    },
+    "news_id":105002,
+    "urls": [],
+    "goodCount":14,
+    "commentCount":210,
+    "careCount":332,
+    "text":"华硕今天展示了34英寸弧形超广角玩家国度Swift显示器。这台显示器尺寸34英寸，采用曲面设计，具有超宽21:9的屏幕，具体型号为PG348Q。超宽屏显示器在玩家中已经变得越来越参加，可以为他们提供更身临其境的体验，LG，宏碁和华硕现在均已经推出自己的超宽屏显示器产品。"
+},{
+    "author":{
+         "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
+        "user_id":10001,
+       "name":"李四",
+        "far":"70米",
+        "year":12,
+        "times":16
+    },
+    "news_id":101002,
+    "urls": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
+            ,"http://img2.imgtn.bdimg.com/it/u=2527473326,1844263864&fm=206&gp=0.jpg","http://img4.imgtn.bdimg.com/it/u=1649033152,2058089280&fm=206&gp=0.jpg","http://pic.nipic.com/2008-05-26/2008526114122930_2.jpg"
+            ,"http://pic6.nipic.com/20100305/4248696_124524728708_2.jpg","http://img4.imgtn.bdimg.com/it/u=2740233851,218672123&fm=206&gp=0.jpg","http://pica.nipic.com/2008-06-06/20086675134534_2.jpg"
+
+    ],
+    "goodCount":14,
+    "commentCount":210,
+    "careCount":332,
+    "text":"日前联想官方微博发布了一张海报，海报中用Moto 360二代的表盘配上“It's time”的标语，充分证明了9月8日联想秋季新品发布会上，将正式发布Moto 360二代。"
+},{
+    "author":{
+         "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
+        "user_id":10001,
+        "name":"张三",
+        "far":"50米",
+        "year":2,
+        "times":6
+    },
+    "news_id":105002,
+    "urls": [],
+    "goodCount":14,
+    "commentCount":210,
+    "careCount":332,
+    "text":"华硕今天展示了34英寸弧形超广角玩家国度Swift显示器。这台显示器尺寸34英寸，采用曲面设计，具有超宽21:9的屏幕，具体型号为PG348Q。超宽屏显示器在玩家中已经变得越来越参加，可以为他们提供更身临其境的体验，LG，宏碁和华硕现在均已经推出自己的超宽屏显示器产品。"
 }]

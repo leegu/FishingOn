@@ -3,16 +3,35 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     
-    <dimen name="base_font_size_h1">12dp</dimen>
-    <dimen name="base_font_size_h2">13dp</dimen>
-    <dimen name="base_font_size_h3">14dp</dimen>
-    <dimen name="base_font_size_h4">15dp</dimen>
-    <dimen name="base_font_size_h5">18dp</dimen>
-    <dimen name="base_font_size_h6">19dp</dimen>
-    <dimen name="base_font_size_h7">20dp</dimen>
+    <dimen name="calender_item_width">55dp</dimen>
+    <dimen name="calender_item_height">60dp</dimen>
+    <dimen name="calender_item_width_with_parent">35dp</dimen>
+    <dimen name="calender_item_height_with_parent">50dp</dimen>
+
+    <dimen name="base_font_size_h_4">4sp</dimen>
+    <dimen name="base_font_size_h_5">5sp</dimen>
+    <dimen name="base_font_size_h_6">6sp</dimen>
+    <dimen name="base_font_size_h_7">7sp</dimen>
+    <dimen name="base_font_size_h_8">8sp</dimen>
+    <dimen name="base_font_size_h_9">9sp</dimen>
+    <dimen name="base_font_size_h1">12sp</dimen>
+    <dimen name="base_font_size_h2">13sp</dimen>
+    <dimen name="base_font_size_h3">14sp</dimen>
+    <dimen name="base_font_size_h4">15sp</dimen>
+    <dimen name="base_font_size_h5">18sp</dimen>
+    <dimen name="base_font_size_h6">19sp</dimen>
+    <dimen name="base_font_size_h7">20sp</dimen>
     
-    <dimen name="base_btn_radius">5dp</dimen>
+    <dimen name="base_btn_radius">3dp</dimen>
+    <dimen name="base_btn_radius_5">5dp</dimen>
+    <dimen name="base_btn_radius_10">10dp</dimen>
+    <dimen name="base_btn_radius_15">15dp</dimen>
+    <dimen name="base_btn_radius_20">20dp</dimen>
+    <dimen name="base_space_s">1dp</dimen>
+    <dimen name="base_space_m">2dp</dimen>
     <dimen name="base_space">5dp</dimen>
+    <dimen name="base_space_2">10dp</dimen>
+    <dimen name="base_space_4">20dp</dimen>
     <dimen name="base_border">0.1dp</dimen>
     <dimen name="base_pic_icon_width">50dp</dimen>
     <dimen name="base_pic_icon_height">50dp</dimen>
@@ -28,8 +47,9 @@
     
     <dimen name="head_bar_height">44dp</dimen>
     <dimen name="head_bar_width">44dp</dimen>
-    <dimen name="head_bar_icon_height">35dp</dimen>
-    <dimen name="head_bar_icon_width">35dp</dimen>
+    
+    <dimen name="head_bar_icon_height">22dp</dimen>
+    <dimen name="head_bar_icon_width">22dp</dimen>
     
     <dimen name="foot_bar_height">60dp</dimen>
     <dimen name="foot_bar_icon_width_height">30dp</dimen>
@@ -37,24 +57,36 @@
     <dimen name="wel_login_width">130dp</dimen>
     <dimen name="wel_login_height">44dp</dimen>
     
+    <dimen name="fplace_icon_size">50dp</dimen>
+
+    <dimen name="detail_bottom_item_size">50dp</dimen>
+
+    <dimen name="friend_user_icon_size">50dp</dimen>
+
     <dimen name="base_user_icon_size">70dp</dimen>
-    <dimen name="base_icon_width">50dp</dimen>
+    <dimen name="base_icon_width">90dp</dimen>
     
-    <dimen name="reg_3_width">70dp</dimen>
+    <dimen name="tips_input_text_space">70dp</dimen>
+    
+    <dimen name="reg_3_width">40dp</dimen>
     <dimen name="reg_next_1">80dp</dimen>
     
     <dimen name="list_item_space_max">100dp</dimen>
-    <dimen name="list_item_space_mid">10dp</dimen>
+    <dimen name="list_item_space_mid">20dp</dimen>
+    <dimen name="list_item_space_8">8dp</dimen>
     <dimen name="list_item_space">2dp</dimen>
     <dimen name="list_item_divider">2dp</dimen>
     
     <dimen name="list_item_padding_left">15dp</dimen>
     <dimen name="list_item_padding_right">15dp</dimen>
     <dimen name="list_item_height">44dp</dimen>
+    <dimen name="list_item_height_1_2_5">55dp</dimen>
+    <dimen name="list_item_height_1_5">66dp</dimen>
     <dimen name="list_item_height_2">88dp</dimen>
     <dimen name="list_item_height_3">132dp</dimen>
-    
-    <dimen name="list_item_base_text_size">17dp</dimen>
+    <dimen name="list_item_height_4">156dp</dimen>
+    <dimen name="list_item_height_5">220dp</dimen>
+
     <dimen name="list_item_hint_text_size">14dp</dimen>
     
     <dimen name="pop_win_list_width">130dp</dimen>
@@ -66,7 +98,7 @@
     <dimen name="hint_background_corners_radius">3dp</dimen>
 
 
-    <dimen name="tab_height">40dp</dimen>
+    <dimen name="tab_height">50dp</dimen>
     <dimen name="tab_item_space">4dp</dimen>
     <dimen name="tab_arrow_left">14dp</dimen>
     <dimen name="tab_arrow_right">14dp</dimen>

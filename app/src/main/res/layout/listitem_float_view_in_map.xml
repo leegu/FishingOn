@@ -1,97 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="@color/base_float_view_normal_color"
-    android:clickable="true"
-    android:focusable="true"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="35dp" >
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/base_bg_color"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical">
 
-        <TextView
+        <RelativeLayout
             android:id="@+id/float_view_detail_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_margin="0dp"
             android:background="@drawable/float_view_background_suit_parent"
             android:clickable="true"
-            android:drawableRight="@drawable/arrow_right"
-            android:gravity="center_vertical"
             android:onClick="onMapFloatViewClick"
             android:padding="@dimen/base_space"
-            android:text="详情"
-            android:textColor="@color/base_float_view_text_color"
-            android:textSize="@dimen/base_font_size_h4" />
-
-        <com.go.fish.view.MarqueeText
-            android:id="@+id/float_view_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@id/float_view_detail_btn"
-            android:layout_toStartOf="@id/float_view_detail_btn"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:gravity="center_vertical"
-            android:marqueeRepeatLimit="1"
-            android:padding="@dimen/base_space"
-            android:singleLine="true"
-            android:textColor="@color/base_float_view_text_color"
-            android:textSize="@dimen/base_font_size_h5" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_gravity="center_vertical" >
-
-        <TextView
-            android:id="@+id/float_view_distance"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
-            android:gravity="center_vertical"
-            android:padding="@dimen/base_space"
-            android:text="@string/hfs_distance_format"
-            android:textColor="@color/base_float_view_text_color"
-            android:textSize="@dimen/base_font_size_h4" />
+            android:gravity="center"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/float_view_detail_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:src="@drawable/arrow_right"
+                />
 
-        <TextView
-            android:id="@+id/float_view_nav_btn"
+            <com.go.fish.view.MarqueeText
+                android:id="@+id/float_view_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/float_view_detail_temp"
+                android:layout_toStartOf="@id/float_view_detail_temp"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="1"
+                android:singleLine="true"
+                android:text="我就是title"
+                android:textColor="@color/head_bar_title_color"
+                android:textSize="@dimen/base_font_size_h5" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/base_space"
+            android:paddingLeft="@dimen/base_space"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/float_view_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:padding="@dimen/base_space_s"
+                android:text="@string/hfs_distance_format"
+                android:textColor="@color/text_btn_color"
+                android:textSize="@dimen/base_font_size_h4" />
+
+            <TextView
+                android:id="@+id/float_view_nav_btn"
+                style="@style/nav_btn_style"
+                 />
+
+            <LinearLayout
+                android:layout_alignParentRight="true"
+                android:paddingTop="@dimen/base_space"
+                android:paddingBottom="@dimen/base_space"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/float_view_care_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:padding="@dimen/base_space"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/hart_care_"
+                    android:tag="false"
+                    android:gravity="center_vertical"
+                    android:onClick="onMapFloatViewClick"
+                    android:text="111"
+                    android:textColor="@color/text_btn_color"
+                    android:textSize="@dimen/base_font_size_h4" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ViewStub
+            android:id="@+id/calendar_container"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:background="@drawable/float_view_background_suit_parent"
-            android:clickable="true"
-            android:drawableLeft="@drawable/point"
-            android:gravity="center_vertical"
-            android:onClick="onMapFloatViewClick"
-            android:padding="@dimen/base_space"
-            android:text="@string/hfs_nav"
-            android:textColor="@color/base_float_view_text_color"
-            android:textSize="@dimen/base_font_size_h4" />
+            android:layout_height="wrap_content"
+            android:layout="@layout/calendar_container_with_parent" />
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/float_view_care_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@id/float_view_care_btn"
-            android:background="@drawable/float_view_background_suit_parent"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:onClick="onMapFloatViewClick"
-            android:padding="@dimen/base_space"
-            android:text="@string/hfs_care"
-            android:textColor="@color/base_float_view_text_color"
-            android:textSize="@dimen/base_font_size_h4" />
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

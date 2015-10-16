@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -22,6 +23,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.widget.AbsoluteLayout;
+import android.widget.Toast;
 
 import com.go.fish.barcode.camera.CameraManager;
 import com.go.fish.barcode.decoding.CaptureActivityHandler;
@@ -29,6 +31,8 @@ import com.go.fish.barcode.decoding.ICallback;
 import com.go.fish.barcode.decoding.InactivityTimer;
 import com.go.fish.barcode.view.DetectorViewConfig;
 import com.go.fish.barcode.view.ViewfinderView;
+import com.go.fish.ui.UICode;
+import com.go.fish.util.Const;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
@@ -242,12 +246,16 @@ class BarcodeView extends AbsoluteLayout implements Callback,ICallback{
 //			 PdrUtil.showNativeAlert(mWebViewImpl.getContext(), "获取的扫描信息", barcode);
 		 }
 		 int num = convertTypestrToNum(obj.getBarcodeFormat());
-		 String json = null;
-		 if(saveSuc){
-			 String message = "{type:%d,message:%s,file:'%s'}";
-			 json = String.format(message, num,JSONObject.quote(obj.getText()),""); 
-		 }
+//		 String json = null;
+//		 if(saveSuc){
+//			 String message = "{type:%d,message:%s,file:'%s'}";
+//			 json = String.format(message, num,JSONObject.quote(obj.getText()),""); 
+//		 }
 		 cancel();//start一次只能有一次结果，所以成功之后需要停止
+		 Intent data = new Intent();
+		 data.putExtra(Const.PRI_QR_RESULT, obj.getText());
+		 mContext.setResult(UICode.ResultCode.RESULT_BARCODE_QR, data);
+		 mContext.finish();
 	}
 
 	private void initBeepSound() {

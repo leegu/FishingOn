@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Demo</string>
+    <string name="app_name">去哪钓</string>
     <string name="base_ui_close">关闭</string>
     <string name="rule_link">http://www.baidu.com</string>
     <string name="help_link">http://www.baidu.com?q=help</string>
@@ -11,8 +11,10 @@
     <!-- welcome end -->
 
 
+    <string name="please_input_pswd">请输入密码</string>
+    
     <!-- 注册页面 begin -->
-    <string name="reg_title">会员注册</string>
+    <string name="reg_title">注册</string>
     <string name="reg_phone_num">手机号</string>
     <string name="reg_pswd">密码</string>
     <string name="reg_check_code">验证码</string>
@@ -29,10 +31,10 @@
     <string name="reg_next_release_input">请填写</string>
     <string name="reg_next_release_chose">请选择</string>
     <string name="reg_next_fishing_years">钓龄</string>
-    <string name="reg_next_fishing_times">出钓频次</string>
+    <string name="reg_next_fishing_times">频次</string>
     <string name="reg_next_location_text">定位</string>
     <string name="reg_next_get_location_btn">获取</string>
-    <string name="reg_next_skip">跳过，先看看~~</string>
+    <string name="reg_next_skip">跳过，先看看</string>
 
     <string-array name="reg_next_fishing_years_spinner">
         <item>1年龄</item>
@@ -41,11 +43,6 @@
         <item>4年龄</item>
         <item>5年龄</item>
         <item>6年龄</item>
-        <item>7年龄</item>
-        <item>8年龄</item>
-        <item>9年龄</item>
-        <item>10年龄</item>
-        <item>11年龄</item>
     </string-array>
     <string-array name="reg_next_fishing_times_spinner">
         <item>天次</item>
@@ -83,13 +80,13 @@
 
 
     <!-- Home页面 begin -->
-    <string name="home_fishing_place">钓场</string>
+    <string name="home_fishing_place">地图</string>
     <string name="home_care">关注</string>
-    <string name="home_appear">发现</string>
+    <string name="home_appear">资讯</string>
     <string name="home_fishing_news">钓播</string>
     <string name="home_my">我的</string>
 
-    <string name="home_fishing_place_title">附近钓场</string>
+    <string name="home_fishing_place_title">最近钓场</string>
     <string name="home_care_title">我关注的钓场</string>
     <string name="home_appear_title">发现</string>
     <string name="home_fishing_news_title">钓播</string>
@@ -99,13 +96,14 @@
     <string name="hfs_fishing_tools_store">渔具店</string>
     <string name="hfs_detail">详情</string>
     <string name="hfs_care">关注</string>
+    <string name="hfs_share">分享</string>
     <string name="hfs_nav">导航</string>
-    <string name="hfs_distance_format">距您%d公里</string>
+    <string name="hfs_distance_format">距您15公里</string>
 
     <string-array name="hfs_splace_type">
         <item>野钓</item>
         <item>高钓</item>
-        <item>舒适家人行</item>
+        <item>舒钓</item>
         <item>黑坑</item>
     </string-array>
 
@@ -128,16 +126,16 @@
     <!-- Home页面 end -->
 
     <string-array name="hmy_listview1_icons">
-        <item>@drawable/search</item>
-        <item>@drawable/search</item>
-        <item>@drawable/search</item>
-        <item>@drawable/search</item>
-        <item>@drawable/search</item>
+        <item>@drawable/incon_148</item>
+        <item>@drawable/incon_151_50</item>
+        <item>@drawable/incon_151</item>
+        <item>@drawable/incon_153</item>
+        <item>@drawable/incon_155_49</item>
     </string-array>
     <string-array name="hmy_listview2_icons">
-        <item>@drawable/icon</item>
-        <item>@drawable/icon</item>
-        <item>@drawable/icon</item>
+        <item>@drawable/incon_155</item>
+        <item>@drawable/incon_155_47</item>
+        <item>@drawable/incon_159</item>
     </string-array>
     
     

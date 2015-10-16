@@ -131,7 +131,7 @@ public class ImageLoader {
 			this.taskReceiver = receiver;
 		}
 		public abstract  void onEnd(String downUrl,Bitmap bitmap);
-		void onStart(){
+		public void onStart(){
 			
 		}
 	}

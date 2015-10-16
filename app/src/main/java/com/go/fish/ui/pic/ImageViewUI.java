@@ -11,14 +11,13 @@ import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.ui.BaseUI;
+import com.go.fish.util.Const;
 
 /**
  * 图片查看器
  */
 public class ImageViewUI extends BaseUI {
 	private static final String STATE_POSITION = "STATE_POSITION";
-	public static final String EXTRA_IMAGE_INDEX = "image_index"; 
-	public static final String EXTRA_IMAGE_URLS = "image_urls";
 
 	private HackyViewPager mPager;
 	private int pagerPosition;
@@ -29,12 +28,9 @@ public class ImageViewUI extends BaseUI {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ui_imageview);
 
-		pagerPosition = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
-		ArrayList<String> urls = getIntent().getStringArrayListExtra(EXTRA_IMAGE_URLS);
-		urls = new ArrayList<String>();
-		urls.add("1");
-		urls.add("1");
-		urls.add("1");
+		pagerPosition = getIntent().getIntExtra(Const.PRI_EXTRA_IMAGE_INDEX, 0);
+		String[] urls = getIntent().getStringArrayExtra(Const.PRI_EXTRA_IMAGE_URLS);
+		
 		mPager = (HackyViewPager) findViewById(R.id.pager);
 		ImagePagerAdapter mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), urls);
 		mPager.setAdapter(mAdapter);
@@ -74,21 +70,21 @@ public class ImageViewUI extends BaseUI {
 
 	private class ImagePagerAdapter extends FragmentStatePagerAdapter {
 
-		public ArrayList<String> fileList;
+		public String[] fileList;
 
-		public ImagePagerAdapter(FragmentManager fm, ArrayList<String> fileList) {
+		public ImagePagerAdapter(FragmentManager fm, String[] fileList) {
 			super(fm);
 			this.fileList = fileList;
 		}
 
 		@Override
 		public int getCount() {
-			return fileList == null ? 0 : fileList.size();
+			return fileList == null ? 0 : fileList.length;
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			String url = fileList.get(position);
+			String url = fileList[position];
 			return ImageDetailFragment.newInstance(url);
 		}
 

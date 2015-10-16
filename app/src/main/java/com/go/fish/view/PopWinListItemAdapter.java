@@ -39,8 +39,8 @@ public class PopWinListItemAdapter extends BaseAdapter {
         }
         itemsData = datas;
         list.setAdapter(this);
-        list.setDivider(new ColorDrawable(Color.GRAY));
-        list.setDividerHeight(context.getResources().getDimensionPixelSize(R.dimen.list_item_divider));
+//        list.setDivider(new ColorDrawable(Color.GRAY));
+//        list.setDividerHeight(context.getResources().getDimensionPixelSize(R.dimen.list_item_divider));
     }
     @Override
     public int getCount() {
@@ -64,13 +64,13 @@ public class PopWinListItemAdapter extends BaseAdapter {
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.listitem_pop_win, null);
             ((TextView)view.findViewById(R.id.pop_list_item_text)).setText(data);
-            TextView status =(TextView)view.findViewById(R.id.pop_list_item_status_text);
-            if(itemResId == R.layout.listitem_pop_win) {
-                status.setText("√");
-                status.setTextColor(Color.GRAY);
-            }else{
-                status.setVisibility(View.GONE);
-            }
+//            TextView status =(TextView)view.findViewById(R.id.pop_list_item_status_text);
+//            if(itemResId == R.layout.listitem_pop_win) {
+//                status.setText("√");
+//                status.setTextColor(Color.GRAY);
+//            }else{
+//                status.setVisibility(View.GONE);
+//            }
         }else{
             view = convertView;
         }

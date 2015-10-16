@@ -3,224 +3,139 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/base_color"
+    android:background="@color/base_bg_color"
     android:orientation="vertical"
     tools:context=".ui.RegisterUI" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar" >
+    <RelativeLayout style="@style/head_bar_style" >
 
         <RelativeLayout
-            android:id="@+id/base_head_bar_last"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space"
-            android:background="@drawable/base_background"
-            android:clickable="true"
-            android:gravity="center"
-            android:minWidth="@dimen/head_bar_width"
-            android:onClick="onHeadClick" >
+            android:id="@+id/base_ui_close"
+            style="@style/head_bar_pic_left_btn_style" >
+
             <ImageView
-                android:layout_width="@dimen/head_bar_icon_width"
-                android:layout_height="@dimen/head_bar_icon_height"
-                android:clickable="false"
+                style="@style/head_bar_pic_style"
                 android:src="@drawable/arrow_left" />
         </RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/forget_pswd_title"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/base_font_size_h7" />
+        <RelativeLayout
+            android:id="@+id/base_ui_help"
+            style="@style/head_bar_pic_right_btn_style" >
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:background="@drawable/help" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/base_ui_help"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space"
-            android:background="@drawable/base_background"
-            android:minWidth="@dimen/head_bar_width"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:onClick="onHeadClick"
-            android:textColor="@color/head_bar_right_color"
-            android:text="@string/help" />
+            android:id="@+id/base_head_bar_title"
+            style="@style/head_bar_title_style"
+            android:layout_toLeftOf="@id/base_ui_help"
+            android:layout_toRightOf="@id/base_ui_close"
+            android:text="@string/forget_pswd_title" >
+        </TextView>
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
     </RelativeLayout>
+    <!-- head end -->
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="130dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/base_space"
-        android:paddingRight="@dimen/base_space" >
+        android:orientation="horizontal" >
 
-        <ImageView
-            android:layout_width="@dimen/base_user_icon_size"
-            android:layout_height="@dimen/base_user_icon_size"
-            android:background="@drawable/circle_solid"
-            android:src="@drawable/icon" />
+        <ImageView style="@style/login_icon_style" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height"
-        android:background="@color/list_item_backgroud"
-        android:paddingLeft="@dimen/base_space"
-        android:paddingRight="@dimen/base_space" >
+    <RelativeLayout style="@style/login_listitem_style" >
+
+        <ImageView
+            android:id="@+id/login_text_phone_num"
+            style="@style/login_listitem_left_drawable_style"
+            android:src="@drawable/phone" />
+        
+        <TextView
+            android:id="@+id/get_check_code"
+            style="@style/base_border_btn_style"
+            android:layout_alignParentRight="true"
+            android:text="@string/reg_get_check_code"/>
+        
+        <EditText
+            android:id="@+id/text_phone_num_input"
+            style="@style/base_input_style"
+            android:layout_marginLeft="@dimen/list_item_divider"
+            android:layout_toLeftOf="@id/get_check_code"
+            android:layout_toRightOf="@id/login_text_phone_num"
+            android:hint="@string/login_account_phone_num"
+            android:maxLength="11"
+            android:inputType="number" />
 
         <TextView
-            android:id="@+id/forget_pswd_text_phone_num"
-            android:layout_width="@dimen/reg_3_width"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/reg_phone_num"
-            android:textColor="#000000"
-            android:textSize="@dimen/list_item_base_text_size" />
-
-        <Button
-            android:id="@+id/forget_pswd_get_check_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="right"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/corner_text_background"
-            android:onClick="onClick"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/reg_get_check_code"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/list_item_hint_text_size" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:layout_toLeftOf="@id/forget_pswd_get_check_code"
-            android:layout_toRightOf="@id/forget_pswd_text_phone_num"
-            android:background="@null"
-            android:cursorVisible="true"
-            android:hint="@string/forget_pswd_input_phone_num"
-            android:inputType="phone"
-            android:maxLength="11"
-            android:singleLine="true"
-            android:textColor="#999999"
-            android:textColorHint="#999999"
-            android:textSize="@dimen/list_item_hint_text_size" />
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height"
-        android:layout_marginTop="@dimen/list_item_divider"
-        android:background="@color/list_item_backgroud"
-        android:paddingLeft="@dimen/base_space"
-        android:paddingRight="@dimen/base_space" >
+    
+    <RelativeLayout style="@style/login_listitem_style" >
 
-         <TextView
-            android:id="@+id/reg_pswd_text"
-            android:layout_width="@dimen/reg_3_width"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/forget_pswd_text_new_pswd"
-            android:textColor="#000000"
-            android:textSize="@dimen/list_item_base_text_size" />
-
-        <com.go.fish.view.Switcher
-            android:id="@+id/ui_forget_pswd_save_pswd"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:layout_gravity="right"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:layout_marginTop="8dp" />
+        <ImageView
+            android:id="@+id/sms"
+            style="@style/login_listitem_left_drawable_style"
+            android:src="@drawable/sms" />
 
         <EditText
-            android:id="@+id/forget_pswd_input_pswd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:layout_toLeftOf="@id/ui_forget_pswd_save_pswd"
-            android:layout_toRightOf="@id/reg_pswd_text"
-            android:inputType="textPassword"
-            android:background="@null"
-            android:cursorVisible="true"
-            android:singleLine="true"
-            android:textColor="#999999"
-            android:textColorHint="#999999"
-            android:hint="@string/forget_pswd_input_new_pswd"
-            android:textSize="@dimen/list_item_hint_text_size" />
-        
+            android:id="@+id/checkCode"
+            style="@style/base_input_style"
+            android:layout_marginLeft="@dimen/list_item_divider"
+            android:layout_toRightOf="@id/sms"
+            android:hint="@string/forget_pswd_text_check_code"
+            android:inputType="number" />
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
     </RelativeLayout>
+    
+    <RelativeLayout style="@style/login_listitem_style" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height"
-        android:layout_marginTop="@dimen/list_item_divider"
-        android:background="@color/list_item_backgroud"
-        android:paddingLeft="@dimen/base_space"
-        android:paddingRight="@dimen/base_space" >
+        <ImageView
+            android:id="@+id/login_pswd_text"
+            style="@style/login_listitem_left_drawable_style"
+            android:src="@drawable/lock" />
 
-         <TextView
-            android:id="@+id/forget_pswd_text_check_code"
-            android:layout_width="@dimen/reg_3_width"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/forget_pswd_text_check_code"
-            android:textColor="#000000"
-            android:textSize="@dimen/list_item_base_text_size" />
+        <ImageView
+            android:id="@+id/hide_show_pwsd"
+            style="@style/hide_show_pwsd"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true" />
 
         <EditText
-            android:id="@+id/forget_pswd_input_check_code"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/list_item_space_mid"
-            android:layout_toRightOf="@id/forget_pswd_text_check_code"
-            android:background="@null"
-            android:cursorVisible="true"
-            android:maxLength="6"
-            android:singleLine="true"
-            android:hint="@string/forget_pswd_input_check_code"
-            android:textColor="#999999"
-            android:textSize="@dimen/list_item_hint_text_size" />
-        
-    </RelativeLayout>
+            android:id="@+id/login_pswd_input"
+            style="@style/base_input_style"
+            android:hint="@string/please_input_pswd"
+            android:layout_toLeftOf="@id/hide_show_pwsd"
+            android:layout_toRightOf="@id/login_pswd_text" />
 
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
+    </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/list_item_divider"
+        style="@style/login_listitem_style"
+        android:layout_marginTop="@dimen/list_item_space_mid"
         android:orientation="vertical" >
 
         <Button
-            android:id="@+id/login_login_btn"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/list_item_height"
-            android:layout_marginTop="@dimen/list_item_space_max"
-            android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
-            android:layout_marginRight="@dimen/button_margin_left_right_match_parent"
-            android:background="@drawable/green_shape"
-            android:onClick="onClick"
+            android:id="@+id/ok"
+            style="@style/base_button_style"
             android:text="@string/forget_pswd_ok" />
     </LinearLayout>
-
 </LinearLayout>

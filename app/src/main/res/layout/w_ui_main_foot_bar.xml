@@ -3,136 +3,102 @@
     android:id="@+id/foot_bar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/foot_bar_height"
-    android:background="@color/head_bar"
+    android:background="@color/foot_bar_bg_color"
     android:gravity="center"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <!-- 钓场 -->
 
     <LinearLayout
         android:id="@+id/foot_bar_fishing_place"
-        android:layout_width="0dip"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="onFootItemClick"
-        android:orientation="vertical" >
+        style="@style/foot_bar_item_style">
 
         <ImageView
-            android:layout_width="@dimen/foot_bar_icon_width_height"
-            android:layout_height="@dimen/foot_bar_icon_width_height" />
+            style="@style/foot_bar_item_icon_style"
+            android:src="@drawable/map" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="1dp"
-            android:text="@string/home_fishing_place"
-            android:textColor="@color/foot_bar_text_color"
-            android:textSize="@dimen/base_font_size_h1" />
+            style="@style/foot_bar_item_text_style"
+            android:text="@string/home_fishing_place" />
     </LinearLayout>
 
     <!-- 关注 -->
+    <FrameLayout
+        style="@style/foot_bar_item_style"
+        >
+        <LinearLayout
+            android:id="@+id/foot_bar_care"
+            style="@style/foot_bar_item_style"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                style="@style/foot_bar_item_icon_style"
+                android:src="@drawable/hart" />
 
-    <LinearLayout
-        android:id="@+id/foot_bar_care"
-        android:layout_width="0dip"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="onFootItemClick"
-        android:orientation="vertical" >
+            <TextView
+                style="@style/foot_bar_item_text_style"
+                android:text="@string/home_care" />
+        </LinearLayout>
 
-        <ImageView
-            android:layout_width="@dimen/foot_bar_icon_width_height"
-            android:layout_height="@dimen/foot_bar_icon_width_height" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="1dp"
-            android:text="@string/home_care"
-            android:textColor="@color/foot_bar_text_color"
-            android:textSize="@dimen/base_font_size_h1" />
-    </LinearLayout>
-    <!-- 发现 -->
+            android:layout_gravity="right|top"
+            android:paddingRight="@dimen/base_space_2"
+            android:paddingTop="@dimen/base_space">
+
+            <TextView
+                android:id="@+id/care_bedger"
+                style="@style/badger_style"
+                android:text="15"></TextView>
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- 资讯 -->
 
     <LinearLayout
         android:id="@+id/foot_bar_appear"
-        android:layout_width="0dip"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="onFootItemClick"
-        android:orientation="vertical" >
+        style="@style/foot_bar_item_style">
 
         <ImageView
-            android:layout_width="@dimen/foot_bar_icon_width_height"
-            android:layout_height="@dimen/foot_bar_icon_width_height" />
+            style="@style/foot_bar_item_icon_style"
+            android:src="@drawable/news" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="1dp"
-            android:text="@string/home_appear"
-            android:textColor="@color/foot_bar_text_color"
-            android:textSize="@dimen/base_font_size_h1" />
+            style="@style/foot_bar_item_text_style"
+            android:text="@string/home_appear" />
     </LinearLayout>
     <!-- 钓播 -->
 
     <LinearLayout
         android:id="@+id/foot_bar_fishing_news"
-        android:layout_width="0dip"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="onFootItemClick"
-        android:orientation="vertical" >
+        style="@style/foot_bar_item_style">
 
         <ImageView
-            android:layout_width="@dimen/foot_bar_icon_width_height"
-            android:layout_height="@dimen/foot_bar_icon_width_height" />
+            style="@style/foot_bar_item_icon_style"
+            android:src="@drawable/play" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="1dp"
-            android:text="@string/home_fishing_news"
-            android:textColor="@color/foot_bar_text_color"
-            android:textSize="@dimen/base_font_size_h1" />
+            style="@style/foot_bar_item_text_style"
+            android:text="@string/home_fishing_news" />
     </LinearLayout>
 
     <!-- 我的 -->
 
     <LinearLayout
         android:id="@+id/foot_bar_my"
-        android:layout_width="0dip"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="onFootItemClick"
-        android:orientation="vertical" >
+        style="@style/foot_bar_item_style">
 
         <ImageView
-            android:layout_width="@dimen/foot_bar_icon_width_height"
-            android:layout_height="@dimen/foot_bar_icon_width_height" />
+            style="@style/foot_bar_item_icon_style"
+            android:src="@drawable/mine" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="1dp"
-            android:text="@string/home_my"
-            android:textColor="@color/foot_bar_text_color"
-            android:textSize="@dimen/base_font_size_h1" />
+            style="@style/foot_bar_item_text_style"
+            android:text="@string/home_my" />
     </LinearLayout>
 
 </LinearLayout>

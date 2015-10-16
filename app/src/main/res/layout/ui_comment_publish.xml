@@ -4,97 +4,93 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
+    android:gravity="bottom"
     android:orientation="vertical" >
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar" >
+        style="@style/head_bar_style"
+        android:layout_width="match_parent" >
 
-        <TextView
-            android:id="@+id/base_ui_close"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="0dp"
-            android:clickable="true"
-            android:gravity="center_vertical"
+        <RelativeLayout
+            android:id="@+id/comment_publish_back"
+            style="@style/head_bar_pic_left_btn_style" >
 
-            android:onClick="onHeadClick"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space"
-            android:background="@drawable/base_background"
-            android:textSize="@dimen/base_font_size_h4"
-            android:text="取消"
-            android:textColor="@color/head_bar_left_color" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="发布钓播"
-            android:textColor="@color/head_bar_title_color"
-            android:textSize="@dimen/base_font_size_h7" />
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/arrow_left" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/base_ui_publish"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_margin="0dp"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:onClick="onHeadClick"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space"
-            android:background="@drawable/base_background"
-            android:text="发布"
-            android:textSize="@dimen/base_font_size_h4" 
-            android:textColor="@color/head_bar_right_color" />
+            style="@style/head_bar_text_right_btn_style"
+            android:text="发布" />
+
+        <TextView
+            android:id="@+id/base_head_bar_title"
+            style="@style/head_bar_title_style"
+            android:layout_toLeftOf="@id/base_ui_publish"
+            android:layout_toRightOf="@id/comment_publish_back"
+            android:text="发布钓播" >
+        </TextView>
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/list_item_space_mid" >
+        android:layout_height="match_parent"
+        >
 
-        <EditText
-            android:id="@+id/comment_text"
+        <RelativeLayout
+            android:id="@+id/main"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@drawable/white_shape"
-            android:gravity="left|top"
-            android:hint="输入您的最新战况"
-            android:maxLength="500"
-            android:textSize="@dimen/base_font_size_h3"
-            android:padding="@dimen/base_space" />
+            android:layout_height="match_parent"
+             >
 
-        <TextView
-            android:id="@+id/comment_has_len"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/comment_text"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="@dimen/list_item_space_mid"
-            android:text="@string/input_text_count" />
+            <EditText
+                android:id="@+id/comment_text"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@null"
+                android:gravity="left|top"
+                android:hint="输入您的最新战况"
+                android:maxLength="500"
+                android:padding="@dimen/base_space_2"
+                android:textColor="#999999"
+                android:textColorHint="#999999"
+                android:textSize="@dimen/base_font_size_h3" />
 
-        <GridView
-            android:id="@+id/comment_pics"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_below="@id/comment_has_len"
-            android:layout_marginTop="@dimen/list_item_space_mid"
-            android:numColumns="3" >
-        </GridView>
+            <ScrollView
+                android:id="@+id/comment_pics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/comment_text"
+                android:layout_marginTop="@dimen/list_item_space_mid"
+                android:background="#fafafa" >
+            </ScrollView>
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/comment_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/comment_pics"
-            android:layout_marginTop="20dp"
-            android:text="北京市海淀区" />
+        <RelativeLayout style="@style/bottom_span_style" >
+            
+             <TextView
+                android:id="@+id/comment_publish_add_location"
+                android:layout_alignParentLeft="true"
+                android:background="@null"
+                android:hint="添加位置信息"
+                android:textColor="#ffffff"
+                android:onClick="onLocation"
+                android:textCursorDrawable="@null"
+                android:textColorHint="#2d83a8"
+                 android:gravity="center_vertical"
+                android:drawablePadding="@dimen/base_space"
+                android:drawableLeft="@drawable/incon_151"
+                android:layout_toLeftOf="@id/comment_list_publish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
     </RelativeLayout>
 
 </LinearLayout>

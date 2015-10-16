@@ -1,29 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/tab_height" >
+    android:layout_height="@dimen/tab_height"
+    android:background="#f7f7f7"
+    android:layout_gravity="center">
 
-    <TextView
+    <ImageView
+        android:visibility="invisible"
         android:id="@+id/search_tab_left"
         android:layout_width="@dimen/tab_arrow_left"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true" >
-    </TextView>
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/base_space"
+        android:layout_marginRight="@dimen/base_space"
+        android:src="@drawable/arrow_left_blue"></ImageView>
 
-    <TextView
+    <ImageView
+        android:visibility="invisible"
         android:id="@+id/search_tab_right"
         android:layout_width="@dimen/tab_arrow_right"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true" >
-    </TextView>
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/base_space"
+        android:layout_marginRight="@dimen/base_space"
+        android:src="@drawable/arrow_right_blue"></ImageView>
 
-    <LinearLayout
-        android:id="@+id/search_tab_content"
+    <HorizontalScrollView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/search_tab_right"
         android:layout_toRightOf="@id/search_tab_left"
-        android:orientation="horizontal" >
-    </LinearLayout>
+        android:overScrollMode="never"
+        android:fadingEdge="none"
+        android:scrollbars="none">
 
+        <LinearLayout
+            android:id="@+id/search_tab_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            ></LinearLayout>
+    </HorizontalScrollView>
 </RelativeLayout>

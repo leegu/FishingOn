@@ -2,23 +2,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/pop_win_list_width"
     android:layout_height="@dimen/pop_win_list_item_height"
-    android:background="#ee333333"
-    android:gravity="center_vertical"
-    android:minHeight="@dimen/pop_win_list_item_height"
-    android:orientation="horizontal" >
+    android:background="@drawable/base_background"
+    android:minHeight="@dimen/pop_win_list_item_height">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="@dimen/base_space"
+        android:paddingRight="@dimen/base_space">
+        <TextView
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D9D9D9" />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/pop_list_item_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
         android:gravity="center"
-        android:paddingLeft="@dimen/list_item_space_mid"
-        android:textColor="#fff"
-        android:textSize="@dimen/base_font_size_h4" >
-    </TextView>
+        android:text="野钓"
+        android:tag="1"
+        android:textColor="@color/base_btn_color"
+        android:textSize="@dimen/base_font_size_h4"></TextView>
 
-    <TextView
+
+    <!--<TextView
         android:id="@+id/pop_list_item_status_text"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -26,6 +40,7 @@
         android:gravity="center"
         android:paddingRight="@dimen/list_item_space_mid"
         android:textSize="@dimen/base_font_size_h5" >
-    </TextView>
+    </TextView>-->
+
 
 </RelativeLayout>

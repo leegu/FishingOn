@@ -3,309 +3,268 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/base_color"
+    android:background="@color/base_bg_color"
     android:orientation="vertical"
-    tools:context=".ui.BaseUI">
+    tools:context=".ui.BaseUI" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar">
+    <!-- head begin -->
 
-        <TextView
+    <RelativeLayout style="@style/head_bar_style" >
+
+        <RelativeLayout
             android:id="@+id/base_ui_close"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/base_background"
-            android:clickable="true"
-            android:gravity="center"
-            android:minWidth="@dimen/head_bar_width"
-            android:onClick="onHeadClick"
-            android:text="@string/base_ui_close"
-            android:textColor="@color/head_bar_left_color"
-            android:textSize="@dimen/base_font_size_h4" />
+            style="@style/head_bar_pic_left_btn_style" >
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/arrow_left" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/base_head_bar_next"
+            style="@style/head_bar_pic_right_btn_style"
+            android:visibility="invisible" >
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:background="@drawable/help" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/base_head_bar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="@string/reg_next_title"
-            android:textColor="@color/head_bar_title_color"
-            android:textSize="@dimen/base_font_size_h7"></TextView>
+            style="@style/head_bar_title_style"
+            android:layout_toLeftOf="@id/base_head_bar_next"
+            android:layout_toRightOf="@id/base_ui_close"
+            android:text="完善资料" >
+        </TextView>
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
     </RelativeLayout>
+    <!-- head end -->
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" >
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
             <LinearLayout
-                android:background="@color/base_ui_background_color"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
+                android:background="@color/base_ui_background_color"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space">
+                android:paddingRight="@dimen/base_space" >
 
-                <ImageView
+                <com.go.fish.view.CircleImageView
                     android:id="@+id/reg_next_photo"
                     android:layout_width="@dimen/base_user_icon_size"
                     android:layout_height="@dimen/base_user_icon_size"
                     android:background="@drawable/circle_solid"
                     android:onClick="onIconClick"
-                    android:src="@drawable/icon" />
+                    android:src="@drawable/icon_user" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/reg_next_1"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/list_item_space_mid">
+                    android:paddingLeft="@dimen/list_item_space_mid" >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal" >
 
                         <TextView
                             android:id="@+id/reg_next_account_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/reg_next_account_text"
-                            android:textColor="@color/base_color_light_font"
-                            android:textSize="@dimen/list_item_base_text_size" />
+                            android:textColor="@color/input_text_color"
+                            android:textSize="@dimen/base_font_size_h6" />
 
                         <TextView
                             android:id="@+id/reg_next_account"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/base_space"
-                            android:textColor="@color/reg_next_cc"
-                            android:textSize="@dimen/list_item_base_text_size" />
+                            android:text="987456321"
+                            android:textColor="@color/input_text_color"
+                            android:textSize="@dimen/base_font_size_h6" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/list_item_divider"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal" >
 
                         <TextView
                             android:id="@+id/reg_next_phone_num_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/reg_next_phone_num_text"
-                            android:textColor="@color/reg_next_cc"
-                            android:textSize="@dimen/list_item_base_text_size" />
+                            android:textColor="@color/text_btn_color"
+                            android:textSize="@dimen/base_font_size_h5" />
 
                         <TextView
                             android:id="@+id/reg_next_phone_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/base_space"
-                            android:textColor="@color/reg_next_cc"
-                            android:textSize="@dimen/list_item_base_text_size" />
+                            android:text="13245678965"
+                            android:textColor="@color/text_btn_color"
+                            android:textSize="@dimen/base_font_size_h5" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
+            <TextView
+                style="@style/head_bar_bottom_line_style"
+                android:layout_alignParentBottom="true" >
+            </TextView>
+
             <!-- 昵称 -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/list_item_divider"
-                android:layout_height="@dimen/list_item_height"
-                android:background="@color/list_item_backgroud"
-                android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space">
+
+            <RelativeLayout style="@style/login_listitem_style" >
 
                 <TextView
                     android:id="@+id/reg_next_nick_text"
-                    android:layout_width="@dimen/reg_3_width"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/reg_next_nick_text"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/list_item_base_text_size" />
+                    style="@style/base_tips_style"
+                    android:text="@string/reg_next_nick_text" />
 
                 <EditText
                     android:id="@+id/reg_next_nick_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_toRightOf="@+id/reg_next_nick_text"
-                    android:background="@null"
-                    android:cursorVisible="true"
-                    android:gravity="center_vertical|left"
-                    android:hint="@string/reg_next_release_input"
-                    android:singleLine="true"
-                    android:textColor="#999999"
-                    android:textColorHint="#999999"
-                    android:textSize="@dimen/list_item_hint_text_size" />
+                    style="@style/base_input_style"
+                    android:layout_marginLeft="@dimen/list_item_divider"
+                    android:layout_toRightOf="@id/reg_next_nick_text"
+                    android:hint="@string/reg_next_release_input" />
 
+                <TextView
+                    style="@style/head_bar_bottom_line_style"
+                    android:layout_alignParentBottom="true" >
+                </TextView>
             </RelativeLayout>
-
             <!-- 钓龄 -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_item_height"
-                android:layout_marginTop="@dimen/list_item_divider"
-                android:background="@color/list_item_backgroud"
-                android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space">
+
+            <RelativeLayout style="@style/login_listitem_style" >
 
                 <TextView
                     android:id="@+id/reg_next_fishing_years_text"
-                    android:layout_width="@dimen/reg_3_width"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/reg_next_fishing_years"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/list_item_base_text_size" />
+                    style="@style/base_tips_style"
+                    android:text="@string/reg_next_fishing_years" />
 
-                <Spinner
+                <TextView
                     android:id="@+id/reg_next_fishing_years_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/reg_3_width"
-                    android:layout_toLeftOf="@id/reg_next_fishing_years_text"
-                    android:entries="@array/reg_next_fishing_years_spinner"
+                    style="@style/base_input_style"
+                    android:onClick="onSelect"
+                    android:layout_marginLeft="@dimen/list_item_divider"
+                    android:layout_toRightOf="@id/reg_next_fishing_years_text"
                     android:hint="@string/reg_next_release_chose"
-                    android:spinnerMode="dialog"
-                    android:textColor="#999999" />
+                    android:inputType="number" />
+
+                <TextView
+                    style="@style/head_bar_bottom_line_style"
+                    android:layout_alignParentBottom="true" >
+                </TextView>
             </RelativeLayout>
 
             <!-- 出钓频次 -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_item_height"
-                android:layout_marginTop="@dimen/list_item_divider"
-                android:background="@color/list_item_backgroud"
-                android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space">
+
+            <RelativeLayout style="@style/login_listitem_style" >
 
                 <TextView
                     android:id="@+id/reg_next_fishing_times_text"
-                    android:layout_width="@dimen/reg_3_width"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/reg_next_fishing_times"
-                    android:textColor="#000000"
-                    android:textColorHint="#999999"
-                    android:textSize="@dimen/list_item_base_text_size" />
+                    style="@style/base_tips_style"
+                    android:text="@string/reg_next_fishing_times" />
 
-                <Spinner
+                <TextView
                     android:id="@+id/reg_next_fishing_times_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/reg_3_width"
-                    android:layout_toLeftOf="@id/reg_next_fishing_times_text"
-                    android:entries="@array/reg_next_fishing_times_spinner"
+                    style="@style/base_input_style"
+                    android:onClick="onSelect"
+                    android:layout_marginLeft="@dimen/list_item_divider"
+                    android:layout_toRightOf="@id/reg_next_fishing_times_text"
                     android:hint="@string/reg_next_release_chose"
-                    android:spinnerMode="dialog"
-                    android:textColor="#999999"
-                    android:textSize="@dimen/list_item_hint_text_size" />
+                    android:inputType="number" />
+
+                <TextView
+                    style="@style/head_bar_bottom_line_style"
+                    android:layout_alignParentBottom="true" >
+                </TextView>
             </RelativeLayout>
 
+            <!--
             <LinearLayout
+                android:id="@+id/ui_my_sec_tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_item_divider"
                 android:background="@color/base_ui_background_color"
                 android:orientation="vertical"
-                android:id="@+id/ui_my_sec_tags"
-                android:layout_marginTop="@dimen/list_item_divider"
-                android:layout_width="match_parent"
-                android:padding="@dimen/base_space"
-                android:layout_height="wrap_content">
+                android:padding="@dimen/base_space" >
+
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="我的标签"
                     android:textColor="#000000"
-                    android:textSize="@dimen/list_item_base_text_size"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <include layout="@layout/w_tags" android:id="@+id/my_tags"></include>
+                    android:textSize="@dimen/list_item_base_text_size" />
+
+                <include
+                    android:id="@+id/my_tags"
+                    layout="@layout/w_tags" >
+                </include>
             </LinearLayout>
+            -->
+
+
             <!-- 定位 -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_item_height"
-                android:layout_marginTop="@dimen/list_item_divider"
-                android:background="@color/list_item_backgroud"
-                android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space">
+
+            <RelativeLayout style="@style/login_listitem_style" >
 
                 <TextView
                     android:id="@+id/reg_next_location_text"
-                    android:layout_width="@dimen/reg_3_width"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/reg_next_location_text"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/list_item_base_text_size" />
+                    style="@style/base_tips_style"
+                    android:text="@string/reg_next_location_text" />
 
-                <Button
-                    android:id="@+id/reg_next_get_location_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="right"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="@dimen/list_item_space_mid"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/corner_text_background"
-                    android:onClick="onClick"
-                    android:paddingLeft="@dimen/base_space"
-                    android:paddingRight="@dimen/base_space"
-                    android:text="@string/reg_next_get_location_btn"
-                    android:textColor="#ffffff"
-                    android:textSize="@dimen/list_item_hint_text_size" />
-
-                <EditText
+                <TextView
                     android:id="@+id/reg_next_location_input"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/list_item_space_mid"
-                    android:layout_toLeftOf="@id/reg_next_get_location_btn"
+                    style="@style/base_input_style"
+                    android:clickable="true"
+                    android:onClick="onLocation"
+                    android:ellipsize="marquee"
+                    android:layout_marginLeft="@dimen/list_item_divider"
                     android:layout_toRightOf="@id/reg_next_location_text"
                     android:hint="请定位"
-                    android:background="@null"
-                    android:cursorVisible="true"
-                    android:maxEms="11"
-                    android:singleLine="true"
-                    android:textColor="#999999"
-                    android:textColorHint="#999999"
-                    android:textSize="@dimen/list_item_hint_text_size" />
+                    android:inputType="number" />
+
+                <TextView
+                    style="@style/head_bar_bottom_line_style"
+                    android:layout_alignParentBottom="true" >
+                </TextView>
             </RelativeLayout>
 
             <!-- 跳过，先看看 -->
+
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/base_last_element_margin_top"
-                android:layout_marginBottom="@dimen/base_last_element_margin_bottom"
-                android:orientation="vertical">
+                style="@style/login_listitem_style"
+                android:layout_marginTop="@dimen/list_item_space_mid"
+                android:orientation="vertical" >
+
                 <Button
-                    android:id="@+id/ui_my_sec_next_skip_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/list_item_height"
-                    android:layout_marginLeft="@dimen/button_margin_left_right_match_parent"
-                    android:layout_marginRight="@dimen/button_margin_left_right_match_parent"
-                    android:background="@drawable/green_btn_background"
-                    android:onClick="onClick"
-                    android:text="@string/reg_next_skip"
-                    android:textColor="@color/base_btn_text_color" />
+                    android:id="@+id/reg_next_skip"
+                    style="@style/base_button_style"
+                    android:text="@string/reg_next_skip" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
 
 </LinearLayout>
