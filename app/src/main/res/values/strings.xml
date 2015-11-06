@@ -100,6 +100,11 @@
     <string name="hfs_nav">导航</string>
     <string name="hfs_distance_format">距您15公里</string>
 
+    <string name="sayu_news">撒鱼动态</string>
+    <string name="surrounding">配套环境</string>
+    <string name="imgs">场馆照片</string>
+    <string name="contact_us">联系我们</string>
+
     <string-array name="hfs_splace_type">
         <item>野钓</item>
         <item>高钓</item>

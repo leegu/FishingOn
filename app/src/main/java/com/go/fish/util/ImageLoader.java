@@ -101,8 +101,12 @@ public class ImageLoader {
 			@Override
 			public void onEnd(byte[] data) {
 				// TODO Auto-generated method stub
-				Bitmap bitmap = toBitmap(data);
-				task.onEnd(task.downUrl,bitmap);
+				if(data == null){
+					task.onEnd(task.downUrl, null);
+				}else {
+					Bitmap bitmap = toBitmap(data);
+					task.onEnd(task.downUrl, bitmap);
+				}
 			}
 		}, task.downUrl,null);
 		NetTool.bitmap().http(rData.syncCallback());

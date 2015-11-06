@@ -57,59 +57,45 @@
 
         <LinearLayout
             android:tag="true"
-            android:orientation="vertical"
-            android:id="@+id/ui_fnews_head_last_news"
-            android:clickable="true"
-            android:onClick="onHeadClick"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content">
+            android:id="@+id/ui_zixun_head_last_news"
+            style="@style/title_nav_item_style">
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingTop="@dimen/base_space_2"
-                android:paddingBottom="@dimen/base_space_2"
-                android:gravity="center"
-                android:text="最新播况"
                 android:textColor="@color/tabitem_foucs_color"
-                android:textSize="@dimen/base_font_size_h4" />
+                android:text="最新播况"
+                style="@style/title_nav_item_text_line_style" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/tabitem_foucs_color" />
+                style="@style/title_nav_item_bottom_line_style" />
         </LinearLayout>
 
-        <RelativeLayout
-            android:orientation="vertical"
-            android:id="@+id/ui_fnews_head_mynews"
-            android:clickable="true"
-            android:onClick="onHeadClick"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/ui_zixun_head_last_activity"
+           style="@style/title_nav_item_style">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_centerVertical="true"
-                android:text="MY钓播"
+                android:text="最新活动"
                 android:textColor="@color/text_btn_color"
-                android:textSize="@dimen/base_font_size_h4" />
+                style="@style/title_nav_item_text_line_style"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/tabitem_foucs_color"
-                android:visibility="gone" />
-        </RelativeLayout>
+                style="@style/title_nav_item_bottom_line_style"
+                android:visibility="invisible" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/ui_f_appear_list_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/last_news"
+            style="@style/listview_style"
+           />
+        <ListView
+            android:id="@+id/last_activity"
+            style="@style/listview_style"
+            android:visibility="gone"
+           />
+    </FrameLayout>
 </LinearLayout>

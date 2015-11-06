@@ -18,11 +18,11 @@ public class PersonData implements IBaseData {
 
     public static PersonData newInstance(JSONObject json){
         PersonData personData = new PersonData();
-        personData.id = json.optInt(Const.STA_USER_ID);
-        personData.photoUrl = json.optString(Const.STA_PHOTO_URL);
+        personData.id = json.optInt(Const.STA_MEMBER_ID);
+        personData.photoUrl = json.optString(Const.STA_IMGURL);
         personData.userName = json.optString(Const.STA_NAME);
-        personData.fYears = json.optInt(Const.STA_YEARS);
-        personData.fTimes = json.optInt(Const.STA_TIMES);
+        personData.fYears = json.optInt(Const.STA_FISH_YEAR);
+        personData.fTimes = json.optInt(Const.STA_FREQUENCY);
         personData.far = json.optString(Const.STA_FAR);
         return personData;
     }

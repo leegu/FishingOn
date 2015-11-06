@@ -84,8 +84,8 @@ public class AutoLayoutViewGroup extends ViewGroup {
             View childView = getChildAt(i);  
             int ws = childView.getLayoutParams().width;
             int hs = childView.getLayoutParams().height;
-            ws = ws > 0 ? (ws + childView.getPaddingTop() + childView.getPaddingBottom() ): cellWidthSpec;
-            hs = hs > 0 ?( hs + childView.getPaddingLeft() + childView.getPaddingRight() ): cellHeightSpec;
+            hs = hs > 0 ? (hs + childView.getPaddingTop() + childView.getPaddingBottom() ): cellHeightSpec;
+            ws = ws > 0 ?( ws + childView.getPaddingLeft() + childView.getPaddingRight() ): cellWidthSpec;
             childView.measure(MeasureSpec.makeMeasureSpec(ws,MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(hs,MeasureSpec.EXACTLY));
             int cw = childView.getMeasuredWidth() ;
             int ch = childView.getMeasuredHeight() ;

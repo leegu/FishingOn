@@ -16,11 +16,13 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -326,12 +329,13 @@ public class ViewHelper {
 		showGlobalWaiting(context, listener,"数据加载中...",-1);
 	}
 	public static void showGlobalWaiting(Context context,ProgressDialog.OnDismissListener listener,String text){
-		showGlobalWaiting(context,null,text,-1);
+		showGlobalWaiting(context, null, text, -1);
 	}
 	public static void showGlobalWaiting(Context context,ProgressDialog.OnDismissListener listener,String text,int timeoutTime){
 		if(sPopupWindow != null){
 			sPopupWindow.dismiss();
 		}
+		Log.d("viewHelper","showGlobalWaiting " + text);
 //		sPopupWindow = new ProgressDialog(context);
 //		LayoutInflater li = LayoutInflater.from(context);
 //		sPopupWindow.addContentView(li.inflate(R.layout.ui_waiting, null),new LayoutParams(-1, -1));
@@ -355,6 +359,7 @@ public class ViewHelper {
 	}
 
 	public static void closeGlobalWaiting(){
+		Log.d("viewHelper", "closeGlobalWaiting ");
 		if(sPopupWindow != null && sPopupWindow.isShowing()){
 			sPopupWindow.dismiss();
 		}
@@ -413,4 +418,5 @@ public class ViewHelper {
 		sendIntent.setType("text/plain");
 		activity.startActivity(Intent.createChooser(sendIntent, Const.DEFT_SHARE_TO));
 	}
+	
 }

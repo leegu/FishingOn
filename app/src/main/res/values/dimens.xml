@@ -3,7 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     
-    <dimen name="calender_item_width">55dp</dimen>
+    <dimen name="care_container_height">60dp</dimen>
+
+    <dimen name="calender_item_width">70dp</dimen>
     <dimen name="calender_item_height">60dp</dimen>
     <dimen name="calender_item_width_with_parent">35dp</dimen>
     <dimen name="calender_item_height_with_parent">50dp</dimen>

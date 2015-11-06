@@ -22,7 +22,7 @@ public class FNewsData implements IBaseData{
 	}
 	public static FNewsData newInstance(JSONObject jsonObject){
 		FNewsData newsData = new FNewsData();
-		JSONArray urlArr = jsonObject.optJSONArray(Const.STA_URLS);
+		JSONArray urlArr = jsonObject.optJSONArray(Const.STA_IMGS);
 		if(urlArr != null && urlArr.length() > 0){
 			newsData.netPicUrl = new String[urlArr.length()];
 			for(int j = 0; j < urlArr.length(); j++) {

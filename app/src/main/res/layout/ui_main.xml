@@ -35,7 +35,7 @@
                 tools:layout="@layout/ui_f_fplace" />
 
             <fragment
-                android:id="@+id/home_appear"
+                android:id="@+id/home_zixun"
                 android:name="com.go.fish.view.HomeFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

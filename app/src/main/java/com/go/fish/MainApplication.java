@@ -16,8 +16,10 @@ import com.go.fish.util.MapUtil.LocationData;
 import com.go.fish.util.MapUtil.OnGetLocationListener;
 import com.go.fish.util.UrlUtils;
 import com.igexin.sdk.PushManager;
+import com.umeng.analytics.AnalyticsConfig;
 
 public class MainApplication extends Application {
+	private static MainApplication instance = null;
     public LocationClient mLocationClient;
     public MyLocationListener mMyLocationListener;
     public OnGetLocationListener mOnGetLocationListener = null;
@@ -28,6 +30,7 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        setInstance(this);
      // 在使用 SDK 各组间之前初始化 context 信息，传入 ApplicationContext
  		SDKInitializer.initialize(this);
         mLocationClient = new LocationClient(this.getApplicationContext());
@@ -36,6 +39,10 @@ public class MainApplication extends Application {
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
         LocalMgr.initEnv(this);
         UrlUtils.initEnv(this);
+        String umkey = "5627058667e58e29b9002f81";
+		AnalyticsConfig.setAppkey(this, umkey);
+		AnalyticsConfig.setChannel(getPackageName().replace(".", "_"));
+		
         PushManager.getInstance().initialize(this);
         LocalServer server = new LocalServer(this, null);
 		server.start();
@@ -44,7 +51,19 @@ public class MainApplication extends Application {
     
 
 
-    /**
+    public static MainApplication getInstance() {
+		return instance;
+	}
+
+
+	public static void setInstance(MainApplication instance) {
+		MainApplication.instance = instance;
+	}
+
+
+
+
+	/**
      * 实现实时位置回调监听
      */
     public class MyLocationListener implements BDLocationListener {

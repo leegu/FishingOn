@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import com.go.fish.R;
 import com.go.fish.barcode.BarcodeUI;
 import com.go.fish.data.FPlaceData;
 import com.go.fish.data.MyListitemData;
-import com.go.fish.ui.HomeUI;
 import com.go.fish.ui.SearchUI;
 import com.go.fish.ui.UICode;
 import com.go.fish.ui.UIMgr;
@@ -35,6 +35,7 @@ import com.go.fish.util.MessageHandler;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.NetTool.RequestData;
 import com.go.fish.util.NetTool.RequestListener;
+import com.go.fish.util.UrlUtils;
 import com.go.fish.view.BaseFragment.ResultForActivityCallback;
 
 public class HomeFragment extends Fragment {
@@ -67,10 +68,10 @@ public class HomeFragment extends Fragment {
 			view = inflater.inflate(layoutId,container,false);
 			onCreateCareView((ViewGroup)view);
 			break;
-		case R.id.home_appear:
-			layoutId = R.layout.ui_f_appear;
+		case R.id.home_zixun:
+			layoutId = R.layout.ui_f_zixun;
 			view = inflater.inflate(layoutId,container,false);
-			onCreateAppearView((ViewGroup)view);
+			onCreateZixunView((ViewGroup) view);
 			break;
 		case R.id.home_fishing_news:
 //			layoutId = R.layout.ui_f_fishing_news;
@@ -98,8 +99,7 @@ public class HomeFragment extends Fragment {
 		ViewGroup vg = (ViewGroup)view.findViewById(R.id.ui_fnews_list_root);
 		{//最新钓播
 //			final ListView fNewsList = new ReFreshListView(getActivity());
-			final ListView fNewsList = new ListView(getActivity());
-			vg.addView(fNewsList);
+			final ListView fNewsList = (ListView)vg.getChildAt(0);
 			//本地先获取显示
 			String careFPlace = LocalMgr.self().getString(Const.SIN_DB_MY_CARE_FNEWS);
 			ArrayList<IBaseData> arr = new ArrayList<IBaseData>();
@@ -118,9 +118,7 @@ public class HomeFragment extends Fragment {
 		}
 		{//my钓播
 //			ListView fPlaceList = new ReFreshListView(getActivity());
-			ListView fPlaceList = new ListView(getActivity());
-			fPlaceList.setVisibility(View.GONE);
-			vg.addView(fPlaceList);
+			final ListView fPlaceList = (ListView)vg.getChildAt(0);
 			//本地先获取显示
 			String careFPlace = LocalMgr.self().getString(Const.SIN_DB_MY_CARE_FPLACE);
 			JSONArray jsonArr = null;
@@ -219,9 +217,10 @@ public class HomeFragment extends Fragment {
 			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce);
 			break;
 		}
-		case R.layout.ui_f_appear:{
-			ViewPager viewPager = (ViewPager) contentView.findViewById(R.id.search_viewpager);
-			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce);
+		case R.layout.ui_f_zixun:{
+			onCreateZixunView((ViewGroup)contentView.findViewById(R.id.ui_f_appear_list_root));
+//			ViewPager viewPager = (ViewPager) contentView.findViewById(R.id.ui_f_appear_list_root);
+//			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce);
 			break;
 		}
 		case R.layout.ui_fnews:
@@ -266,7 +265,13 @@ public class HomeFragment extends Fragment {
 							UIMgr.showActivity(getActivity(),R.layout.ui_my_care);
 							break;
 						case 2:
-							UIMgr.showActivity(getActivity(),R.layout.ui_near_fplace);
+							Bundle newBundle = new Bundle();
+							newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
+							newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_search_list);
+							Intent intent = new Intent();
+							intent.putExtras(newBundle);
+							UIMgr.showActivity(getActivity(), intent, SearchUI.class.getName());
+//							UIMgr.showActivity(getActivity(),R.layout.ui_near_fplace);
 							break;
 						case 3:
 							UIMgr.showActivity(getActivity(),R.layout.ui_near_friends);
@@ -292,16 +297,16 @@ public class HomeFragment extends Fragment {
 //					问题反馈  清空缓存  关于我们
 					switch (position) {
 						case 0://问题反馈
-							UIMgr.showActivity(getActivity(),R.layout.ui_comment_publish);
+//							UIMgr.showActivity(getActivity(),R.layout.ui_comment_publish);
 							break;
 						case 1://清除缓存
-							LocalMgr.self().clearCache();
+//							LocalMgr.self().clearCache();
 							break;
 						case 2:
-							Intent i = new Intent();
-							i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_barcode);
-							i.putExtra(Const.PRI_TO_QR_CONTENT,"13245698756");
-							UIMgr.showActivity(getActivity(),i,BarcodeUI.class.getName());
+//							Intent i = new Intent();
+//							i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_barcode);
+//							i.putExtra(Const.PRI_TO_QR_CONTENT,"13245698756");
+//							UIMgr.showActivity(getActivity(),i,BarcodeUI.class.getName());
 							break;
 					}
 				}
@@ -309,41 +314,65 @@ public class HomeFragment extends Fragment {
 		}
 	}
 
-	private void onCreateAppearView(ViewGroup vg){
-    	String[] tabItemsTitle = getResources().getStringArray(R.array.hfs_splace_type);
-    	ViewGroup mainView = ViewHelper.newMainView(getActivity(), getChildFragmentManager(), new ResultForActivityCallback() {
-			@Override
-			public void onItemClick(View view, final FPlaceData fPlaceData) {
-				RequestData rData = RequestData.newInstance(new RequestListener() {
-					@Override
-					public void onStart() {
-						ViewHelper.showGlobalWaiting(getActivity(), null);
-					}
-
-					@Override
-					public void onEnd(byte[] data) {
-						try {
-							String jsonStr = new String(data, "UTF-8");
-							Bundle newBundle = new Bundle();
-							String fPlaceId = fPlaceData.sid;;
-							newBundle.putString(Const.STA_FISHING_PLACE_ID, fPlaceId);
-							newBundle.putString(Const.STA_TEXT, fPlaceData.title);
-							newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
-							newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
-							newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
-							Intent i = new Intent();
-							i.putExtras(newBundle);
-							UIMgr.showActivity(getActivity(),i, SearchUI.class.getName());
-							ViewHelper.closeGlobalWaiting();
-						} catch (Exception e) {
+	private void onCreateZixunView(ViewGroup view){
+		{//最新播况
+			final ListView lastNews = (ListView)view.findViewById(R.id.last_news);
+			//本地先获取显示
+			String careFPlace = LocalMgr.self().getString(Const.SIN_DB_MY_CARE_FNEWS);
+			ArrayList<IBaseData> arr = new ArrayList<IBaseData>();
+			JSONArray jsonArr = null;
+			try {
+				if(!TextUtils.isEmpty(careFPlace)){
+					jsonArr = new JSONArray(careFPlace);
+				}else{
+					jsonArr = new JSONArray();
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			final AdapterExt mListAdapter = AdapterExt.newInstance(lastNews, jsonArr, R.layout.listitem_zixun);
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put(Const.STA_START_INDEX, 0);
+				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			NetTool.data().http(new RequestListener() {
+				
+				@Override
+				public void onEnd(byte[] data) {
+					// TODO Auto-generated method stub
+					JSONObject json = toJSONObject(data);
+					if(isRight(json)){
+						JSONArray arr = json.optJSONArray(Const.STA_DATA);
+						if(arr != null && arr.length() > 0) {
+							mListAdapter.updateAdapter(arr);
 						}
 					}
-				}, "fishing_place_" + fPlaceData.sid);
-	            rData.putData(Const.STA_FISHING_PLACE_ID, fPlaceData.sid);
-	            NetTool.data().http(rData.syncCallback());
+				}
+			}, jsonObject, UrlUtils.self().getinfoList());
+			lastNews.setAdapter(mListAdapter);
+		}
+		{//最新活动
+			final ListView lastActivity = (ListView)view.findViewById(R.id.last_activity);
+			lastActivity.setVisibility(View.GONE);
+			//本地先获取显示
+			String careFPlace = LocalMgr.self().getString(Const.SIN_DB_MY_CARE_FPLACE);
+			JSONArray jsonArr = null;
+			try {
+				if(!TextUtils.isEmpty(careFPlace)){
+					jsonArr = new JSONArray(careFPlace);
+				}else{
+					jsonArr = new JSONArray();
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
-		}, tabItemsTitle);
-    	vg.addView(mainView);
+			final AdapterExt mListAdapter = AdapterExt.newInstance(lastActivity, jsonArr, R.layout.listitem_zixun);
+			
+			lastActivity.setAdapter(mListAdapter);
+		}
     }
     
     private void onCreateCareView(ViewGroup vg){
@@ -363,7 +392,7 @@ public class HomeFragment extends Fragment {
 							String jsonStr = new String(data, "UTF-8");
 							Bundle newBundle = new Bundle();
 							String fPlaceId = fPlaceData.sid;;
-							newBundle.putString(Const.STA_FISHING_PLACE_ID, fPlaceId);
+							newBundle.putString(Const.STA_ID, fPlaceId);
 							newBundle.putString(Const.STA_TEXT, fPlaceData.title);
 							newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
 							newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
@@ -376,7 +405,7 @@ public class HomeFragment extends Fragment {
 						}
 					}
 				}, "fishing_place_" + fPlaceData.sid);
-	            rData.putData(Const.STA_FISHING_PLACE_ID, fPlaceData.sid);
+	            rData.putData(Const.STA_ID, fPlaceData.sid);
 	            NetTool.data().http(rData.syncCallback());
 			}
 		}, tabItemsTitle));

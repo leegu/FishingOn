@@ -34,6 +34,8 @@
     <color name="base_btn_color">#36c3fe</color>
     <color name="base_btn_color_press">#3fc3fe</color>
 
+    <color name="menu_item_text_color">#b4b4b4</color>
+
     <color name="tabitem_foucs_color">#009ef5</color>
 
     <color name="base_btn_border_color">#e5e5e5</color>
@@ -45,6 +47,9 @@
     <color name="head_bar">#9A9691</color>
     <color name="head_bar_normal_color">#ffffff</color>
     <color name="head_bar_press_color">#eeeeee</color>
+
+    <color name="comment_bg_press_color">#BBBBBB</color>
+    <color name="comment_bg_color">#f1f1f1</color>
 
     <color name="head_bar_title_color">#666666</color>
     <color name="head_bar_left_color">#666666</color>

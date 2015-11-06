@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/comment_listitem_name"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_background"
+    android:clickable="true"
+    android:onClick="onShowUser"
+    android:paddingBottom="@dimen/base_space_m"
+    android:paddingLeft="@dimen/base_space_m"
+    android:paddingTop="@dimen/base_space_m"
+    android:text="磊:"
+    android:textColor="@color/base_btn_color" />
+

@@ -14,7 +14,7 @@ public class FPlaceData implements IBaseData{
 	public Bundle toBundle(Bundle bundle){
 		bundle.putString(Const.STA_TEXT, title);
 		bundle.putInt(Const.STA_ORDER_ID, orderId);
-		bundle.putString(Const.STA_FISHING_PLACE_ID, sid);
+		bundle.putString(Const.STA_ID, sid);
 		return bundle;
 	}
 }

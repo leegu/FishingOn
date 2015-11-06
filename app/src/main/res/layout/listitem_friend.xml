@@ -101,8 +101,10 @@
                     >
                     <include layout="@layout/item_tag"></include>
                     <include layout="@layout/item_tag"></include>
+                    <include layout="@layout/item_tag"></include>
                 </LinearLayout>
                 <TextView
+                    android:id="@+id/listitem_friend_last_info"
                     android:drawableRight="@drawable/arrow_right"
                     android:layout_alignParentRight="true"
                     android:gravity="center"
@@ -148,7 +150,7 @@
                     <TextView
                         style="@style/friend_item_text_style"
                         android:layout_alignParentRight="true"
-                        android:text="出钓频次:" />
+                        android:text="频次:" />
 
                     <TextView
                         android:id="@+id/listitem_friend_ftimes"

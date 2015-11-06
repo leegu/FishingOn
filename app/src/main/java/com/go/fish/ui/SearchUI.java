@@ -34,9 +34,6 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 			detailFragment.isFront = true;
 			Bundle dataBundle = getIntent().getExtras();
 			Bundle b = detailFragment.getArguments();
-			b.putString(Const.STA_FISHING_PLACE_ID, dataBundle.getString(Const.STA_FISHING_PLACE_ID));
-			b.putString(Const.STA_TEXT, dataBundle.getString(Const.STA_TEXT));
-			b.putString(Const.STA_TITLE, dataBundle.getString(Const.STA_TITLE));
 			b.putString(Const.PRI_JSON_DATA, dataBundle.getString(Const.PRI_JSON_DATA));
 			detailFragment.setArguments(b);
 			fragmentMgr.beginTransaction().add(R.id.search_content, detailFragment).commit();
@@ -111,7 +108,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 		int id = view.getId();
 		switch (id) {
 		case R.id.float_view_detail_btn://详情
-            String fPlaceId = searchInMapFragment.getArguments().getString(Const.STA_FISHING_PLACE_ID);
+            String fPlaceId = searchInMapFragment.getArguments().getString(Const.STA_ID);
 			RequestData rData = RequestData.newInstance(new RequestListener() {
 				@Override
 				public void onStart() {
@@ -126,8 +123,8 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 						Bundle src = searchInMapFragment.getArguments();
 						Bundle b = detailFragment.getArguments();
 						String fPlaceId = searchInMapFragment.getArguments()
-								.getString(Const.STA_FISHING_PLACE_ID);
-						b.putString(Const.STA_FISHING_PLACE_ID, fPlaceId);
+								.getString(Const.STA_ID);
+						b.putString(Const.STA_ID, fPlaceId);
 						b.putString(Const.STA_TEXT, src.getString(Const.STA_TEXT));
 						b.putString(Const.PRI_JSON_DATA, jsonStr);
 						detailFragment.setArguments(b);
@@ -138,7 +135,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 					}
 				}
 			}, "fishing_place_" + fPlaceId);
-            rData.putData(Const.STA_FISHING_PLACE_ID, fPlaceId);
+            rData.putData(Const.STA_ID, fPlaceId);
             NetTool.data().http(rData.syncCallback());
 			break;
 		case R.id.float_view_care_text:
@@ -151,15 +148,5 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 		default:
 			break;
 		}
-	}
-
-	@Override
-	public void onCommentIconClick(View view) {
-
-	}
-
-	@Override
-	public void onCommentReplyClick(View view) {
-		UIMgr.showActivity(this,R.layout.ui_comment_list);
 	}
 }

@@ -4,89 +4,74 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar" >
+    <!-- copy  beign -->
+
+    <RelativeLayout style="@style/head_bar_style">
 
         <RelativeLayout
-            android:id="@+id/base_head_bar_last"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/base_background"
-            android:clickable="true"
-            android:gravity="center"
-            android:minWidth="@dimen/head_bar_width"
-            android:onClick="onHeadClick"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space" >
+            android:id="@+id/base_ui_close"
+            style="@style/head_bar_pic_left_btn_style">
 
             <ImageView
-                android:id="@+id/base_ui_close"
-                android:layout_width="@dimen/head_bar_icon_width"
-                android:layout_height="@dimen/head_bar_icon_height"
-                android:clickable="false"
-                android:onClick="onHeadClick"
+                style="@style/head_bar_pic_style"
                 android:src="@drawable/arrow_left" />
         </RelativeLayout>
 
+        <RelativeLayout
+            android:visibility="invisible"
+            android:id="@+id/base_head_bar_publish"
+            style="@style/head_bar_pic_right_btn_style">
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/publish" />
+        </RelativeLayout>
+
         <TextView
-            android:id="@+id/base_head_bar_weather"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/base_background"
-            android:clickable="true"
-            android:gravity="center"
-            android:onClick="onHeadClick"
-            android:paddingLeft="@dimen/base_space"
-            android:textSize="@dimen/base_font_size_h4"
-            android:textColor="@color/head_bar_right_color"
-            android:text="天气" 
-            android:paddingRight="@dimen/base_space" >
-        </TextView>
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true"></TextView>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            style="@style/head_bar_title_style"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@id/base_head_bar_weather"
-            android:layout_toRightOf="@id/base_head_bar_last"
-            android:orientation="horizontal" >
+            android:layout_toLeftOf="@id/base_head_bar_publish"
+            android:layout_toRightOf="@id/base_ui_close"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/base_space"
+            android:layout_marginRight="@dimen/base_space"
+            >
 
-            <TextView
+            <RelativeLayout
                 android:id="@+id/ui_my_care_head_fplace"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/list_item_space_mid"
-                android:layout_weight="1"
-                android:background="@drawable/title_btn_background_selected"
-                android:clickable="true"
-                android:gravity="center"
-                android:onClick="onHeadClick"
-                android:padding="@dimen/base_space"
                 android:tag="true"
-                android:text="钓场"
-                android:textColor="@color/head_bar_title_color"
-                android:textSize="@dimen/base_font_size_h7" />
+                style="@style/title_nav_item_style">
+                <TextView
+                    android:text="钓场/渔具"
+                    android:textColor="@color/tabitem_foucs_color"
+                    style="@style/title_nav_item_text_line_style" />
 
-            <TextView
+                <TextView
+                    style="@style/title_nav_item_bottom_line_style"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/ui_my_care_head_fnews"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginRight="@dimen/list_item_space_mid"
-                android:layout_weight="1"
-                android:background="@drawable/title_btn_background"
-                android:clickable="true"
-                android:gravity="center"
-                android:onClick="onHeadClick"
-                android:padding="@dimen/base_space"
-                android:text="钓播"
-                android:textColor="@color/head_bar_title_color"
-                android:textSize="@dimen/base_font_size_h7" />
+                style="@style/title_nav_item_style">
+
+                <TextView
+                    android:text="钓播"
+                    android:textColor="@color/text_btn_color"
+                    style="@style/title_nav_item_text_line_style" />
+
+                <TextView
+                    style="@style/title_nav_item_bottom_line_style"
+                    android:visibility="invisible"
+                    />
+            </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
+    <!-- copy  end -->
 
     <FrameLayout
         android:id="@+id/ui_my_care_list_root"

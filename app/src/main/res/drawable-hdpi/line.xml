@@ -5,6 +5,6 @@
         android:width="@dimen/base_border"
         android:color="#d0d0d0"
         android:dashWidth="@dimen/base_space_s"
-        android:dashGap="@dimen/base_space_s"></stroke>
+        android:dashGap="@dimen/base_space_m"></stroke>
     <solid android:color="@android:color/transparent"></solid>
 </shape>

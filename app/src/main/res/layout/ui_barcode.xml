@@ -8,54 +8,38 @@
          android:layout_width="match_parent"
         android:layout_height="match_parent"
         ></FrameLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/head_bar_height"
-        android:background="@color/head_bar" >
-
-        <TextView
-            android:id="@+id/base_ui_close"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space"
-            android:background="@drawable/base_background"
-            android:clickable="true"
-            android:gravity="center"
-            android:onClick="onHeadClick"
-            android:textSize="@dimen/base_font_size_h4"
-            android:text="关闭"
-            android:textColor="@color/head_bar_left_color" />
-
-        <TextView
+    <!-- copy  beign -->
+    <RelativeLayout style="@style/head_bar_style" >
+        <RelativeLayout
+            android:id="@+id/base_head_bar_last"
+            style="@style/head_bar_pic_left_btn_style" >
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/arrow_left" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:visibility="invisible"
             android:id="@+id/base_head_bar_next"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/base_background"
-            android:clickable="true"
-            android:gravity="center"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space"
-            android:onClick="onHeadClick"
-            android:textSize="@dimen/base_font_size_h4"
-            android:text="菜单"
-            android:textColor="@color/head_bar_right_color" />
+            style="@style/head_bar_pic_right_btn_style" >
+            <ImageView
+                android:id="@+id/base_ui_publish"
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/publish" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/base_head_bar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
+            style="@style/head_bar_title_style"
             android:layout_toLeftOf="@id/base_head_bar_next"
-            android:layout_toRightOf="@id/base_ui_close"
-            android:background="@drawable/base_background"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="扫一扫"
-            android:textColor="@color/head_bar_title_color"
-            android:textSize="@dimen/base_font_size_h7" >
+            android:layout_toRightOf="@id/base_head_bar_last"
+            android:text="扫一扫" >
+        </TextView>
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
         </TextView>
     </RelativeLayout>
+    <!-- copy  end -->
 
 </FrameLayout>

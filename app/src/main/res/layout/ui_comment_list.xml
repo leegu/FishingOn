@@ -9,7 +9,7 @@
     <RelativeLayout style="@style/head_bar_style" >
 
         <RelativeLayout
-            android:id="@+id/base_head_bar_last"
+            android:id="@+id/base_ui_close"
             style="@style/head_bar_pic_left_btn_style" >
 
             <ImageView
@@ -31,7 +31,7 @@
             android:id="@+id/base_head_bar_title"
             style="@style/head_bar_title_style"
             android:layout_toLeftOf="@id/base_head_bar_next"
-            android:layout_toRightOf="@id/base_head_bar_last"
+            android:layout_toRightOf="@id/base_ui_close"
             android:text="评论" >
         </TextView>
         
@@ -44,12 +44,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ListView
-            android:id="@+id/comment_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        </ListView>
         <RelativeLayout
+            android:id="@+id/comment_publish_container"
             style="@style/bottom_span_style"
             >
             <TextView
@@ -80,8 +76,15 @@
                 android:layout_toLeftOf="@id/comment_list_publish"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
         </RelativeLayout>
+
+        <ListView
+            android:id="@+id/comment_list"
+            android:layout_above="@id/comment_publish_container"
+            style="@style/listview_style"
+            >
+        </ListView>
+
 
     </RelativeLayout>
 </LinearLayout>

@@ -2,81 +2,103 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/base_space"
-    android:orientation="vertical" >
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/base_space"
+    android:paddingRight="@dimen/base_space"
+    android:paddingLeft="@dimen/base_space"><!--android:background="@drawable/base_background"-->
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <com.go.fish.view.CircleImageView
             android:id="@+id/comment_listitem_icon"
             android:layout_width="@dimen/base_pic_icon_width"
             android:layout_height="@dimen/base_pic_icon_height"
-            android:layout_centerHorizontal="true"
+            android:background="@drawable/circle_solid"
             android:clickable="true"
             android:onClick="onCommentIconClick"
-            android:background="@drawable/circle_solid"
-            android:src="@drawable/icon" />
+            android:src="@drawable/icon_user" />
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_alignTop="@id/comment_listitem_icon"
+            android:layout_alignBottom="@id/comment_listitem_icon"
+            android:layout_toRightOf="@id/comment_listitem_icon"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/base_space" >
+            android:orientation="vertical"
+            android:padding="@dimen/base_space">
+
             <RelativeLayout
-                android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space"
-                android:paddingBottom="@dimen/base_space"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/base_space"
+                android:paddingLeft="@dimen/base_space"
+                android:paddingRight="@dimen/base_space">
+
                 <TextView
                     android:id="@+id/comment_listitem_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="磊"
                     android:textColor="#888888" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/comment_listitem_time_right_of"
+                    style="@style/comment_list_time_right_of_style" />
                 <TextView
                     android:id="@+id/comment_listitem_time"
-                    android:layout_toRightOf="@id/comment_listitem_name"
-                    android:paddingLeft="40dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1分钟前"
-                    android:textColor="#d2d2d2" />
+                    style="@style/comment_list_time_style" />
+
                 <ImageView
-                    android:clickable="true"
-                    android:onClick="onCommentReplyClick"
-                    android:layout_gravity="right"
+                    android:id="@+id/comment_listitem_reply"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/comment" />
+                    android:padding="@dimen/base_space"
+                    android:background="@drawable/base_background"
+                    android:layout_gravity="right"
+                    android:clickable="true"
+                    android:onClick="onCommentReplyClick"
+                    android:src="@drawable/comment"
+                    android:visibility="gone"
+                     />
             </RelativeLayout>
 
             <TextView
-                android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space"
                 android:id="@+id/comment_listitem_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:onClick="onCommentReplyClick"
+                android:paddingLeft="@dimen/base_space"
+                android:paddingRight="@dimen/base_space"
                 android:text="很长很评论"
                 android:textColor="#888888" />
-            <ViewStub
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:clickable="true"
-                android:onClick="onCommentReplyClick"
-                android:padding="@dimen/base_space" >
-            </ViewStub>
 
+            <LinearLayout
+                android:id="@+id/comment_listitem_lower_comments"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:background="@color/comment_bg_color"
+                android:paddingLeft="@dimen/base_space"
+                android:paddingTop="@dimen/base_space_m"
+                android:paddingBottom="@dimen/base_space_m"
+                android:paddingRight="@dimen/base_space"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <TextView
-        android:background="@drawable/line"
+        android:id="@+id/line"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/base_space"
+        android:background="@drawable/line" />
 </LinearLayout>

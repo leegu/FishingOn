@@ -1,16 +1,7 @@
 package com.go.fish.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -22,15 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,11 +44,21 @@ import com.go.fish.util.MapUtil;
 import com.go.fish.util.MapUtil.LocationData;
 import com.go.fish.util.MapUtil.OnGetLocationListener;
 import com.go.fish.util.NetTool;
-import com.go.fish.util.NetTool.RequestData;
 import com.go.fish.util.NetTool.RequestListener;
+import com.go.fish.util.UrlUtils;
 import com.go.fish.view.HomeFragment;
 import com.go.fish.view.PopWinListItemAdapter;
 import com.go.fish.view.ViewHelper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 public class HomeUI extends FragmentActivity implements IHasHeadBar {
 
@@ -119,19 +117,19 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                     {
                         TextView detail_text = (TextView) mFloatViewInfo.findViewById(R.id.float_view_title);
                         detail_text.setTag(data);
-                        detail_text.setText(data.getString(Const.STA_TITLE));
+                        detail_text.setText(data.getString(Const.STA_NAME));
                     }
                     {
                         TextView distance_text = (TextView) mFloatViewInfo.findViewById(R.id.float_view_distance);
                         distance_text.setText(MapUtil.getDistance(data.getDouble(Const.PRI_DISTANCE)));
                     }
-                    {
+                    if(data.getInt(Const.STA_CARE_COUNT) > 0){
                         TextView care_text = (TextView) mFloatViewInfo.findViewById(R.id.float_view_care_text);
                         care_text.setText(String.valueOf(data.getInt(Const.STA_CARE_COUNT)));
                     }
                     {
                         ViewStub vs = (ViewStub) mFloatViewInfo.findViewById(R.id.calendar_container);
-                        if (data.containsKey(Const.STA_CALENDER)) {
+                        if (data.containsKey(Const.STA_PIRCES)) {
                             ViewGroup calendar_container = null;
                             if (vs != null) {//viewstub不为空时，表示还没有初始化
                                 calendar_container = (ViewGroup) vs.inflate();
@@ -145,10 +143,12 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                             LinearLayout container = (LinearLayout) calendar_container.findViewById(R.id.calendar);
                             ((View) container.getParent()).scrollTo(0, 0);
                             try {
-                                JSONArray datas = new JSONArray(data.getString(Const.STA_CALENDER));
+                                JSONArray datas = new JSONArray(data.getString(Const.STA_PIRCES));
                                 int size = datas.length();
                                 int ciw = getResources().getDimensionPixelSize(R.dimen.calender_item_width);
                                 int cih = getResources().getDimensionPixelSize(R.dimen.calender_item_height);
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                Date curDate = new Date();
                                 for (int i = 0; i < size; i++) {
                                     View view = null;
                                     boolean needAdd = false;
@@ -159,13 +159,32 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                                         needAdd = true;
                                     }
                                     JSONObject item = datas.getJSONObject(i);
-                                    int type = item.getInt(Const.STA_STAUS);
-                                    int money = item.getInt(Const.STA_MONEY);
-                                    String date = item.getString(Const.STA_DATE);
+                                    String priceTitle = item.getString(Const.STA_PRICE_TITLE);
+                                    String date = item.getString(Const.STA_PRICE_DATE);
+                                    int type = -1;
+                                    try {
+                                        Date pd = sdf.parse(date);
+                                        if("正".equals(priceTitle)){
+                                            type = 1;
+                                            if(!pd.after(curDate)){
+                                                type = -1;
+                                            }
+                                        }else{
+                                            type = 2;
+                                            if(!pd.after(curDate)){
+                                                type = -2;
+                                            }
+                                        }
+                                        date = (pd.getMonth() + 1) + "月" + pd.getDate() + "日";
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    int money = item.getInt(Const.STA_PRICE);
                                     View statusView = view.findViewById(R.id.calendar_pic_status);
                                     TextView moneyView = (TextView) view.findViewById(R.id.calendar_money);
                                     TextView dateView = (TextView) view.findViewById(R.id.calendar_date);
                                     moneyView.setText(money + "￥");
+
                                     dateView.setText(date);
                                     if (needAdd) {
                                         container.addView(view/*, new LinearLayout.LayoutParams(ciw, cih)*/);
@@ -290,8 +309,14 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
             case R.id.float_view_detail_btn://详情
                 View titleView = mFloatViewInfo.findViewById(R.id.float_view_title);
                 final Bundle b = (Bundle) titleView.getTag();
-                String fPlaceId = b.getString(Const.STA_FISHING_PLACE_ID);
-                RequestData rData = RequestData.newInstance(new RequestListener() {
+                int fPlaceId = b.getInt(Const.STA_ID);
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put(Const.STA_FIELDID, fPlaceId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                NetTool.data().http(new RequestListener() {
                     @Override
                     public void onStart() {
                         ViewHelper.showGlobalWaiting(HomeUI.this, null);
@@ -302,23 +327,18 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                         try {
                             String jsonStr = new String(data, "UTF-8");
                             Bundle newBundle = new Bundle();
-                            String fPlaceId = b.getString(Const.STA_FISHING_PLACE_ID);
-                            newBundle.putString(Const.STA_FISHING_PLACE_ID, fPlaceId);
-                            newBundle.putString(Const.STA_TEXT, b.getString(Const.STA_TITLE));
                             newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
                             newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
                             newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
                             Intent i = new Intent();
                             i.putExtras(newBundle);
                             UIMgr.showActivity(HomeUI.this, i, SearchUI.class.getName());
-                            ViewHelper.closeGlobalWaiting();
                             mFloatViewInfo.setVisibility(View.GONE);
+                            ViewHelper.closeGlobalWaiting();
                         } catch (Exception e) {
                         }
                     }
-                }, "fishing_place_" + fPlaceId);
-                rData.putData(Const.STA_FISHING_PLACE_ID, fPlaceId);
-                NetTool.data().http(rData.syncCallback());
+                }, jsonObject, UrlUtils.self().getFieldInfo() + "?fieldId=" + fPlaceId);
                 break;
             case R.id.float_view_nav_btn://
                 break;
@@ -340,7 +360,15 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                         mBaiduMap.animateMapStatus(u);
                     }
 
-                    NetTool.RequestData rData = NetTool.RequestData.newInstance(
+                    JSONObject jsonObject = new JSONObject();
+        			try {
+        				jsonObject.put(Const.STA_LAT, String.valueOf(data.lat));
+        				jsonObject.put(Const.STA_LNG, String.valueOf(data.lng));
+        				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
+        			} catch (JSONException e) {
+        				e.printStackTrace();
+        			}
+                    NetTool.data().http(
                             new NetTool.RequestListener() {
                                 @Override
                                 public void onStart() {
@@ -351,41 +379,46 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                                 public void onEnd(byte[] data) {
                                     if (data != null) {
                                         locationUpdateTime = System.currentTimeMillis();
-                                        JSONArray jsonArray = toJSONArray(data);
-                                        mSearchResult = new HashMap<String, ArrayList<Marker>>();
-                                        BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.point);
-                                        for (int i = 0; i < jsonArray.length(); i++) {
-                                            JSONArray typeFPlaceArr = jsonArray.optJSONArray(i);
-                                            ArrayList<Marker> typeMarkers = new ArrayList<Marker>();
-                                            mSearchResult.put(i + "", typeMarkers);
-                                            for (int j = 0; j < typeFPlaceArr.length(); j++) {
-                                                try {
-                                                    JSONObject json = typeFPlaceArr.optJSONObject(j);
-                                                    LatLng p = new LatLng(json.optDouble(Const.STA_LAT), json.optDouble(Const.STA_LNG));
-                                                    OverlayOptions ooD = new MarkerOptions().position(p).icon(bdA);
-                                                    Marker mMarkerD = (Marker) (mBaiduMap.addOverlay(ooD));
-                                                    Bundle b = new Bundle();
-                                                    String fPlaceId = json.optString(Const.STA_FISHING_PLACE_ID);
-                                                    b.putString(Const.STA_TITLE, json.optString(Const.STA_TITLE));
-                                                    b.putDouble(Const.PRI_DISTANCE, DistanceUtil.getDistance(userP, p));
-                                                    b.putString(Const.STA_FISHING_PLACE_ID, fPlaceId);
-                                                    b.putInt(Const.STA_CARE_COUNT, json.optInt(Const.STA_CARE_COUNT, 0));
-                                                    if (json.has(Const.STA_CALENDER)) {
-                                                        b.putString(Const.STA_CALENDER, json.optJSONArray(Const.STA_CALENDER).toString());
-                                                    }
-                                                    mMarkerD.setExtraInfo(b);
-                                                    typeMarkers.add(mMarkerD);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
+                                        JSONObject resultData = toJSONObject(data);
+                                        if(resultData != null ){
+                                            if( isRight(resultData)){
+                                                JSONArray jsonArray = resultData.optJSONArray(Const.STA_DATA);
+                                                mSearchResult = new HashMap<String, ArrayList<Marker>>();
+                                                BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.point);
+                                                for (int i = 0; i < jsonArray.length(); i++) {
+//                                                    JSONArray typeFPlaceArr = jsonArray.optJSONArray(i);
+//                                                    ArrayList<Marker> typeMarkers = new ArrayList<Marker>();
+//                                                    mSearchResult.put(i + "", typeMarkers);
+//                                                    for (int j = 0; j < typeFPlaceArr.length(); j++) {
+                                                        try {
+                                                            JSONObject json = jsonArray.optJSONObject(i);
+                                                            LatLng p = new LatLng(json.optDouble(Const.STA_LAT), json.optDouble(Const.STA_LNG));
+                                                            OverlayOptions ooD = new MarkerOptions().position(p).icon(bdA);
+                                                            Marker mMarkerD = (Marker) (mBaiduMap.addOverlay(ooD));
+                                                            Bundle b = new Bundle();
+                                                            int fPlaceId = json.optInt(Const.STA_ID);
+                                                            b.putString(Const.STA_NAME, json.optString(Const.STA_NAME));
+                                                            b.putDouble(Const.PRI_DISTANCE, DistanceUtil.getDistance(userP, p));
+                                                            b.putInt(Const.STA_ID, fPlaceId);
+                                                            b.putInt(Const.STA_CARE_COUNT, json.optInt(Const.STA_CARE_COUNT, 0));
+                                                            if (json.has(Const.STA_PIRCES)) {
+                                                                b.putString(Const.STA_PIRCES, json.optJSONArray(Const.STA_PIRCES).toString());
+                                                            }
+                                                            mMarkerD.setExtraInfo(b);
+//                                                            typeMarkers.add(mMarkerD);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+//                                                    }
                                                 }
+                                            }else{
+                                                ViewHelper.showToast(HomeUI.this,resultData.optString(Const.STA_MESSAGE));
                                             }
                                         }
                                         ViewHelper.closeGlobalWaiting();
                                     }
                                 }
-                            }, "fishing_place_near"
-                    );
-                    NetTool.data().http(rData.syncCallback());
+                            }, jsonObject,UrlUtils.self().getQueryForMap());
 //					JSONObject json = new JSONObject();
 //					json.put("lng", data.lng);
 //					json.put("lat", data.lat);
@@ -409,7 +442,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
     }
 
     int[] fragmentIds = new int[]{R.id.home_fishing_place, R.id.home_care,
-            R.id.home_appear, R.id.home_fishing_news, R.id.home_my};
+            R.id.home_zixun, R.id.home_fishing_news, R.id.home_my};
 
     int[] footItemIds = new int[]{R.id.foot_bar_fishing_place,
             R.id.foot_bar_care, R.id.foot_bar_appear,
@@ -466,7 +499,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                 showFragment(R.id.home_care, id);
                 break;
             case R.id.foot_bar_appear:
-                showFragment(R.id.home_appear, id);
+                showFragment(R.id.home_zixun, id);
                 break;
             case R.id.foot_bar_fishing_news:
                 showFragment(R.id.home_fishing_news, id);
@@ -539,7 +572,8 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
             case R.id.fishing_place_head_search_btn:
                 showSearchView();
                 break;
-            case R.id.ui_fnews_head_last_news: {
+            case R.id.ui_fnews_head_last_news: 
+            case R.id.ui_zixun_head_last_news: {
                 boolean f = "true".equals(view.getTag());
                 if (!f) {
                     ViewGroup p = (ViewGroup) view;
@@ -558,14 +592,21 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                         otherP.getChildAt(1).setVisibility(View.GONE);
                     }
                     {//设置主内容区显示，隐藏
-                        ViewGroup vg = (ViewGroup) findViewById(R.id.ui_fnews_list_root);
+                    	int rootViewId = 0;
+                    	if(R.id.ui_fnews_head_last_news == id){
+                    		rootViewId = R.id.ui_fnews_list_root;
+                    	}else if(R.id.ui_zixun_head_last_news == id){
+                    		rootViewId = R.id.ui_f_appear_list_root;
+                    	}
+                        ViewGroup vg = (ViewGroup) findViewById(rootViewId);
                         vg.getChildAt(0).setVisibility(View.VISIBLE);
                         vg.getChildAt(1).setVisibility(View.GONE);
                     }
                 }
                 break;
             }
-            case R.id.ui_fnews_head_mynews: {
+            case R.id.ui_fnews_head_mynews: 
+            case R.id.ui_zixun_head_last_activity: {
                 boolean f = "true".equals(view.getTag());
                 if (!f) {
                     ViewGroup p = (ViewGroup) view;
@@ -583,7 +624,13 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                         otherP.getChildAt(1).setVisibility(View.GONE);
                     }
                     {//设置主内容区显示，隐藏
-                        ViewGroup vg = (ViewGroup) findViewById(R.id.ui_fnews_list_root);
+                    	int rootViewId = 0;
+                    	if(R.id.ui_fnews_head_mynews == id){
+                    		rootViewId = R.id.ui_fnews_list_root;
+                    	}else if(R.id.ui_zixun_head_last_activity == id){
+                    		rootViewId = R.id.ui_f_appear_list_root;
+                    	}
+                        ViewGroup vg = (ViewGroup) findViewById(rootViewId);
                         vg.getChildAt(1).setVisibility(View.VISIBLE);
                         vg.getChildAt(0).setVisibility(View.GONE);
                     }

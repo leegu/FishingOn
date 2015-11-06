@@ -122,13 +122,13 @@ public class BarcodeUI extends BaseUI {
 	}
 	
 	@Override
-	protected void onPause() {
+	public void onPause() {
 		super.onPause();
 		if(mBarcodeView != null)
 			mBarcodeView.onPause();
 	}
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		if(mBarcodeView != null)
 			mBarcodeView.onResume(true);

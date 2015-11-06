@@ -9,6 +9,7 @@
     >
 
     <LinearLayout
+        android:background="@drawable/base_background"
         android:padding="@dimen/base_space_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -26,7 +27,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:background="@drawable/base_listitem_background"
             android:clickable="true"
             android:focusable="true"
             android:onClick="onMapFloatViewClick"
@@ -39,6 +39,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/listitem_zixun_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -50,7 +51,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/fplace_desc"
+                android:id="@+id/listitem_zixun_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
@@ -67,11 +68,11 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/float_view_nav_btn"
+                    android:id="@+id/listitem_zixun_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:background="@drawable/float_view_background_suit_parent"
+                    android:background="@drawable/base_background"
                     android:clickable="true"
                     android:drawableLeft="@drawable/incon_80"
                     android:drawablePadding="@dimen/base_space_m"
@@ -83,8 +84,9 @@
                     android:textSize="@dimen/base_font_size_h2" />
 
                 <TextView
-                    android:id="@+id/float_view_distance"
-                    android:layout_width="match_parent"
+                    android:id="@+id/listitem_zixun_zan"
+                    android:background="@drawable/base_background"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@id/float_view_nav_btn"
@@ -97,6 +99,8 @@
                     android:textSize="@dimen/base_font_size_h2" />
 
                 <TextView
+                    android:id="@+id/listitem_zixun_time"
+                    android:background="@drawable/base_background"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

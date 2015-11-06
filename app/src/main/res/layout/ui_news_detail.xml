@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- copy  beign -->
+
+    <RelativeLayout style="@style/head_bar_style">
+
+        <RelativeLayout
+            android:id="@+id/base_ui_close"
+            style="@style/head_bar_pic_left_btn_style">
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/arrow_left" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/news_item_detail_share"
+            style="@style/head_bar_pic_right_btn_style">
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/share" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/news_item_detail_title"
+            style="@style/head_bar_title_style"
+            android:layout_toLeftOf="@id/news_item_detail_share"
+            android:layout_toRightOf="@id/base_ui_close"
+            android:text="钓播详情"></TextView>
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true"></TextView>
+    </RelativeLayout>
+    <!-- copy  end -->
+
+    <include
+        android:id="@+id/listitem_friend_layout"
+        layout="@layout/listitem_friend_for_ui_zan"></include>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/detail_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/action_sheet_bg"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="@dimen/base_space">
+
+            <LinearLayout
+                style="@style/average_width_weight_1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/detail_bottom_bar_care_icon"
+                    style="@style/detail_bottom_item"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/hart_red" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/detail_bottom_bar_care_number"
+                    style="@style/detail_bottom_item_text"
+                    android:text="0" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/average_width_weight_1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/detail_bottom_bar_zan_icon"
+                    style="@style/detail_bottom_item"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/zan" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/detail_bottom_bar_zan_number"
+                    style="@style/detail_bottom_item_text"
+                    android:text="0" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/average_width_weight_1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/detail_bottom_bar_comment_icon"
+                    style="@style/detail_bottom_item"
+                    android:clickable="true">
+
+                    <ImageView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/comment_" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/detail_bottom_bar_comment_number"
+                    style="@style/detail_bottom_item_text"
+                    android:text="0" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.go.fish.view.ObservableScrollView
+            android:id="@+id/ui_f_news_item_detail_root_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/detail_bottom_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/base_bg_color"
+                android:orientation="vertical">
+
+                <!-- banner begin-->
+                <RelativeLayout
+                    android:id="@+id/news_item_detail_banner_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:visibility="gone"><!--android:layout_height="220dp"-->
+
+                    <LinearLayout
+                        android:id="@+id/news_item_detail_banner_focus_items"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="@dimen/base_space"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/base_space"
+                        android:paddingTop="@dimen/base_space"></LinearLayout>
+                </RelativeLayout>
+                <!-- banner end-->
+                <!-- 关注 begin -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/base_space_2"
+                    android:paddingTop="@dimen/base_space_2">
+
+                    <ImageView
+                        style="@style/fplace_detail_span_icon"
+                        android:src="@drawable/hart_red_solid" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/base_space"
+                        android:paddingTop="@dimen/base_space">
+
+                        <TextView
+                            android:id="@+id/care"
+                            style="@style/fplace_detail_span_text"
+                            android:text="关注" />
+
+                        <TextView
+                            android:id="@+id/care_left"
+                            style="@style/fplace_detail_span_line_left"
+                            android:layout_toLeftOf="@id/care" />
+
+                        <TextView
+                            android:id="@+id/care_right"
+                            style="@style/fplace_detail_span_line_right"
+                            android:layout_toRightOf="@id/care" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/care_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/care_container_height"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/base_space">
+
+                        <LinearLayout style="@style/average_width_weight_1">
+
+                            <include layout="@layout/circle_image_view"></include>
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/average_width_weight_1">
+
+                            <include layout="@layout/circle_image_view"></include>
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/average_width_weight_1">
+
+                            <include layout="@layout/circle_image_view"></include>
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/average_width_weight_1">
+
+                            <include layout="@layout/circle_image_view"></include>
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/average_width_weight_1">
+
+                            <include layout="@layout/circle_image_view"></include>
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/average_width_weight_1">
+
+                            <include layout="@layout/circle_image_view"></include>
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/average_width_weight_1">
+
+                            <include layout="@layout/circle_image_view"></include>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+                <!-- 关注 end -->
+
+                <!-- 评论 begin -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/base_space_2">
+
+                    <ImageView
+                        style="@style/fplace_detail_span_icon"
+                        android:src="@drawable/comment_" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/base_space">
+
+                        <TextView
+                            android:id="@+id/comment"
+                            style="@style/fplace_detail_span_text"
+                            android:text="评论" />
+
+                        <TextView
+                            android:id="@+id/comment_left"
+                            style="@style/fplace_detail_span_line_left"
+                            android:layout_toLeftOf="@id/comment" />
+
+                        <TextView
+                            android:id="@+id/comment_right"
+                            style="@style/fplace_detail_span_line_right"
+                            android:layout_toRightOf="@id/comment" />
+                    </RelativeLayout>
+                    <!---->
+                </LinearLayout>
+                <!-- 评论 end -->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:id="@+id/last_comment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <include layout="@layout/listitem_comment"></include>
+
+                            <include layout="@layout/listitem_comment"></include>
+
+                            <include layout="@layout/listitem_comment"></include>
+
+                            <TextView
+                                android:id="@+id/detail_bottom_hr"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp" />
+                        </LinearLayout>
+                    </FrameLayout>
+
+                </RelativeLayout>
+                <!-- <EditText
+                     android:layout_width="match_parent"
+                     android:layout_height="@dimen/head_bar_height" />-->
+            </LinearLayout>
+        </com.go.fish.view.ObservableScrollView>
+    </RelativeLayout>
+
+    <!--<ListView-->
+    <!--android:id="@+id/news_item_detail_comment_list"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="@dimen/base_space"-->
+    <!--android:layout_marginTop="@dimen/base_space"></ListView>-->
+
+</LinearLayout>

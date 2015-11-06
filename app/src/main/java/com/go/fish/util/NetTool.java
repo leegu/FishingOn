@@ -23,6 +23,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,8 +59,11 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.support.v4.util.ArrayMap;
@@ -68,6 +72,19 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.Volley;
+import com.baidu.platform.comapi.map.l;
+import com.go.fish.MainApplication;
 import com.go.fish.R;
 import com.go.fish.ui.RegisterUI;
 import com.go.fish.util.NetTool.RequestData.HttpOption;
@@ -75,27 +92,48 @@ import com.go.fish.view.ViewHelper;
 
 public class NetTool {
 
+	
 	private static String TAG = "NetTool";
+	static NetTool subimtiDataNetTool = null;
 	static NetTool dataNetTool = null;
 	static NetTool bitmapNetTool = null;
-
-	private ExecutorService Handler = null;
-
+	private RequestQueue Handler = null;
+	
 	private NetTool() {
 	};
+	private static String UserAgent;
+	static{
+		String userAgent = " fish/0";
+        try {
+            String packageName = MainApplication.getInstance().getPackageName();
+            PackageInfo info = MainApplication.getInstance().getPackageManager().getPackageInfo(packageName, 0);
+            UserAgent = packageName + "/" + info.versionCode + userAgent;
+        } catch (NameNotFoundException e) {
+        }
+	}
 
 	public static NetTool data() {
 		if (dataNetTool == null) {
 			dataNetTool = new NetTool();
-			dataNetTool.Handler = Executors.newCachedThreadPool();
+			dataNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance());
+			dataNetTool.Handler.start();
 		}
 		return dataNetTool;
+	}
+	public static NetTool submit() {
+		if (subimtiDataNetTool == null) {
+			subimtiDataNetTool = new NetTool();
+			subimtiDataNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance(),new MultiPartStack(AndroidHttpClient.newInstance(UserAgent)));
+			subimtiDataNetTool.Handler.start();
+		}
+		return subimtiDataNetTool;
 	}
 
 	public static NetTool bitmap() {
 		if (bitmapNetTool == null) {
 			bitmapNetTool = new NetTool();
-			bitmapNetTool.Handler = Executors.newFixedThreadPool(1);
+			bitmapNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance());
+			bitmapNetTool.Handler.start();
 		}
 		return bitmapNetTool;
 	}
@@ -113,331 +151,237 @@ public class NetTool {
 	 * 
 	 * @param rData
 	 */
-	public void http(final RequestData rData) {
+	public Request http(final RequestData rData) {
 		if (!rData.isValid()) {
 			Log.e(TAG, "http, url is null");
-			return;
+			return null;
 		}
-		Handler.execute(new Runnable() {
-			public void run() {
-				RequestListener listener = rData.mListener;
-				if (rData.synCallBack) {
-					MessageHandler
-							.sendMessage(new MessageHandler.MessageListener<byte[]>() {
-								@Override
-								public MessageHandler.MessageListener init(
-										byte[] data) {
-									return this;
-								}
-
-								@Override
-								public void onExecute() {
-									rData.mListener.onStart();
-								}
-							});
-				} else {
-					listener.onStart();
-				}
-				HttpClient httpClient = getNewHttpClient();
-				HttpUriRequest request = null;
-				if (rData.option == HttpOption.GET) {
-					if(rData.hasStringData()){
-						String query = URLEncodedUtils.format(
-								rData.getStringData(), HTTP.UTF_8);
-						request = new HttpGet(rData.url + "?" + query);
-					}else{
-						request = new HttpGet(rData.url);
-						
-					}
-				} else {
-					request = onPost(rData);
-				}
-				try {
-					HttpResponse resp = httpClient.execute(request);
-					if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-						Log.e(TAG, "http fail, status code = "
-								+ resp.getStatusLine().getStatusCode());
-						if (rData.synCallBack) {
-							MessageHandler
-									.sendMessage(new MessageHandler.MessageListener<byte[]>() {
-										byte data[] = null;
-
-										@Override
-										public MessageHandler.MessageListener init(
-												byte[] data) {
-											this.data = data;
-											return this;
-										}
-
-										@Override
-										public void onExecute() {
-											rData.mListener.onEnd(this.data);
-										}
-									}.init(null));
-						} else {
-							listener.onEnd(null);
-						}
-						return;
-					}
-
-					byte[] data = EntityUtils.toByteArray(resp.getEntity());
-					if (rData.synCallBack) {
-						MessageHandler
-								.sendMessage(new MessageHandler.MessageListener<byte[]>() {
-									byte data[] = null;
-
-									@Override
-									public MessageHandler.MessageListener init(
-											byte[] data) {
-										this.data = data;
-										return this;
-									}
-
-									@Override
-									public void onExecute() {
-										rData.mListener.onEnd(this.data);
-									}
-								}.init(data));
-					} else {
-						listener.onEnd(data);
-					}
-				} catch (Exception e) {
-					Log.e(TAG, "http exception, e = " + e.getMessage());
-					e.printStackTrace();
-					MessageHandler
-							.sendMessage(new MessageHandler.MessageListener<byte[]>() {
-								@Override
-								public MessageHandler.MessageListener init(
-										byte[] data) {
-									return this;
-								}
-
-								@Override
-								public void onExecute() {
-									rData.mListener
-											.onError(RequestListener.ERROR_TIMEOUT);
-								}
-							});
-				}
-			};
-		});
-	}
-
-	/**
-	 * 将请求参数写入输入流集合
-	 */
-	private long appendPostParemeter(Vector<InputStream> arr, String content,
-			long _length) {
-		ByteArrayInputStream ret = null;
-		try {
-			ret = new ByteArrayInputStream(content.getBytes("utf-8"));
-			arr.add(ret);
-			return ret.available() + _length;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
-	private long addPropertyInputStream(Vector<InputStream> pArr, String pKey,
-			String pValue, long mContentLength) {
-		mContentLength = appendPostParemeter(
-				pArr,
-				"Content-Disposition: form-data; name=\"" + pKey + "\"\r\n\r\n",
-				mContentLength);
-		mContentLength = appendPostParemeter(pArr, pValue + "\r\n",
-				mContentLength);
-		return mContentLength;
-	}
-
-	private long addFileInputStream(Vector<InputStream> pArr, String pKey,
-			File pFile, long mContentLength) {
-		try {
-			mContentLength = appendPostParemeter(pArr,
-					"Content-Disposition: form-data; name=\"" + pKey
-							+ "\"; filename=\"" + pKey + "\"\r\n",
-					mContentLength);
-			mContentLength = appendPostParemeter(pArr, "Content-Type: "
-					+ getMimeType(pFile.getName()) + "\r\n\r\n", mContentLength);
-			pArr.add(new FileInputStream(pFile));
-			mContentLength = appendPostParemeter(pArr, "\r\n", mContentLength);
-			mContentLength = mContentLength + pFile.length();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		return mContentLength;
-	}
-
-	private long addCutoffLine(Vector<InputStream> pArr, String mainBoundry,
-			long contentLength) {
-		return appendPostParemeter(pArr, "--" + mainBoundry + "\r\n",
-				contentLength);
-	}
-
-	public static String getMimeType(String filename) {
-		MimeTypeMap map = android.webkit.MimeTypeMap.getSingleton();
-		String extType = MimeTypeMap.getFileExtensionFromUrl(filename);
-		if (TextUtils.isEmpty(extType) && filename.lastIndexOf(".") >= 0) {
-			extType = filename.substring(filename.lastIndexOf(".") + 1);
-		}
-		return map.getMimeTypeFromExtension(extType);
-	}
-
-	/**
-	 * 产生6位的boundary
-	 */
-	public static String getBoundry() {
-		StringBuffer _sb = new StringBuffer("------");
-		for (int t = 1; t < 7; t++) {
-			long time = System.currentTimeMillis() + t;
-			if (time % 3 == 0) {
-				_sb.append((char) time % 9);
-			} else if (time % 3 == 1) {
-				_sb.append((char) (65 + time % 26));
+		RequestListener listener = rData.mListener;
+		if(listener != null){
+			if (rData.synCallBack) {
+				MessageHandler.sendMessage(new MessageHandler.MessageListener<byte[]>() {
+							@Override
+							public MessageHandler.MessageListener init(
+									byte[] data) {
+								return this;
+							}
+	
+							@Override
+							public void onExecute() {
+								rData.mListener.onStart();
+							}
+						});
 			} else {
-				_sb.append((char) (97 + time % 26));
+				listener.onStart();
 			}
 		}
-		return _sb.toString();
+		int M = rData.option == HttpOption.GET ? Method.GET : Method.POST; 
+		BinaryRequest br = new BinaryRequest(M,rData.url,rData.mJsonData.toString(), new Response.Listener<byte[]>() {
+			@Override
+			public void onResponse(byte[] response) {
+				rData.mListener.onEnd(response);
+			}
+		}, null);
+		
+		if(!rData.mHeads.containsKey("Accept")){
+			rData.mHeads.put("Accept", "application/json");
+		}
+		if(!rData.mHeads.containsKey("Content-type")){
+			rData.mHeads.put("Content-type", "application/json;charset=UTF-8");
+		}
+		br.mRequest  = rData;
+		Handler.add(br);
+		return br;
 	}
 
-	private HttpUriRequest onPost(RequestData rData) {
-		HttpPost httpPost = new HttpPost(rData.url);
-		if (rData.mJsonData != null) {//json请求格式
+	
+
+	static class MultiPartStack extends HttpClientStack{
+		
+		public MultiPartStack(HttpClient client) {
+			super(client);
+		}
+
+		protected void onPrepareRequest(Request<?> requestImpl,HttpUriRequest request) throws IOException {
+	        // Nothing.
+			if(requestImpl instanceof BinaryRequest){
+				RequestData rd = ((BinaryRequest)requestImpl).mRequest;
+				if(requestImpl.getMethod() == Method.POST){
+					onPost(rd,(HttpPost)request);
+				}
+			}
+	    }
+		
+		/**
+		 * 将请求参数写入输入流集合
+		 */
+		private static long appendPostParemeter(Vector<InputStream> arr, String content,
+				long _length) {
+			ByteArrayInputStream ret = null;
 			try {
-				httpPost.setEntity(new StringEntity(rData.mJsonData.toString()));
+				ret = new ByteArrayInputStream(content.getBytes("utf-8"));
+				arr.add(ret);
+				return ret.available() + _length;
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-		} else {//表单提交(文字数据、图片)
-			String mMainBoundry = getBoundry();
-			// 存储上传数据的输入流集合
-			Vector<InputStream> _arr = new Vector<InputStream>();
-			long mContentLength = 0;
-			// 上传File数据
-			if (rData.mFileDataList != null && rData.mFileDataList.size() > 0) {
-				for (File file : rData.mFileDataList) {
-					if (file.exists()) {
-						mContentLength = addCutoffLine(_arr, mMainBoundry, mContentLength);
-						mContentLength = addFileInputStream(_arr, file.getName(), file, mContentLength);
+			return 0;
+		}
+
+		private static long addPropertyInputStream(Vector<InputStream> pArr, String pKey,
+				String pValue, long mContentLength) {
+			mContentLength = appendPostParemeter(
+					pArr,
+					"Content-Disposition: form-data; name=\"" + pKey + "\"\r\n\r\n",
+					mContentLength);
+			mContentLength = appendPostParemeter(pArr, pValue + "\r\n",
+					mContentLength);
+			return mContentLength;
+		}
+
+		private static long addFileInputStream(Vector<InputStream> pArr, String pKey,
+				File pFile, long mContentLength) {
+			try {
+				mContentLength = appendPostParemeter(pArr,
+						"Content-Disposition: form-data; name=\"" + pKey
+								+ "\"; filename=\"" + pKey + "\"\r\n",
+						mContentLength);
+				mContentLength = appendPostParemeter(pArr, "Content-Type: "
+						+ getMimeType(pFile.getName()) + "\r\n\r\n", mContentLength);
+				pArr.add(new FileInputStream(pFile));
+				mContentLength = appendPostParemeter(pArr, "\r\n", mContentLength);
+				mContentLength = mContentLength + pFile.length();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			return mContentLength;
+		}
+
+		private static long addCutoffLine(Vector<InputStream> pArr, String mainBoundry,
+				long contentLength) {
+			return appendPostParemeter(pArr, "--" + mainBoundry + "\r\n",
+					contentLength);
+		}
+
+		public static String getMimeType(String filename) {
+			MimeTypeMap map = android.webkit.MimeTypeMap.getSingleton();
+			String extType = MimeTypeMap.getFileExtensionFromUrl(filename);
+			if (TextUtils.isEmpty(extType) && filename.lastIndexOf(".") >= 0) {
+				extType = filename.substring(filename.lastIndexOf(".") + 1);
+			}
+			return map.getMimeTypeFromExtension(extType);
+		}
+
+		/**
+		 * 产生6位的boundary
+		 */
+		public static String getBoundry() {
+			StringBuffer _sb = new StringBuffer("------");
+			for (int t = 1; t < 7; t++) {
+				long time = System.currentTimeMillis() + t;
+				if (time % 3 == 0) {
+					_sb.append((char) time % 9);
+				} else if (time % 3 == 1) {
+					_sb.append((char) (65 + time % 26));
+				} else {
+					_sb.append((char) (97 + time % 26));
+				}
+			}
+			return _sb.toString();
+		}
+
+		private static HttpUriRequest onPost(RequestData rData,HttpPost httpPost) {
+			if (rData.mJsonData != null) {//json请求格式
+				try {
+					httpPost.setEntity(new StringEntity(rData.mJsonData.toString()));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			} else {//表单提交(文字数据、图片)
+				String mMainBoundry = getBoundry();
+				// 存储上传数据的输入流集合
+				Vector<InputStream> _arr = new Vector<InputStream>();
+				long mContentLength = 0;
+				// 上传File数据
+				if (rData.mFileDataList != null && rData.mFileDataList.size() > 0) {
+					for (File file : rData.mFileDataList) {
+						if (file.exists()) {
+							mContentLength = addCutoffLine(_arr, mMainBoundry, mContentLength);
+							mContentLength = addFileInputStream(_arr, file.getName(), file, mContentLength);
+						}
 					}
 				}
+				// 上传StringData数据
+				if(rData.mStringDataArr != null && rData.mStringDataArr.size() > 0){
+					Iterator<String> _iterator = rData.mStringDataArr.keySet().iterator();
+					String _name, _value;
+					while (_iterator.hasNext()) {
+						_name = _iterator.next();
+						_value = rData.mStringDataArr.get(_name);
+						mContentLength = addCutoffLine(_arr, mMainBoundry, mContentLength);
+						mContentLength = addPropertyInputStream(_arr, _name, _value, mContentLength);
+					}
+				}
+				// 上传结尾
+				mContentLength = appendPostParemeter(_arr, "--" + mMainBoundry + "--\r\n", mContentLength);
+
+				SequenceInputStream sis = new SequenceInputStream(_arr.elements());
+				httpPost.addHeader("Content-Type", "multipart/form-data;boundary=" + mMainBoundry);
+				// mHttpPost.addHeader("Content-Length",String.valueOf(mContentLength));
+				InputStreamEntity ise = new InputStreamEntity(sis, mContentLength);
+				// ProgressOutHttpEntity ProgressOutHttpEntity = new
+				// ProgressOutHttpEntity(ise, new ProgressListener() {
+				// @Override
+				// public void transferred(long transferedBytes) {
+				// // TODO Auto-generated method stub
+				// mTotalSize = mContentLength;
+				// mUploadedSize = transferedBytes;
+				// }
+				// });
+				httpPost.setEntity(ise);
 			}
-			// 上传StringData数据
-			if(rData.mStringDataArr != null && rData.mStringDataArr.size() > 0){
-				Iterator<String> _iterator = rData.mStringDataArr.keySet().iterator();
-				String _name, _value;
-				while (_iterator.hasNext()) {
-					_name = _iterator.next();
-					_value = rData.mStringDataArr.get(_name);
-					mContentLength = addCutoffLine(_arr, mMainBoundry, mContentLength);
-					mContentLength = addPropertyInputStream(_arr, _name, _value, mContentLength);
-				}
-			}
-			// 上传结尾
-			mContentLength = appendPostParemeter(_arr, "--" + mMainBoundry + "--\r\n", mContentLength);
-
-			SequenceInputStream sis = new SequenceInputStream(_arr.elements());
-			httpPost.addHeader("Content-Type", "multipart/form-data;boundary=" + mMainBoundry);
-			// mHttpPost.addHeader("Content-Length",String.valueOf(mContentLength));
-			InputStreamEntity ise = new InputStreamEntity(sis, mContentLength);
-			// ProgressOutHttpEntity ProgressOutHttpEntity = new
-			// ProgressOutHttpEntity(ise, new ProgressListener() {
-			// @Override
-			// public void transferred(long transferedBytes) {
-			// // TODO Auto-generated method stub
-			// mTotalSize = mContentLength;
-			// mUploadedSize = transferedBytes;
-			// }
-			// });
-			httpPost.setEntity(ise);
-		}
-		if(!rData.mHeads.containsKey("Accept")){
-			httpPost.setHeader("Accept", "application/json");
-		}
-		if(!rData.mHeads.containsKey("Content-type")){
-			httpPost.setHeader("Content-type", "application/json;charset=UTF-8");
-		}
-		Iterator<String> _iterator = rData.mHeads.keySet().iterator();
-		String _name, _value;
-		while (_iterator.hasNext()) {
-			_name = _iterator.next();
-			_value = rData.mHeads.get(_name);
-			httpPost.setHeader(_name, _value);
-		}
-		return httpPost;
-	}
-
-	private static class SSLSocketFactoryEx extends SSLSocketFactory {
-
-		SSLContext sslContext = SSLContext.getInstance("TLS");
-
-		public SSLSocketFactoryEx(KeyStore truststore)
-				throws NoSuchAlgorithmException, KeyManagementException,
-				KeyStoreException, UnrecoverableKeyException {
-			super(truststore);
-
-			TrustManager tm = new X509TrustManager() {
-
-				public X509Certificate[] getAcceptedIssuers() {
-					return null;
-				}
-
-				@Override
-				public void checkClientTrusted(X509Certificate[] chain,
-						String authType)
-						throws java.security.cert.CertificateException {
-				}
-
-				@Override
-				public void checkServerTrusted(X509Certificate[] chain,
-						String authType)
-						throws java.security.cert.CertificateException {
-				}
-			};
-
-			sslContext.init(null, new TrustManager[] { tm }, null);
-		}
-
-		@Override
-		public Socket createSocket(Socket socket, String host, int port,
-				boolean autoClose) throws IOException, UnknownHostException {
-			return sslContext.getSocketFactory().createSocket(socket, host,
-					port, autoClose);
-		}
-
-		@Override
-		public Socket createSocket() throws IOException {
-			return sslContext.getSocketFactory().createSocket();
+//			if(!rData.mHeads.containsKey("Accept")){
+//				httpPost.setHeader("Accept", "application/json");
+//			}
+//			if(!rData.mHeads.containsKey("Content-type")){
+//				httpPost.setHeader("Content-type", "application/json;charset=UTF-8");
+//			}
+//			Iterator<String> _iterator = rData.mHeads.keySet().iterator();
+//			String _name, _value;
+//			while (_iterator.hasNext()) {
+//				_name = _iterator.next();
+//				_value = rData.mHeads.get(_name);
+//				httpPost.setHeader(_name, _value);
+//			}
+			return httpPost;
 		}
 	}
-
-	private static HttpClient getNewHttpClient() {
-		try {
-			KeyStore trustStore = KeyStore.getInstance(KeyStore
-					.getDefaultType());
-			trustStore.load(null, null);
-
-			SSLSocketFactory sf = new SSLSocketFactoryEx(trustStore);
-			sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-
-			HttpParams params = new BasicHttpParams();
-			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-
-			SchemeRegistry registry = new SchemeRegistry();
-			registry.register(new Scheme("http", PlainSocketFactory
-					.getSocketFactory(), 80));
-			registry.register(new Scheme("https", sf, 443));
-
-			ClientConnectionManager ccm = new ThreadSafeClientConnManager(
-					params, registry);
-
-			return new DefaultHttpClient(ccm, params);
-		} catch (Exception e) {
-			return new DefaultHttpClient();
-		}
-	}
+	
+//	private static HttpClient getNewHttpClient() {
+//		try {
+//			KeyStore trustStore = KeyStore.getInstance("TLS");
+//			trustStore.load(null, null);
+//
+//			SSLSocketFactory sf = new SSLSocketFactory(trustStore);
+//			sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+//
+//			HttpParams params = new BasicHttpParams();
+//			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+//			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+//
+//			SchemeRegistry registry = new SchemeRegistry();
+//			registry.register(new Scheme("http", PlainSocketFactory
+//					.getSocketFactory(), 80));
+//			registry.register(new Scheme("https", sf, 443));
+//
+//			ClientConnectionManager ccm = new ThreadSafeClientConnManager(
+//					params, registry);
+//
+//			return new DefaultHttpClient(ccm, params);
+//		} catch (Exception e) {
+//			return new DefaultHttpClient();
+//		}
+//	}
 
 	public static class RequestData {
 		static enum HttpOption {
@@ -471,7 +415,7 @@ public class NetTool {
 		}
 
 		public boolean isValid() {
-			return mListener != null && url != null && url.length() > 0;
+			return mListener != null && url != null && (url.startsWith("http://") || url.startsWith("https://"));
 		}
 
 		public void setOption(HttpOption option) {
@@ -524,6 +468,7 @@ public class NetTool {
 		 */
 		public void putData(String key, File file) {
 			if (mFileDataList == null) {
+				
 				mFileDataList = new ArrayList<File>();
 				this.option = HttpOption.POST;
 			}
@@ -592,6 +537,10 @@ public class NetTool {
 			return null;
 		}
 
+		public  boolean isRight(JSONObject jsonObject){
+			return jsonObject != null && Const.DEFT_1.equals(jsonObject.optString(Const.STA_CODE));
+		}
+
 		public JSONArray toJSONArray(byte[] data) {
 			try {
 				String json = new String(data, "utf-8");
@@ -633,5 +582,46 @@ public class NetTool {
                 }
             }
         }.execute();
+	}
+	
+	class BinaryRequest extends com.android.volley.toolbox.JsonRequest<byte[]>{
+		
+		public BinaryRequest(int method, String url, String requestBody,
+				Listener<byte[]> listener, ErrorListener errorListener) {
+			super(method, url, requestBody, listener, errorListener);
+			mListener = listener;
+		}
+		public BinaryRequest(String url, String requestBody,
+				Listener<byte[]> listener, ErrorListener errorListener) {
+			super(url, requestBody, listener, errorListener);
+			mListener = listener;
+		}
+		private final Response.Listener<byte[]> mListener;
+		RequestData mRequest = null;
+//		public BinaryRequest(String url, Response.Listener<byte[]> listener,ErrorListener errorListener) {
+//			this(Method.POST,url,listener,errorListener);
+//		}
+//
+//		public BinaryRequest(int method, String url, Response.Listener<byte[]> listener,ErrorListener errorListener) {
+//			super(method, url, errorListener);
+//			mListener = listener;
+//		}
+
+		@Override
+		protected Response<byte[]> parseNetworkResponse(NetworkResponse response) {
+			// TODO Auto-generated method stub
+			return Response.success(response.data,HttpHeaderParser.parseCacheHeaders(response));
+		}
+
+		@Override
+		protected void deliverResponse(byte[] response) {
+			mListener.onResponse(response);
+		}
+		@Override
+		public Map<String, String> getHeaders() throws AuthFailureError {
+			// TODO Auto-generated method stub
+			return mRequest.mHeads;
+		}
+		
 	}
 }

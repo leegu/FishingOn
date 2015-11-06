@@ -42,53 +42,29 @@
 
             <RelativeLayout
                 android:tag="true"
-                android:orientation="vertical"
                 android:id="@+id/ui_fnews_head_last_news"
-                android:clickable="true"
-                android:onClick="onHeadClick"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent">
+                style="@style/title_nav_item_style">
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
                     android:text="最新播况"
                     android:textColor="@color/tabitem_foucs_color"
-                    android:textSize="@dimen/base_font_size_h4" />
+                    style="@style/title_nav_item_text_line_style"/>
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/tabitem_foucs_color" />
+                    style="@style/title_nav_item_bottom_line_style" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:orientation="vertical"
                 android:id="@+id/ui_fnews_head_mynews"
-                android:clickable="true"
-                android:onClick="onHeadClick"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent">
+                style="@style/title_nav_item_style">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:layout_centerVertical="true"
                     android:text="MY钓播"
                     android:textColor="@color/text_btn_color"
-                    android:textSize="@dimen/base_font_size_h4" />
+                    style="@style/title_nav_item_text_line_style"/>
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/tabitem_foucs_color"
-                    android:visibility="gone" />
+                    style="@style/title_nav_item_bottom_line_style"
+                    android:visibility="invisible" />
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
@@ -97,5 +73,15 @@
     <FrameLayout
         android:id="@+id/ui_fnews_list_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/last_news"
+            style="@style/listview_style"
+            />
+        <ListView
+            android:id="@+id/last_activity"
+            style="@style/listview_style"
+            android:visibility="gone"
+            />
+    </FrameLayout>
 </LinearLayout>

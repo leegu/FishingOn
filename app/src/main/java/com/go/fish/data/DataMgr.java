@@ -20,7 +20,7 @@ public class DataMgr {
 				ld.layout_id = layoutId;
 				ld.orderId = i + 1;
 				ld.title = json.getString(Const.STA_TITLE);
-				ld.sid = json.getString(Const.STA_FISHING_PLACE_ID);
+				ld.sid = json.getString(Const.STA_ID);
 				arr.add(ld);
 			}
 		} catch (Exception e) {

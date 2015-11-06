@@ -91,6 +91,7 @@
         </activity>
         <activity
             android:name="com.go.fish.ui.HomeUI"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:screenOrientation="portrait" >
         </activity>
 
