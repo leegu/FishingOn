@@ -865,6 +865,12 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 					ViewHelper.showGlobalWaiting(BaseUI.this, null, Const.DEFT_GETTING);
 				}
 				@Override
+				public void onError(int type, String msg) {
+					super.onError(type, msg);
+					ViewHelper.closeGlobalWaiting();
+					ViewHelper.showToast(BaseUI.this, msg);
+				}
+				@Override
 				public void onEnd(byte[] bytes) {
 					ViewHelper.closeGlobalWaiting();
 					JSONObject response = toJSONObject(bytes);

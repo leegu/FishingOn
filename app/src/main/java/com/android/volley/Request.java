@@ -243,6 +243,21 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     public String getUrl() {
         return mUrl;
     }
+    
+    public String getStringMethod(){
+    	switch (mMethod) {
+		case Method.GET:
+			return "GET";
+		case Method.POST:
+			return "POST";
+		case Method.DELETE:
+			return "DELETE";
+		case Method.PUT:
+			return "PUT";
+		default:
+			return "UNKOWN";
+		}
+    }
 
     /**
      * Returns the cache key for this request.  By default, this is the URL.

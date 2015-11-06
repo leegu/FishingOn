@@ -37,6 +37,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -80,6 +81,7 @@ import com.android.volley.Response;
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.Volley;
@@ -115,7 +117,7 @@ public class NetTool {
 	public static NetTool data() {
 		if (dataNetTool == null) {
 			dataNetTool = new NetTool();
-			dataNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance());
+			dataNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance(),new MultiPartStack(AndroidHttpClient.newInstance(UserAgent)));
 			dataNetTool.Handler.start();
 		}
 		return dataNetTool;
@@ -132,7 +134,7 @@ public class NetTool {
 	public static NetTool bitmap() {
 		if (bitmapNetTool == null) {
 			bitmapNetTool = new NetTool();
-			bitmapNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance());
+			bitmapNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance(),new MultiPartStack(AndroidHttpClient.newInstance(UserAgent)));
 			bitmapNetTool.Handler.start();
 		}
 		return bitmapNetTool;
@@ -176,12 +178,18 @@ public class NetTool {
 			}
 		}
 		int M = rData.option == HttpOption.GET ? Method.GET : Method.POST; 
-		BinaryRequest br = new BinaryRequest(M,rData.url,rData.mJsonData.toString(), new Response.Listener<byte[]>() {
+		BinaryRequest br = new BinaryRequest(M,rData.url,rData.mJsonData != null ? rData.mJsonData.toString() : null, new Response.Listener<byte[]>() {
 			@Override
 			public void onResponse(byte[] response) {
 				rData.mListener.onEnd(response);
 			}
-		}, null);
+		}, new ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				// TODO Auto-generated method stub
+				rData.mListener.onError(-1, error.getMessage());
+			}
+		});
 		
 		if(!rData.mHeads.containsKey("Accept")){
 			rData.mHeads.put("Accept", "application/json");
@@ -201,17 +209,17 @@ public class NetTool {
 		public MultiPartStack(HttpClient client) {
 			super(client);
 		}
-
-		protected void onPrepareRequest(Request<?> requestImpl,HttpUriRequest request) throws IOException {
-	        // Nothing.
-			if(requestImpl instanceof BinaryRequest){
-				RequestData rd = ((BinaryRequest)requestImpl).mRequest;
-				if(requestImpl.getMethod() == Method.POST){
-					onPost(rd,(HttpPost)request);
+		@Override
+		protected void setEntityIfNonEmptyBody(HttpEntityEnclosingRequestBase httpRequest,
+	            Request<?> request) throws AuthFailureError {
+			if(request instanceof BinaryRequest){
+				RequestData rd = ((BinaryRequest)request).mRequest;
+				if(request.getMethod() == Method.POST){
+					onPost(rd,(HttpPost)httpRequest);
 				}
 			}
-	    }
-		
+		}
+
 		/**
 		 * 将请求参数写入输入流集合
 		 */
@@ -502,7 +510,7 @@ public class NetTool {
 		public void onStart() {
 		}
 
-		public void onError(int type) {
+		public void onError(int type, String msg) {
 		}
 
 		public void onSend(OutputStream os) {
