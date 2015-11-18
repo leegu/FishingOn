@@ -351,7 +351,7 @@ public class HomeFragment extends Fragment {
 						}
 					}
 				}
-			}, jsonObject, UrlUtils.self().getinfoList());
+			}, jsonObject, UrlUtils.self().getInfoList());
 			lastNews.setAdapter(mListAdapter);
 		}
 		{//最新活动

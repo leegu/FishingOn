@@ -21,13 +21,13 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/base_head_bar_next"
+            android:id="@+id/base_head_bar_ok"
             style="@style/head_bar_pic_right_btn_style"
-            android:visibility="invisible" >
+            >
 
             <ImageView
                 style="@style/head_bar_pic_style"
-                android:background="@drawable/help" />
+                android:background="@drawable/ok" />
         </RelativeLayout>
 
         <TextView

@@ -22,7 +22,7 @@ import com.go.fish.view.ViewHelper;
 
 public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHeadBar,IHasComment{
 	FragmentManager fragmentMgr = null;
-	BaseFragment searchFragment = null,detailFragment = null,searchInMapFragment = null;
+	BaseFragment searchFragment = null,detailFragment = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +75,6 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 				break;
 		}
 	}
-	private void initSearchMap(){
-		if(searchInMapFragment == null){
-			searchInMapFragment = BaseFragment.newInstance(this, R.layout.ui_f_search_list_in_map);
-		}
-	}
 	private void initDetailFragment() {
 		if(detailFragment == null){
 			detailFragment = BaseFragment.newInstance(this,R.layout.ui_f_search_item_detail);
@@ -89,9 +84,9 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 
 	@Override
 	public void onItemClick(View view, FPlaceData data) {
-		initSearchMap();
-		searchInMapFragment.setArguments(data.toBundle(searchInMapFragment.getArguments()));
-		showFragment(searchInMapFragment);
+		initDetailFragment();
+		detailFragment.setArguments(data.toBundle(searchFragment.getArguments()));
+		showFragment(detailFragment);
 	}
 	
 	private void showFragment(Fragment f){
@@ -107,39 +102,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 	public void onMapFloatViewClick(View view) {
 		int id = view.getId();
 		switch (id) {
-		case R.id.float_view_detail_btn://详情
-            String fPlaceId = searchInMapFragment.getArguments().getString(Const.STA_ID);
-			RequestData rData = RequestData.newInstance(new RequestListener() {
-				@Override
-				public void onStart() {
-					ViewHelper.showGlobalWaiting(SearchUI.this, null);
-				}
-
-				@Override
-				public void onEnd(byte[] data) {
-					try {
-						String jsonStr = new String(data, "UTF-8");
-						initDetailFragment();
-						Bundle src = searchInMapFragment.getArguments();
-						Bundle b = detailFragment.getArguments();
-						String fPlaceId = searchInMapFragment.getArguments()
-								.getString(Const.STA_ID);
-						b.putString(Const.STA_ID, fPlaceId);
-						b.putString(Const.STA_TEXT, src.getString(Const.STA_TEXT));
-						b.putString(Const.PRI_JSON_DATA, jsonStr);
-						detailFragment.setArguments(b);
-						showFragment(detailFragment);
-						ViewHelper.closeGlobalWaiting();
-
-					} catch (Exception e) {
-					}
-				}
-			}, "fishing_place_" + fPlaceId);
-            rData.putData(Const.STA_ID, fPlaceId);
-            NetTool.data().http(rData.syncCallback());
-			break;
 		case R.id.float_view_care_text:
-			
 			break;
 		case R.id.float_view_nav_btn:
 			

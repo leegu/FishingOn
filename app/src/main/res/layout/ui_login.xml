@@ -73,7 +73,7 @@
                     android:layout_marginLeft="@dimen/list_item_divider"
                     android:layout_toRightOf="@id/login_text_phone_num"
                     android:hint="@string/login_account_phone_num"
-                    android:text="13567891234"
+                    android:text="@string/phone"
                     android:maxLength="11"
                     android:inputType="number" />
 

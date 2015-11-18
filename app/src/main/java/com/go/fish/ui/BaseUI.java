@@ -27,8 +27,10 @@ import com.go.fish.MainActivity;
 import com.go.fish.R;
 import com.go.fish.data.DataMgr;
 import com.go.fish.data.FPlaceData;
+import com.go.fish.data.PersonData;
 import com.go.fish.ui.pic.ImageViewUI;
 import com.go.fish.ui.pics.GalleryUtils;
+import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
@@ -462,6 +464,37 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 	public void onHeadClick(View view) {
 		int id = view.getId();
 		switch (id) {
+//		case R.id.login:{
+//			Intent intent = new Intent();
+//			intent.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_login);
+//			intent.setClass(BaseUI.this, BaseUI.class);
+//			startActivity(intent);
+//			finish();
+//			break;
+//		}
+		case R.id.base_head_bar_ok:
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put(Const.STA_NAME, ((TextView)findViewById(R.id.reg_next_nick_input)).getText().toString());
+				jsonObject.put(Const.STA_FISH_YEAR, ((TextView)findViewById(R.id.reg_next_fishing_years_spinner)).getText().toString());
+				jsonObject.put(Const.STA_FISH_TIMES, ((TextView)findViewById(R.id.reg_next_fishing_times_spinner)).getText().toString());
+				jsonObject.put(Const.STA_ADDRESS, ((TextView)findViewById(R.id.reg_next_location_input)).getText().toString());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			NetTool.data().http(new RequestListener() {
+				@Override
+				public void onStart() {
+					super.onStart(BaseUI.this);
+				}
+				@Override
+				public void onEnd(byte[] data) {
+					// TODO Auto-generated method stub
+					onEnd();
+					showHomeUI();
+				}
+			}, jsonObject, UrlUtils.self().getCompleteData());
+			break;
 		case R.id.comment_publish_back: {
 			if(!makeSureExitPushlish()){
 				finish();
@@ -724,10 +757,18 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			break;
 		}
 	}
+	public void showHomeUI() {
+		Intent i = new Intent();
+		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_main);
+		UIMgr.showActivity(BaseUI.this, i, HomeUI.class.getName());
+		finish();
+	}
 
 	public void onClick(View view) {
 		int id = view.getId();
 		switch (id) {
+		case R.id.ui_forget_get_check_code:
 		case R.id.get_check_code: {
 			String num = ((TextView) findViewById(R.id.text_phone_num_input))
 					.getText().toString();
@@ -742,6 +783,10 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				e.printStackTrace();
 			}
 
+			String url = UrlUtils.self().getSendCheckNode();
+			if(id == R.id.ui_forget_get_check_code){
+				url = UrlUtils.self().getCheckMobile();
+			}
 			NetTool.data().http(new NetTool.RequestListener() {
 				@Override
 				public void onStart() {
@@ -749,8 +794,12 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 					ViewHelper.showGlobalWaiting(BaseUI.this, null, Const.DEFT_GETTING);
 				}
 				@Override
+				public void onError(int type, String msg) {
+					super.onError(type, msg);
+				}
+				@Override
 				public void onEnd(byte[] data) {
-					ViewHelper.closeGlobalWaiting();
+					onEnd();
 					JSONObject response = toJSONObject(data);
 //									if(response == null){
 //										try {
@@ -758,13 +807,18 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 //										} catch (Exception e) {
 //										}
 //									}
-					if (response != null && response.has(Const.STA_CODE) && response.optString(Const.STA_CODE).equals(Const.DEFT_1)) {
-						((TextView) findViewById(R.id.checkCode)).setText(response.optJSONObject(Const.STA_DATA).optString(Const.STA_VALIDATECODE));
+					if (isRight(response)
+//							&& response.has(Const.STA_DATA)
+//							&& response.optJSONObject(Const.STA_DATA).has(Const.STA_VALIDATECODE)
+							) {
+						ViewHelper .showToast(BaseUI.this, Const.DEFT_GET_CHECK_CODE_SENDING);
+						// 浏览器查看接口 http://115.29.51.39:8080/code/listCode
+//						((TextView) findViewById(R.id.checkCode)).setText(response.optJSONObject(Const.STA_DATA).optString(Const.STA_VALIDATECODE));
 					} else {
 						ViewHelper .showToast(BaseUI.this, Const.DEFT_GET_CHECK_CODE_FAILED);
 					}
 				}
-			},jsonObject,UrlUtils.self().getSendCheckNode());
+			},jsonObject,url);
 			// SmsManager smsManager = SmsManager.getDefault();
 			// smsManager.sendTextMessage("10086", null, "cxyl", null, null);
 			break;
@@ -807,15 +861,14 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				public void onEnd(byte[] bytes) {
 					ViewHelper.closeGlobalWaiting();
 					JSONObject response = toJSONObject(bytes);
-					if(response == null){
-						try {
-							response = new JSONObject("{\"code\":1,\"isError\":false,\"message\":\"success\",\"remark\":\"\",\"data\":{\"token\":\"ASDFCGUDHJFJHSGKH151230\"},\"unlogin\":\"\",\"exception\":\"\",\"error\":\"\"}");
-						} catch (Exception e) {
-						}
-					}
+//					if(response == null){
+//						try {
+//							response = new JSONObject("{\"code\":1,\"isError\":false,\"message\":\"success\",\"remark\":\"\",\"data\":{\"token\":\"ASDFCGUDHJFJHSGKH151230\"},\"unlogin\":\"\",\"exception\":\"\",\"error\":\"\"}");
+//						} catch (Exception e) {
+//						}
+//					}
 					if (response != null ){
-						if( response.has(Const.STA_CODE)
-							&& response.optString(Const.STA_CODE).equals(Const.DEFT_1)) {
+						if(isRight(response)) {
 							JSONObject data = response.optJSONObject(Const.STA_DATA);
 							LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
 						} else {
@@ -865,31 +918,22 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 					ViewHelper.showGlobalWaiting(BaseUI.this, null, Const.DEFT_GETTING);
 				}
 				@Override
-				public void onError(int type, String msg) {
-					super.onError(type, msg);
-					ViewHelper.closeGlobalWaiting();
-					ViewHelper.showToast(BaseUI.this, msg);
-				}
-				@Override
 				public void onEnd(byte[] bytes) {
 					ViewHelper.closeGlobalWaiting();
 					JSONObject response = toJSONObject(bytes);
-					if(response == null){
+//					if(response == null){
 						try {
 							response = new JSONObject("{\"code\":1,\"isError\":false,\"message\":\"success\",\"remark\":\"\",\"data\":{\"token\":\"ASDFCGUDHJFJHSGKH151230\"},\"unlogin\":\"\",\"exception\":\"\",\"error\":\"\"}");
 						} catch (Exception e) {
 						}
-					}
+//					}
 					if (response != null ){
 						if( response.has(Const.STA_CODE)
 							&& response.optString(Const.STA_CODE).equals(Const.DEFT_1)) {
 							JSONObject data = response.optJSONObject(Const.STA_DATA);
 							LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
-							Intent i = new Intent();
-							i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-							i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_main);
-							UIMgr.showActivity(BaseUI.this, i, HomeUI.class.getName());
-							finish();
+							User.self().userInfo = PersonData.newInstance(data);
+							showHomeUI();
 						} else {
 							ViewHelper.showToast(BaseUI.this, response.optString(Const.STA_MESSAGE));
 						}
@@ -897,6 +941,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 						ViewHelper.showToast(BaseUI.this, Const.DEFT_NET_ERROR);
 					}
 				}
+				
 			},jsonObject,UrlUtils.self().getMemberLogin());
 			
 			break;

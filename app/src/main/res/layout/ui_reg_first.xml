@@ -18,6 +18,13 @@
                 android:src="@drawable/arrow_left" />
         </RelativeLayout>
 
+        <!-- <TextView
+            style="@style/head_bar_text_left_btn_style"
+            android:id="@+id/login"
+            android:text="直接登录"
+            android:layout_alignParentBottom="true" >
+        </TextView> -->
+        
         <TextView
             android:id="@+id/base_next"
             style="@style/head_bar_text_right_btn_style"
@@ -77,6 +84,7 @@
                     android:layout_toRightOf="@id/reg_text_phone_num_text"
                     android:hint="@string/login_account_phone_num"
                     android:maxLength="11"
+                    android:text="@string/phone"
                     android:inputType="number" />
 
                 <TextView

@@ -105,97 +105,95 @@ public class UrlUtils {
     }
 
     String memberLogin = "/member/memberLogin";
-
     public String getMemberLogin() {
         return getHost() + memberLogin;
     }
 
     String registerMember = "/member/registerMember";
-
     public String getRegisterMember() {
         return getHost() + registerMember;
     }
 
     String sendCheckNode = "/member/sendCheckNode";
-
-    public String getSendCheckNode() {
+    public String getSendCheckNode() {//查看验证码接口 http://115.29.51.39:8080/code/listCode
         return getHost() + sendCheckNode;
+    }
+    
+    String checkNode = "/member/checkNode";
+    public String getCheckNode() {
+    	return getHost() + checkNode;
     }
 
     String checkMobile = "/member/checkMobile";
-
-    public String getCheckMobile() {
+    public String getCheckMobile() {//查看验证码接口 http://115.29.51.39:8080/code/listCode
         return getHost() + checkMobile;
     }
 
     String checkValidateCode = "/member/checkValidateCode";
-
     public String getCheckValidateCode() {
         return getHost() + checkValidateCode;
     }
 
     String resetPassword = "/member/resetPassword";
-
     public String getResetPassword() {
         return getHost() + resetPassword;
     }
 
     String resetNewPassword = "/member/resetNewPassword";
-
     public String getResetNewPassword() {
         return getHost() + resetNewPassword;
     }
 
     String completeData = "/member/completeData";
-
     public String getCompleteData() {
         return getHost() + completeData;
     }
 
     String resetUserName = "/member/resetUserName";
-
     public String getResetUserName() {
         return getHost() + resetUserName;
     }
 
     String queryForMap = "/merchant/queryForMap";
-
     public String getQueryForMap() {
         return getHost() + queryForMap;
     }
 
     String fieldInfo = "/merchant/fieldInfo";
-
     public String getFieldInfo() {
         return getHost() + fieldInfo;
     }
 
     String attention = "/merchant/attention";
-
     public String getAttention() {
         return getHost() + attention;
     }
-    String commentList = "/merchant/commentList";//?objectId=1&type=field
     
+    String commentList = "/merchant/commentList";//?objectId=1&type=field
     public String getCommentList() {
 //    	return getHost() + commentList;
     	return Const.SIN_HOST + "commentList";
     }
-    String attListForField = "/merchant/attListForField";
     
+    String attListForField = "/merchant/attListForField";
     public String getAttListForField() {
     	return Const.SIN_HOST + "attListForField";
 //    	return getHost() + attListForField;
     }
+    
     String commentOn = "/merchant/commentOn";
     public String getCommentOn() {
     	return getHost() + commentOn;
     }
     
     String infoList = "/relevant/infoList";
-    public String getinfoList() {
+    public String getInfoList() {
     	return getHost() + infoList;
     }
 
+    String aroundMember = "/member/aroundMember";
+    public String getAroundMember() {
+    	return getHost() + aroundMember;
+    }
 
 }

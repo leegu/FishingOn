@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
 			try {
 				JSONObject data = new JSONObject(userInfo);
 				if (data != null && data.has(Const.STA_TOKEN)){
+					//TODO刷新登陆
                     return true;
                 }
 			} catch (JSONException e) {

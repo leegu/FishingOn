@@ -98,7 +98,7 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 			}
 			bundle.remove(Const.PRI_EXTRA_DATA);
 		}else{
-			if(mListAdapter == null) {
+			if(mListAdapter == null && mListView != null) {
 				mListAdapter = new FPlaceListAdapter(mListView.getContext(), new ArrayList<FPlaceData>());
 			}
 		}

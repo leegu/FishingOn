@@ -60,6 +60,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
@@ -84,10 +85,13 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.baidu.platform.comapi.map.l;
+import com.go.fish.BuildConfig;
 import com.go.fish.MainApplication;
 import com.go.fish.R;
+import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.RegisterUI;
 import com.go.fish.util.NetTool.RequestData.HttpOption;
 import com.go.fish.view.ViewHelper;
@@ -117,24 +121,24 @@ public class NetTool {
 	public static NetTool data() {
 		if (dataNetTool == null) {
 			dataNetTool = new NetTool();
-			dataNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance(),new MultiPartStack(AndroidHttpClient.newInstance(UserAgent)));
-			dataNetTool.Handler.start();
+			dataNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance()/*,new MultiPartStack(getNewHttpClient())*/);
+//			dataNetTool.Handler.start();
 		}
 		return dataNetTool;
 	}
 	public static NetTool submit() {
 		if (subimtiDataNetTool == null) {
 			subimtiDataNetTool = new NetTool();
-			subimtiDataNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance(),new MultiPartStack(AndroidHttpClient.newInstance(UserAgent)));
+			subimtiDataNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance(),new MultiPartStack(getNewHttpClient()));
 			subimtiDataNetTool.Handler.start();
 		}
 		return subimtiDataNetTool;
 	}
 
-	public static NetTool bitmap() {
+	static NetTool bitmap() {
 		if (bitmapNetTool == null) {
 			bitmapNetTool = new NetTool();
-			bitmapNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance(),new MultiPartStack(AndroidHttpClient.newInstance(UserAgent)));
+			bitmapNetTool.Handler = Volley.newRequestQueue(MainApplication.getInstance(),new MultiPartStack(getNewHttpClient()));
 			bitmapNetTool.Handler.start();
 		}
 		return bitmapNetTool;
@@ -148,6 +152,19 @@ public class NetTool {
 		}
 		http(rData.syncCallback());
 	}
+	
+	private String toQueryString(JSONObject json){
+		StringBuffer sb = new StringBuffer();
+		JSONArray arr = json.names();
+		for(int i = 0; i < arr.length(); i++){
+			String k = arr.optString(i);
+			sb.append(k).append("=").append(json.optString(k));
+			if(i != arr.length() - 1){
+				sb.append("&");
+			}
+		}
+		return sb.toString();
+	}
 	/***
 	 * 默认使用GET请求方式
 	 * 
@@ -160,6 +177,7 @@ public class NetTool {
 		}
 		RequestListener listener = rData.mListener;
 		if(listener != null){
+			listener.url = rData.url;
 			if (rData.synCallBack) {
 				MessageHandler.sendMessage(new MessageHandler.MessageListener<byte[]>() {
 							@Override
@@ -177,6 +195,11 @@ public class NetTool {
 				listener.onStart();
 			}
 		}
+		if(BuildConfig.DEBUG){
+//			rData.url = rData.url + "?" + toQueryString(rData.mJsonData);
+//			rData.mJsonData = null;
+			Log.e("yl", "onRequest request:(" + rData.url + " "+ rData.mJsonData + ")");
+		}
 		int M = rData.option == HttpOption.GET ? Method.GET : Method.POST; 
 		BinaryRequest br = new BinaryRequest(M,rData.url,rData.mJsonData != null ? rData.mJsonData.toString() : null, new Response.Listener<byte[]>() {
 			@Override
@@ -187,16 +210,19 @@ public class NetTool {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				// TODO Auto-generated method stub
+				if(BuildConfig.DEBUG){
+					Log.e("yl", "onErrorResponse request:(" + rData.url + " "+ rData.mJsonData + ") response:(" + error.networkResponse.statusCode +" " + error.networkResponse.headers + ")");
+				}
 				rData.mListener.onError(-1, error.getMessage());
 			}
 		});
 		
-		if(!rData.mHeads.containsKey("Accept")){
-			rData.mHeads.put("Accept", "application/json");
-		}
-		if(!rData.mHeads.containsKey("Content-type")){
-			rData.mHeads.put("Content-type", "application/json;charset=UTF-8");
-		}
+//		if(!rData.mHeads.containsKey("Accept")){
+//			rData.mHeads.put("Accept", "application/json");
+//		}
+//		if(!rData.mHeads.containsKey("Content-type")){
+//			rData.mHeads.put("Content-type", "application/json;charset=UTF-8");
+//		}
 		br.mRequest  = rData;
 		Handler.add(br);
 		return br;
@@ -365,31 +391,31 @@ public class NetTool {
 		}
 	}
 	
-//	private static HttpClient getNewHttpClient() {
-//		try {
-//			KeyStore trustStore = KeyStore.getInstance("TLS");
-//			trustStore.load(null, null);
-//
-//			SSLSocketFactory sf = new SSLSocketFactory(trustStore);
-//			sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
-//
-//			HttpParams params = new BasicHttpParams();
-//			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-//			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-//
-//			SchemeRegistry registry = new SchemeRegistry();
-//			registry.register(new Scheme("http", PlainSocketFactory
-//					.getSocketFactory(), 80));
-//			registry.register(new Scheme("https", sf, 443));
-//
-//			ClientConnectionManager ccm = new ThreadSafeClientConnManager(
-//					params, registry);
-//
-//			return new DefaultHttpClient(ccm, params);
-//		} catch (Exception e) {
-//			return new DefaultHttpClient();
-//		}
-//	}
+	private static HttpClient getNewHttpClient() {
+		try {
+			KeyStore trustStore = KeyStore.getInstance("TLS");
+			trustStore.load(null, null);
+
+			SSLSocketFactory sf = new SSLSocketFactory(trustStore);
+			sf.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+
+			HttpParams params = new BasicHttpParams();
+			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+
+			SchemeRegistry registry = new SchemeRegistry();
+			registry.register(new Scheme("http", PlainSocketFactory
+					.getSocketFactory(), 80));
+			registry.register(new Scheme("https", sf, 443));
+
+			ClientConnectionManager ccm = new ThreadSafeClientConnManager(
+					params, registry);
+
+			return new DefaultHttpClient(ccm, params);
+		} catch (Exception e) {
+			return new DefaultHttpClient();
+		}
+	}
 
 	public static class RequestData {
 		static enum HttpOption {
@@ -506,8 +532,22 @@ public class NetTool {
 
 	public static abstract class RequestListener {
 		public static final int ERROR_TIMEOUT = 0;
-
+		private String url = null;
 		public void onStart() {
+		}
+		/**
+		 * 含有显示等待框逻辑
+		 * @param context
+		 * @param waitingMsg
+		 */
+		public void onStart(Context context,String waitingMsg) {
+			ViewHelper.showGlobalWaiting(context, null,waitingMsg);
+		}
+		/**
+		 * 含有显示等待框逻辑
+		 */
+		public void onStart(Context context) {
+			ViewHelper.showGlobalWaiting(context, null);
 		}
 
 		public void onError(int type, String msg) {
@@ -558,7 +598,13 @@ public class NetTool {
 			}
 			return null;
 		}
-
+		/**
+		 * 含有关闭等待快
+		 */
+		public void onEnd(){
+			ViewHelper.closeGlobalWaiting();
+		};
+		public void onEnd(JSONObject data){};
 		public abstract void onEnd(byte[] data);
 	}
 	

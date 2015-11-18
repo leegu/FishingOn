@@ -59,7 +59,7 @@
             android:src="@drawable/phone" />
         
         <TextView
-            android:id="@+id/get_check_code"
+            android:id="@+id/ui_forget_get_check_code"
             style="@style/base_border_btn_style"
             android:layout_alignParentRight="true"
             android:text="@string/reg_get_check_code"/>
@@ -68,10 +68,11 @@
             android:id="@+id/text_phone_num_input"
             style="@style/base_input_style"
             android:layout_marginLeft="@dimen/list_item_divider"
-            android:layout_toLeftOf="@id/get_check_code"
+            android:layout_toLeftOf="@id/ui_forget_get_check_code"
             android:layout_toRightOf="@id/login_text_phone_num"
             android:hint="@string/login_account_phone_num"
             android:maxLength="11"
+            android:text="@string/phone"
             android:inputType="number" />
 
         <TextView

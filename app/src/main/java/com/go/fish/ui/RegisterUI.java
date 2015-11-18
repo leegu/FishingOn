@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.go.fish.R;
+import com.go.fish.data.PersonData;
+import com.go.fish.user.User;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
 import com.go.fish.util.NetTool;
@@ -125,6 +127,7 @@ public class RegisterUI extends BaseUI {
 							&& response.optString(Const.STA_CODE).equals(Const.DEFT_1)) {
 							JSONObject data = response.optJSONObject(Const.STA_DATA);
 							LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
+							User.self().userInfo = PersonData.newInstance(data);
 							showRegNext = true;
 							replace(regNextFragment);
 						} else {

@@ -11,6 +11,7 @@ public class PersonData implements IBaseData {
     public int id;
     public  String photoUrl;
     public String userName;
+    public String mobileNum;
     public String[] aiHaos = null;
     public String far = null;
     public int fYears = 0;
@@ -22,6 +23,7 @@ public class PersonData implements IBaseData {
         personData.photoUrl = json.optString(Const.STA_IMGURL);
         personData.userName = json.optString(Const.STA_NAME);
         personData.fYears = json.optInt(Const.STA_FISH_YEAR);
+        personData.mobileNum = json.optString(Const.STA_MOBILE);
         personData.fTimes = json.optInt(Const.STA_FREQUENCY);
         personData.far = json.optString(Const.STA_FAR);
         return personData;

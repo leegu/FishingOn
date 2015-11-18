@@ -1,14 +1,14 @@
 ﻿[{
     "author":{
         "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
-        "user_id":10003,
+        "memberId":10003,
         "name":"张三",
         "far":"50米",
         "year":2,
         "times":6
     },
     "news_id":105002,
-    "urls": [],
+    "imgs": [],
     "goodCount":14,
     "commentCount":210,
     "careCount":332,
@@ -16,14 +16,14 @@
 },{
     "author":{
          "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
-        "user_id":10003,
+        "memberId":10003,
         "name":"张三",
         "far":"50米",
         "year":2,
         "times":6
     },
     "news_id":101002,
-    "urls": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
+    "imgs": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
             ,"http://img2.imgtn.bdimg.com/it/u=2527473326,1844263864&fm=206&gp=0.jpg","http://img4.imgtn.bdimg.com/it/u=1649033152,2058089280&fm=206&gp=0.jpg","http://pic.nipic.com/2008-05-26/2008526114122930_2.jpg"
             ,"http://pic6.nipic.com/20100305/4248696_124524728708_2.jpg","http://img4.imgtn.bdimg.com/it/u=2740233851,218672123&fm=206&gp=0.jpg","http://pica.nipic.com/2008-06-06/20086675134534_2.jpg"
 
@@ -35,14 +35,14 @@
 },{
     "author":{
          "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
-        "user_id":10003,
+        "memberId":10003,
         "name":"张三",
         "far":"50米",
         "year":2,
         "times":6
     },
     "news_id":100002,
-    "urls": ["http://a0.att.hudong.com/78/32/01300000231518122137321626800_950.jpg", "http://pic15.nipic.com/20110812/5200151_031803723128_2.jpg","http://img.taopic.com/uploads/allimg/111109/53162-11110910454466.jpg"],
+    "imgs": ["http://a0.att.hudong.com/78/32/01300000231518122137321626800_950.jpg", "http://pic15.nipic.com/20110812/5200151_031803723128_2.jpg","http://img.taopic.com/uploads/allimg/111109/53162-11110910454466.jpg"],
     "goodCount":40,
     "commentCount":20,
     "careCount":2,
@@ -50,14 +50,14 @@
 },{
     "author":{
          "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
-        "user_id":10003,
+        "memberId":10003,
         "name":"张三",
         "far":"50米",
         "year":2,
         "times":6
     },
     "news_id":105002,
-    "urls": [],
+    "imgs": [],
     "goodCount":14,
     "commentCount":210,
     "careCount":332,
@@ -65,14 +65,14 @@
 },{
     "author":{
          "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
-        "user_id":10003,
+        "memberId":10003,
         "name":"张三",
         "far":"50米",
         "year":2,
         "times":6
     },
     "news_id":101002,
-    "urls": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
+    "imgs": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
             ,"http://img2.imgtn.bdimg.com/it/u=2527473326,1844263864&fm=206&gp=0.jpg","http://img4.imgtn.bdimg.com/it/u=1649033152,2058089280&fm=206&gp=0.jpg","http://pic.nipic.com/2008-05-26/2008526114122930_2.jpg"
             ,"http://pic6.nipic.com/20100305/4248696_124524728708_2.jpg","http://img4.imgtn.bdimg.com/it/u=2740233851,218672123&fm=206&gp=0.jpg","http://pica.nipic.com/2008-06-06/20086675134534_2.jpg"
 
@@ -84,14 +84,14 @@
 },{
     "author":{
          "photo_url":"http://img5.duitang.com/uploads/item/201404/04/20140404175033_VJzLi.thumb.600_0.jpeg",
-        "user_id":10001,
+        "memberId":10001,
         "name":"刘大",
         "far":"10,000米",
         "year":2,
         "times":76
     },
     "news_id":105002,
-    "urls": [],
+    "imgs": [],
     "goodCount":14,
     "commentCount":210,
     "careCount":332,
@@ -99,14 +99,14 @@
 },{
     "author":{
          "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
-        "user_id":10003,
+        "memberId":10003,
         "name":"张三",
         "far":"50米",
         "year":2,
         "times":6
     },
     "news_id":108902,
-    "urls": ["https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3984140715,1665759755&fm=58", "http://a0.att.hudong.com/78/32/01300000231518122137321626800_950.jpg"],
+    "imgs": ["https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3984140715,1665759755&fm=58", "http://a0.att.hudong.com/78/32/01300000231518122137321626800_950.jpg"],
     "goodCount":240,
     "commentCount":2,
     "careCount":12,
@@ -114,14 +114,14 @@
 },{
     "author":{
          "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
-        "user_id":10003,
+        "memberId":10003,
         "name":"张三",
         "far":"50米",
         "year":2,
         "times":6
     },
     "news_id":101002,
-    "urls": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
+    "imgs": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
             ,"http://img2.imgtn.bdimg.com/it/u=2527473326,1844263864&fm=206&gp=0.jpg","http://img4.imgtn.bdimg.com/it/u=1649033152,2058089280&fm=206&gp=0.jpg","http://pic.nipic.com/2008-05-26/2008526114122930_2.jpg"
             ,"http://pic6.nipic.com/20100305/4248696_124524728708_2.jpg","http://img4.imgtn.bdimg.com/it/u=2740233851,218672123&fm=206&gp=0.jpg","http://pica.nipic.com/2008-06-06/20086675134534_2.jpg"
 
@@ -133,14 +133,14 @@
 },{
     "author":{
          "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
-        "user_id":10003,
+        "memberId":10003,
         "name":"张三",
         "far":"50米",
         "year":2,
         "times":6
     },
     "news_id":100902,
-    "urls": ["http://www.jydoc.com/uploads/jydoc/p42001/200912420103782877801.jpg"],
+    "imgs": ["http://www.jydoc.com/uploads/jydoc/p42001/200912420103782877801.jpg"],
     "goodCount":14,
     "commentCount":210,
     "careCount":332,
@@ -148,14 +148,14 @@
 },{
     "author":{
          "photo_url":"http://img3.imgtn.bdimg.com/it/u=3709009494,4126148509&fm=21&gp=0.jpg",
-        "user_id":10006,
+        "memberId":10006,
         "name":"赵六",
         "far":"160米",
         "year":2,
         "times":6
     },
     "news_id":105002,
-    "urls": [],
+    "imgs": [],
     "goodCount":14,
     "commentCount":210,
     "careCount":332,
@@ -163,14 +163,14 @@
 },{
     "author":{
          "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
-        "user_id":10001,
+        "memberId":10001,
        "name":"李四",
         "far":"70米",
         "year":12,
         "times":16
     },
     "news_id":101002,
-    "urls": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
+    "imgs": ["http://pic26.nipic.com/20121217/5747916_141818579173_2.jpg", "https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=1367370678,2264124896&fm=96&s=2B96E706B6C8B70D0466127E0300C073","http://img3.imgtn.bdimg.com/it/u=809347992,2738140629&fm=206&gp=0.jpg"
             ,"http://img2.imgtn.bdimg.com/it/u=2527473326,1844263864&fm=206&gp=0.jpg","http://img4.imgtn.bdimg.com/it/u=1649033152,2058089280&fm=206&gp=0.jpg","http://pic.nipic.com/2008-05-26/2008526114122930_2.jpg"
             ,"http://pic6.nipic.com/20100305/4248696_124524728708_2.jpg","http://img4.imgtn.bdimg.com/it/u=2740233851,218672123&fm=206&gp=0.jpg","http://pica.nipic.com/2008-06-06/20086675134534_2.jpg"
 
@@ -182,14 +182,14 @@
 },{
     "author":{
          "photo_url":"http://diy.qqjay.com/u2/2012/0805/ef765307050e859f6e3291e24c35c810.jpg",
-        "user_id":10001,
+        "memberId":10001,
         "name":"张三",
         "far":"50米",
         "year":2,
         "times":6
     },
     "news_id":105002,
-    "urls": [],
+    "imgs": [],
     "goodCount":14,
     "commentCount":210,
     "careCount":332,

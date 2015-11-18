@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.go.fish.R;
@@ -63,13 +64,28 @@ public class FPlaceListAdapter extends BaseAdapter{
 		notifyDataSetChanged();
 	}
 
+	class FPlaceViewHolder{
+		TextView listitem_fplace_title,fplace_desc,float_view_distance;
+		ImageView listitem_fplace_icon;
+		ViewGroup fplace_temp_title;
+	}
 	private View onGetNearFPlace(FPlaceData fPlace, View convertView, ViewGroup parent){
 		ViewGroup item = null;
+		FPlaceViewHolder mViewHolder = null;
 		if (convertView == null) {
 			item = (ViewGroup)mInflater.inflate(fPlace.layout_id, parent, false);
+			mViewHolder = new FPlaceViewHolder();
+			item.setTag(mViewHolder);
+			mViewHolder.listitem_fplace_title = ((TextView)item.findViewById(R.id.listitem_fplace_title));
+			mViewHolder.fplace_desc = ((TextView)item.findViewById(R.id.fplace_desc));
+			mViewHolder.float_view_distance = ((TextView)item.findViewById(R.id.float_view_distance));
+			mViewHolder.fplace_temp_title = ((ViewGroup)item.findViewById(R.id.fplace_temp_title));
+			mViewHolder.listitem_fplace_icon = ((ImageView)item.findViewById(R.id.listitem_fplace_icon));
 		} else {
 			item = (ViewGroup)convertView;
 		}
+		mViewHolder.fplace_temp_title.getChildAt(0).setVisibility(View.GONE);
+		mViewHolder.fplace_temp_title.getChildAt(1).setVisibility(View.VISIBLE);
 		return item;
 	}
 	private View onGetSearchListitem(FPlaceData fPlace, View convertView, ViewGroup parent){

@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroupOverlay;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -35,6 +37,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.Text;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.go.fish.R;
@@ -59,13 +62,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Random;
+import java.util.Set;
 
 public class HomeUI extends FragmentActivity implements IHasHeadBar {
 
     FragmentManager fragmentMgr = null;
     MapView mMapView;
     BaiduMap mBaiduMap;
-    HashMap<String, ArrayList<Marker>> mSearchResult = null;
+    ArrayList<Marker> mSearchResult = null;
     ViewGroup mFloatViewInfo = null;
     ViewGroup mHomeMainView = null;
     LayoutInflater mLayoutInflater = null;
@@ -346,6 +351,39 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                 break;
         }
     }
+    
+    private void updateMarkerStatus(ViewGroup parent){
+    	//获取正在显示的类型
+    	int count = parent.getChildCount();
+    	ArrayList<Integer> showTags = new ArrayList<Integer>();
+    	for(int i = 0; i < count; i++){
+    		TextView tv = (TextView)((ViewGroup)parent.getChildAt(i)).getChildAt(1);
+    		if(tv.getTag() != null && tv.getTag().equals("1")){
+    			showTags.add(convertInt(tv.getText().toString()));
+    		}
+    	}
+    	int mCount = mSearchResult.size();
+    	int s = mCount;
+    	for(int i = 0;i < mCount; i++){
+    		Marker m = mSearchResult.get(i);
+    		Bundle b = m.getExtraInfo();
+    		int[] ts = b.getIntArray(Const.STA_TAG);
+    		boolean setHide = true;
+    		for(int j = 0;j < ts.length; j++){
+    			if(showTags.contains(ts[j])){
+    				setHide = false;
+    				break;
+    			}
+    		}
+    		if(setHide){
+    			s--;
+    			m.setVisible(false);
+    		}else{
+    			m.setVisible(true);
+    		}
+    	}
+    	ViewHelper.showToast(HomeUI.this, "剩余" + s + "显示");
+    }
 
     OnGetLocationListener mOnGetLocationListener = null;
 
@@ -365,6 +403,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
         				jsonObject.put(Const.STA_LAT, String.valueOf(data.lat));
         				jsonObject.put(Const.STA_LNG, String.valueOf(data.lng));
         				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
+        				jsonObject.put(Const.STA_TAG, Const.DEFT_REQUEST_QUERY_LIST);
         			} catch (JSONException e) {
         				e.printStackTrace();
         			}
@@ -383,18 +422,24 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                                         if(resultData != null ){
                                             if( isRight(resultData)){
                                                 JSONArray jsonArray = resultData.optJSONArray(Const.STA_DATA);
-                                                mSearchResult = new HashMap<String, ArrayList<Marker>>();
+                                                mSearchResult = new ArrayList<Marker>();
                                                 BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.point);
-                                                for (int i = 0; i < jsonArray.length(); i++) {
+                                                int count = jsonArray.length();
+                                                count = 20;//test
+                                                for (int i = 0; i < count; i++) {
 //                                                    JSONArray typeFPlaceArr = jsonArray.optJSONArray(i);
 //                                                    ArrayList<Marker> typeMarkers = new ArrayList<Marker>();
 //                                                    mSearchResult.put(i + "", typeMarkers);
 //                                                    for (int j = 0; j < typeFPlaceArr.length(); j++) {
                                                         try {
-                                                            JSONObject json = jsonArray.optJSONObject(i);
-                                                            LatLng p = new LatLng(json.optDouble(Const.STA_LAT), json.optDouble(Const.STA_LNG));
+                                                            JSONObject json = jsonArray.optJSONObject(0);
+//                                                            JSONObject json = jsonArray.optJSONObject(i);//test
+                                                            double d = new Random().nextDouble();
+                                                            d = d - (int)d;
+                                                            LatLng p = new LatLng(json.optDouble(Const.STA_LAT) + d, json.optDouble(Const.STA_LNG) + d);
                                                             OverlayOptions ooD = new MarkerOptions().position(p).icon(bdA);
                                                             Marker mMarkerD = (Marker) (mBaiduMap.addOverlay(ooD));
+                                                            mSearchResult.add(mMarkerD);
                                                             Bundle b = new Bundle();
                                                             int fPlaceId = json.optInt(Const.STA_ID);
                                                             b.putString(Const.STA_NAME, json.optString(Const.STA_NAME));
@@ -403,6 +448,18 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                                                             b.putInt(Const.STA_CARE_COUNT, json.optInt(Const.STA_CARE_COUNT, 0));
                                                             if (json.has(Const.STA_PIRCES)) {
                                                                 b.putString(Const.STA_PIRCES, json.optJSONArray(Const.STA_PIRCES).toString());
+                                                            }
+                                                            String tags = json.optString(Const.STA_TAG);
+                                                            if(!TextUtils.isEmpty(tags)){
+                                                            	String[] ts = tags.split("，");
+                                                            	int[] i_tags = new int[ts.length];
+                                                            	int tag_i = Math.abs(new Random().nextInt()) % ts.length;
+//                                                            	for(int tag_i = 0; tag_i < ts.length; tag_i++){//test
+                                                            		String s_tag = ts[tag_i];
+                                                            		i_tags[tag_i] = convertInt(s_tag);
+//                                                            	}
+                                                            	
+                                                            	b.putIntArray(Const.STA_TAG, i_tags);
                                                             }
                                                             mMarkerD.setExtraInfo(b);
 //                                                            typeMarkers.add(mMarkerD);
@@ -435,6 +492,27 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
         return mOnGetLocationListener;
     }
 
+    private static final int TAG_YD = 1;
+    private static final int TAG_BD = 2;
+    private static final int TAG_HK = 3;
+    private static final int TAG_GD = 4;
+    private static final int TAG_SSJRX = 5;
+//    private static final int TAG_YD = 1;
+    private int convertInt(String tag){
+    	if(tag.equals("夜钓")){
+    		return TAG_YD;
+    	}else if(tag.equals("冰钓")){
+    		return TAG_BD;
+    	}else if(tag.equals("高钓")){
+    		return TAG_GD;
+    	}else if(tag.equals("黑坑")){
+    		return TAG_HK;
+    	}else if(tag.equals("舒适家人行") || tag.equals("舒适")){
+    		return TAG_SSJRX;
+    	}else{
+    		return 0;
+    	}
+    }
     private void onGetNearFPlace() {
         //获取自己位置
         MapUtil.getLocation(this, initOnGetLocationListener(), 0);
@@ -524,7 +602,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                     splaceTypePopWinView = LayoutInflater.from(this).inflate(R.layout.list_pop_win, null);
                     ListView list = (ListView) ((ViewGroup) splaceTypePopWinView).getChildAt(0);
                     list.setDividerHeight(0);
-                    PopWinListItemAdapter adapter = PopWinListItemAdapter.newInstance(this, list, R.array.hfs_splace_type, R.layout.listitem_pop_win);
+                    PopWinListItemAdapter.newInstance(this, list, R.array.hfs_splace_type, R.layout.listitem_pop_win);
                     list.setOnItemClickListener(new OnItemClickListener() {
 
                         @Override
@@ -540,6 +618,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 //							tv.setTextColor(Color.GREEN);
                                 tv.setTextColor(HomeUI.this.getResources().getColor(R.color.base_btn_color));
                             }
+                            updateMarkerStatus(parent);
 //						popupWindow.dismiss();
                         }
                     });

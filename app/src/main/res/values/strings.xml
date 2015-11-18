@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">去哪钓</string>
     <string name="base_ui_close">关闭</string>
-    <string name="rule_link">http://www.baidu.com</string>
-    <string name="help_link">http://www.baidu.com?q=help</string>
+    <string name="rule_link">http://www.qndiao.cn/index.html</string>
+    <string name="help_link">http://www.qndiao.cn/index.html</string>
 
     <!-- welcome页面 begin -->
     <string name="wel_reg">注册</string>
@@ -48,7 +48,7 @@
         <item>天次</item>
         <item>周次</item>
         <item>月次</item>
-        <item>年圳</item>
+        <item>年次</item>
     </string-array>
 
     <!-- 注册页面 end -->
@@ -57,6 +57,7 @@
     <!-- 登陆页面 begin -->
     <string name="login_account">账号:</string>
     <string name="login_account_phone_num">手机号/账号</string>
+    <string name="phone">13521379291</string>
     <string name="login_pswd">密码:</string>
     <string name="login_forgot_pswd">忘记密码</string>
     <string name="login_reg_new_account">注册新用户</string>
