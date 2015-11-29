@@ -8,11 +8,16 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 
+import com.go.fish.data.PersonData;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.HomeUI;
+import com.go.fish.user.User;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
+import com.go.fish.util.NetTool;
+import com.go.fish.util.UrlUtils;
 import com.go.fish.view.SplashView;
+import com.go.fish.view.ViewHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +34,35 @@ public class MainActivity extends Activity {
 		}
 		if(welcome_ed){
 			if(isLogined()){
-				showHomeUI();
+				//TODO刷新登陆
+				//成功进入首页面
+				String num = LocalMgr.self().getUserInfo(Const.K_num);
+				String pswd = LocalMgr.self().getUserInfo(Const.K_pswd);
+				JSONObject jsonObject = new JSONObject();
+				try {
+					jsonObject.put(Const.STA_MOBILE, num);
+					jsonObject.put(Const.STA_PASSWORD, pswd);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				NetTool.data().http(new NetTool.RequestListener() {
+					@Override
+					public void onEnd(byte[] bytes) {
+						JSONObject response = toJSONObject(bytes);
+						if (response != null ){
+							if(isRight(response)) {
+								JSONObject data = response.optJSONObject(Const.STA_DATA);
+								LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
+								User.self().userInfo = PersonData.newInstance(data);
+								showHomeUI();
+							} else {
+								showLoginUI();
+							}
+						}else{
+							showLoginUI();
+						}
+					}
+				},jsonObject,UrlUtils.self().getMemberLogin());
 			}else{
 				showLoginUI();
 			}
@@ -59,7 +92,7 @@ public class MainActivity extends Activity {
 			try {
 				JSONObject data = new JSONObject(userInfo);
 				if (data != null && data.has(Const.STA_TOKEN)){
-					//TODO刷新登陆
+					UrlUtils.self().setToken(data.optString(Const.STA_TOKEN));
                     return true;
                 }
 			} catch (JSONException e) {

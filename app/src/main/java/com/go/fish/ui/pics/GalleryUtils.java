@@ -1,5 +1,6 @@
 package com.go.fish.ui.pics;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipData.Item;
@@ -14,12 +15,12 @@ import android.os.Build;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-
 import com.go.fish.ui.UICode;
 import com.go.fish.util.LocalMgr;
-
+import java.io.File;
 import java.util.List;
 
+@SuppressLint("NewApi")
 public class GalleryUtils {
 
     private static GalleryUtils instance = null;
@@ -49,6 +50,10 @@ public class GalleryUtils {
     public void crop(final Activity activity, final GalleryCallback callback,int w,int h) {
         String IMAGE_FILE_LOCATION = "file://" + LocalMgr.sRootPath + "temp.jpg";//temp file
         final Uri imageUri = Uri.parse(IMAGE_FILE_LOCATION);//The Uri to store the big bitmap
+        File file = new File(imageUri.getPath());
+        if(file.exists()){
+        	file.delete();
+        }
         Intent intent = new Intent("com.android.camera.action.CROP", null);
         intent.setType("image/*");
         intent.putExtra("crop", "true");

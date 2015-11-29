@@ -57,7 +57,7 @@
     <!-- 登陆页面 begin -->
     <string name="login_account">账号:</string>
     <string name="login_account_phone_num">手机号/账号</string>
-    <string name="phone">13521379291</string>
+    <string name="phone"></string>
     <string name="login_pswd">密码:</string>
     <string name="login_forgot_pswd">忘记密码</string>
     <string name="login_reg_new_account">注册新用户</string>

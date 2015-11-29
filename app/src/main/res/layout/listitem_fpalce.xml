@@ -33,7 +33,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/base_background"
                 android:clickable="true"
                 android:gravity="center_vertical"
                 android:onClick="onClick"
@@ -49,11 +48,12 @@
                     android:textSize="@dimen/base_font_size_h4" />
 
                 <ImageView
-                    android:id="@+id/float_view_care_text"
+                    android:id="@+id/listitem_fplace_care"
                     android:layout_width="@dimen/base_pic_drawable_x_width"
                     android:layout_height="@dimen/base_pic_drawable_x_height"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/hart_care_"
+                    android:layout_margin="@dimen/base_space"
+                    android:src="@drawable/care_bg"
                     android:visibility="gone" />
             </FrameLayout>
 

@@ -329,7 +329,7 @@ public class ViewHelper {
 		showGlobalWaiting(context, listener,"数据加载中...",-1);
 	}
 	public static void showGlobalWaiting(Context context,ProgressDialog.OnDismissListener listener,String text){
-		showGlobalWaiting(context, null, text, -1);
+		showGlobalWaiting(context, listener, text, -1);
 	}
 	public static void showGlobalWaiting(Context context,ProgressDialog.OnDismissListener listener,String text,int timeoutTime){
 		if(sPopupWindow != null){

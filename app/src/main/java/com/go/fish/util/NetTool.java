@@ -61,6 +61,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
@@ -92,6 +94,7 @@ import com.go.fish.BuildConfig;
 import com.go.fish.MainApplication;
 import com.go.fish.R;
 import com.go.fish.ui.BaseUI;
+import com.go.fish.ui.HomeUI;
 import com.go.fish.ui.RegisterUI;
 import com.go.fish.util.NetTool.RequestData.HttpOption;
 import com.go.fish.view.ViewHelper;
@@ -146,10 +149,6 @@ public class NetTool {
 
 	public void http(RequestListener listener,JSONObject jsonObject,String url){
 		RequestData rData = RequestData.newInstance(listener,jsonObject,url);
-		rData.addHeader(Const.STA_USER_AGENT, UrlUtils.self().getUserAgent());
-		if(!TextUtils.isEmpty(UrlUtils.self().getToken())){
-			rData.addHeader(Const.STA_CC_TOKEN, UrlUtils.self().getToken());
-		}
 		http(rData.syncCallback());
 	}
 	
@@ -176,6 +175,10 @@ public class NetTool {
 			return null;
 		}
 		RequestListener listener = rData.mListener;
+		rData.addHeader(Const.STA_USER_AGENT, UrlUtils.self().getUserAgent());
+		if(!TextUtils.isEmpty(UrlUtils.self().getToken())){
+			rData.addHeader(Const.STA_CC_TOKEN, UrlUtils.self().getToken());
+		}
 		if(listener != null){
 			listener.url = rData.url;
 			if (rData.synCallBack) {
@@ -210,10 +213,12 @@ public class NetTool {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				// TODO Auto-generated method stub
-				if(BuildConfig.DEBUG){
-					Log.e("yl", "onErrorResponse request:(" + rData.url + " "+ rData.mJsonData + ") response:(" + error.networkResponse.statusCode +" " + error.networkResponse.headers + ")");
+				if(rData != null){
+					if(BuildConfig.DEBUG){
+						Log.e("yl", "onErrorResponse request:(" + rData.url + " "+ rData.mJsonData + ") response:(" + error.networkResponse.statusCode +" " + error.networkResponse.headers + ")");
+					}
+					rData.mListener.onError(-1, error.getMessage());
 				}
-				rData.mListener.onError(-1, error.getMessage());
 			}
 		});
 		
@@ -325,10 +330,18 @@ public class NetTool {
 		}
 
 		private static HttpUriRequest onPost(RequestData rData,HttpPost httpPost) {
-			if (rData.mJsonData != null) {//json请求格式
+			if (rData.mJsonData != null && rData.mJsonData.length() > 0) {//json请求格式
 				try {
 					httpPost.setEntity(new StringEntity(rData.mJsonData.toString()));
 				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			} else if(rData.mCommitFilePath != null){//表单提交图片
+				try {
+					File file = new File(rData.mCommitFilePath);
+					InputStreamEntity ise = new InputStreamEntity(new FileInputStream(file), file.length());
+					httpPost.setEntity(ise);
+				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
 			} else {//表单提交(文字数据、图片)
@@ -430,6 +443,7 @@ public class NetTool {
 		RequestListener mListener = null;
 		/** GET方式提交json字符串数据 */
 		JSONObject mJsonData = null;
+		String mCommitFilePath = null;
 		static String sHost = Const.SIN_HOST;
 		HashMap<String,String> mHeads = new HashMap<String,String>();
 		private RequestData(String url, RequestListener listener) {
@@ -452,6 +466,9 @@ public class NetTool {
 			return mListener != null && url != null && (url.startsWith("http://") || url.startsWith("https://"));
 		}
 
+		public void setCommitFilePath(String path){
+			mCommitFilePath = path;
+		}
 		public void setOption(HttpOption option) {
 			this.option = option;
 		}
@@ -530,9 +547,14 @@ public class NetTool {
 		}
 	}
 
-	public static abstract class RequestListener {
+	public static abstract class RequestListener implements OnDismissListener{
 		public static final int ERROR_TIMEOUT = 0;
 		private String url = null;
+		boolean isOver = false;
+		@Override
+		public void onDismiss(DialogInterface arg0) {
+			isOver = true;
+		}
 		public void onStart() {
 		}
 		/**
@@ -541,15 +563,29 @@ public class NetTool {
 		 * @param waitingMsg
 		 */
 		public void onStart(Context context,String waitingMsg) {
-			ViewHelper.showGlobalWaiting(context, null,waitingMsg);
+			ViewHelper.showGlobalWaiting(context, this,waitingMsg);
 		}
 		/**
 		 * 含有显示等待框逻辑
 		 */
 		public void onStart(Context context) {
-			ViewHelper.showGlobalWaiting(context, null);
+			ViewHelper.showGlobalWaiting(context, this);
 		}
 
+		public void onDataError(Context context,String msg){
+			ViewHelper.showToast(context, msg);
+		}
+		public void onDataError(Context context){
+			onDataError(context, (JSONObject)null);
+		}
+		
+		public void onDataError(Context context,JSONObject response){
+			String msg = Const.DEFT_NET_ERROR;
+			if(response != null){
+				msg = response.optString(Const.STA_MESSAGE);
+			}
+			onDataError(context, msg);
+		}
 		public void onError(int type, String msg) {
 		}
 
@@ -586,7 +622,14 @@ public class NetTool {
 		}
 
 		public  boolean isRight(JSONObject jsonObject){
-			return jsonObject != null && Const.DEFT_1.equals(jsonObject.optString(Const.STA_CODE));
+			return Const.DEFT_1.equals(jsonObject.optString(Const.STA_CODE));
+		}
+		/**
+		 * 联网请求是否结束
+		 * @return
+		 */
+		public boolean isOver(){
+			return isOver;
 		}
 
 		public JSONArray toJSONArray(byte[] data) {

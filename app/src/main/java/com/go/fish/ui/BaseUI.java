@@ -1,11 +1,17 @@
 package com.go.fish.ui;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -23,7 +29,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.go.fish.MainActivity;
 import com.go.fish.R;
 import com.go.fish.data.DataMgr;
 import com.go.fish.data.FPlaceData;
@@ -33,13 +38,15 @@ import com.go.fish.ui.pics.GalleryUtils;
 import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
+import com.go.fish.util.IME;
 import com.go.fish.util.LocalMgr;
 import com.go.fish.util.MapUtil;
-import com.go.fish.util.NetTool.RequestListener;
-import com.go.fish.util.UrlUtils;
 import com.go.fish.util.MapUtil.LocationData;
 import com.go.fish.util.MapUtil.OnGetLocationListener;
 import com.go.fish.util.NetTool;
+import com.go.fish.util.NetTool.RequestData;
+import com.go.fish.util.NetTool.RequestListener;
+import com.go.fish.util.UrlUtils;
 import com.go.fish.view.ActionSheet;
 import com.go.fish.view.AdapterExt;
 import com.go.fish.view.AutoLayoutViewGroup;
@@ -47,16 +54,8 @@ import com.go.fish.view.BaseFragment;
 import com.go.fish.view.BaseFragmentPagerAdapter;
 import com.go.fish.view.FPlaceListAdapter;
 import com.go.fish.view.IBaseData;
-import com.go.fish.view.IMETools;
 import com.go.fish.view.ViewHelper;
 import com.umeng.analytics.MobclickAgent;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 
 public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		IHasComment {
@@ -118,6 +117,20 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			onCreateZanList();
 			break;
 		case R.layout.ui_my_sec:
+			break;
+		case R.layout.ui_forget_pswd:
+		case R.layout.ui_login:
+			String num = LocalMgr.self().getUserInfo(Const.K_num);
+			if(!TextUtils.isEmpty(num)){
+				num = num.trim();
+				if(num.length() > 0){
+					TextView tv = (TextView)findViewById(R.id.text_phone_num_input);
+					tv.setText(num);
+					TextView login_pswd_input = (TextView)findViewById(R.id.login_pswd_input);
+					login_pswd_input.requestFocus();
+					IME.showIME(login_pswd_input);
+				}
+			}
 			break;
 		default:
 			break;
@@ -354,31 +367,46 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 	}
 
 	private void onCreateNearFriend() {// 创建附近钓友
-		NetTool.RequestData rd = NetTool.RequestData.newInstance(
-				new NetTool.RequestListener() {
+
+		MapUtil.getLocation(BaseUI.this, new OnGetLocationListener() {
+			
+			@Override
+			public void onGetLocation(LocationData data) {
+				User.self().userInfo.lng = data.lng;
+				User.self().userInfo.lat = data.lat;
+				JSONObject jsonObject = new JSONObject();
+				try {
+					jsonObject.put(Const.STA_LNG, User.self().userInfo.lng);
+					jsonObject.put(Const.STA_LAT, User.self().userInfo.lat);
+					jsonObject.put(Const.STA_START_INDEX, 0);
+					jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				final ListView list = (ListView)findViewById(R.id.ui_near_f_friends_listview);
+				list.setDividerHeight(0);
+				AdapterExt.newInstance(list, new JSONArray(), R.layout.listitem_friend_for_ui_zan);
+				NetTool.data().http(new RequestListener() {
 					@Override
 					public void onStart() {
-						ViewHelper.showGlobalWaiting(BaseUI.this, null);
+						super.onStart(BaseUI.this);
 					}
-
 					@Override
 					public void onEnd(byte[] data) {
-						ListView list = (ListView) findViewById(R.id.ui_near_f_friends_listview);
-						list.setDividerHeight(0);
-						JSONArray arr = null;
-						try {
-							arr = new JSONArray(new String(data, "utf-8"));
-						} catch (JSONException e) {
-							e.printStackTrace();
-						} catch (UnsupportedEncodingException e) {
-							e.printStackTrace();
+						// TODO Auto-generated method stub
+						JSONObject json = toJSONObject(data);
+						if(isRight(json)){
+							JSONArray dataJson = json.optJSONArray(Const.STA_DATA);
+							ListView list = (ListView) findViewById(R.id.ui_near_f_friends_listview);
+							list.setDividerHeight(0);
+							list.setAdapter(AdapterExt.newInstance(list, dataJson,
+									R.layout.listitem_friend));
 						}
-						list.setAdapter(AdapterExt.newInstance(list, arr,
-								R.layout.listitem_friend));
-						ViewHelper.closeGlobalWaiting();
+						onEnd();
 					}
-				}, "near_friend");
-		NetTool.data().http(rd.syncCallback());
+				}, jsonObject, UrlUtils.self().getAroundMember());
+			}
+		});
 	}
 
 	private void onCreateMyFNewsView() {// 创建我的钓播
@@ -404,7 +432,9 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				GalleryUtils.self().crop(this, new GalleryUtils.GalleryCallback() {
 					@Override
 					public void onCompleted(String[] filePath) {
-						((ImageView)view).setImageDrawable(Drawable.createFromPath(filePath[0]));
+						String f = filePath[0];
+						((ImageView)view).setImageDrawable(Drawable.createFromPath(f));
+						view.setTag(f);
 					}
 				},view.getWidth(),view.getHeight());
 				return;
@@ -485,13 +515,48 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			NetTool.data().http(new RequestListener() {
 				@Override
 				public void onStart() {
-					super.onStart(BaseUI.this);
+					super.onStart(BaseUI.this,Const.DEFT_COMMITTING);
 				}
 				@Override
 				public void onEnd(byte[] data) {
-					// TODO Auto-generated method stub
-					onEnd();
-					showHomeUI();
+					JSONObject response = toJSONObject(data);
+					if(response != null){
+						if(isRight(response)){//文字数据提交成功
+							View view = findViewById(R.id.reg_next_photo);
+							if(TextUtils.isEmpty((String)view.getTag())){
+								onEnd();
+								return;
+							}
+							JSONObject jsonObject = new JSONObject();
+							RequestData rData = RequestData.newInstance(new RequestListener() {
+								@Override
+								public void onEnd(byte[] data) {
+									//onEnd();
+									JSONObject response = toJSONObject(data);
+									if(response != null){
+										if(isRight(response)){//头像数据提交成功
+											onEnd();
+											showHomeUI();
+										}else{
+											onEnd();
+											ViewHelper .showToast(BaseUI.this, response.optString(Const.STA_MESSAGE));
+										}
+									}else{
+										onEnd();
+										ViewHelper.showToast(BaseUI.this, Const.DEFT_NET_ERROR);										
+									}
+								}
+							},jsonObject,UrlUtils.self().getUploadUserImg());
+							rData.setCommitFilePath((String)view.getTag());
+							NetTool.submit().http(rData.syncCallback());
+						}else{
+							onEnd();
+							ViewHelper .showToast(BaseUI.this, response.optString(Const.STA_MESSAGE));
+						}
+					}else{
+						onEnd();
+						ViewHelper.showToast(BaseUI.this, Const.DEFT_NET_ERROR);
+					}
 				}
 			}, jsonObject, UrlUtils.self().getCompleteData());
 			break;
@@ -638,7 +703,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				break;
 			case R.id.comment_list_publish: {
 				final TextView replyText = ((TextView) findViewById(R.id.comment_list_reply_text));
-				IMETools.hideIME(findViewById(R.id.comment_list_reply_text));
+				IME.hideIME(findViewById(R.id.comment_list_reply_text));
 				JSONObject jsonObject = new JSONObject();
 				String[] args = BaseUtils.splitString(replyText.getTag());
 				try {
@@ -672,7 +737,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			case -1: {
 				TextView replyText = ((TextView) findViewById(R.id.comment_list_reply_text));
 				replyText.setCompoundDrawables(null, null, null, null);
-				IMETools.showIME(replyText);
+				IME.showIME(replyText);
 				String tv = String.valueOf(view.getTag());
 				String[] args = BaseUtils.splitString(tv);
 				replyText.setHint(Const.DEFT_REPLY + Const.DEFT_REPLY_ + args[0]);
@@ -750,6 +815,8 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			MapUtil.getLocation(this, new OnGetLocationListener() {
 				@Override
 				public void onGetLocation(LocationData data) {
+					User.self().userInfo.lng = data.lng;
+					User.self().userInfo.lat = data.lat;
 					ViewHelper.closeGlobalWaiting();
 					((TextView) view).setText(data.address);
 				}
@@ -815,7 +882,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 						// 浏览器查看接口 http://115.29.51.39:8080/code/listCode
 //						((TextView) findViewById(R.id.checkCode)).setText(response.optJSONObject(Const.STA_DATA).optString(Const.STA_VALIDATECODE));
 					} else {
-						ViewHelper .showToast(BaseUI.this, Const.DEFT_GET_CHECK_CODE_FAILED);
+						ViewHelper .showToast(BaseUI.this, response.optString(Const.STA_MESSAGE));
 					}
 				}
 			},jsonObject,url);
@@ -825,13 +892,13 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		}
 		
 		case R.id.ok: {//忘记密码确定按钮
-			String num = ((TextView) findViewById(R.id.text_phone_num_input))
+			final String num = ((TextView) findViewById(R.id.text_phone_num_input))
 					.getText().toString();
 			if (TextUtils.isEmpty(num) || num.length() != 11) {
 				ViewHelper.showToast(this, Const.DEFT_PLEASE_INPUT_RIGHT_PHONE_NUMBER);
 				return;
 			}
-			String login_pswd_input = ((TextView) findViewById(R.id.login_pswd_input))
+			final String login_pswd_input = ((TextView) findViewById(R.id.login_pswd_input))
 					.getText().toString();
 			if (TextUtils.isEmpty(login_pswd_input)) {
 				ViewHelper.showToast(this, Const.DEFT_PLEASE_INPUT_RIGHT_PSWD);
@@ -843,11 +910,11 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				ViewHelper.showToast(this, Const.DEFT_PLEASE_INPUT_RIGHT_CHECK_CODE);
 				return;
 			}
-			JSONObject jsonObject = new JSONObject();
+			JSONObject checkCodeJsonObject = new JSONObject();
 			try {
-				jsonObject.put(Const.STA_MOBILE, num);
-				jsonObject.put(Const.STA_PASSWORD, login_pswd_input);
-				jsonObject.put(Const.STA_VALIDATECODE, checkCode);
+				checkCodeJsonObject.put(Const.STA_MOBILE, num);
+//				jsonObject.put(Const.STA_PASSWORD, login_pswd_input);
+				checkCodeJsonObject.put(Const.STA_VALIDATECODE, checkCode);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -855,30 +922,51 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				@Override
 				public void onStart() {
 					super.onStart();
-					ViewHelper.showGlobalWaiting(BaseUI.this, null, Const.DEFT_GETTING);
+					ViewHelper.showGlobalWaiting(BaseUI.this, null, Const.DEFT_REQUESTING);
 				}
 				@Override
 				public void onEnd(byte[] bytes) {
-					ViewHelper.closeGlobalWaiting();
 					JSONObject response = toJSONObject(bytes);
-//					if(response == null){
-//						try {
-//							response = new JSONObject("{\"code\":1,\"isError\":false,\"message\":\"success\",\"remark\":\"\",\"data\":{\"token\":\"ASDFCGUDHJFJHSGKH151230\"},\"unlogin\":\"\",\"exception\":\"\",\"error\":\"\"}");
-//						} catch (Exception e) {
-//						}
-//					}
 					if (response != null ){
-						if(isRight(response)) {
-							JSONObject data = response.optJSONObject(Const.STA_DATA);
-							LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
+						if(isRight(response)) {//校验验证码成功
+							//启动重置密码请求
+							JSONObject jsonObject = new JSONObject();
+							try {
+								jsonObject.put(Const.STA_MOBILE, num);
+								jsonObject.put(Const.STA_NEW_PASSWORD, login_pswd_input);
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+							NetTool.data().http(new NetTool.RequestListener() {
+								@Override
+								public void onEnd(byte[] bytes) {
+									onEnd();
+									JSONObject response = toJSONObject(bytes);
+									if (response != null ){
+										if(isRight(response)) {
+//											JSONObject data = response.optJSONObject(Const.STA_DATA);
+//											LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
+											ViewHelper.showToast(BaseUI.this, response.optString(Const.STA_MESSAGE));
+											finish();
+										}else {
+											ViewHelper.showToast(BaseUI.this, response.optString(Const.STA_MESSAGE));
+										}
+									}else{
+										onEnd();
+										ViewHelper.showToast(BaseUI.this, Const.DEFT_NET_ERROR);
+									}
+								}
+							},jsonObject,UrlUtils.self().getResetNewPassword());
+							
 						} else {
 							ViewHelper.showToast(BaseUI.this, response.optString(Const.STA_MESSAGE));
 						}
 					}else{
+						onEnd();
 						ViewHelper.showToast(BaseUI.this, Const.DEFT_NET_ERROR);
 					}
 				}
-			},jsonObject,UrlUtils.self().getRegisterMember());
+			},checkCodeJsonObject,UrlUtils.self().getCheckValidateCode());
 //			 showRegNext = true;
 //			 replace(regNextFragment);
 			break;
@@ -892,13 +980,13 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			break;
 		}
 		case R.id.login_login_btn: {//登陆
-			String num = ((TextView) findViewById(R.id.ui_login_input_phone))
+			final String num = ((TextView) findViewById(R.id.text_phone_num_input))
 					.getText().toString();
 			if (TextUtils.isEmpty(num) || num.length() != 11) {
 				ViewHelper.showToast(this, Const.DEFT_PLEASE_INPUT_RIGHT_PHONE_NUMBER);
 				return;
 			}
-			String login_pswd_input = ((TextView) findViewById(R.id.login_pswd_input))
+			final String login_pswd_input = ((TextView) findViewById(R.id.login_pswd_input))
 					.getText().toString();
 			if (TextUtils.isEmpty(login_pswd_input)) {
 				ViewHelper.showToast(this, Const.DEFT_PLEASE_INPUT_RIGHT_PSWD);
@@ -928,10 +1016,11 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 						}
 //					}
 					if (response != null ){
-						if( response.has(Const.STA_CODE)
-							&& response.optString(Const.STA_CODE).equals(Const.DEFT_1)) {
+						if(isRight(response)) {
 							JSONObject data = response.optJSONObject(Const.STA_DATA);
 							LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
+							LocalMgr.self().saveUserInfo(Const.K_num, num);
+							LocalMgr.self().saveUserInfo(Const.K_pswd, login_pswd_input);
 							User.self().userInfo = PersonData.newInstance(data);
 							showHomeUI();
 						} else {

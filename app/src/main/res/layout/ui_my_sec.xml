@@ -24,7 +24,6 @@
             android:id="@+id/base_head_bar_ok"
             style="@style/head_bar_pic_right_btn_style"
             >
-
             <ImageView
                 style="@style/head_bar_pic_style"
                 android:background="@drawable/ok" />
@@ -33,7 +32,7 @@
         <TextView
             android:id="@+id/base_head_bar_title"
             style="@style/head_bar_title_style"
-            android:layout_toLeftOf="@id/base_head_bar_next"
+            android:layout_toLeftOf="@id/base_head_bar_ok"
             android:layout_toRightOf="@id/base_ui_close"
             android:text="完善资料" >
         </TextView>

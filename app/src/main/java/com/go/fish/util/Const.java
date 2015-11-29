@@ -8,7 +8,9 @@ public interface Const {
 	String DEFT_COMMENTLIST_TYPE_PODCAST = "podcast";
 	String DEFT_GET_CHECK_CODE_SENDING = "验证码已发送";
 	String DEFT_GET_CHECK_CODE_FAILED = "验证码获取失败";
+	String DEFT_REQUESTING = "请求中...";
 	String DEFT_GETTING = "获取中...";
+	String DEFT_COMMITTING = "提交中...";
 	String DEFT_LOADING = "加载中...";
 	String DEFT_NET_ERROR = "网络错误";
 	String DEFT_PLEASE_INPUT_RIGHT_CHECK_CODE = "请正确填写验证码"; 
@@ -35,7 +37,11 @@ public interface Const {
 	String K_LoginData = "loginData";
 //	String PRI_WELCOME_ED = "welcome_ed";
 //	String PRI_WELCOME_ED = "welcome_ed";
+	String K_num = "num";
+	String K_account = "account";
+	String K_pswd = "welcome_ed";
 	String K_Welcomed = "welcome_ed";
+	
 	String PRI_DISTANCE = "distance";
 	String PRI_EXTRA_DATA = "extra_data";
 	String PRI_EXTRA_IMAGE_INDEX = "image_index";
@@ -96,6 +102,7 @@ public interface Const {
 	String STA_OBJECTID = "objectId";
 	String STA_ORDER_ID = "orderid";
 	String STA_PASSWORD = "password";
+	String STA_NEW_PASSWORD = "newPassword";
 	String STA_PHOTO_URL = "photo_url";
 	String STA_PIRCES = "pirces";
 	String STA_PRICE = "price";

@@ -196,4 +196,12 @@ public class UrlUtils {
     	return getHost() + aroundMember;
     }
 
+    String podCastList = "/relevant/podCastList";
+    public String getPodCastList() {
+    	return getHost() + podCastList;
+    }
+    String uploadUserImg = "/member/uploadUserImg";
+    public String getUploadUserImg() {
+    	return getHost() + uploadUserImg;
+    }
 }

@@ -113,8 +113,11 @@ public class AdapterExt extends BaseAdapter {
 	}
 	public static ArrayList<IBaseData> makePersonDataArray(JSONArray array){
 		ArrayList<IBaseData> arr = new ArrayList<IBaseData>();
-		for(int i = 0; i < array.length(); i++) {
-			JSONObject jsonObject = array.optJSONObject(i);
+		int count = array.length();
+		count = count > 0 ? 50 : 0;
+		for(int i = 0; i < count; i++) {
+//			JSONObject jsonObject = array.optJSONObject(i);
+			JSONObject jsonObject = array.optJSONObject(0);
 			PersonData newsData = PersonData.newInstance(jsonObject);
 			arr.add(newsData);
 		}

@@ -68,12 +68,11 @@
                     android:src="@drawable/phone" />
 
                 <EditText
-                   android:id="@+id/ui_login_input_phone"
+                   android:id="@+id/text_phone_num_input"
                     style="@style/base_input_style"
                     android:layout_marginLeft="@dimen/list_item_divider"
                     android:layout_toRightOf="@id/login_text_phone_num"
                     android:hint="@string/login_account_phone_num"
-                    android:text="@string/phone"
                     android:maxLength="11"
                     android:inputType="number" />
 

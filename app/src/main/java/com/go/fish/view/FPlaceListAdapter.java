@@ -83,9 +83,11 @@ public class FPlaceListAdapter extends BaseAdapter{
 			mViewHolder.listitem_fplace_icon = ((ImageView)item.findViewById(R.id.listitem_fplace_icon));
 		} else {
 			item = (ViewGroup)convertView;
+			mViewHolder = (FPlaceViewHolder)item.getTag();
 		}
-		mViewHolder.fplace_temp_title.getChildAt(0).setVisibility(View.GONE);
-		mViewHolder.fplace_temp_title.getChildAt(1).setVisibility(View.VISIBLE);
+		mViewHolder.fplace_temp_title.setTag(fPlace.sid);
+		mViewHolder.fplace_temp_title.getChildAt(0).setVisibility(View.GONE);//隐藏最近状态
+		mViewHolder.fplace_temp_title.getChildAt(1).setVisibility(View.VISIBLE);//显示关注图标
 		return item;
 	}
 	private View onGetSearchListitem(FPlaceData fPlace, View convertView, ViewGroup parent){

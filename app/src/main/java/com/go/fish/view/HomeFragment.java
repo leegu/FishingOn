@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
 			view = inflater.inflate(layoutId,container,false);
 			onCreateZixunView((ViewGroup) view);
 			break;
-		case R.id.home_fishing_news:
+		case R.id.home_fishing_news://钓播
 //			layoutId = R.layout.ui_f_fishing_news;
 			layoutId = R.layout.ui_fnews;
 			view = inflater.inflate(layoutId,container,false);
@@ -95,7 +95,7 @@ public class HomeFragment extends Fragment {
 
 	}
 
-	private void onCreateFNewsView(ViewGroup view) {
+	private void onCreateFNewsView(ViewGroup view) {//创建钓播 页面
 		ViewGroup vg = (ViewGroup)view.findViewById(R.id.ui_fnews_list_root);
 		{//最新钓播
 //			final ListView fNewsList = new ReFreshListView(getActivity());
@@ -135,38 +135,41 @@ public class HomeFragment extends Fragment {
 		}
 	}
 	
-	private void onShowFNews(){
+	private void onShowFNews(){//显示钓播 
 		ViewGroup vg = (ViewGroup)contentView.findViewById(R.id.ui_fnews_list_root);
 		{
 			final ListView fNListView = (ListView)vg.getChildAt(0);
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put(Const.STA_START_INDEX, fNListView.getAdapter().getCount());
+				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			//网络数据抓取,进行更新
-			NetTool.RequestData rd = NetTool.RequestData.newInstance(new NetTool.RequestListener() {
+			NetTool.data().http(new NetTool.RequestListener() {
 				@Override
 				public void onStart() {
 					ViewHelper.showGlobalWaiting(getActivity(), null);
 				}
-	
 				@Override
 				public void onEnd(byte[] data) {
-					try {
-						String str = new String(data,"utf-8");
-						JSONArray arr= new JSONArray(str);
+					onEnd();
+					JSONObject response = toJSONObject(data);
+					if(isRight(response)){
+						JSONArray arr= response.optJSONArray(Const.STA_DATA);
 						ListAdapter adapter = fNListView.getAdapter();
 						if(adapter instanceof AdapterExt){
 							((AdapterExt)adapter).updateAdapter(AdapterExt.makeFNewsDataArray(arr));
 						}else if(adapter instanceof HeaderViewListAdapter){
 							((AdapterExt)((HeaderViewListAdapter)adapter).getWrappedAdapter()).updateAdapter(AdapterExt.makeFNewsDataArray(arr));
 						}
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
-					} catch (JSONException e) {
-						e.printStackTrace();
-					} finally {
-						ViewHelper.closeGlobalWaiting();
+					}else{
+						
 					}
 				}
-			}, "last_fnews");
-			NetTool.data().http(rd.syncCallback());
+			}, jsonObject, UrlUtils.self().getPodCastList());
 		}
 		{
 			final ListView fNListView = (ListView)vg.getChildAt(1);

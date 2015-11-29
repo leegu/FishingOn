@@ -8,12 +8,20 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.go.fish.MainApplication;
+import com.go.fish.user.User;
 
 public class MapUtil {
 
 	private static String DISTANCE_KM = "距您%s公里";
 	private static String DISTANCE_M = "距您%s米";
+	/**
+	 * 获取距离
+	 * @param d_value 单位米
+	 * @return
+	 */
 	public static String getDistance(double d_value){
 		if(d_value >= 10000){
 			int s = (int)(d_value / 1000);
@@ -22,6 +30,11 @@ public class MapUtil {
 		}else{
 			return String.format(DISTANCE_M, (int)d_value + "");
 		}
+	}
+	public static String getDistance(double d_lng,double d_lat){
+		LatLng p = new LatLng(d_lat, d_lng);
+		LatLng p1 = new LatLng(User.self().userInfo.lat,User.self().userInfo.lng);
+		return getDistance(DistanceUtil.getDistance(p, p1));
 	}
 	public static MapView newMap(Context context){
 		BaiduMapOptions bmo = new BaiduMapOptions();

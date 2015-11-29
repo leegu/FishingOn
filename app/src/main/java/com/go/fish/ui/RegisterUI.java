@@ -79,14 +79,22 @@ public class RegisterUI extends BaseUI {
 	public void onClick(View view) {
 		int id = view.getId();
 		switch (id) {
-		case R.id.reg_next: {
-			String num = ((TextView) findViewById(R.id.text_phone_num_input))
+		case R.id.reg_next: {//注册
+			try {
+				JSONObject data = new JSONObject("{token:\"sdfsdsfdsfdxcvdgfh\",longitude:\"119.404\",latitude:\"39.915\",name:\"owen\",imgUrl:\"http://a.hiphotos.baidu.com/image/pic/item/dcc451da81cb39db2eae1257d2160924ab183040.jpg\",mobile:\"18588888888\"}");
+				User.self().userInfo = PersonData.newInstance(data);
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+			replace(regNextFragment);
+			if(true) return;
+			final String num = ((TextView) findViewById(R.id.text_phone_num_input))
 					.getText().toString();
 			if (TextUtils.isEmpty(num) || num.length() != 11) {
 				ViewHelper.showToast(this, Const.DEFT_PLEASE_INPUT_RIGHT_PHONE_NUMBER);
 				return;
 			}
-			String login_pswd_input = ((TextView) findViewById(R.id.login_pswd_input))
+			final String login_pswd_input = ((TextView) findViewById(R.id.login_pswd_input))
 					.getText().toString();
 			if (TextUtils.isEmpty(login_pswd_input)) {
 				ViewHelper.showToast(this, Const.DEFT_PLEASE_INPUT_RIGHT_PSWD);
@@ -116,17 +124,12 @@ public class RegisterUI extends BaseUI {
 				public void onEnd(byte[] bytes) {
 					ViewHelper.closeGlobalWaiting();
 					JSONObject response = toJSONObject(bytes);
-					if(response == null){
-						try {
-							response = new JSONObject("{\"code\":1,\"isError\":false,\"message\":\"success\",\"remark\":\"\",\"data\":{\"token\":\"ASDFCGUDHJFJHSGKH151230\"},\"unlogin\":\"\",\"exception\":\"\",\"error\":\"\"}");
-						} catch (Exception e) {
-						}
-					}
 					if (response != null ){
-						if( response.has(Const.STA_CODE)
-							&& response.optString(Const.STA_CODE).equals(Const.DEFT_1)) {
+						if(isRight(response)) {
 							JSONObject data = response.optJSONObject(Const.STA_DATA);
 							LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
+							LocalMgr.self().saveUserInfo(Const.K_num, num);
+							LocalMgr.self().saveUserInfo(Const.K_pswd, login_pswd_input);
 							User.self().userInfo = PersonData.newInstance(data);
 							showRegNext = true;
 							replace(regNextFragment);
