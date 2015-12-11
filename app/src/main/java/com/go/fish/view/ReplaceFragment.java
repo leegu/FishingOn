@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.go.fish.R;
 import com.go.fish.data.PersonData;
 import com.go.fish.user.User;
+import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 
 public class ReplaceFragment extends Fragment{
@@ -34,12 +35,7 @@ public class ReplaceFragment extends Fragment{
 			{
 				TextView reg_next_phone_num = (TextView)view.findViewById(R.id.reg_next_phone_num);
 				if(!TextUtils.isEmpty(userInfo.mobileNum)){
-					String num = userInfo.mobileNum.trim();
-					if(num.length() > 11){
-						num = num.substring(num.length() - 11);
-					}
-					num = new StringBuffer(num.substring(0,3)).append(" ").append(num.substring(3,7)).append(" ").append(num.substring(7)).toString();
-					reg_next_phone_num.setText(num);
+					reg_next_phone_num.setText(BaseUtils.formatPhoneNum(userInfo.mobileNum));
 				}
 			}
 			{

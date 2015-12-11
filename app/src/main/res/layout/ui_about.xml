@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:gravity="bottom"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            style="@style/head_bar_style"
+            android:layout_width="match_parent" >
+
+            <RelativeLayout
+                android:id="@+id/comment_publish_back"
+                style="@style/head_bar_pic_left_btn_style" >
+
+                <ImageView
+                    style="@style/head_bar_pic_style"
+                    android:src="@drawable/arrow_left" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/base_ui_commit"
+                style="@style/head_bar_text_right_btn_style"
+                android:text="提交"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/base_head_bar_title"
+                style="@style/head_bar_title_style"
+                android:layout_toLeftOf="@id/base_ui_commit"
+                android:layout_toRightOf="@id/comment_publish_back"
+                android:text="关于去哪钓" >
+            </TextView>
+
+            <TextView
+                style="@style/head_bar_bottom_line_style"
+                android:layout_alignParentBottom="true" >
+            </TextView>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageView style="@style/login_icon_style" />
+
+                <TextView
+                    android:id="@+id/ui_about_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/base_space"
+                    android:paddingTop="@dimen/base_space"
+                    android:text="v1.0.0"
+                    android:textColor="#999999" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    style="@style/login_listitem_style"
+                    android:layout_height="40dp" >
+
+                    <TextView
+                        android:id="@+id/yx_t"
+                        style="@style/base_tips_style"
+                        android:textSize="@dimen/base_font_size_h4"
+                        android:text="邮箱" />
+
+                    <TextView
+                        style="@style/base_input_style"
+                        android:layout_marginLeft="@dimen/list_item_divider"
+                        android:layout_toRightOf="@id/yx_t"
+                        android:textSize="@dimen/base_font_size_h3"
+                        android:text="aaa@163.com" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    style="@style/login_listitem_style"
+                    android:layout_height="40dp" >
+
+                    <TextView
+                        android:id="@+id/phone_t"
+                        style="@style/base_tips_style"
+                        android:textSize="@dimen/base_font_size_h4"
+                        android:text="电话" />
+
+                    <TextView
+                        style="@style/base_input_style"
+                        android:layout_marginLeft="@dimen/list_item_divider"
+                        android:layout_toRightOf="@id/phone_t"
+                        android:textSize="@dimen/base_font_size_h3"
+                        android:text="0109638527" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    style="@style/login_listitem_style"
+                    android:layout_height="40dp" >
+
+                    <TextView
+                        android:id="@+id/org_t"
+                        style="@style/base_tips_style"
+                        android:textSize="@dimen/base_font_size_h4"
+                        android:text="公司" />
+
+                    <TextView
+                        style="@style/base_input_style"
+                        android:layout_marginLeft="@dimen/list_item_divider"
+                        android:layout_toRightOf="@id/org_t"
+                        android:textSize="@dimen/base_font_size_h3"
+                        android:text="去哪钓公司" />
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="@dimen/base_space_2"
+            android:paddingBottom="@dimen/base_space_2"
+            android:textSize="@dimen/base_font_size_h1"
+            android:text="Copyright ©2015-2016 去哪钓 All Rights Reserved "
+            android:textColor="@color/text_btn_color" />
+    </LinearLayout>
+
+</RelativeLayout>

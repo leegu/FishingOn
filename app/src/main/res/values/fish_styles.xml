@@ -220,6 +220,25 @@
         <item name="android:layout_centerVertical">true</item>
     </style>
 
+    <style name="user_tag_item">
+
+        <!-- user_tag_item 按钮样式 -->
+        <item name="android:paddingTop">@dimen/base_space</item>
+        <item name="android:paddingBottom">@dimen/base_space</item>
+        <item name="android:paddingLeft">@dimen/base_space_4</item>
+        <item name="android:paddingRight">@dimen/base_space_4</item>
+        <item name="android:background">@drawable/base_border_bg</item>
+        <item name="android:textColor">@color/user_tag_text_color</item>
+        <item name="android:textSize">@dimen/base_font_size_h3</item>
+        <item name="android:onClick">onUserTagClick</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <style name="badger_style">
 
         <!-- badger样式 -->
@@ -404,6 +423,7 @@
     </style>
 
     <style name="fplace_detail_menu_item_text">
+
         <!-- tu样式 -->
         <item name="android:textColor">@color/menu_item_text_color</item>
         <item name="android:gravity">center</item>
@@ -588,6 +608,7 @@
         <item name="android:textColor">@color/text_btn_color</item>
         <item name="android:textSize">@dimen/base_font_size_h4</item>
     </style>
+
     <style name="title_nav_item_bottom_line_style">
         <item name="android:layout_marginLeft">@dimen/base_space_2</item>
         <item name="android:layout_marginRight">@dimen/base_space_2</item>
@@ -596,6 +617,7 @@
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:background">@color/tabitem_foucs_color</item>
     </style>
+
     <style name="title_nav_item_style">
         <item name="android:orientation">vertical</item>
         <item name="android:clickable">true</item>
@@ -604,6 +626,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
     <style name="title_nav_item_text_line_style">
         <item name="android:textColor">@color/text_btn_color</item>
         <item name="android:layout_width">match_parent</item>
@@ -614,31 +637,38 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/base_font_size_h7</item>
     </style>
-    <!--<style name="comment_time_style">
+    <!--
+    <style name="comment_time_style">
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">1分钟前</item>
         <item name="android:textColor">#d2d2d2</item>
-    </style>-->
+    </style>
+    -->
     <style name="comment_list_time_style">
-        <!--<item name="android:layout_toRightOf">@id/comment_listitem_name</item> 设置此在评论列表显示时间-->
+
+        <!-- <item name="android:layout_toRightOf">@id/comment_listitem_name</item> 设置此在评论列表显示时间 -->
         <item name="android:layout_alignParentRight">true</item>
-        <!--<item name="android:paddingLeft">40dp</item>-->
+        <!-- <item name="android:paddingLeft">40dp</item> -->
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">1分钟前</item>
         <item name="android:textColor">#d2d2d2</item>
     </style>
+
     <style name="comment_list_time_right_of_style">
-        <item name="android:layout_toRightOf">@id/comment_listitem_name</item><!-- 设置此在评论列表显示时间-->
+        <item name="android:layout_toRightOf">@id/comment_listitem_name</item>
+ <!-- 设置此在评论列表显示时间 -->
         <item name="android:layout_alignParentRight">true</item>
-        <item name="android:paddingLeft">40dp</item><!---->
+        <item name="android:paddingLeft">40dp</item>
+ <!--  -->
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">1分钟前</item>
         <item name="android:textColor">#d2d2d2</item>
     </style>
+
     <style name="listview_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -646,4 +676,5 @@
         <item name="android:headerDividersEnabled">false</item>
         <item name="android:verticalScrollbarPosition">defaultPosition</item>
     </style>
+
 </resources>

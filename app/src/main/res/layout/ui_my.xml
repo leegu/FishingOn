@@ -96,7 +96,6 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginBottom="@dimen/base_space"
                         android:layout_weight="1.0"
-                        android:text="张三丰"
                         android:textColor="@color/text_btn_color"
                         android:textSize="@dimen/base_font_size_h5" />
 

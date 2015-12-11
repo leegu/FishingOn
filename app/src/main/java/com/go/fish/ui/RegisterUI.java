@@ -46,6 +46,7 @@ public class RegisterUI extends BaseUI {
 		{
 			regNextFragment = new ReplaceFragment();
 			Bundle b = new Bundle();
+			b.putBoolean(Const.PRI_REG_OP, true);
 			b.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_my_sec);
 			regNextFragment.setArguments(b);
 		}
@@ -80,14 +81,14 @@ public class RegisterUI extends BaseUI {
 		int id = view.getId();
 		switch (id) {
 		case R.id.reg_next: {//注册
-			try {
-				JSONObject data = new JSONObject("{token:\"sdfsdsfdsfdxcvdgfh\",longitude:\"119.404\",latitude:\"39.915\",name:\"owen\",imgUrl:\"http://a.hiphotos.baidu.com/image/pic/item/dcc451da81cb39db2eae1257d2160924ab183040.jpg\",mobile:\"18588888888\"}");
-				User.self().userInfo = PersonData.newInstance(data);
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-			replace(regNextFragment);
-			if(true) return;
+//			try {
+//				JSONObject data = new JSONObject("{token:\"sdfsdsfdsfdxcvdgfh\",longitude:\"119.404\",latitude:\"39.915\",name:\"owen\",imgUrl:\"http://a.hiphotos.baidu.com/image/pic/item/dcc451da81cb39db2eae1257d2160924ab183040.jpg\",mobile:\"18588888888\"}");
+//				User.self().userInfo = PersonData.newInstance(data);
+//			} catch (JSONException e1) {
+//				e1.printStackTrace();
+//			}
+//			replace(regNextFragment);
+//			if(true) return;
 			final String num = ((TextView) findViewById(R.id.text_phone_num_input))
 					.getText().toString();
 			if (TextUtils.isEmpty(num) || num.length() != 11) {

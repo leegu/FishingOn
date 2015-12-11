@@ -14,6 +14,7 @@ import com.go.fish.ui.HomeUI;
 import com.go.fish.user.User;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
+import com.go.fish.util.LogUtils;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.UrlUtils;
 import com.go.fish.view.SplashView;
@@ -32,11 +33,12 @@ public class MainActivity extends Activity {
 		if(testView()){
 			return;
 		}
+		LogUtils.d("yl", "MainActivity welcome_ed=" + welcome_ed);
 		if(welcome_ed){
 			if(isLogined()){
 				//TODO刷新登陆
 				//成功进入首页面
-				String num = LocalMgr.self().getUserInfo(Const.K_num);
+				final String num = LocalMgr.self().getUserInfo(Const.K_num);
 				String pswd = LocalMgr.self().getUserInfo(Const.K_pswd);
 				JSONObject jsonObject = new JSONObject();
 				try {
@@ -54,6 +56,7 @@ public class MainActivity extends Activity {
 								JSONObject data = response.optJSONObject(Const.STA_DATA);
 								LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
 								User.self().userInfo = PersonData.newInstance(data);
+								User.self().userInfo.mobileNum = num;
 								showHomeUI();
 							} else {
 								showLoginUI();
@@ -72,6 +75,7 @@ public class MainActivity extends Activity {
 			new SplashView(this,new IOnWelcomedListener(){
 				@Override
 				public void onClick() {
+					LogUtils.d("yl", "MainActivity saveUserInfo welcome_ed");
 					LocalMgr.self().saveUserInfo(Const.K_Welcomed,"true");
 				}
 			},vp);

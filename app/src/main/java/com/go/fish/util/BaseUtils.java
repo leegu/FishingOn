@@ -59,4 +59,13 @@ public class BaseUtils {
     public static String[] splitString(Object str){
         return String.valueOf(str).split("\\|");
     }
+    
+    public static String formatPhoneNum(String num){
+    	num = num.trim();
+		if(num.length() > 11){
+			num = num.substring(num.length() - 11);
+		}
+		num = new StringBuffer(num.substring(0,3)).append(" ").append(num.substring(3,7)).append(" ").append(num.substring(7)).toString();
+		return num;
+    }
 }

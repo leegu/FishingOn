@@ -204,4 +204,9 @@ public class UrlUtils {
     public String getUploadUserImg() {
     	return getHost() + uploadUserImg;
     }
+    
+    String setLocation = "/member/setLocation";
+    public String getSetLocation() {
+    	return getHost() + setLocation;
+    }
 }

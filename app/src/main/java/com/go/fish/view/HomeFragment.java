@@ -19,8 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.HeaderViewListAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.barcode.BarcodeUI;
@@ -29,6 +31,8 @@ import com.go.fish.data.MyListitemData;
 import com.go.fish.ui.SearchUI;
 import com.go.fish.ui.UICode;
 import com.go.fish.ui.UIMgr;
+import com.go.fish.user.User;
+import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
 import com.go.fish.util.MessageHandler;
@@ -238,8 +242,27 @@ public class HomeFragment extends Fragment {
 	public void onHide(){
 		showStatus = false;
 	}
+	void onShowMyView(){
+		//更新关注数量，头像信息，昵称
+	}
 	private void onCreateMyView(ViewGroup view) {
 		{
+			{//更新用户名,头像，手机号
+				TextView userPhoneNumber = (TextView)view.findViewById(R.id.userPhoneNumber);
+				userPhoneNumber.setText(BaseUtils.formatPhoneNum(User.self().userInfo.mobileNum));
+				
+				TextView userName = (TextView)view.findViewById(R.id.userName);
+				if(!TextUtils.isEmpty(User.self().userInfo.userName)){
+					userName.setText(User.self().userInfo.userName);
+				}else{
+					userName.setText("" + User.self().userInfo.id);
+				}
+				
+				if(!TextUtils.isEmpty(User.self().userInfo.photoUrl)){
+					ImageView userIcon = (ImageView)view.findViewById(R.id.userIcon);
+					ViewHelper.load(userIcon, User.self().userInfo.photoUrl, true);
+				}
+			}
 			final ListView list1 = (ListView)view.findViewById(R.id.ui_f_my_listview1);
 			list1.setDividerHeight(0);
 			MyListitemAdapter.fillToListView(list1,R.array.hmy_listview1, R.array.hmy_listview1_icons);
@@ -251,9 +274,11 @@ public class HomeFragment extends Fragment {
 
 				@Override
 				public void onExecute() {
-					MyListitemAdapter listitemAdapter = (MyListitemAdapter) list1.getAdapter();
-					((MyListitemData) listitemAdapter.getItem(1)).bedgerNumber = 45;
-					((MyListitemData) listitemAdapter.getItem(1)).subLabel = "钓场~播况~GO";
+//					MyListitemAdapter listitemAdapter = (MyListitemAdapter) list1.getAdapter();
+//					((MyListitemData) listitemAdapter.getItem(1)).bedgerNumber = 45;
+//					((MyListitemData) listitemAdapter.getItem(1)).subLabel = "钓场~播况~GO";
+//					((MyListitemData) listitemAdapter.getItem(0)).bedgerNumber = 15;
+//					((MyListitemData) listitemAdapter.getItem(0)).subLabel = "gaga";
 				}
 			});
 			list1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -300,12 +325,13 @@ public class HomeFragment extends Fragment {
 //					问题反馈  清空缓存  关于我们
 					switch (position) {
 						case 0://问题反馈
-//							UIMgr.showActivity(getActivity(),R.layout.ui_comment_publish);
+							UIMgr.showActivity(getActivity(),R.layout.ui_advice);
 							break;
 						case 1://清除缓存
-//							LocalMgr.self().clearCache();
+							LocalMgr.self().clearCache();
 							break;
 						case 2:
+							UIMgr.showActivity(getActivity(),R.layout.ui_about);
 //							Intent i = new Intent();
 //							i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_barcode);
 //							i.putExtra(Const.PRI_TO_QR_CONTENT,"13245698756");

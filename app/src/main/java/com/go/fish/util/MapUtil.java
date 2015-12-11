@@ -48,6 +48,12 @@ public class MapUtil {
 	public static void getLocation(Activity context,OnGetLocationListener listener){
 		getLocation(context,listener,0);
 	}
+	/**
+	 * 
+	 * @param context
+	 * @param listener
+	 * @param span 单位毫米
+	 */
 	public static void getLocation(Activity context,OnGetLocationListener listener,int span){
 		MainApplication app = (MainApplication)context.getApplication();
 		app.mOnGetLocationListener = listener;

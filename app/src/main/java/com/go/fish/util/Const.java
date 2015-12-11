@@ -23,7 +23,7 @@ public interface Const {
 	String DEFT_REPLY_ = ": ";
 	String DEFT_REPLY_TEXT = "我来评论一下";
 	String DEFT_REQUEST_QUERY_LIST = "野钓,夜钓,高钓,黑坑,舒适";
-	int DEFT_REQ_COUNT = 20;
+	int DEFT_REQ_COUNT = 100;
 	String DEFT_SHARE_CONTENT = "钓鱼帮的分享,精彩尽在http://115.29.51.39/";
 
 	
@@ -39,7 +39,7 @@ public interface Const {
 //	String PRI_WELCOME_ED = "welcome_ed";
 	String K_num = "num";
 	String K_account = "account";
-	String K_pswd = "welcome_ed";
+	String K_pswd = "pswd";
 	String K_Welcomed = "welcome_ed";
 	
 	String PRI_DISTANCE = "distance";
@@ -50,6 +50,7 @@ public interface Const {
 	String PRI_FRAGMENT_TAG = "fragment_tag";
 	String PRI_JSON_DATA = "json";
 	String PRI_LAYOUT_ID = "layout_id";
+	String PRI_REG_OP = "reg_op";
 	String PRI_QR_RESULT = "qr_result";
 	String PRI_TO_QR_CONTENT = "to_qr_content";
 	String SIN_DB_MY_CARE_FNEWS = "db_my_care_fnews";
@@ -94,6 +95,7 @@ public interface Const {
 	String STA_LOWER_COMMENTS = "lowerComments";
 	String STA_MEMBER_ID = "memberId";
 	String STA_MEMBERS = "members";
+	String STA_MEMBER = "member";
 	String STA_MESSAGE = "message";
 	String STA_MOBILE = "mobile";
 	String STA_NAME = "name";
@@ -108,6 +110,7 @@ public interface Const {
 	String STA_PRICE = "price";
 	String STA_PRICE_DATE = "priceDate";
 	
+	String STA_LOCATION = "location";
 	String STA_PRICE_TITLE = "priceTitle";
 	String STA_SIZE = "size";
 	String STA_START_INDEX = "startIndex";

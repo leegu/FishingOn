@@ -8,6 +8,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,6 +20,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -116,7 +120,55 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		case R.layout.ui_zan:
 			onCreateZanList();
 			break;
+		case R.layout.ui_about:
+			try {
+				TextView ver = (TextView)findViewById(R.id.ui_about_version);
+				PackageManager pm = getPackageManager();  
+				PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);  
+				String s_ver = pi.versionName;
+				if(!s_ver.startsWith("v")){
+					s_ver = "v" + s_ver;
+				}
+				ver.setText(s_ver);
+			} catch (NameNotFoundException e) {
+				e.printStackTrace();
+			}
+			break;
 		case R.layout.ui_my_sec:
+			TextView reg_next_phone_num = (TextView)findViewById(R.id.reg_next_phone_num);
+			reg_next_phone_num.setText(BaseUtils.formatPhoneNum(User.self().userInfo.mobileNum));
+			TextView reg_next_account = (TextView)findViewById(R.id.reg_next_account);
+			reg_next_account.setText("" + User.self().userInfo.id);
+			if(getIntent().hasExtra(Const.PRI_REG_OP) && getIntent().getBooleanExtra(Const.PRI_REG_OP,false)){
+				//注册进入
+				
+			}else{
+				if(User.self().userInfo.fYears > 0){
+					TextView reg_next_fishing_years_spinner = (TextView)findViewById(R.id.reg_next_fishing_years_spinner);
+					reg_next_fishing_years_spinner.setText(User.self().userInfo.fYears + "年龄");
+				}
+				if(User.self().userInfo.fTimes > 0){
+					TextView reg_next_fishing_times_spinner = (TextView)findViewById(R.id.reg_next_fishing_times_spinner);
+					reg_next_fishing_times_spinner.setText("" + User.self().userInfo.fTimes);
+				}
+				TextView reg_next_location_input = (TextView)findViewById(R.id.reg_next_location_input);
+				reg_next_location_input.setText(User.self().userInfo.address);
+				ViewGroup alvg = (ViewGroup)findViewById(R.id.tags);
+//				String[] str = new String[]{"夜钓"};
+//				if(str.length > 0){
+				alvg.setVisibility(View.VISIBLE);
+//					LayoutInflater mInflater = LayoutInflater.from(this);
+//					for(int i =0;i < str.length; i++){
+//						ViewGroup item_tag = (ViewGroup)mInflater.inflate(R.layout.item_tag, null);
+//						TextView tv = (TextView)item_tag.getChildAt(0);
+//						tv.setText(str[i]);
+//						alvg.addView(item_tag);
+//					}
+//				}else{
+//					((View)alvg.getParent()).setVisibility(View.GONE);
+//				}
+				
+			}
 			break;
 		case R.layout.ui_forget_pswd:
 		case R.layout.ui_login:
@@ -137,6 +189,9 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		}
 	}
 
+	public void onUserTagClick(View view){
+		view.setSelected(!view.isSelected());
+	}
 	int PADDING = 20;
 
 	private void addImageView(final ViewGroup parent, final String filePath,
@@ -509,6 +564,29 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				jsonObject.put(Const.STA_FISH_YEAR, ((TextView)findViewById(R.id.reg_next_fishing_years_spinner)).getText().toString());
 				jsonObject.put(Const.STA_FISH_TIMES, ((TextView)findViewById(R.id.reg_next_fishing_times_spinner)).getText().toString());
 				jsonObject.put(Const.STA_ADDRESS, ((TextView)findViewById(R.id.reg_next_location_input)).getText().toString());
+				StringBuffer tags = new StringBuffer();
+				{
+					ViewGroup tag1 = (ViewGroup)findViewById(R.id.tags_1);
+					for(int i = 0;i < tag1.getChildCount(); i++){
+						TextView v = (TextView)tag1.getChildAt(i);
+						if(v.isSelected()){
+							tags.append(v.getText()).append(",");
+						}
+					}
+				}
+				{
+					ViewGroup tag1 = (ViewGroup)findViewById(R.id.tags_2);
+					for(int i = 0;i < tag1.getChildCount(); i++){
+						TextView v = (TextView)tag1.getChildAt(i);
+						if(v.isSelected()){
+							tags.append(v.getText()).append(",");
+						}
+					}
+				}
+				if(tags.length() > 0 && tags.charAt(tags.length() - 1) == ','){
+					tags.deleteCharAt(tags.length() - 1);
+				}
+				jsonObject.put(Const.STA_TAG, tags);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -1022,6 +1100,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 							LocalMgr.self().saveUserInfo(Const.K_num, num);
 							LocalMgr.self().saveUserInfo(Const.K_pswd, login_pswd_input);
 							User.self().userInfo = PersonData.newInstance(data);
+							User.self().userInfo.mobileNum = num;
 							showHomeUI();
 						} else {
 							ViewHelper.showToast(BaseUI.this, response.optString(Const.STA_MESSAGE));

@@ -213,7 +213,7 @@ public class NetTool {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				// TODO Auto-generated method stub
-				if(rData != null){
+				if(rData != null && error != null){
 					if(BuildConfig.DEBUG){
 						Log.e("yl", "onErrorResponse request:(" + rData.url + " "+ rData.mJsonData + ") response:(" + error.networkResponse.statusCode +" " + error.networkResponse.headers + ")");
 					}

@@ -22,8 +22,8 @@
 
         <RelativeLayout
             android:id="@+id/base_head_bar_ok"
-            style="@style/head_bar_pic_right_btn_style"
-            >
+            style="@style/head_bar_pic_right_btn_style" >
+
             <ImageView
                 style="@style/head_bar_pic_style"
                 android:background="@drawable/ok" />
@@ -164,11 +164,11 @@
                 <TextView
                     android:id="@+id/reg_next_fishing_years_spinner"
                     style="@style/base_input_style"
-                    android:onClick="onSelect"
                     android:layout_marginLeft="@dimen/list_item_divider"
                     android:layout_toRightOf="@id/reg_next_fishing_years_text"
                     android:hint="@string/reg_next_release_chose"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:onClick="onSelect" />
 
                 <TextView
                     style="@style/head_bar_bottom_line_style"
@@ -188,11 +188,88 @@
                 <TextView
                     android:id="@+id/reg_next_fishing_times_spinner"
                     style="@style/base_input_style"
-                    android:onClick="onSelect"
                     android:layout_marginLeft="@dimen/list_item_divider"
                     android:layout_toRightOf="@id/reg_next_fishing_times_text"
                     android:hint="@string/reg_next_release_chose"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:onClick="onSelect" />
+
+                <TextView
+                    style="@style/head_bar_bottom_line_style"
+                    android:layout_alignParentBottom="true" >
+                </TextView>
+            </RelativeLayout>
+            <!-- android:visibility="gone" -->
+
+            <RelativeLayout
+                android:id="@+id/tags"
+                style="@style/login_listitem_style"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tag_t"
+                    style="@style/base_tips_style"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="false"
+                    android:paddingTop="10dp"
+                    android:text="标签" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/list_item_divider"
+                    android:layout_marginTop="@dimen/list_item_divider"
+                    android:layout_toRightOf="@id/tag_t"
+                    android:background="@color/base_ui_background_color"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:id="@+id/tags_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/base_space" >
+
+                        <TextView
+                            style="@style/user_tag_item"
+                            android:text="黑坑" >
+                        </TextView>
+
+                        <TextView
+                            style="@style/user_tag_item"
+                            android:text="夜钓" >
+                        </TextView>
+
+                        <TextView
+                            style="@style/user_tag_item"
+                            android:text="冰钓" >
+                        </TextView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tags_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/base_space" >
+
+                        <TextView
+                            style="@style/user_tag_item"
+                            android:text="野钓" >
+                        </TextView>
+
+                        <TextView
+                            style="@style/user_tag_item"
+                            android:text="高钓" >
+                        </TextView>
+
+                        <TextView
+                            style="@style/user_tag_item"
+                            android:text="高钓"
+                            android:visibility="invisible" >
+                        </TextView>
+                    </LinearLayout>
+                </LinearLayout>
 
                 <TextView
                     style="@style/head_bar_bottom_line_style"
@@ -200,29 +277,7 @@
                 </TextView>
             </RelativeLayout>
 
-            <!--
-            <LinearLayout
-                android:id="@+id/ui_my_sec_tags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/list_item_divider"
-                android:background="@color/base_ui_background_color"
-                android:orientation="vertical"
-                android:padding="@dimen/base_space" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="我的标签"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/list_item_base_text_size" />
-
-                <include
-                    android:id="@+id/my_tags"
-                    layout="@layout/w_tags" >
-                </include>
-            </LinearLayout>
-            -->
+            <!--  -->
 
 
             <!-- 定位 -->
@@ -237,13 +292,13 @@
                 <TextView
                     android:id="@+id/reg_next_location_input"
                     style="@style/base_input_style"
-                    android:clickable="true"
-                    android:onClick="onLocation"
-                    android:ellipsize="marquee"
                     android:layout_marginLeft="@dimen/list_item_divider"
                     android:layout_toRightOf="@id/reg_next_location_text"
+                    android:clickable="true"
+                    android:ellipsize="marquee"
                     android:hint="请定位"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:onClick="onLocation" />
 
                 <TextView
                     style="@style/head_bar_bottom_line_style"

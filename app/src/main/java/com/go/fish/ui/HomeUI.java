@@ -2,6 +2,7 @@ package com.go.fish.ui;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroupOverlay;
 import android.view.ViewStub;
+import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -303,11 +305,13 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
             }
         }, 500);
     }
-
+    
+    boolean justUplocation = false;
     @Override
     protected void onResume() {
         super.onResume();
-//		updateLocation();
+        justUplocation = false;
+		updateLocation();
     }
 
     public void onMapFloatViewClick(View view) {//漂浮渔场信息
@@ -368,6 +372,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
     }
     
     private void updateMarkerStatus(ViewGroup parent){
+    	if(mSearchResult == null) return;//不存在搜索结果的时候
     	//获取正在显示的类型
     	int count = parent.getChildCount();
     	ArrayList<Integer> showTags = new ArrayList<Integer>();
@@ -409,12 +414,19 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                 public void onGetLocation(LocationData data) {
                 	User.self().userInfo.lng = data.lng;
     				User.self().userInfo.lat = data.lat;
-                    final LatLng userP = new LatLng(data.lat, data.lng);
-                    {//移动到自己位置
-                        MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(userP);
-                        mBaiduMap.animateMapStatus(u);
-                    }
-
+    				User.self().userInfo.address = data.address;
+    				if(justUplocation){//更新实时位置
+    					JSONObject jsonObject = new JSONObject();
+            			try {
+            				jsonObject.put(Const.STA_LAT, String.valueOf(data.lat));
+            				jsonObject.put(Const.STA_LNG, String.valueOf(data.lng));
+            				jsonObject.put(Const.STA_LOCATION, User.self().userInfo.address);
+            			} catch (JSONException e) {
+            				e.printStackTrace();
+            			}
+                        NetTool.data().http(null, jsonObject,UrlUtils.self().getSetLocation());
+    					return;
+    				}
                     JSONObject jsonObject = new JSONObject();
         			try {
         				jsonObject.put(Const.STA_LAT, String.valueOf(data.lat));
@@ -438,60 +450,8 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                                         JSONObject resultData = toJSONObject(data);
                                         if(resultData != null ){
                                             if( isRight(resultData)){
-                                                JSONArray jsonArray = resultData.optJSONArray(Const.STA_DATA);
-                                                mSearchResult = new ArrayList<Marker>();
-                                                BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.point);
-                                                int count = jsonArray.length();
-//                                                count = 20;//test
-                                                for (int i = 0; i < count; i++) {
-//                                                    JSONArray typeFPlaceArr = jsonArray.optJSONArray(i);
-//                                                    ArrayList<Marker> typeMarkers = new ArrayList<Marker>();
-//                                                    for (int j = 0; j < typeFPlaceArr.length(); j++) {
-                                                        try {
-//                                                            JSONObject json = jsonArray.optJSONObject(0);
-                                                            JSONObject json = jsonArray.optJSONObject(i);//test
-//                                                            double d1 = new Random().nextDouble();
-//                                                            d1 = d1 - (int)d1;
-//                                                            double d2 = new Random().nextDouble();
-//                                                            d2 = d2 - (int)d2;
-//                                                            LatLng p = new LatLng(json.optDouble(Const.STA_LAT) + d1, json.optDouble(Const.STA_LNG) + d2);
-                                                            LatLng p = new LatLng(json.optDouble(Const.STA_LAT), json.optDouble(Const.STA_LNG));
-                                                            OverlayOptions ooD = new MarkerOptions().position(p).icon(bdA);
-                                                            Marker mMarkerD = (Marker) (mBaiduMap.addOverlay(ooD));
-                                                            mSearchResult.add(mMarkerD);
-                                                            Bundle b = new Bundle();
-                                                            int fPlaceId = json.optInt(Const.STA_ID);
-                                                            b.putString(Const.STA_NAME, json.optString(Const.STA_NAME));
-                                                            b.putDouble(Const.PRI_DISTANCE, DistanceUtil.getDistance(userP, p));
-                                                            b.putInt(Const.STA_ID, fPlaceId);
-                                                            b.putInt(Const.STA_CARE_COUNT, json.optInt(Const.STA_CARE_COUNT, 0));
-                                                            if (json.has(Const.STA_PIRCES)) {
-                                                                b.putString(Const.STA_PIRCES, json.optJSONArray(Const.STA_PIRCES).toString());
-                                                            }
-                                                            String tags = json.optString(Const.STA_TAG);
-//                                                            tags = "高钓，冰钓，舒适，黑坑";
-                                                            if(!TextUtils.isEmpty(tags)){
-                                                            	String[] ts = tags.split("，");
-                                                            	int[] i_tags = new int[ts.length];//test
-//                                                            	int[] i_tags = new int[1];//test
-//                                                            	int random = Math.abs(new Random().nextInt(10));
-//                                                            	int tag_i = random % ts.length;
-//                                                            	LogUtils.d("random", "rand=" + random + ";length=" + ts.length + ";tag_i=" + tag_i);
-                                                            	for(int tag_i = 0; tag_i < ts.length; tag_i++){//test
-                                                            		String s_tag = ts[tag_i];
-                                                            		i_tags[tag_i] = convertInt(s_tag);//test
-//                                                            		i_tags[0] = convertInt(s_tag);//test
-                                                            	}
-                                                            	
-                                                            	b.putIntArray(Const.STA_TAG, i_tags);
-                                                            }
-                                                            mMarkerD.setExtraInfo(b);
-//                                                            typeMarkers.add(mMarkerD);
-                                                        } catch (Exception e) {
-                                                            e.printStackTrace();
-                                                        }
-//                                                    }
-                                                }
+                                            	justUplocation = true;
+                                            	makeQueryMapResultMarkers(resultData);
                                             }else{
                                                 ViewHelper.showToast(HomeUI.this,resultData.optString(Const.STA_MESSAGE));
                                             }
@@ -527,11 +487,13 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
     		return 0;
     	}
     }
+    
+    final int interval = 2000; 
     private void onGetNearFPlace() {
         //获取自己位置
-        MapUtil.getLocation(this, initOnGetLocationListener(), 0);
-
+        MapUtil.getLocation(this, initOnGetLocationListener(), interval);
     }
+    
 
     int[] fragmentIds = new int[]{R.id.home_fishing_place, R.id.home_care,
             R.id.home_zixun, R.id.home_fishing_news, R.id.home_my};
@@ -605,7 +567,8 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
     public void onLocation(View view) {
         int id = view.getId();
         switch (id) {
-            case R.id.myloc:
+            case R.id.myloc://我的位置
+            	justUplocation = true;
                 onGetNearFPlace();
                 break;
             case R.id.hfs_fishing_tools_store_btn:
@@ -787,6 +750,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
         int id = view.getId();
         switch (id) {
             case R.id.ui_f_my_go_next: {
+            	//进入到完善页面
                 UIMgr.showActivity(this, R.layout.ui_my_sec, BaseUI.class.getName());
                 break;
             }
@@ -801,7 +765,12 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                 if (resultCode == UICode.ResultCode.RESULT_BARCODE_QR) {
                     String ret = data.getStringExtra(Const.PRI_QR_RESULT);
                     Log.d("onActivityResult", "RESULT_BARCODE_QR " + ret);
-                    Toast.makeText(this, ret, Toast.LENGTH_LONG).show();
+                    if(URLUtil.isNetworkUrl(ret)){
+                    	Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(ret));
+						startActivity(i);
+                    }else{
+                    	Toast.makeText(this, ret, Toast.LENGTH_LONG).show();
+                    }
                 }
                 break;
 
@@ -809,4 +778,66 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                 break;
         }
     }
+
+	private void makeQueryMapResultMarkers(JSONObject resultData) {
+		LatLng userP = new LatLng(User.self().userInfo.lat, User.self().userInfo.lng);
+		 {//移动到自己位置
+		     MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(userP);
+		     mBaiduMap.animateMapStatus(u);
+		 }
+		JSONArray jsonArray = resultData.optJSONArray(Const.STA_DATA);
+		mSearchResult = new ArrayList<Marker>();
+		BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.point);
+		int count = jsonArray.length();
+//                                                count = 20;//test
+		for (int i = 0; i < count; i++) {
+//                                                    JSONArray typeFPlaceArr = jsonArray.optJSONArray(i);
+//                                                    ArrayList<Marker> typeMarkers = new ArrayList<Marker>();
+//                                                    for (int j = 0; j < typeFPlaceArr.length(); j++) {
+		        try {
+//                                                            JSONObject json = jsonArray.optJSONObject(0);
+		            JSONObject json = jsonArray.optJSONObject(i);//test
+//                                                            double d1 = new Random().nextDouble();
+//                                                            d1 = d1 - (int)d1;
+//                                                            double d2 = new Random().nextDouble();
+//                                                            d2 = d2 - (int)d2;
+//                                                            LatLng p = new LatLng(json.optDouble(Const.STA_LAT) + d1, json.optDouble(Const.STA_LNG) + d2);
+		            LatLng p = new LatLng(json.optDouble(Const.STA_LAT), json.optDouble(Const.STA_LNG));
+		            OverlayOptions ooD = new MarkerOptions().position(p).icon(bdA);
+		            Marker mMarkerD = (Marker) (mBaiduMap.addOverlay(ooD));
+		            mSearchResult.add(mMarkerD);
+		            Bundle b = new Bundle();
+		            int fPlaceId = json.optInt(Const.STA_ID);
+		            b.putString(Const.STA_NAME, json.optString(Const.STA_NAME));
+		            b.putDouble(Const.PRI_DISTANCE, DistanceUtil.getDistance(userP, p));
+		            b.putInt(Const.STA_ID, fPlaceId);
+		            b.putInt(Const.STA_CARE_COUNT, json.optInt(Const.STA_CARE_COUNT, 0));
+		            if (json.has(Const.STA_PIRCES)) {
+		                b.putString(Const.STA_PIRCES, json.optJSONArray(Const.STA_PIRCES).toString());
+		            }
+		            String tags = json.optString(Const.STA_TAG);
+//                                                            tags = "高钓，冰钓，舒适，黑坑";
+		            if(!TextUtils.isEmpty(tags)){
+		            	String[] ts = tags.split("，");
+		            	int[] i_tags = new int[ts.length];//test
+//                                                            	int[] i_tags = new int[1];//test
+//                                                            	int random = Math.abs(new Random().nextInt(10));
+//                                                            	int tag_i = random % ts.length;
+//                                                            	LogUtils.d("random", "rand=" + random + ";length=" + ts.length + ";tag_i=" + tag_i);
+		            	for(int tag_i = 0; tag_i < ts.length; tag_i++){//test
+		            		String s_tag = ts[tag_i];
+		            		i_tags[tag_i] = convertInt(s_tag);//test
+//                                                            		i_tags[0] = convertInt(s_tag);//test
+		            	}
+		            	
+		            	b.putIntArray(Const.STA_TAG, i_tags);
+		            }
+		            mMarkerD.setExtraInfo(b);
+//                                                            typeMarkers.add(mMarkerD);
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
+//                                                    }
+		}
+	}
 }

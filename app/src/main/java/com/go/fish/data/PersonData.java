@@ -27,23 +27,28 @@ public class PersonData implements IBaseData {
     
     public static PersonData newInstance(JSONObject json){
         PersonData personData = new PersonData();
-        personData.id = json.optInt(Const.STA_MEMBER_ID);
-        personData.photoUrl = json.optString(Const.STA_IMGURL);
-        personData.userName = json.optString(Const.STA_NAME);
-        personData.userName = "丰";
-        personData.fYears = json.optInt(Const.STA_FISH_YEAR);
-        personData.mobileNum = json.optString(Const.STA_MOBILE);
-        personData.fTimes = json.optInt(Const.STA_FREQUENCY);
-        personData.address = json.optString(Const.STA_ADDRESS);
-        personData.lng = json.optDouble(Const.STA_LNG);
-        personData.lat = json.optDouble(Const.STA_LAT);
-        double d1 = new Random().nextDouble();
-        d1 = d1 - (int)d1;
-        double d2 = new Random().nextDouble();
-        d2 = d2 - (int)d2;
-        personData.lng =  User.self().userInfo.lng + d1;
-        personData.lat = User.self().userInfo.lat + d2;
-		personData.far = MapUtil.getDistance(personData.lat,personData.lng);
+        JSONObject member = json.optJSONObject(Const.STA_MEMBER);
+        if(member != null){
+	        personData.id = member.optInt(Const.STA_MEMBER_ID);
+	        personData.photoUrl = member.optString(Const.STA_IMGURL);
+	        personData.userName = member.optString(Const.STA_NAME);
+	//        personData.userName = "丰";
+	        personData.fYears = member.optInt(Const.STA_FISH_YEAR);
+	        personData.mobileNum = member.optString(Const.STA_MOBILE);
+	        personData.fTimes = member.optInt(Const.STA_FREQUENCY);
+	        personData.address = member.optString(Const.STA_ADDRESS);
+	        personData.lng = member.optDouble(Const.STA_LNG);
+	        personData.lat = member.optDouble(Const.STA_LAT);
+        }
+//        double d1 = new Random().nextDouble();
+//        d1 = d1 - (int)d1;
+//        double d2 = new Random().nextDouble();
+//        d2 = d2 - (int)d2;
+//        personData.lng =  User.self().userInfo.lng + d1;
+//        personData.lat = User.self().userInfo.lat + d2;
+        if(personData.lat > 0){
+        	personData.far = MapUtil.getDistance(personData.lat,personData.lng);
+        }
         return personData;
     }
 }
