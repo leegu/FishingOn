@@ -433,6 +433,8 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
         				jsonObject.put(Const.STA_LNG, String.valueOf(data.lng));
         				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
         				jsonObject.put(Const.STA_TAG, Const.DEFT_REQUEST_QUERY_LIST);
+        				jsonObject.put(Const.STA_TYPE, Const.DEFT_YC);
+        				jsonObject.put(Const.STA_TITLE, "");
         			} catch (JSONException e) {
         				e.printStackTrace();
         			}
@@ -440,7 +442,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                             new NetTool.RequestListener() {
                                 @Override
                                 public void onStart() {
-                                	onStart(HomeUI.this);
+//                                	onStart(HomeUI.this);
                                 }
 
                                 @Override
@@ -456,7 +458,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
                                                 ViewHelper.showToast(HomeUI.this,resultData.optString(Const.STA_MESSAGE));
                                             }
                                         }
-                                        onEnd();
+//                                        onEnd();
                                     }
                                 }
                             }, jsonObject,UrlUtils.self().getQueryForMap());
@@ -818,7 +820,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 		            String tags = json.optString(Const.STA_TAG);
 //                                                            tags = "高钓，冰钓，舒适，黑坑";
 		            if(!TextUtils.isEmpty(tags)){
-		            	String[] ts = tags.split("，");
+		            	String[] ts = tags.split(",");
 		            	int[] i_tags = new int[ts.length];//test
 //                                                            	int[] i_tags = new int[1];//test
 //                                                            	int random = Math.abs(new Random().nextInt(10));

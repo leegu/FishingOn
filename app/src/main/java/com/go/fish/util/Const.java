@@ -23,6 +23,8 @@ public interface Const {
 	String DEFT_REPLY_ = ": ";
 	String DEFT_REPLY_TEXT = "我来评论一下";
 	String DEFT_REQUEST_QUERY_LIST = "野钓,夜钓,高钓,黑坑,舒适";
+	String DEFT_YC = "yc";
+	String DEFT_YJD = "yjd";
 	int DEFT_REQ_COUNT = 100;
 	String DEFT_SHARE_CONTENT = "钓鱼帮的分享,精彩尽在http://115.29.51.39/";
 
@@ -72,6 +74,8 @@ public interface Const {
 	String STA_COMMENT_STR = "commentStr";
 	String STA_COMMENTS = "comments";
 	String STA_COMNUM = "comNum"; 
+	String STA_COMCOUNT = "comCount"; 
+	String STA_ZANCOUNT = "zanCount"; 
 	String STA_CONTACS_US = "contactUs";
 	String STA_CONTENT = "content";
 	String STA_CREATED_AT_TIME = "createdAt";
@@ -90,6 +94,8 @@ public interface Const {
 	String STA_IMGURL = "imgUrl";
 	String STA_INTRODUCTION = "introduction";
 	String STA_ISERROR = "isError";
+	String STA_IS_ATTENTION = "isAttention";
+	String STA_IS_ZAN = "isZan";
 	String STA_LAT = "latitude";
 	String STA_LNG = "longitude";
 	String STA_LOWER_COMMENTS = "lowerComments";
@@ -99,6 +105,7 @@ public interface Const {
 	String STA_MESSAGE = "message";
 	String STA_MOBILE = "mobile";
 	String STA_NAME = "name";
+	String STA_USER_NAME = "userName";
 	String STA_NEWS_ID = "news_id";
 
 	String STA_OBJECTID = "objectId";

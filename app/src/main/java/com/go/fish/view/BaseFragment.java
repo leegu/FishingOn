@@ -299,11 +299,10 @@ public class BaseFragment extends Fragment {
 				updateState(menu_contents,menu_item_contents,0,listener);
 
 				//关注
-				int careCount = 0;
+				int careCount = json.optInt(Const.STA_CARE_COUNT);//总关注数
 				if(json.has(Const.STA_MEMBERS)){
 					JSONArray members = json.optJSONArray(Const.STA_MEMBERS);
-					careCount = members.length();
-					careCount = 8;
+					int careCountThumb = members.length();//详情页待会关注数，永远小总关注数
 					OnClickListener careIcon = new OnClickListener(){
 						@Override
 						public void onClick(View v) {
@@ -317,7 +316,7 @@ public class BaseFragment extends Fragment {
 						ImageView careItem = (ImageView) ((ViewGroup)care_container.getChildAt(i)).getChildAt(0);
 //						ImageView careItem = (ImageView) vs.inflate();
 						careItem.setOnClickListener(careIcon);
-						if(careCount > 7){
+						if(careCountThumb > 7){
 							//显示剩余20+
 							if(i == 6){
 								careItem.setTag("more|" + fieldId);
@@ -326,15 +325,15 @@ public class BaseFragment extends Fragment {
 								td.setTextColor(0xFF888888);
 								td.setSize(200, 200);
 								String text = null;
-								if(careCount - 6 > 99){
+								if(careCountThumb - 6 > 99){
 									text = "99+";
 								}else{
-									text = String.valueOf(careCount - 6);
+									text = String.valueOf(careCountThumb - 6);
 								}
 								td.setText(text);
 								td.setTextAlign(Layout.Alignment.ALIGN_CENTER);
 								careItem.setImageDrawable(td);
-							}else if(i > careCount){
+							}else if(i > careCountThumb){
 								careItem.setVisibility(View.GONE);
 							}else {
 								JSONObject member = members.optJSONObject(0);
@@ -345,7 +344,7 @@ public class BaseFragment extends Fragment {
 								ViewHelper.load(careItem, imgUrl, true, false);
 							}
 						}else{
-							if(careCount < 7 && i >= careCount) {
+							if(careCountThumb < 7 && i >= careCountThumb) {
 								careItem.setVisibility(View.GONE);
 							}else{
 								JSONObject member = members.optJSONObject(0);
@@ -359,17 +358,17 @@ public class BaseFragment extends Fragment {
 					}
 				}
 				//评论
-				int commentSize = 0;
+				int commentSize = json.optInt(Const.STA_COMCOUNT);//总评论数
 				if(json.has(Const.STA_COMMENTS)){
 					JSONArray comments = json.optJSONArray(Const.STA_COMMENTS);
 					ViewGroup commentListView = (ViewGroup) view.findViewById(R.id.last_comment);
-					commentSize = comments.length();
+					int commentSizeThumb = comments.length();//详情页返回评论数
 					for(int i = 0; i < 3;  i++){
 						boolean able = true;
 						View item = commentListView.getChildAt(i);
 						JSONObject commentJson = comments.optJSONObject(0);
-						if(commentSize <= 3){
-							if(i < commentSize){
+						if(commentSizeThumb <= 3){
+							if(i < commentSizeThumb){
 								item.setVisibility(View.VISIBLE);
 							}else{
 								able = false;
@@ -395,50 +394,76 @@ public class BaseFragment extends Fragment {
 				}
 				int zanCount = 0;
 				{
+					zanCount = json.optInt(Const.STA_ZANCOUNT);
+					
 					OnClickListener clickListener = new OnClickListener() {
 						@Override
 						public void onClick(final View v) {
 							int id = v.getId();
 							if(id == R.id.detail_bottom_bar_care_icon){
-								((ImageView)((ViewGroup)v).getChildAt(0)).setImageResource(R.drawable.hart_care);
-								int oldCount = Integer.parseInt(((TextView) view.findViewById(R.id.detail_bottom_bar_care_number)).getText().toString());
-								((TextView) view.findViewById(R.id.detail_bottom_bar_care_number)).setText(String.valueOf(oldCount + 1));
-							}else if(id == R.id.detail_bottom_bar_comment_icon){
-								v.setTag(fieldId);
-								int oldCount = Integer.parseInt(((TextView) view.findViewById(R.id.detail_bottom_bar_comment_number)).getText().toString());
-								((TextView) view.findViewById(R.id.detail_bottom_bar_comment_number)).setText(String.valueOf(oldCount + 1));
-								((BaseUI)getActivity()).onCommentReplyClick(v);
-							}else if(id == R.id.detail_bottom_bar_zan_icon){
+								final View destView = ((ImageView)((ViewGroup)v).getChildAt(0));
 								JSONObject jsonObject = new JSONObject();
 								try {
 									jsonObject.put(Const.STA_FIELDID, fieldId);
-									jsonObject.put(Const.STA_TYPE, "gz");
+									jsonObject.put(Const.STA_TYPE, (destView.isSelected() ? "qxgz":"gz"));
 								} catch (JSONException e) {
 									e.printStackTrace();
 								}
+								destView.setSelected(!destView.isSelected());
 								NetTool.data().http(new NetTool.RequestListener() {
 									@Override
 									public void onEnd(byte[] data) {
 										JSONObject response = toJSONObject(data);
-//									if(response == null){
-//										try {
-//											response = new JSONObject("{\"code\":1,\"isError\":false,\"message\":\"success\",\"remark\":\"\",\"data\":{\"validateCode\":\"151230\"},\"unlogin\":\"\",\"exception\":\"\",\"error\":\"\"}");
-//										} catch (Exception e) {
-//										}
-//									}
-										int oldCount = Integer.parseInt(((TextView) view.findViewById(R.id.detail_bottom_bar_zan_number)).getText().toString());
-										((TextView) view.findViewById(R.id.detail_bottom_bar_zan_number)).setText(String.valueOf(oldCount + 1));
-										((ImageView)((ViewGroup)v).getChildAt(0)).setImageResource(R.drawable.zan_);
-										if (response != null && response.has(Const.STA_CODE) && response.optString(Const.STA_CODE).equals(Const.DEFT_1)) {
+										if (isRight(response)) {
+											int careCount = response.optInt(Const.STA_CARE_COUNT);
+											((TextView) view.findViewById(R.id.detail_bottom_bar_care_number)).setText(String.valueOf(careCount));
 //											((TextView) findViewById(R.id.checkCode)).setText(response.optJSONObject(Const.STA_DATA).optString(Const.STA_VALIDATECODE));
 										} else {
 //											ViewHelper .showToast(getActivity(), Const.DEFT_GET_CHECK_CODE_FAILED);
 										}
 									}
 								},jsonObject, UrlUtils.self().getAttention());
+								
+							}else if(id == R.id.detail_bottom_bar_comment_icon){
+								v.setTag(fieldId);
+								int oldCount = Integer.parseInt(((TextView) view.findViewById(R.id.detail_bottom_bar_comment_number)).getText().toString());
+								((TextView) view.findViewById(R.id.detail_bottom_bar_comment_number)).setText(String.valueOf(oldCount + 1));
+								((BaseUI)getActivity()).onCommentReplyClick(v);
+							}else if(id == R.id.detail_bottom_bar_zan_icon){//点赞
+								final View destView = ((ViewGroup)v).getChildAt(0);
+								JSONObject jsonObject = new JSONObject();
+								try {
+									jsonObject.put(Const.STA_FIELDID, fieldId);
+									jsonObject.put(Const.STA_TYPE, (destView.isSelected() ? "qxzan":"zan")); 
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+								destView.setSelected(!destView.isSelected());
+								NetTool.data().http(new NetTool.RequestListener() {
+									@Override
+									public void onEnd(byte[] data) {
+										JSONObject response = toJSONObject(data);
+										if (isRight(response)) {
+											int zanCount = response.optInt(Const.STA_ZANCOUNT);
+											((TextView) view.findViewById(R.id.detail_bottom_bar_zan_number)).setText(String.valueOf(zanCount));
+//											((TextView) findViewById(R.id.checkCode)).setText(response.optJSONObject(Const.STA_DATA).optString(Const.STA_VALIDATECODE));
+										} else {
+//											ViewHelper .showToast(getActivity(), Const.DEFT_GET_CHECK_CODE_FAILED);
+										}
+									}
+								},jsonObject, UrlUtils.self().getPraise());
 							}
 						}
 					};
+					
+					boolean isAttention = json.optBoolean(Const.STA_IS_ATTENTION) ;
+					if(isAttention){
+						((ViewGroup)view.findViewById(R.id.detail_bottom_bar_care_icon)).getChildAt(0).setSelected(true);
+					}
+					boolean isZan = json.optBoolean(Const.STA_IS_ZAN) ;
+					if(isZan){
+						((ViewGroup)( view.findViewById(R.id.detail_bottom_bar_zan_icon))).getChildAt(0).setSelected(true);
+					}
 					( view.findViewById(R.id.detail_bottom_bar_care_icon)).setOnClickListener(clickListener);
 					( view.findViewById(R.id.detail_bottom_bar_comment_icon)).setOnClickListener(clickListener);
 					( view.findViewById(R.id.detail_bottom_bar_zan_icon)).setOnClickListener(clickListener);

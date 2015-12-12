@@ -8,10 +8,9 @@
 
         <TextView
             android:id="@+id/search_head_btn"
-            android:layout_alignParentRight="true"
             style="@style/head_bar_text_right_btn_style"
-            android:text="搜搜"
-            />
+            android:layout_alignParentRight="true"
+            android:text="搜搜" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,56 +44,56 @@
             android:layout_alignParentBottom="true" >
         </TextView>
     </RelativeLayout>
+
     <LinearLayout
         style="@style/head_bar_title_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#f7f7f7"
-        android:orientation="horizontal"
-        
-        >
+        android:orientation="horizontal" >
 
         <LinearLayout
-            android:tag="true"
             android:id="@+id/ui_zixun_head_last_news"
-            style="@style/title_nav_item_style">
-            <TextView
-                android:textColor="@color/tabitem_foucs_color"
-                android:text="最新播况"
-                style="@style/title_nav_item_text_line_style" />
+            style="@style/title_nav_item_style"
+            android:tag="true" >
 
             <TextView
-                style="@style/title_nav_item_bottom_line_style" />
+                style="@style/title_nav_item_text_line_style"
+                android:text="撒鱼信息"
+                android:textColor="@color/tabitem_foucs_color" />
+
+            <TextView style="@style/title_nav_item_bottom_line_style" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ui_zixun_head_last_activity"
-           style="@style/title_nav_item_style">
+            style="@style/title_nav_item_style"
+            android:clickable="false" >
 
             <TextView
+                style="@style/title_nav_item_text_line_style"
                 android:text="最新活动"
-                android:textColor="@color/text_btn_color"
-                style="@style/title_nav_item_text_line_style"/>
+                android:textColor="@color/text_btn_color" />
 
             <TextView
                 style="@style/title_nav_item_bottom_line_style"
                 android:visibility="invisible" />
         </LinearLayout>
-
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/ui_f_appear_list_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
+
         <ListView
             android:id="@+id/last_news"
-            style="@style/listview_style"
-           />
+            style="@style/listview_style" />
+
         <ListView
             android:id="@+id/last_activity"
             style="@style/listview_style"
-            android:visibility="gone"
-           />
+            android:visibility="gone" />
     </FrameLayout>
+
 </LinearLayout>

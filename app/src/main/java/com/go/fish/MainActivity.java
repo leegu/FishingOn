@@ -36,6 +36,10 @@ public class MainActivity extends Activity {
 		LogUtils.d("yl", "MainActivity welcome_ed=" + welcome_ed);
 		if(welcome_ed){
 			if(isLogined()){
+				showHomeUI();
+				if(true){
+					return;
+				}
 				//TODO刷新登陆
 				//成功进入首页面
 				final String num = LocalMgr.self().getUserInfo(Const.K_num);
@@ -97,6 +101,7 @@ public class MainActivity extends Activity {
 				JSONObject data = new JSONObject(userInfo);
 				if (data != null && data.has(Const.STA_TOKEN)){
 					UrlUtils.self().setToken(data.optString(Const.STA_TOKEN));
+					User.self().userInfo.mobileNum = LocalMgr.self().getUserInfo(Const.K_num);
                     return true;
                 }
 			} catch (JSONException e) {

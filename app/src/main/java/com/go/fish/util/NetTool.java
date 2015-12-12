@@ -96,6 +96,7 @@ import com.go.fish.R;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.HomeUI;
 import com.go.fish.ui.RegisterUI;
+import com.go.fish.user.User;
 import com.go.fish.util.NetTool.RequestData.HttpOption;
 import com.go.fish.view.ViewHelper;
 
@@ -176,6 +177,7 @@ public class NetTool {
 		}
 		RequestListener listener = rData.mListener;
 		rData.addHeader(Const.STA_USER_AGENT, UrlUtils.self().getUserAgent());
+		LogUtils.d("token", UrlUtils.self().getToken());
 		if(!TextUtils.isEmpty(UrlUtils.self().getToken())){
 			rData.addHeader(Const.STA_CC_TOKEN, UrlUtils.self().getToken());
 		}
@@ -204,7 +206,7 @@ public class NetTool {
 			Log.e("yl", "onRequest request:(" + rData.url + " "+ rData.mJsonData + ")");
 		}
 		int M = rData.option == HttpOption.GET ? Method.GET : Method.POST; 
-		BinaryRequest br = new BinaryRequest(M,rData.url,rData.mJsonData != null ? rData.mJsonData.toString() : null, new Response.Listener<byte[]>() {
+		BinaryRequest br = new BinaryRequest(M,rData, new Response.Listener<byte[]>() {
 			@Override
 			public void onResponse(byte[] response) {
 				rData.mListener.onEnd(response);
@@ -214,10 +216,17 @@ public class NetTool {
 			public void onErrorResponse(VolleyError error) {
 				// TODO Auto-generated method stub
 				if(rData != null && error != null){
-					if(BuildConfig.DEBUG){
-						Log.e("yl", "onErrorResponse request:(" + rData.url + " "+ rData.mJsonData + ") response:(" + error.networkResponse.statusCode +" " + error.networkResponse.headers + ")");
+					try {
+						if(BuildConfig.DEBUG){
+							LogUtils.d("http", "onErrorResponse request:(" + rData.url + " "+ rData.mJsonData + ")" );
+							if(error.networkResponse != null){
+								LogUtils.d("http", "onErrorResponse response:(" + error.networkResponse.statusCode +" " + error.networkResponse.headers + ")");
+							}
+						}
+						rData.mListener.onError(-1, error.getMessage());
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					rData.mListener.onError(-1, error.getMessage());
 				}
 			}
 		});
@@ -330,6 +339,7 @@ public class NetTool {
 		}
 
 		private static HttpUriRequest onPost(RequestData rData,HttpPost httpPost) {
+			LogUtils.d("http", "post url=" + rData.url);
 			if (rData.mJsonData != null && rData.mJsonData.length() > 0) {//json请求格式
 				try {
 					httpPost.setEntity(new StringEntity(rData.mJsonData.toString()));
@@ -345,7 +355,12 @@ public class NetTool {
 					e.printStackTrace();
 				}
 			} else {//表单提交(文字数据、图片)
-				String mMainBoundry = getBoundry();
+				String mMainBoundry = rData.mMainBoundry;
+//				if(httpPost.containsHeader("Content-Type")){
+//					httpPost.removeHeaders("Content-Type");
+//				}
+//				rData.mContentType = "multipart/form-data;boundary=" + mMainBoundry;
+//				httpPost.addHeader("Content-Type", rData.mContentType);
 				// 存储上传数据的输入流集合
 				Vector<InputStream> _arr = new Vector<InputStream>();
 				long mContentLength = 0;
@@ -373,10 +388,11 @@ public class NetTool {
 				mContentLength = appendPostParemeter(_arr, "--" + mMainBoundry + "--\r\n", mContentLength);
 
 				SequenceInputStream sis = new SequenceInputStream(_arr.elements());
-				httpPost.addHeader("Content-Type", "multipart/form-data;boundary=" + mMainBoundry);
+				
+//				httpPost.addHeader("Content-Type", "multipart/form-data;boundary=" + mMainBoundry);
 				// mHttpPost.addHeader("Content-Length",String.valueOf(mContentLength));
 				InputStreamEntity ise = new InputStreamEntity(sis, mContentLength);
-				// ProgressOutHttpEntity ProgressOutHttpEntity = new
+				// ProgressOutHttpEntity ProgressOutHhttpPostttpEntity = new
 				// ProgressOutHttpEntity(ise, new ProgressListener() {
 				// @Override
 				// public void transferred(long transferedBytes) {
@@ -444,6 +460,8 @@ public class NetTool {
 		/** GET方式提交json字符串数据 */
 		JSONObject mJsonData = null;
 		String mCommitFilePath = null;
+		String mContentType = null;
+		String mMainBoundry = null;
 		static String sHost = Const.SIN_HOST;
 		HashMap<String,String> mHeads = new HashMap<String,String>();
 		private RequestData(String url, RequestListener listener) {
@@ -683,10 +701,25 @@ public class NetTool {
 	
 	class BinaryRequest extends com.android.volley.toolbox.JsonRequest<byte[]>{
 		
-		public BinaryRequest(int method, String url, String requestBody,
+		public BinaryRequest(int method, RequestData rData,
 				Listener<byte[]> listener, ErrorListener errorListener) {
-			super(method, url, requestBody, listener, errorListener);
+			super(method, rData.url,rData.mJsonData != null ? rData.mJsonData.toString() : null, listener, errorListener);
+			mRequest = rData;
 			mListener = listener;
+			if (rData.mJsonData != null && rData.mJsonData.length() > 0) {//json请求格式
+			} else if(rData.mCommitFilePath != null){
+			}else{
+				rData.mMainBoundry = MultiPartStack.getBoundry();
+				rData.mContentType = "multipart/form-data;boundary=" + rData.mMainBoundry;
+			}
+		}
+		@Override
+		public String getBodyContentType() {
+			if(mRequest.mContentType != null){
+				return mRequest.mContentType;
+			}else{
+				return super.getBodyContentType();
+			}
 		}
 		public BinaryRequest(String url, String requestBody,
 				Listener<byte[]> listener, ErrorListener errorListener) {

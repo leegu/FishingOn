@@ -71,7 +71,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/hart_red" />
+                        android:src="@drawable/care_src" />
                 </LinearLayout>
 
                 <TextView
@@ -92,7 +92,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/zan" />
+                        android:src="@drawable/zan_src" />
                 </LinearLayout>
 
                 <TextView

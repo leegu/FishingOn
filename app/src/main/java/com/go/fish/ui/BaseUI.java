@@ -1,5 +1,6 @@
 package com.go.fish.ui;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
@@ -151,6 +152,17 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 					TextView reg_next_fishing_times_spinner = (TextView)findViewById(R.id.reg_next_fishing_times_spinner);
 					reg_next_fishing_times_spinner.setText("" + User.self().userInfo.fTimes);
 				}
+				
+				TextView userName = (TextView)findViewById(R.id.reg_next_nick_input);
+				if(!TextUtils.isEmpty(User.self().userInfo.userName)){
+					userName.setText(User.self().userInfo.userName);
+				}
+				
+				if(!TextUtils.isEmpty(User.self().userInfo.photoUrl)){
+					ImageView userIcon = (ImageView)findViewById(R.id.userIcon);
+					ViewHelper.load(userIcon, User.self().userInfo.photoUrl, true);
+				}
+				
 				TextView reg_next_location_input = (TextView)findViewById(R.id.reg_next_location_input);
 				reg_next_location_input.setText(User.self().userInfo.address);
 				ViewGroup alvg = (ViewGroup)findViewById(R.id.tags);
@@ -484,14 +496,25 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		int id = view.getId();
 		switch (id) {
 			case R.id.reg_next_photo: {
-				GalleryUtils.self().crop(this, new GalleryUtils.GalleryCallback() {
+//				GalleryUtils.self().crop(this, new GalleryUtils.GalleryCallback() {
+//					@Override
+//					public void onCompleted(String[] filePath) {
+//						String f = filePath[0];
+//						((ImageView)view).setImageDrawable(Drawable.createFromPath(f));
+//						view.setTag(f);
+//					}
+//				},view.getWidth(),view.getHeight());
+				GalleryUtils.self().pick(this, new GalleryUtils.GalleryCallback() {
 					@Override
 					public void onCompleted(String[] filePath) {
-						String f = filePath[0];
-						((ImageView)view).setImageDrawable(Drawable.createFromPath(f));
-						view.setTag(f);
+						if(filePath != null && filePath.length > 0){
+							String f = filePath[0];
+							((ImageView)view).setImageDrawable(Drawable.createFromPath(f));
+							view.setTag(f);
+						}
 					}
-				},view.getWidth(),view.getHeight());
+				},"",false);
+				
 				return;
 			}
 			case R.id.right_icon:{
@@ -625,7 +648,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 									}
 								}
 							},jsonObject,UrlUtils.self().getUploadUserImg());
-							rData.setCommitFilePath((String)view.getTag());
+							rData.putData("UserImg", new File((String)view.getTag()));
 							NetTool.submit().http(rData.syncCallback());
 						}else{
 							onEnd();
@@ -1072,7 +1095,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			}
 			JSONObject jsonObject = new JSONObject();
 			try {
-				jsonObject.put(Const.STA_MOBILE, num);
+				jsonObject.put(Const.STA_USER_NAME, num);
 				jsonObject.put(Const.STA_PASSWORD, login_pswd_input);
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -1088,10 +1111,10 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 					ViewHelper.closeGlobalWaiting();
 					JSONObject response = toJSONObject(bytes);
 //					if(response == null){
-						try {
-							response = new JSONObject("{\"code\":1,\"isError\":false,\"message\":\"success\",\"remark\":\"\",\"data\":{\"token\":\"ASDFCGUDHJFJHSGKH151230\"},\"unlogin\":\"\",\"exception\":\"\",\"error\":\"\"}");
-						} catch (Exception e) {
-						}
+//						try {
+//							response = new JSONObject("{\"code\":1,\"isError\":false,\"message\":\"success\",\"remark\":\"\",\"data\":{\"token\":\"ASDFCGUDHJFJHSGKH151230\"},\"unlogin\":\"\",\"exception\":\"\",\"error\":\"\"}");
+//						} catch (Exception e) {
+//						}
 //					}
 					if (response != null ){
 						if(isRight(response)) {

@@ -97,8 +97,8 @@ public class UrlUtils {
     }
 
     String HOST = "http://115.29.51.39:8080";
-    String TEST_HOST = "http://115.29.51.39:8080";
-    boolean isTest = false;
+    String TEST_HOST = "http://192.168.1.135:9027/qndiao";
+    boolean isTest = true;
 
     public String getHost() {
         return isTest ? TEST_HOST : HOST;
@@ -168,6 +168,10 @@ public class UrlUtils {
     public String getAttention() {
         return getHost() + attention;
     }
+    String praise = "/merchant/praise";
+    public String getPraise() {
+    	return getHost() + praise;
+    }
     
     String commentList = "/merchant/commentList";//?objectId=1&type=field
     public String getCommentList() {
@@ -208,5 +212,9 @@ public class UrlUtils {
     String setLocation = "/member/setLocation";
     public String getSetLocation() {
     	return getHost() + setLocation;
+    }
+    String getSettingData = "/member/getSettingData";
+    public String getSettingData() {
+    	return getHost() + getSettingData;
     }
 }

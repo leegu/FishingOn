@@ -28,6 +28,7 @@ import com.go.fish.R;
 import com.go.fish.barcode.BarcodeUI;
 import com.go.fish.data.FPlaceData;
 import com.go.fish.data.MyListitemData;
+import com.go.fish.data.PersonData;
 import com.go.fish.ui.SearchUI;
 import com.go.fish.ui.UICode;
 import com.go.fish.ui.UIMgr;
@@ -234,6 +235,7 @@ public class HomeFragment extends Fragment {
 			onShowFNews();
 			break;
 		case R.layout.ui_my:
+			onShowMyView();
 			break;
 		default:
 			break;
@@ -243,26 +245,45 @@ public class HomeFragment extends Fragment {
 		showStatus = false;
 	}
 	void onShowMyView(){
+		
 		//更新关注数量，头像信息，昵称
+		JSONObject jsonObject = new JSONObject();
+		NetTool.data().http(new NetTool.RequestListener() {
+			@Override
+			public void onEnd(byte[] bytes) {
+				JSONObject response = toJSONObject(bytes);
+				if (response != null ){
+					if(isRight(response)) {
+						JSONObject data = response.optJSONObject(Const.STA_DATA);
+						User.self().userInfo = PersonData.newInstance(data);
+						updateMyView(getView());
+					}
+				}
+			}
+		},jsonObject,UrlUtils.self().getSettingData());
+	}
+	
+	private void updateMyView(View view){
+		{//更新用户名,头像，手机号
+			TextView userPhoneNumber = (TextView)view.findViewById(R.id.userPhoneNumber);
+			userPhoneNumber.setText(BaseUtils.formatPhoneNum(User.self().userInfo.mobileNum));
+			
+			TextView userName = (TextView)view.findViewById(R.id.userName);
+			if(!TextUtils.isEmpty(User.self().userInfo.userName)){
+				userName.setText(User.self().userInfo.userName);
+			}else{
+				userName.setText("" + User.self().userInfo.id);
+			}
+			
+			if(!TextUtils.isEmpty(User.self().userInfo.photoUrl)){
+				ImageView userIcon = (ImageView)view.findViewById(R.id.userIcon);
+				ViewHelper.load(userIcon, User.self().userInfo.photoUrl, true);
+			}
+		}
 	}
 	private void onCreateMyView(ViewGroup view) {
 		{
-			{//更新用户名,头像，手机号
-				TextView userPhoneNumber = (TextView)view.findViewById(R.id.userPhoneNumber);
-				userPhoneNumber.setText(BaseUtils.formatPhoneNum(User.self().userInfo.mobileNum));
-				
-				TextView userName = (TextView)view.findViewById(R.id.userName);
-				if(!TextUtils.isEmpty(User.self().userInfo.userName)){
-					userName.setText(User.self().userInfo.userName);
-				}else{
-					userName.setText("" + User.self().userInfo.id);
-				}
-				
-				if(!TextUtils.isEmpty(User.self().userInfo.photoUrl)){
-					ImageView userIcon = (ImageView)view.findViewById(R.id.userIcon);
-					ViewHelper.load(userIcon, User.self().userInfo.photoUrl, true);
-				}
-			}
+			updateMyView(view);
 			final ListView list1 = (ListView)view.findViewById(R.id.ui_f_my_listview1);
 			list1.setDividerHeight(0);
 			MyListitemAdapter.fillToListView(list1,R.array.hmy_listview1, R.array.hmy_listview1_icons);
@@ -344,7 +365,7 @@ public class HomeFragment extends Fragment {
 	}
 
 	private void onCreateZixunView(ViewGroup view){
-		{//最新播况
+		{//最新播况 撒鱼信息
 			final ListView lastNews = (ListView)view.findViewById(R.id.last_news);
 			//本地先获取显示
 			String careFPlace = LocalMgr.self().getString(Const.SIN_DB_MY_CARE_FNEWS);

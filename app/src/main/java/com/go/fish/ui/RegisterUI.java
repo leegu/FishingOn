@@ -131,6 +131,7 @@ public class RegisterUI extends BaseUI {
 							LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
 							LocalMgr.self().saveUserInfo(Const.K_num, num);
 							LocalMgr.self().saveUserInfo(Const.K_pswd, login_pswd_input);
+							UrlUtils.self().setToken(data.optString(Const.STA_TOKEN));
 							User.self().userInfo = PersonData.newInstance(data);
 							showRegNext = true;
 							replace(regNextFragment);
