@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+<RelativeLayout
+        style="@style/head_bar_style"
+        android:layout_width="match_parent" >
+
+        <RelativeLayout
+            android:id="@+id/comment_publish_back"
+            android:onClick="onClick"
+            style="@style/head_bar_pic_left_btn_style" >
+
+            <ImageView
+                style="@style/head_bar_pic_style"
+                android:src="@drawable/arrow_left" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/ok"
+            style="@style/head_bar_text_right_btn_style"
+            android:text="完成"/>
+
+        <TextView
+            android:id="@+id/base_head_bar_title"
+            style="@style/head_bar_title_style"
+            android:layout_toLeftOf="@id/ok"
+            android:layout_toRightOf="@id/comment_publish_back"
+            android:text="设置头像" >
+        </TextView>
+
+        <TextView
+            style="@style/head_bar_bottom_line_style"
+            android:layout_alignParentBottom="true" >
+        </TextView>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/crop_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside" />
+
+</LinearLayout>

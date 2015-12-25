@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/base_space" >
+
+    <TextView
+        style="@style/user_tag_item"
+        android:text="黑坑" >
+    </TextView>
+
+    <TextView
+        style="@style/user_tag_item"
+        android:text="夜钓" >
+    </TextView>
+
+    <TextView
+        style="@style/user_tag_item"
+        android:text="冰钓" >
+    </TextView>
+
+</LinearLayout>
