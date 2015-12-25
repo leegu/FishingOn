@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.webkit.URLUtil;
 
 /**
  * Created by DCloud on 2015/10/14.
@@ -90,7 +91,7 @@ public class UrlUtils {
         this.token = token;
     }
 
-    String token = null;
+    String token = "";
 
     public String getToken() {
         return token;
@@ -98,12 +99,23 @@ public class UrlUtils {
 
     String HOST = "http://115.29.51.39:8080";
     String TEST_HOST = "http://192.168.1.135:9027/qndiao";
-    boolean isTest = true;
+    boolean isTest = false;
 
     public String getHost() {
         return isTest ? TEST_HOST : HOST;
     }
 
+    public String getNetUrl(String url){
+    	if(TextUtils.isEmpty(url)) return url;
+    	if(URLUtil.isNetworkUrl(url)){
+    		return url;
+    	}else{
+    		while(url.startsWith("/")){
+    			url = url.substring(1);
+    		}
+    		return getHost() + "/" + url;
+    	}
+    }
     String memberLogin = "/member/memberLogin";
     public String getMemberLogin() {
         return getHost() + memberLogin;
@@ -175,14 +187,14 @@ public class UrlUtils {
     
     String commentList = "/merchant/commentList";//?objectId=1&type=field
     public String getCommentList() {
-//    	return getHost() + commentList;
-    	return Const.SIN_HOST + "commentList";
+    	return getHost() + commentList;
+//    	return Const.SIN_HOST + "commentList";
     }
     
     String attListForField = "/merchant/attListForField";
     public String getAttListForField() {
-    	return Const.SIN_HOST + "attListForField";
-//    	return getHost() + attListForField;
+//    	return Const.SIN_HOST + "attListForField";
+    	return getHost() + attListForField;
     }
     
     String commentOn = "/merchant/commentOn";

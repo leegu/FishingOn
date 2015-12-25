@@ -9,6 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textColor="@color/text_btn_color"
+        android:paddingLeft="@dimen/base_space_4"
+        android:paddingRight="@dimen/base_space_4"
         android:text="黑钓"
         android:gravity="center"
         android:textSize="@dimen/base_font_size_h4" />

@@ -9,6 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/base_bg_color"
+        android:paddingTop="@dimen/base_space"
+        android:paddingBottom="@dimen/base_space"
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical">
@@ -86,11 +88,11 @@
                     android:layout_alignParentRight="true"
                     android:padding="@dimen/base_space"
                     android:clickable="true"
-                    android:drawableLeft="@drawable/hart_care_"
+                    android:drawableLeft="@drawable/care_src"
                     android:tag="false"
                     android:gravity="center_vertical"
                     android:onClick="onMapFloatViewClick"
-                    android:text="111"
+                    android:text="0"
                     android:textColor="@color/text_btn_color"
                     android:textSize="@dimen/base_font_size_h4" />
             </LinearLayout>

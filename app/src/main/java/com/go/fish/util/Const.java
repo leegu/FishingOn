@@ -22,7 +22,6 @@ public interface Const {
 	
 	String DEFT_REPLY_ = ": ";
 	String DEFT_REPLY_TEXT = "我来评论一下";
-	String DEFT_REQUEST_QUERY_LIST = "野钓,夜钓,高钓,黑坑,舒适";
 	String DEFT_YC = "yc";
 	String DEFT_YJD = "yjd";
 	int DEFT_REQ_COUNT = 100;
@@ -49,6 +48,7 @@ public interface Const {
 	String PRI_EXTRA_IMAGE_INDEX = "image_index";
 	String PRI_EXTRA_IMAGE_URLS = "image_urls";
 	String PRI_EXTRA_LAYOUT_ID = "extra_layout_id";
+	String PRI_FPLACE_RESULT_TYPE = "fplace_result_type";
 	String PRI_FRAGMENT_TAG = "fragment_tag";
 	String PRI_JSON_DATA = "json";
 	String PRI_LAYOUT_ID = "layout_id";

@@ -11,6 +11,9 @@ public class BaseUtils {
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date curDate = new Date();
+    public static String getCurrentTime(){
+    	return sdf.format(new Date());
+    }
     public static String getTimeShow(String str){
         String ret = null;
         try {
@@ -57,7 +60,11 @@ public class BaseUtils {
     }
 
     public static String[] splitString(Object str){
-        return String.valueOf(str).split("\\|");
+    	if(str != null){
+    		return String.valueOf(str).split("\\|");
+    	}else{
+    		return null;
+    	}
     }
     
     public static String formatPhoneNum(String num){

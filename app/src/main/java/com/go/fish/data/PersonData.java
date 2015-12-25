@@ -9,19 +9,21 @@ import com.baidu.mapapi.model.LatLng;
 import com.go.fish.user.User;
 import com.go.fish.util.Const;
 import com.go.fish.util.MapUtil;
+import com.go.fish.util.UrlUtils;
 import com.go.fish.view.IBaseData;
 
 public class PersonData implements IBaseData {
 
-    public int id;
+    public String id;
     public  String photoUrl;
     public String userName;
     public String mobileNum;
     public String[] aiHaos = null;
     public String far = null;
     public String address = null;
-    public int fYears = -1;
-    public int fTimes = -1;
+    public String tag = null;
+    public String fYears = null;
+    public String fTimes = null;
     public double lng = 0;
     public double lat = 0;
     
@@ -29,14 +31,15 @@ public class PersonData implements IBaseData {
         PersonData personData = new PersonData();
         JSONObject member = json.optJSONObject(Const.STA_MEMBER);
         if(member != null){
-	        personData.id = member.optInt(Const.STA_MEMBER_ID);
-	        personData.photoUrl = member.optString(Const.STA_IMGURL);
+	        personData.id = member.optString(Const.STA_MEMBER_ID);
+	        personData.photoUrl = UrlUtils.self().getNetUrl(member.optString(Const.STA_IMGURL));
 	        personData.userName = member.optString(Const.STA_NAME);
 	//        personData.userName = "丰";
-	        personData.fYears = member.optInt(Const.STA_FISH_YEAR);
+	        personData.fYears = member.optString(Const.STA_FISH_YEAR);
 	        personData.mobileNum = member.optString(Const.STA_MOBILE);
-	        personData.fTimes = member.optInt(Const.STA_FREQUENCY);
+	        personData.fTimes = member.optString(Const.STA_FREQUENCY);
 	        personData.address = member.optString(Const.STA_ADDRESS);
+	        personData.tag = member.optString(Const.STA_TAG);
 	        personData.lng = member.optDouble(Const.STA_LNG);
 	        personData.lat = member.optDouble(Const.STA_LAT);
         }

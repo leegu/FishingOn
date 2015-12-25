@@ -30,7 +30,10 @@ public class PopWinListItemAdapter extends BaseAdapter {
     public static PopWinListItemAdapter newInstance(Context context,ListView list,String[] datas){
         return new PopWinListItemAdapter(context,list,datas,0);
     }
-    private PopWinListItemAdapter(Context context,ListView list,String[] sDatas,int itemResId){
+    public static PopWinListItemAdapter newInstance(Context context,ListView list,String[] sDatas,int itemResId){
+    	return new PopWinListItemAdapter(context,list,sDatas,itemResId);
+    }
+    private PopWinListItemAdapter (Context context,ListView list,String[] sDatas,int itemResId){
         this.context = context;
         this.itemResId = itemResId;
         ArrayList<String> datas = new ArrayList<String>();

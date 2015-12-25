@@ -6,7 +6,7 @@
     android:layout_gravity="center">
 
     <ImageView
-        android:visibility="invisible"
+        android:visibility="gone"
         android:id="@+id/search_tab_left"
         android:layout_width="@dimen/tab_arrow_left"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         android:src="@drawable/arrow_left_blue"></ImageView>
 
     <ImageView
-        android:visibility="invisible"
+        android:visibility="gone"
         android:id="@+id/search_tab_right"
         android:layout_width="@dimen/tab_arrow_right"
         android:layout_height="wrap_content"

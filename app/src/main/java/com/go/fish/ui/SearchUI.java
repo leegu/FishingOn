@@ -1,11 +1,16 @@
 package com.go.fish.ui;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.go.fish.R;
@@ -13,6 +18,7 @@ import com.go.fish.data.FPlaceData;
 import com.go.fish.util.Const;
 import com.go.fish.util.IME;
 import com.go.fish.util.NetTool;
+import com.go.fish.util.UrlUtils;
 import com.go.fish.util.NetTool.RequestData;
 import com.go.fish.util.NetTool.RequestListener;
 import com.go.fish.view.BaseFragment;
@@ -65,10 +71,11 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 //					detailFragment.onHeadClick(view);
 				}
 				break;
-			case R.id.search_head_btn:
+			case R.id.search_head_btn://搜索按钮
 				IME.hideIME(view);
 				ViewPager viewPager = (ViewPager) searchFragment.getView().findViewById(R.id.search_viewpager);
-				BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce);
+				String searchTitle = ((TextView)findViewById(R.id.search_list_edit)).getText().toString();
+				BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce, searchTitle, viewPager.getCurrentItem());
 				break;
 			default:
 				super.onClick(view);
@@ -85,8 +92,52 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 	@Override
 	public void onItemClick(View view, FPlaceData data) {
 		initDetailFragment();
-		detailFragment.setArguments(data.toBundle(searchFragment.getArguments()));
-		showFragment(detailFragment);
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put(Const.STA_FIELDID, data.sid);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		NetTool.data().http(new RequestListener() {
+			@Override
+			public void onStart() {
+				onStart(SearchUI.this);
+			}
+
+			@Override
+			public void onEnd(byte[] data) {
+				try {
+					if (isOver()) {// 返回键取消联网之后不应该继续处理
+
+					} else {
+						JSONObject response = toJSONObject(data);
+						if (response != null) {
+							if (isRight(response)) {
+								String jsonStr = new String(data, "UTF-8");
+								Bundle newBundle = new Bundle();
+								newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
+								newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
+								newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
+
+//								Bundle bundle = searchFragment.getArguments();
+//								bundle.putString(Const.PRI_JSON_DATA, jsonStr);
+//								bundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
+								detailFragment.setArguments(newBundle);
+								showFragment(detailFragment);
+								
+							} else {
+								onDataError(SearchUI.this, response);
+							}
+						} else {
+							onDataError(SearchUI.this);
+						}
+					}
+					onEnd();
+				} catch (Exception e) {
+				}
+			}
+		}, jsonObject, UrlUtils.self().getFieldInfo());
+		
 	}
 	
 	private void showFragment(Fragment f){

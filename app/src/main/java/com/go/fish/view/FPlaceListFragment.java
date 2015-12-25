@@ -48,7 +48,7 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		if(mListView == null){
 			Bundle b = getArguments();
-			int layoutId = b.getInt(Const.PRI_LAYOUT_ID);
+			int layoutId = b.getInt(Const.PRI_LAYOUT_ID);//list_fragment.xml 钓场列表
 			mListView = (ListView)inflater.inflate(layoutId, container, false);
 			updateAdapter();
 			if(mListAdapter.isEmpty()) {
@@ -61,7 +61,7 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 			mListView.setOnItemClickListener(this);
 			mListView.setOnLongClickListener(this);
 			mListView.setAdapter(mListAdapter);
-			mListView.setBackgroundColor((int)new Random().nextLong());
+//			mListView.setBackgroundColor((int)new Random().nextLong());//设置随机背景色
 		}
 		return mListView;
 	}
@@ -70,7 +70,7 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 		if(mListView.getFooterViewsCount() > 0) {
 			mListView.removeFooterView(mFooterTextView);
 		}
-		mListAdapter.listDatas.addAll(arr);
+		mListAdapter.listDatas.addAll(0,arr);
 		if(created) {
 			mListAdapter.notifyDataSetChanged();
 		}
@@ -81,15 +81,18 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 		mCallback.onItemClick(view, mListAdapter.listDatas.get(position));
 	}
 
+	//更新适配器内容
 	public void updateAdapter(){
 		Bundle bundle = getArguments();
 		if(bundle.containsKey(Const.PRI_EXTRA_DATA)){
 			try {
 				int listitemLayoutid = bundle.getInt(Const.PRI_EXTRA_LAYOUT_ID);
+				int resultType = bundle.getInt(Const.PRI_EXTRA_LAYOUT_ID);
 				JSONArray jsonArr = new JSONArray(bundle.getString(Const.PRI_EXTRA_DATA));
 				ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(listitemLayoutid, jsonArr);
 				if(mListAdapter == null) {
-					mListAdapter = new FPlaceListAdapter(getActivity(), fPlaceArr);
+					//构造钓场列表所需list 适配器
+					mListAdapter = new FPlaceListAdapter(getActivity(), fPlaceArr, resultType);
 				} else {
 					updateData(fPlaceArr);
 				}
@@ -99,8 +102,16 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 			bundle.remove(Const.PRI_EXTRA_DATA);
 		}else{
 			if(mListAdapter == null && mListView != null) {
-				mListAdapter = new FPlaceListAdapter(mListView.getContext(), new ArrayList<FPlaceData>());
+				mListAdapter = new FPlaceListAdapter(mListView.getContext(), new ArrayList<FPlaceData>(), -1);
 			}
+		}
+	}
+	
+	public int getSize(){
+		if(mListAdapter != null && mListAdapter.listDatas != null){
+			return mListAdapter.listDatas.size();
+		}else{
+			return 0;
 		}
 	}
 

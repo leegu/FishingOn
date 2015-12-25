@@ -15,6 +15,7 @@ import com.go.fish.data.PersonData;
 import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
+import com.go.fish.util.UrlUtils;
 
 public class ReplaceFragment extends Fragment{
 
@@ -27,10 +28,12 @@ public class ReplaceFragment extends Fragment{
 		if(layoutId == R.layout.ui_my_sec){
 			PersonData userInfo = User.self().userInfo;
 			ImageView iv = (ImageView)view.findViewById(R.id.reg_next_photo);
-			ViewHelper.load(iv, userInfo.photoUrl, true);
+			if(!TextUtils.isEmpty(userInfo.photoUrl)){
+				ViewHelper.load(iv, UrlUtils.self().getNetUrl(userInfo.photoUrl), true);
+			}
 			{
 				TextView reg_next_account = (TextView)view.findViewById(R.id.reg_next_account);
-				reg_next_account.setText(String.valueOf(userInfo.id));
+				reg_next_account.setText(userInfo.id);
 			}
 			{
 				TextView reg_next_phone_num = (TextView)view.findViewById(R.id.reg_next_phone_num);
@@ -44,13 +47,13 @@ public class ReplaceFragment extends Fragment{
 			}
 			{
 				TextView reg_next_fishing_years_spinner = (TextView)view.findViewById(R.id.reg_next_fishing_years_spinner);
-				if(userInfo.fYears > 0){
+				if(!TextUtils.isEmpty(userInfo.fYears)){
 					reg_next_fishing_years_spinner.setText(userInfo.fYears);
 				}
 			}
 			{
 				TextView reg_next_fishing_times_spinner = (TextView)view.findViewById(R.id.reg_next_fishing_times_spinner);
-				if(userInfo.fTimes > 0){
+				if(!TextUtils.isEmpty(userInfo.fTimes)){
 					reg_next_fishing_times_spinner.setText(userInfo.fTimes);
 				}
 			}

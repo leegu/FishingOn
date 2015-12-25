@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.go.fish.R;
+import com.go.fish.data.CommentData;
 import com.go.fish.data.DataMgr;
 import com.go.fish.data.FPlaceData;
 import com.go.fish.data.PersonData;
@@ -139,18 +140,18 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			TextView reg_next_phone_num = (TextView)findViewById(R.id.reg_next_phone_num);
 			reg_next_phone_num.setText(BaseUtils.formatPhoneNum(User.self().userInfo.mobileNum));
 			TextView reg_next_account = (TextView)findViewById(R.id.reg_next_account);
-			reg_next_account.setText("" + User.self().userInfo.id);
+			reg_next_account.setText(User.self().userInfo.id);
 			if(getIntent().hasExtra(Const.PRI_REG_OP) && getIntent().getBooleanExtra(Const.PRI_REG_OP,false)){
 				//注册进入
 				
 			}else{
-				if(User.self().userInfo.fYears > 0){
+				if(!TextUtils.isEmpty(User.self().userInfo.fYears)){
 					TextView reg_next_fishing_years_spinner = (TextView)findViewById(R.id.reg_next_fishing_years_spinner);
-					reg_next_fishing_years_spinner.setText(User.self().userInfo.fYears + "年龄");
+					reg_next_fishing_years_spinner.setText(User.self().userInfo.fYears);
 				}
-				if(User.self().userInfo.fTimes > 0){
+				if(!TextUtils.isEmpty(User.self().userInfo.fTimes)){
 					TextView reg_next_fishing_times_spinner = (TextView)findViewById(R.id.reg_next_fishing_times_spinner);
-					reg_next_fishing_times_spinner.setText("" + User.self().userInfo.fTimes);
+					reg_next_fishing_times_spinner.setText(User.self().userInfo.fTimes);
 				}
 				
 				TextView userName = (TextView)findViewById(R.id.reg_next_nick_input);
@@ -160,26 +161,42 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				
 				if(!TextUtils.isEmpty(User.self().userInfo.photoUrl)){
 					ImageView userIcon = (ImageView)findViewById(R.id.userIcon);
-					ViewHelper.load(userIcon, User.self().userInfo.photoUrl, true);
+					ViewHelper.load(userIcon, UrlUtils.self().getNetUrl(User.self().userInfo.photoUrl), true);
 				}
 				
 				TextView reg_next_location_input = (TextView)findViewById(R.id.reg_next_location_input);
 				reg_next_location_input.setText(User.self().userInfo.address);
 				ViewGroup alvg = (ViewGroup)findViewById(R.id.tags);
-//				String[] str = new String[]{"夜钓"};
-//				if(str.length > 0){
+				ViewGroup tags_div = (ViewGroup)findViewById(R.id.tags_div);
 				alvg.setVisibility(View.VISIBLE);
-//					LayoutInflater mInflater = LayoutInflater.from(this);
-//					for(int i =0;i < str.length; i++){
-//						ViewGroup item_tag = (ViewGroup)mInflater.inflate(R.layout.item_tag, null);
-//						TextView tv = (TextView)item_tag.getChildAt(0);
-//						tv.setText(str[i]);
-//						alvg.addView(item_tag);
-//					}
-//				}else{
-//					((View)alvg.getParent()).setVisibility(View.GONE);
-//				}
-				
+				String[] userTags = null;
+				if(!TextUtils.isEmpty(User.self().userInfo.tag)){
+					userTags = User.self().userInfo.tag.split(",");
+				}
+				String[] totalTags = LocalMgr.getFPlaceType();
+				LayoutInflater mInflater = LayoutInflater.from(this);
+				for(int i = 0; i < totalTags.length; ){
+					ViewGroup line_tags = (ViewGroup)mInflater.inflate(R.layout.line_tags, null);
+					for(int j = 0; j < line_tags.getChildCount(); j++){//设置tag显示标题
+						TextView tv = (TextView)line_tags.getChildAt(j);
+						int ii = i + j;
+						if(ii >= totalTags.length){
+							tv.setVisibility(View.INVISIBLE);
+						}else{//设置标题
+							tv.setText(totalTags[ii]);
+							if(userTags != null){
+								for(int k = 0;k < userTags.length; k++){
+									if(totalTags[ii].equals(userTags[k])){//设置用户已选择标签状态
+										tv.setSelected(true);
+										break;
+									}
+								}
+							}
+						}
+					}
+					tags_div.addView(line_tags);
+					i = i+3;
+				}
 			}
 			break;
 		case R.layout.ui_forget_pswd:
@@ -217,7 +234,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				GalleryUtils.self().pick(BaseUI.this,
 						new GalleryUtils.GalleryCallback() {
 							@Override
-							public void onCompleted(String[] filePaths) {
+							public void onCompleted(String[] filePaths, Bitmap bitmap0) {
 								if (!(v.getTag() instanceof Integer)) {
 									int w = (getResources().getDisplayMetrics().widthPixels - PADDING * 4) / 3;
 									Bitmap bitmap = LocalMgr.self()
@@ -343,10 +360,8 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(
-					R.layout.listitem_fpalce, jsonArr);
-			final FPlaceListAdapter mListAdapter = new FPlaceListAdapter(this,
-					fPlaceArr);
+			ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas( R.layout.listitem_fpalce, jsonArr);
+			final FPlaceListAdapter mListAdapter = new FPlaceListAdapter(this, fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT);
 			fPlaceList.setAdapter(mListAdapter);
 			// 网络数据抓取,进行更新
 			NetTool.RequestData rd = NetTool.RequestData.newInstance(
@@ -359,11 +374,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 						public void onEnd(byte[] data) {
 							try {
 								String str = new String(data, "utf-8");
-								mListAdapter.updateAdapter(DataMgr
-										.makeFPlaceDatas(
-												R.layout.listitem_fpalce,
-												new JSONArray(str)
-														.getJSONArray(0)));
+								mListAdapter.updateAdapter(DataMgr .makeFPlaceDatas( R.layout.listitem_fpalce, new JSONArray(str) .getJSONArray(0)));
 							} catch (UnsupportedEncodingException e) {
 								e.printStackTrace();
 							} catch (JSONException e) {
@@ -428,9 +439,10 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 					}
 				}, tabItemsTitle);
 		vg.addView(mainVG);
+		ViewPager vp = (ViewPager) mainVG.findViewById(R.id.search_viewpager);
 		BaseFragmentPagerAdapter.initAdapterByNetData(
-				(ViewPager) mainVG.findViewById(R.id.search_viewpager),
-				R.layout.listitem_fpalce);
+				vp,
+				R.layout.listitem_fpalce, null, vp.getCurrentItem());
 	}
 
 	private void onCreateNearFriend() {// 创建附近钓友
@@ -496,24 +508,25 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		int id = view.getId();
 		switch (id) {
 			case R.id.reg_next_photo: {
+				GalleryUtils.self().crop(this, new GalleryUtils.GalleryCallback() {
+					@Override
+					public void onCompleted(String[] filePath, Bitmap bitmap0) {
+						String f = filePath[0];
+						((ImageView)view).setImageDrawable(new BitmapDrawable(bitmap0));
+						view.setTag(f);
+						User.self().userInfo.photoUrl = f;
+					}
+				},view.getWidth(),view.getHeight());
 //				GalleryUtils.self().crop(this, new GalleryUtils.GalleryCallback() {
 //					@Override
-//					public void onCompleted(String[] filePath) {
-//						String f = filePath[0];
-//						((ImageView)view).setImageDrawable(Drawable.createFromPath(f));
-//						view.setTag(f);
+//					public void onCompleted(String[] filePath, Bitmap bitmap0) {
+//						if(filePath != null && filePath.length > 0){
+//							String f = filePath[0];
+//							((ImageView)view).setImageDrawable(Drawable.createFromPath(f));
+//							view.setTag(f);
+//						}
 //					}
-//				},view.getWidth(),view.getHeight());
-				GalleryUtils.self().pick(this, new GalleryUtils.GalleryCallback() {
-					@Override
-					public void onCompleted(String[] filePath) {
-						if(filePath != null && filePath.length > 0){
-							String f = filePath[0];
-							((ImageView)view).setImageDrawable(Drawable.createFromPath(f));
-							view.setTag(f);
-						}
-					}
-				},"",false);
+//				},"",false);
 				
 				return;
 			}
@@ -585,24 +598,18 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			try {
 				jsonObject.put(Const.STA_NAME, ((TextView)findViewById(R.id.reg_next_nick_input)).getText().toString());
 				jsonObject.put(Const.STA_FISH_YEAR, ((TextView)findViewById(R.id.reg_next_fishing_years_spinner)).getText().toString());
-				jsonObject.put(Const.STA_FISH_TIMES, ((TextView)findViewById(R.id.reg_next_fishing_times_spinner)).getText().toString());
+				jsonObject.put(Const.STA_FREQUENCY, ((TextView)findViewById(R.id.reg_next_fishing_times_spinner)).getText().toString());
 				jsonObject.put(Const.STA_ADDRESS, ((TextView)findViewById(R.id.reg_next_location_input)).getText().toString());
 				StringBuffer tags = new StringBuffer();
 				{
-					ViewGroup tag1 = (ViewGroup)findViewById(R.id.tags_1);
-					for(int i = 0;i < tag1.getChildCount(); i++){
-						TextView v = (TextView)tag1.getChildAt(i);
-						if(v.isSelected()){
-							tags.append(v.getText()).append(",");
-						}
-					}
-				}
-				{
-					ViewGroup tag1 = (ViewGroup)findViewById(R.id.tags_2);
-					for(int i = 0;i < tag1.getChildCount(); i++){
-						TextView v = (TextView)tag1.getChildAt(i);
-						if(v.isSelected()){
-							tags.append(v.getText()).append(",");
+					ViewGroup tags_div = (ViewGroup)findViewById(R.id.tags_div);
+					for(int i = 0;i < tags_div.getChildCount(); i++){
+						ViewGroup line_tags = (ViewGroup)tags_div.getChildAt(i);
+						for(int j = 0; j < line_tags.getChildCount(); j++){
+							TextView v = (TextView)line_tags.getChildAt(j);
+							if(v.isSelected()){
+								tags.append(v.getText()).append(",");
+							}
 						}
 					}
 				}
@@ -795,7 +802,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 
 	}
 	@Override
-	public void onCommentReplyClick(View view) {
+	public void onCommentReplyClick(View view) {//回复，发布评论
 		int id = view.getId();
 		switch (id) {
 			case R.id.comment_list_reply_text:
@@ -803,14 +810,18 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 //			view.setBackgroundResource(R.drawable.base_border_bg);
 				break;
 			case R.id.comment_list_publish: {
+				final int objectId = getIntent().getIntExtra(Const.STA_ID, 0);
 				final TextView replyText = ((TextView) findViewById(R.id.comment_list_reply_text));
 				IME.hideIME(findViewById(R.id.comment_list_reply_text));
 				JSONObject jsonObject = new JSONObject();
-				String[] args = BaseUtils.splitString(replyText.getTag());
+				CommentData commentData = (CommentData)replyText.getTag();
+				String toMemberId = "0";
+				if(commentData != null){
+					toMemberId = commentData.uid;
+				}
 				try {
-					jsonObject.put(Const.STA_TO_MEMBER_ID,args[1]);
-					jsonObject.put(Const.STA_OBJECTID,args[2]);
-					jsonObject.put(Const.STA_MEMBER_ID,args[3]);
+					jsonObject.put(Const.STA_TO_MEMBER_ID,toMemberId);
+					jsonObject.put(Const.STA_OBJECTID,objectId);
 					jsonObject.put(Const.STA_COMMENT_STR,replyText.getText());
 					jsonObject.put(Const.STA_TYPE,"field");
 				} catch (JSONException e) {
@@ -822,9 +833,42 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 						super.onStart();
 						ViewHelper.showGlobalWaiting(BaseUI.this,null,Const.DEFT_SUBMITING);
 					}
-
 					@Override
 					public void onEnd(byte[] data) {
+						ListView listView = (ListView)findViewById(R.id.comment_list);
+						JSONObject comment = new JSONObject();
+						try {
+							CommentData replayComment = (CommentData)replyText.getTag();//要回复的评论数据对象
+							comment.put("commentStr", replyText.getText().toString());
+							comment.put("id", objectId);
+							comment.put("imgUrl", User.self().userInfo.photoUrl);
+							comment.put("name", User.self().userInfo.userName);
+							comment.put("createdAt", BaseUtils.getCurrentTime());
+							CommentData newCommentData = CommentData.newInstance(comment);//即将发布的新评论
+							if(replayComment == null){//对渔场的评论
+								((AdapterExt)listView.getAdapter()).updateAdapter(newCommentData);
+							}else{//对评论的回复，添加新评论到结构中时，需要使用根rootComment
+								newCommentData.text = replyText.getText().toString();
+								newCommentData.commentTime = BaseUtils.getCurrentTime();
+								newCommentData.fromId = User.self().userInfo.id;
+								newCommentData.toId = replayComment.uid;
+								newCommentData.fromName = User.self().userInfo.userName;
+								newCommentData.toName = replayComment.uname;
+								CommentData rootComment = replayComment.getRootCommentData();//使用
+								if(rootComment == null ){
+									rootComment = replayComment;
+								}
+								if(rootComment.lowerComments == null){
+									rootComment.lowerComments = new ArrayList<CommentData>();
+								}
+								newCommentData.setRootCommentData(rootComment);
+								rootComment.lowerComments.add(newCommentData);
+								((AdapterExt)listView.getAdapter()).updateAdapter();
+							}
+						} catch (JSONException e1) {
+							e1.printStackTrace();
+						}
+						replyText.setTag(null);
 						replyText.setHint(Const.DEFT_REPLY_TEXT);
 						replyText.setText("");
 						replyText.setCompoundDrawables(new BitmapDrawable(BitmapFactory.decodeResource(getResources(), R.drawable.comment)), null, null, null);
@@ -834,22 +878,21 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 
 				break;
 			}
-			case R.id.comment_listitem_reply:
-			case -1: {
-				TextView replyText = ((TextView) findViewById(R.id.comment_list_reply_text));
+			case R.id.comment_listitem_reply://点击回复图标
+			case -1: {//点击评论信息 回复图标
+				TextView replyText = ((TextView) findViewById(R.id.comment_list_reply_text));//向输入框view设置数据
 				replyText.setCompoundDrawables(null, null, null, null);
 				IME.showIME(replyText);
-				String tv = String.valueOf(view.getTag());
-				String[] args = BaseUtils.splitString(tv);
-				replyText.setHint(Const.DEFT_REPLY + Const.DEFT_REPLY_ + args[0]);
-				replyText.setTag(view.getTag());
+				CommentData tv = (CommentData)(view.getTag());//名字|memberId
+				replyText.setHint(Const.DEFT_REPLY + Const.DEFT_REPLY_ + tv.uname);
+				replyText.setTag(tv);//设置toMemberId
 				replyText.requestFocus();
 				break;
 			}
 			case R.id.detail_bottom_bar_comment_icon:
 				Intent intent = new Intent();
 				intent.putExtra(Const.STA_ID, (Integer) view.getTag());
-				intent.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_comment_list);
+				intent.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_comment_list);//跳转到评论列表页面
 				UIMgr.showActivity(this, intent);
 				break;
 		}
@@ -933,9 +976,40 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		finish();
 	}
 
-	public void onClick(View view) {
+	public void onShare(final View view) {
 		int id = view.getId();
 		switch (id) {
+		case R.id.listitem_fnews_share:{//搜索页面 share
+		}
+		}
+	}
+	public void onClick(final View view) {
+		int id = view.getId();
+		switch (id) {
+		case R.id.listitem_fplace_care:{//搜索页面 care
+			FPlaceData fpp = (FPlaceData)view.getTag();
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put(Const.STA_FIELDID, fpp.sid);
+				jsonObject.put(Const.STA_TYPE, (view.isSelected() ? "qxgz":"gz"));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			NetTool.data().http(new NetTool.RequestListener() {
+				@Override
+				public void onEnd(byte[] data) {
+					JSONObject response = toJSONObject(data);
+					if (isRight(response)) {
+						view.setSelected(!view.isSelected());
+//						int careCount = response.optInt(Const.STA_CARE_COUNT);
+//									((TextView) findViewById(R.id.checkCode)).setText(response.optJSONObject(Const.STA_DATA).optString(Const.STA_VALIDATECODE));
+					} else {
+//									ViewHelper .showToast(getActivity(), Const.DEFT_GET_CHECK_CODE_FAILED);
+					}
+				}
+			},jsonObject, UrlUtils.self().getAttention());
+			break;
+		}
 		case R.id.ui_forget_get_check_code:
 		case R.id.get_check_code: {
 			String num = ((TextView) findViewById(R.id.text_phone_num_input))
@@ -1080,7 +1154,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			UIMgr.showActivity(BaseUI.this, R.layout.ui_forget_pswd);
 			break;
 		}
-		case R.id.login_login_btn: {//登陆
+		case R.id.login_login_btn: {//登陆按钮login
 			final String num = ((TextView) findViewById(R.id.text_phone_num_input))
 					.getText().toString();
 			if (TextUtils.isEmpty(num) || num.length() != 11) {

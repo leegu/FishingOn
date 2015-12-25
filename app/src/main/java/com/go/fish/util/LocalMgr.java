@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.go.fish.R;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -38,8 +40,31 @@ public class LocalMgr {
         new File(sRootPath).mkdirs();
         dbUrls = context.getSharedPreferences("urls", Context.MODE_PRIVATE);
         dbUserInfo = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        typesArray = context.getResources().getStringArray(R.array.hfs_splace_type);
     }
 
+    static String[] typesArray = {};
+	public static String[] getFPlaceType(){
+		return typesArray;
+	}
+	
+	public static String getFPlaceTypes(){
+		String[] tags = getFPlaceType();
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < tags.length; i++) {
+			sb.append(tags[i]);
+			if (i != tags.length - 1) {
+				sb.append(",");
+			}
+		}
+		return sb.toString();
+	}
+	public static void setFPlaceType(String types){
+		if(!TextUtils.isEmpty(types)){
+			typesArray = types.split(",");
+		}
+	}
+	
     private void deleteFile(File file) {
         try {
             if (file.isFile()) {

@@ -43,7 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/fplace_temp_title"
+                    android:layout_toLeftOf="@id/fplace_state"
                     android:singleLine="true"
                     android:text="海淀区驾驭钓鱼休闲体验区"
                     android:textColor="#555555"

@@ -46,6 +46,8 @@
         android:layout_height="match_parent">
         <RelativeLayout
             android:id="@+id/comment_publish_container"
+            android:paddingTop="@dimen/base_space_2"
+       		android:paddingBottom="@dimen/base_space_2"
             style="@style/bottom_span_style"
             >
             <TextView
@@ -74,6 +76,7 @@
                 android:drawablePadding="@dimen/base_space"
                 android:drawableLeft="@drawable/comment"
                 android:layout_toLeftOf="@id/comment_list_publish"
+                android:maxHeight="200dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </RelativeLayout>

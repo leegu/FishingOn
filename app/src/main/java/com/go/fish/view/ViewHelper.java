@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -120,9 +121,17 @@ public class ViewHelper {
 //		return tab;
 //	}
 	
+	/**
+	 * 
+	 * @param context
+	 * @param fm
+	 * @param callback item回调接口
+	 * @param itemLabels tabitem 内容
+	 * @return
+	 */
 	public static ViewGroup newMainView(final Context context, FragmentManager fm, ResultForActivityCallback callback, String[] itemLabels){
 		LayoutInflater inflater = LayoutInflater.from(context);
-		ViewGroup vg = (ViewGroup)inflater.inflate(R.layout.view_main_content, null);
+		ViewGroup vg = (ViewGroup)inflater.inflate(R.layout.view_main_content, null);//构造主要 窗口
 		final LinearLayout tabContent = (LinearLayout) vg.findViewById(R.id.search_tab_content);
 		((HorizontalScrollView)tabContent.getParent()).setHorizontalFadingEdgeEnabled(false);
 		Resources res = context.getResources();
@@ -131,18 +140,19 @@ public class ViewHelper {
 		int tabItemWidth = (sw - leftOrRightWidth) / 4 - 6;
 		final ViewPager viewPager = (ViewPager) vg.findViewById(R.id.search_viewpager);
 		final ArrayList<Fragment> fragmentArr = new ArrayList<Fragment>();
+		//初始化标题按钮item listener监听
 		View.OnClickListener tabItemListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				int position = Integer.parseInt(String.valueOf(v.getTag()));
+				viewPager.setTag("true");
 				viewPager.setCurrentItem(position);
 			}
 		};
-		for (int i = 0; i < itemLabels.length; i++) {
+		for (int i = 0; i < itemLabels.length; i++) {//标题
 			String title = itemLabels[i];
 			{
-				ViewGroup tabitemLinear = (ViewGroup) inflater.inflate(
-						R.layout.tabitem_fplace_type, null);
+				ViewGroup tabitemLinear = (ViewGroup) inflater.inflate( R.layout.tabitem_fplace_type, null);
 				{//设置tabitem显示名称
 					TextView tabitem = (TextView) tabitemLinear.getChildAt(0);
 					tabitem.setText(title);
@@ -158,19 +168,21 @@ public class ViewHelper {
 					TextView status = (TextView) tabitemLinear.getChildAt(1);
 					status.setVisibility(View.VISIBLE);
 				}
-				tabContent.addView(tabitemLinear, new LayoutParams(
-						tabItemWidth, LayoutParams.MATCH_PARENT));
+				tabContent.addView(tabitemLinear, new LayoutParams( LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 			}
-			{// listFragment初始化
+			{// 钓场 list Fragment初始化
 				FPlaceListFragment listFragment = FPlaceListFragment.newInstance(callback,R.layout.list_fragment);
 				listFragment.name = title;
 //				fm.beginTransaction().add(listFragment, null);
 				fragmentArr.add(listFragment);
 			}
 		}
-		BaseFragmentPagerAdapter bfpa = new BaseFragmentPagerAdapter(fm, fragmentArr);
-		viewPager.setAdapter(bfpa);
-		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
+		//初始化ViewPager Adapter
+		BaseFragmentPagerAdapter bfpa = new BaseFragmentPagerAdapter(context,fm, fragmentArr);
+		bfpa.setOnPageChangeListener(viewPager);
+		//设置viewPager 切换事件
+		bfpa.addOnPageChangeListener(new IViewPagerChanged() {
+			int lastPosition = 0;
 			@Override
 			public void onPageSelected(int position) {
 				if (tabContent.getChildAt(position) != tabContent.getTag()) {
@@ -188,19 +200,49 @@ public class ViewHelper {
 						TextView tabitemStatus = (TextView) tabitemLinear.getChildAt(1);
 						tabitemStatus.setVisibility(View.VISIBLE);
 						tabContent.setTag(tabitemLinear);
+						if(!"true".equals(viewPager.getTag())) {
+							ViewGroup hLiner = tabContent;
+							HorizontalScrollView hsv = ((HorizontalScrollView)tabContent.getParent());
+							int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+							int displayWidth = screenWidth - tabContent.getPaddingLeft() - tabContent.getPaddingRight();
+							int scrollX = hsv.getScrollX();
+							displayWidth -= hLiner.getPaddingLeft() - hLiner.getPaddingRight();
+							int focusIndex = lastPosition;
+							int fiWidth = 0;
+							if(position < lastPosition){
+								focusIndex--;
+//								-1
+//								for(int i = 0; i <= focusIndex; i++){
+//									fiWidth += hLiner.getChildAt(i).getWidth();
+//								}
+//								scrollX = fiWidth - displayWidth;
+//								if(scrollX < 0){
+//									scrollX = 0;
+//								}
+							}else if(position > lastPosition){
+//								+1
+								focusIndex++;
+							}
+							for(int i = 0; i <= focusIndex; i++){
+								fiWidth += hLiner.getChildAt(i).getWidth();
+							}
+							scrollX = fiWidth - displayWidth;
+							if(focusIndex != hLiner.getChildCount() - 1){//露出尾方便认识后边还有值
+								scrollX += hLiner.getChildAt(focusIndex + 1).getWidth() / 3;
+							}
+							if(scrollX < 0){
+								scrollX = 0;
+							}
+							Log.d("scrollX", "scrollX=" + scrollX);
+							hsv.smoothScrollTo(scrollX,0);
+						}else{
+							viewPager.setTag(null);
+							lastPosition = position;
+						}
 					}
 					((FPlaceListFragment) fragmentArr.get(position)).updateAdapter();
+					lastPosition = position;
 				}
-			}
-
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-//				System.out.println("onPageScrolled =" + arg0 + ";" + arg1 + ";" + arg2);
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-//				System.out.println("onPageScrollStateChanged =" + arg0);
 			}
 		});
 
@@ -374,7 +416,21 @@ public class ViewHelper {
 	public static void load(ImageView view,String url,boolean allowNetLoad,final boolean forBg){
 		Bitmap bm = ImageLoader.self().getBitmapFromLruCache(url);
 		if(bm == null && allowNetLoad){//从缓存取
-			bm = LocalMgr.self().getBitmap(url);
+			if(bm == null){
+				bm = LocalMgr.self().getBitmap(url);
+			}
+			if(bm == null && url.startsWith(LocalMgr.sRootPath)){
+				bm = LocalMgr.self().getLowBitmap(url);
+				if(bm != null){
+					if(forBg){
+						((ImageView)view).setBackgroundDrawable(new BitmapDrawable(bm));
+					}else{
+						((ImageView)view).setImageBitmap(bm);
+					}
+					ImageLoader.self().addBitmapToLruCache(url, bm);
+				}
+				return ;
+			}
 			if(bm == null){//从本地取
 				ImageLoader.self().loadNetImage(new ImageLoader.DownloadTask<ImageView>(url, view){
 					@Override

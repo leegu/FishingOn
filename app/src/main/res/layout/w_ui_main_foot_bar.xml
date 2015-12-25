@@ -58,11 +58,12 @@
         </LinearLayout>
     </FrameLayout>
 
-    <!-- 资讯 -->
+    <!-- 资讯  style="@style/foot_bar_item_style"-->
 
     <LinearLayout
         android:id="@+id/foot_bar_appear"
-        style="@style/foot_bar_item_style">
+        style="@style/foot_bar_item_style_unclickable"
+        >
 
         <ImageView
             style="@style/foot_bar_item_icon_style"

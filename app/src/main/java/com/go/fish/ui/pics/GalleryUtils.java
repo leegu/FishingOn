@@ -1,5 +1,11 @@
 package com.go.fish.ui.pics;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
@@ -10,15 +16,20 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.ResultReceiver;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+
 import com.go.fish.ui.UICode;
+import com.go.fish.ui.pic.ClipPicUI;
 import com.go.fish.util.LocalMgr;
-import java.io.File;
-import java.util.List;
 
 @SuppressLint("NewApi")
 public class GalleryUtils {
@@ -48,34 +59,60 @@ public class GalleryUtils {
         activity.startActivityForResult(intent, UICode.RequestCode.REQUEST_PICK_CAPTURE);
     }
     public void crop(final Activity activity, final GalleryCallback callback,int w,int h) {
-        String IMAGE_FILE_LOCATION = "file://" + LocalMgr.sRootPath + "temp.jpg";//temp file
-        final Uri imageUri = Uri.parse(IMAGE_FILE_LOCATION);//The Uri to store the big bitmap
-        File file = new File(imageUri.getPath());
-        if(file.exists()){
-        	file.delete();
-        }
-        Intent intent = new Intent("com.android.camera.action.CROP", null);
-        intent.setType("image/*");
-        intent.putExtra("crop", "true");
-//        intent.putExtra("aspectX", 2);
-//        intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX", w);
-        intent.putExtra("outputY", h);
-        intent.putExtra("scale", true);
-        intent.putExtra("return-data", false);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        intent.putExtra("noFaceDetection", true); // no face detection
-        registerSysEventListener(new ISysEventListener() {
-            @Override
-            public boolean onReceiveResult(int requestCode, int resultCode, Intent resultData) {
-                if(requestCode == UICode.RequestCode.REQUEST_CROP_IMAGE && resultCode != 0){
-                    onHandleFilePathArray(activity, callback, new String[]{imageUri.getPath()});
-                }
-                return false;
-            }
-        });
-        activity.startActivityForResult(intent, UICode.RequestCode.REQUEST_CROP_IMAGE);
+//        String IMAGE_FILE_LOCATION = "file://" + LocalMgr.sRootPath + "temp.jpg";//temp file
+//        final Uri imageUri = Uri.parse(IMAGE_FILE_LOCATION);//The Uri to store the big bitmap
+//        File file = new File(imageUri.getPath());
+//        if(file.exists()){
+//        	file.delete();
+//        }
+//        Intent intent = new Intent("com.android.camera.action.CROP", null);
+//        intent.setType("image/*");
+//        intent.putExtra("crop", "true");
+////        intent.putExtra("aspectX", 2);
+////        intent.putExtra("aspectY", 1);
+//        intent.putExtra("outputX", w);
+//        intent.putExtra("outputY", h);
+//        intent.putExtra("scale", true);
+//        intent.putExtra("return-data", false);
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+//        intent.putExtra("noFaceDetection", true); // no face detection
+//        registerSysEventListener(new ISysEventListener() {
+//            @Override
+//            public boolean onReceiveResult(int requestCode, int resultCode, Intent resultData) {
+//                if(requestCode == UICode.RequestCode.REQUEST_CROP_IMAGE && resultCode != 0){
+//                    onHandleFilePathArray(activity, callback, new String[]{imageUri.getPath()});
+//                }
+//                return false;
+//            }
+//        });
+//        activity.startActivityForResult(intent, UICode.RequestCode.REQUEST_CROP_IMAGE);
+        pick(activity, new GalleryCallback() {
+			@Override
+			public void onCompleted(String[] filePath, Bitmap bitmap0) {
+					ResultReceiver resultRcrv = new ResultReceiver(new Handler(Looper.getMainLooper())) {
+	                    @Override
+	                    protected void onReceiveResult(int resultCode, Bundle resultData) {
+	                    	super.onReceiveResult(resultCode, resultData);
+	//                    	byte[] bis = resultData.getByteArray("bitmap");
+	//                    	Bitmap bitmap = BitmapFactory.decodeByteArray(bis, 0, bis.length);
+	                    	Bitmap bitmap = (Bitmap)resultData.get("bitmap");
+	                    	String filePath = LocalMgr.sRootPath + "temp.jpg";
+	                    	try {
+								bitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(new File(filePath)));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+	                    	callback.onCompleted(new String[]{filePath}, bitmap);
+	                    }
+	                };
+	                Intent intent = new Intent();
+	                intent.setClass(activity, ClipPicUI.class);
+	                intent.putExtra("bitmap",filePath[0]);
+	                intent.putExtra("onResult",resultRcrv);
+	                activity.startActivity(intent);
+			}
+		}, null, false);
     }
 
     public void pick(Activity activity, GalleryCallback callback, String pickType, boolean multiple) {
@@ -215,7 +252,7 @@ public class GalleryUtils {
 
     private void onHandleFilePathArray(final Activity activity, final GalleryCallback callback, String[] paths) {
         if (callback != null) {
-            callback.onCompleted(paths);
+            callback.onCompleted(paths, null);
         }
     }
 
@@ -311,7 +348,8 @@ public class GalleryUtils {
     }
 
     public interface GalleryCallback {
-        void onCompleted(String[] filePath);
+        void onCompleted(String[] filePath, Bitmap bitmap0);
+        
     }
 
     interface ISysEventListener {

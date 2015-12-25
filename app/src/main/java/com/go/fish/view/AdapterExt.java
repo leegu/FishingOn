@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +35,7 @@ import com.go.fish.ui.pic.ImageViewUI;
 import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
+import com.go.fish.util.UrlUtils;
 
 public class AdapterExt extends BaseAdapter {
 
@@ -205,7 +207,7 @@ public class AdapterExt extends BaseAdapter {
 		ImageView comment_listitem_icon,comment_listitem_reply;
 		ViewGroup comment_listitem_lower_comments;
 	}
-	private View onGetComment(int position, View convertView, ViewGroup parent){
+	private View onGetComment(int position, View convertView, ViewGroup parent){//评论数据
 		ViewGroup item = null;
 		IBaseData data = listDatas.get(position);
 		CommentData commentData = (CommentData)data;
@@ -226,7 +228,9 @@ public class AdapterExt extends BaseAdapter {
 			item = (ViewGroup)convertView;
 			holder = (CommentViewHolder)convertView.getTag();
 		}
-		ViewHelper.load(holder.comment_listitem_icon, commentData.imgUrl, true, false);
+		if(!TextUtils.isEmpty(commentData.imgUrl)){
+			ViewHelper.load(holder.comment_listitem_icon, commentData.imgUrl, true, false);
+		}
 		holder.comment_listitem_name.setText(commentData.uname);
 		holder.comment_listitem_name.setTag(commentData.uid);
 		holder.comment_listitem_time_right_of.setText(BaseUtils.getTimeShow(commentData.commentTime));//设置日期
@@ -234,7 +238,7 @@ public class AdapterExt extends BaseAdapter {
 		holder.comment_listitem_time.setVisibility(View.GONE);//隐藏右边的时间
 		holder.comment_listitem_text.setText(commentData.text);//设置评论内容
 		holder.comment_listitem_reply.setVisibility(View.VISIBLE);//设置评论图标可见
-		holder.comment_listitem_reply.setTag(BaseUtils.joinString(commentData.uname,commentData.uid,getExtra(),-1));
+		holder.comment_listitem_reply.setTag(commentData);//设置评论图标tag数据，以供点击事情数据处理
 		holder.comment_listitem_lower_comments.setTag(new IHasComment(){//回复成功之后，二级评论有所改变
 
 			@Override
@@ -248,22 +252,22 @@ public class AdapterExt extends BaseAdapter {
 				// TODO Auto-generated method stub
 				
 			}});
-		if(commentData.lowerComments != null && commentData.lowerComments.length() > 0){
+		if(commentData.lowerComments != null && commentData.lowerComments.size() > 0){
 			holder.comment_listitem_lower_comments.setVisibility(View.VISIBLE);
 			holder.comment_listitem_lower_comments.removeAllViews();
-			for(int i = 0; i < commentData.lowerComments.length();i++){
-				JSONObject json = commentData.lowerComments.optJSONObject(i);
+			for(int i = 0; i < commentData.lowerComments.size();i++){
+				CommentData cData = commentData.lowerComments.get(i);
 				ViewGroup replyContainer = (ViewGroup)mInflater.inflate(R.layout.listitem_comment_reply, null, false);
 				ViewGroup replyClickView = (ViewGroup)replyContainer.getChildAt(0);
 				TextView fromNameTv = ((TextView)replyClickView.getChildAt(0));
 				TextView fromTextTv = ((TextView)replyClickView.getChildAt(1));
 
-				String fromId = json.optString(Const.STA_FROM_ID);
-				String fromName = json.optString(Const.STA_FROM_NAME);
+				String fromId = cData.fromId;
+				String fromName = cData.fromName;
 				fromNameTv.setTag(fromId);
 				String toId = "-1";
-				String str = Const.DEFT_REPLY_ + json.optString(Const.STA_COMMENT_STR);//设置评论
-				if(json.has(Const.STA_TO_ID)){//回复某人评论
+				String str = Const.DEFT_REPLY_ + cData.text;//设置评论
+				if(!TextUtils.isEmpty(cData.toId)){//回复某人评论
 					fromNameTv.setText(fromName);//设置联系人名字
 					fromTextTv.setText(Const.DEFT_REPLY);//设置"回复"
 					{//设置被回复人
@@ -275,11 +279,11 @@ public class AdapterExt extends BaseAdapter {
 						TextView toTextTv = ((TextView)replyTO.getChildAt(1));
 						replyToContainer.removeView(replyTO);
 						{
-							toId = json.optString(Const.STA_TO_ID);
+							toId = cData.toId;
 							toNameTv.setTag(toId);
 						}
 						{
-							String toName = json.optString(Const.STA_TO_NAME);
+							String toName = cData.toName;
 							toNameTv.setText(toName);
 						}
 						toTextTv.setText(str);
@@ -289,7 +293,7 @@ public class AdapterExt extends BaseAdapter {
 					fromNameTv.setText(fromName);
 					fromTextTv.setText(str);
 				}
-				replyClickView.setTag(BaseUtils.joinString(fromName, fromId, getExtra(),toId));
+				replyClickView.setTag(cData);//使用当前条评论作为tag
 				holder.comment_listitem_lower_comments.addView(replyContainer);
 			}
 
@@ -322,7 +326,16 @@ public class AdapterExt extends BaseAdapter {
         }
     }
 	public void updateAdapter(ArrayList<IBaseData> arr){
-		listDatas.addAll(arr);
+		listDatas.addAll(0,arr);
+		setheight(mListView);
+		notifyDataSetChanged();
+	}
+	public void updateAdapter(){
+		setheight(mListView);
+		notifyDataSetChanged();
+	}
+	public void updateAdapter(IBaseData data){
+		listDatas.add(0, data);
 		setheight(mListView);
 		notifyDataSetChanged();
 	}
@@ -352,7 +365,9 @@ public class AdapterExt extends BaseAdapter {
 			item = (ViewGroup)convertView;
 			holder = (ZanFriendViewHolder)convertView.getTag();
 		}
-		ViewHelper.load(holder.userIcon, personData.photoUrl, true, false);
+		if(!TextUtils.isEmpty(personData.photoUrl)){
+			ViewHelper.load(holder.userIcon, UrlUtils.self().getNetUrl(personData.photoUrl), true, false);
+		}
 		holder.nameView.setText(personData.userName);
 		holder.fYearView.setText(""+personData.fYears);
 		holder.fTimesView.setText(personData.fTimes + "次/月");
@@ -386,7 +401,9 @@ public class AdapterExt extends BaseAdapter {
 			item = (ViewGroup)convertView;
 			holder = (FriendViewHolder)convertView.getTag();
 		}
-		ViewHelper.load(holder.userIcon, personData.photoUrl, true, false);
+		if(!TextUtils.isEmpty(personData.photoUrl)){
+			ViewHelper.load(holder.userIcon, UrlUtils.self().getNetUrl(personData.photoUrl), true, false);
+		}
 		holder.listitem_friend_last_info.setVisibility(View.GONE);
 		holder.nameView.setText(personData.userName);
 		holder.farView.setText(personData.far);
@@ -460,7 +477,9 @@ public class AdapterExt extends BaseAdapter {
 		if(newsData.authorData.id == User.self().userInfo.id){
 			holder.listitem_friend_layout.setVisibility(View.GONE);
 		}else{
-			ViewHelper.load(holder.userIcon, newsData.authorData.photoUrl,true,false);
+			if(!TextUtils.isEmpty(newsData.authorData.photoUrl)){
+				ViewHelper.load(holder.userIcon,  UrlUtils.self().getNetUrl(newsData.authorData.photoUrl),true,false);
+			}
 			holder.nameView.setText(newsData.authorData.userName);
 			holder.fYearView.setText(""+newsData.authorData.fYears);
 			holder.fTimesView.setText(""+newsData.authorData.fTimes);

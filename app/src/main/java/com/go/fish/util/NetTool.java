@@ -172,12 +172,12 @@ public class NetTool {
 	 */
 	public Request http(final RequestData rData) {
 		if (!rData.isValid()) {
-			Log.e(TAG, "http, url is null");
+			LogUtils.d("http", "http, url is null");
 			return null;
 		}
 		RequestListener listener = rData.mListener;
 		rData.addHeader(Const.STA_USER_AGENT, UrlUtils.self().getUserAgent());
-		LogUtils.d("token", UrlUtils.self().getToken());
+		LogUtils.d("http", UrlUtils.self().getToken());
 		if(!TextUtils.isEmpty(UrlUtils.self().getToken())){
 			rData.addHeader(Const.STA_CC_TOKEN, UrlUtils.self().getToken());
 		}
@@ -203,7 +203,7 @@ public class NetTool {
 		if(BuildConfig.DEBUG){
 //			rData.url = rData.url + "?" + toQueryString(rData.mJsonData);
 //			rData.mJsonData = null;
-			Log.e("yl", "onRequest request:(" + rData.url + " "+ rData.mJsonData + ")");
+			Log.e("http", "onRequest request:(" + rData.url + " "+ rData.mJsonData + ")");
 		}
 		int M = rData.option == HttpOption.GET ? Method.GET : Method.POST; 
 		BinaryRequest br = new BinaryRequest(M,rData, new Response.Listener<byte[]>() {

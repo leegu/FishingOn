@@ -31,7 +31,12 @@ public class MapUtil {
 			return String.format(DISTANCE_M, (int)d_value + "");
 		}
 	}
-	public static String getDistance(double d_lng,double d_lat){
+	public static double getDistanceDoubleValue(double d_lat,double d_lng){
+		LatLng p = new LatLng(d_lat, d_lng);
+		LatLng p1 = new LatLng(User.self().userInfo.lat,User.self().userInfo.lng);
+		return DistanceUtil.getDistance(p, p1);
+	}
+	public static String getDistance(double d_lat,double d_lng){
 		LatLng p = new LatLng(d_lat, d_lng);
 		LatLng p1 = new LatLng(User.self().userInfo.lat,User.self().userInfo.lng);
 		return getDistance(DistanceUtil.getDistance(p, p1));
@@ -42,7 +47,7 @@ public class MapUtil {
 		bmo.zoomControlsEnabled(false);
 		MapView mapView = new MapView(context, bmo);
 		mapView.showZoomControls(false);
-//		mapView.getMap().getUiSettings().setCompassEnabled(false);
+		mapView.getMap().getUiSettings().setCompassEnabled(true);
 		return mapView;
 	}
 	public static void getLocation(Activity context,OnGetLocationListener listener){
@@ -59,7 +64,7 @@ public class MapUtil {
 		app.mOnGetLocationListener = listener;
 		LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
-        option.setCoorType("gcj02");//可选，默认gcj02，设置返回的定位结果坐标系，
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系，
 //        int span=1000;
 //        try {
 //            span = Integer.valueOf(frequence.getText().toString());

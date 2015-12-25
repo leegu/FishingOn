@@ -66,7 +66,7 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/hart_red" />
+                        android:src="@drawable/care_src" />
                 </LinearLayout>
 
                 <TextView
@@ -87,7 +87,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/zan" />
+                        android:src="@drawable/zan_src" />
                 </LinearLayout>
 
                 <TextView
@@ -121,6 +121,7 @@
         <com.go.fish.view.ObservableScrollView
             android:layout_above="@id/detail_bottom_bar"
             android:id="@+id/ui_f_search_item_detail_root_scrollview"
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

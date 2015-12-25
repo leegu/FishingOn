@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment {
 			view = inflater.inflate(layoutId,container,false);
 			onCreateFPlaceView((ViewGroup) view);
 			break;
-		case R.id.home_care:
+		case R.id.home_care://关注
 			layoutId = R.layout.ui_f_care;
 			view = inflater.inflate(layoutId,container,false);
 			onCreateCareView((ViewGroup)view);
@@ -220,9 +220,9 @@ public class HomeFragment extends Fragment {
 		switch (layoutId) {
 		case R.layout.ui_f_fplace:
 			break;
-		case R.layout.ui_f_care:{
+		case R.layout.ui_f_care:{//关注页面
 	    	ViewPager viewPager = (ViewPager) contentView.findViewById(R.id.search_viewpager);
-			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce);
+			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce, null, viewPager.getCurrentItem());
 			break;
 		}
 		case R.layout.ui_f_zixun:{
@@ -245,7 +245,7 @@ public class HomeFragment extends Fragment {
 		showStatus = false;
 	}
 	void onShowMyView(){
-		
+//		updateMyView(getView());
 		//更新关注数量，头像信息，昵称
 		JSONObject jsonObject = new JSONObject();
 		NetTool.data().http(new NetTool.RequestListener() {
@@ -266,18 +266,20 @@ public class HomeFragment extends Fragment {
 	private void updateMyView(View view){
 		{//更新用户名,头像，手机号
 			TextView userPhoneNumber = (TextView)view.findViewById(R.id.userPhoneNumber);
-			userPhoneNumber.setText(BaseUtils.formatPhoneNum(User.self().userInfo.mobileNum));
+			if(!TextUtils.isEmpty(User.self().userInfo.mobileNum)){
+				userPhoneNumber.setText(BaseUtils.formatPhoneNum(User.self().userInfo.mobileNum));
+			}
 			
 			TextView userName = (TextView)view.findViewById(R.id.userName);
 			if(!TextUtils.isEmpty(User.self().userInfo.userName)){
 				userName.setText(User.self().userInfo.userName);
 			}else{
-				userName.setText("" + User.self().userInfo.id);
+				userName.setText(User.self().userInfo.id);
 			}
 			
 			if(!TextUtils.isEmpty(User.self().userInfo.photoUrl)){
 				ImageView userIcon = (ImageView)view.findViewById(R.id.userIcon);
-				ViewHelper.load(userIcon, User.self().userInfo.photoUrl, true);
+				ViewHelper.load(userIcon, UrlUtils.self().getNetUrl(User.self().userInfo.photoUrl), true);
 			}
 		}
 	}
@@ -313,9 +315,10 @@ public class HomeFragment extends Fragment {
 						case 1:
 							UIMgr.showActivity(getActivity(),R.layout.ui_my_care);
 							break;
-						case 2:
+						case 2://附近钓场
 							Bundle newBundle = new Bundle();
 							newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
+							newBundle.putInt(Const.PRI_FPLACE_RESULT_TYPE, FPlaceListAdapter.FLAG_NEAR_RESULT);
 							newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_search_list);
 							Intent intent = new Intent();
 							intent.putExtras(newBundle);
@@ -426,7 +429,8 @@ public class HomeFragment extends Fragment {
     }
     
     private void onCreateCareView(ViewGroup vg){
-    	String[] tabItemsTitle = getResources().getStringArray(R.array.hfs_splace_type);
+    	//创建 关注 页面
+    	String[] tabItemsTitle = LocalMgr.getFPlaceType();
     	vg.addView(ViewHelper.newMainView(getActivity(), getChildFragmentManager(), new ResultForActivityCallback() {
 			@Override
 			public void onItemClick(View view,final FPlaceData fPlaceData) {
@@ -447,6 +451,7 @@ public class HomeFragment extends Fragment {
 							newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
 							newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
 							newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
+							newBundle.putInt(Const.PRI_FPLACE_RESULT_TYPE, FPlaceListAdapter.FLAG_CARE_RESULT);
 							Intent i = new Intent();
 							i.putExtras(newBundle);
 							UIMgr.showActivity(getActivity(),i, SearchUI.class.getName());

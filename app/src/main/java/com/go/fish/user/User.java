@@ -12,7 +12,6 @@ public class User {
 		if(sUser == null){
 			sUser = new User();
 			sUser.userInfo = new PersonData();
-			sUser.userInfo.id = 0;
 		}
 		return sUser;
 	}
