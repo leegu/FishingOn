@@ -16,13 +16,15 @@ public class CommentData implements IBaseData{
 	private CommentData rootCommentData;
 	public String commentTime;
 	public String imgUrl;
-	public String uid ;//理论上等同于fromId
-	public String uname ;//理论上等同于fromName
+	public String id ;//评论的id
+	public String memberId ;//理论上等同于fromId
+	public String memberName ;//理论上等同于fromName
+	
 	public String fromId ;
 	public String fromName ;
 	public String toId ;
 	public String toName ;
-	public String text ;
+	public String commentStr ;
 	public ArrayList<CommentData> lowerComments;
 	public JSONObject jsonData;
 	public CommentData(){};
@@ -37,26 +39,27 @@ public class CommentData implements IBaseData{
 		CommentData cd = new CommentData();
 //		try {
 			cd.jsonData = json;
-			cd.uid = json.optString(Const.STA_ID);
+			cd.id = json.optString(Const.STA_ID);
+			cd.memberId = json.optString(Const.STA_MEMBER_ID);
 			cd.fromId = json.optString(Const.STA_FROM_ID);
-			if(TextUtils.isEmpty(cd.uid) && !TextUtils.isEmpty(cd.fromId)){
-				cd.uid = cd.fromId ;
+			if(TextUtils.isEmpty(cd.memberId) && !TextUtils.isEmpty(cd.fromId)){
+				cd.memberId = cd.fromId ;
 			}else{
-				cd.fromId = cd.uid;
+				cd.fromId = cd.memberId;
 			}
-			cd.uname = json.optString(Const.STA_NAME);
+			cd.memberName = json.optString(Const.STA_NAME);
 			cd.fromName = json.optString(Const.STA_FROM_NAME);
-			if(TextUtils.isEmpty(cd.uname) && !TextUtils.isEmpty(cd.fromName)){
-				cd.uname = cd.fromName ;
+			if(TextUtils.isEmpty(cd.memberName) && !TextUtils.isEmpty(cd.fromName)){
+				cd.memberName = cd.fromName ;
 			}else{
-				cd.fromName = cd.uname;
+				cd.fromName = cd.memberName;
 			}
 			
 			cd.toId = json.optString(Const.STA_TO_ID);
 			cd.toName = json.optString(Const.STA_TO_NAME);
 			
 			cd.imgUrl = json.optString(Const.STA_IMGURL);
-			cd.text = json.optString(Const.STA_COMMENT_STR);
+			cd.commentStr = json.optString(Const.STA_COMMENT_STR);
 			cd.commentTime = json.optString(Const.STA_CREATED_AT_TIME);
 			JSONArray arr = json.optJSONArray(Const.STA_LOWER_COMMENTS);
 			if(arr != null && arr.length() > 0){

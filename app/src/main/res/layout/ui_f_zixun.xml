@@ -68,8 +68,7 @@
         <LinearLayout
             android:id="@+id/ui_zixun_head_last_activity"
             style="@style/title_nav_item_style"
-            android:clickable="false" >
-
+             >
             <TextView
                 style="@style/title_nav_item_text_line_style"
                 android:text="最新活动"

@@ -642,6 +642,21 @@ public class NetTool {
 		public  boolean isRight(JSONObject jsonObject){
 			return Const.DEFT_1.equals(jsonObject.optString(Const.STA_CODE));
 		}
+		public  boolean isRight(Context context,JSONObject response,boolean endWaiting){
+			boolean ret = false;
+			if(response != null){
+				ret = Const.DEFT_1.equals(response.optString(Const.STA_CODE));
+				if(!ret && endWaiting){
+					onEnd();
+				}
+			}else{
+				if(endWaiting){
+					onEnd();
+				}
+				ViewHelper.showToast(context, Const.DEFT_NET_ERROR);
+			}
+			return ret;
+		}
 		/**
 		 * 联网请求是否结束
 		 * @return

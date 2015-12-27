@@ -11,7 +11,7 @@ public class FNewsData implements IBaseData{
 	public PersonData authorData = null;
 	public int newsId = 0;
 	public String content;
-	public long publishTime = 0;
+	public String publishTime;
 	public int goodCount,careCount,commentCount,shareCount;
 	public String[] netPicUrl = null;
 //	public String[] localPicUrl = null;
@@ -29,12 +29,13 @@ public class FNewsData implements IBaseData{
 				newsData.netPicUrl[j] = urlArr.optString(j);
 			}
 		}
-		newsData.content =jsonObject.optString(Const.STA_TEXT);
+		newsData.content =jsonObject.optString(Const.STA_CONTENT);
+		newsData.publishTime =jsonObject.optString(Const.STA_CREATED_AT_TIME);
 		newsData.goodCount =jsonObject.optInt(Const.STA_GOOD_COUNT);
 		newsData.commentCount =jsonObject.optInt(Const.STA_COMMENT_COUNT);
 		newsData.careCount =jsonObject.optInt(Const.STA_CARE_COUNT);
 		newsData.newsId =jsonObject.optInt(Const.STA_NEWS_ID);
-		newsData.authorData = PersonData.newInstance(jsonObject.optJSONObject(Const.STA_AUTHOR));
+		newsData.authorData = PersonData.newInstance(jsonObject.optJSONObject(Const.STA_MEMBER));
 		return newsData;
 	}
 }

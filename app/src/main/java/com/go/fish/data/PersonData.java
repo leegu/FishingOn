@@ -27,9 +27,8 @@ public class PersonData implements IBaseData {
     public double lng = 0;
     public double lat = 0;
     
-    public static PersonData newInstance(JSONObject json){
+    public static PersonData newInstance(JSONObject member){
         PersonData personData = new PersonData();
-        JSONObject member = json.optJSONObject(Const.STA_MEMBER);
         if(member != null){
 	        personData.id = member.optString(Const.STA_MEMBER_ID);
 	        personData.photoUrl = UrlUtils.self().getNetUrl(member.optString(Const.STA_IMGURL));

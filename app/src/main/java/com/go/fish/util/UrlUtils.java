@@ -98,7 +98,7 @@ public class UrlUtils {
     }
 
     String HOST = "http://115.29.51.39:8080";
-    String TEST_HOST = "http://192.168.1.135:9027/qndiao";
+    String TEST_HOST = "http://192.168.1.125:9027/qndiao";
     boolean isTest = false;
 
     public String getHost() {
@@ -228,5 +228,13 @@ public class UrlUtils {
     String getSettingData = "/member/getSettingData";
     public String getSettingData() {
     	return getHost() + getSettingData;
+    }
+    String createPodCast = "/relevant/createPodCast";
+    public String getCreatePodCast() {
+    	return getHost() + createPodCast;
+    }
+    String attentionPod = "/relevant/attentionPod";
+    public String getAttentionPod() {
+    	return getHost() + attentionPod;
     }
 }

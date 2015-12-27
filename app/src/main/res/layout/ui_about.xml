@@ -89,7 +89,7 @@
                         android:layout_marginLeft="@dimen/list_item_divider"
                         android:layout_toRightOf="@id/yx_t"
                         android:textSize="@dimen/base_font_size_h3"
-                        android:text="aaa@163.com" />
+                        android:text="qndiao@163.com" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -107,7 +107,7 @@
                         android:layout_marginLeft="@dimen/list_item_divider"
                         android:layout_toRightOf="@id/phone_t"
                         android:textSize="@dimen/base_font_size_h3"
-                        android:text="0109638527" />
+                        android:text="13691193490" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -125,7 +125,7 @@
                         android:layout_marginLeft="@dimen/list_item_divider"
                         android:layout_toRightOf="@id/org_t"
                         android:textSize="@dimen/base_font_size_h3"
-                        android:text="去哪钓公司" />
+                        android:text="北京好结网络信息科技有限公司" />
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>

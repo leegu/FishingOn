@@ -105,65 +105,54 @@ public class HomeFragment extends Fragment {
 		{//最新钓播
 //			final ListView fNewsList = new ReFreshListView(getActivity());
 			final ListView fNewsList = (ListView)vg.getChildAt(0);
+			fNewsList.setTag("0");
 			//本地先获取显示
-			String careFPlace = LocalMgr.self().getString(Const.SIN_DB_MY_CARE_FNEWS);
-			ArrayList<IBaseData> arr = new ArrayList<IBaseData>();
-			JSONArray jsonArr = null;
-			try {
-				if(!TextUtils.isEmpty(careFPlace)){
-					jsonArr = new JSONArray(careFPlace);
-				}else{
-					jsonArr = new JSONArray();
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			final AdapterExt mListAdapter = AdapterExt.newInstance(fNewsList, jsonArr, R.layout.listitem_fnews);
+			final AdapterExt mListAdapter = AdapterExt.newInstance(fNewsList, new JSONArray(), R.layout.listitem_fnews);
 			fNewsList.setAdapter(mListAdapter);
 		}
 		{//my钓播
 //			ListView fPlaceList = new ReFreshListView(getActivity());
-			final ListView fPlaceList = (ListView)vg.getChildAt(0);
-			//本地先获取显示
-			String careFPlace = LocalMgr.self().getString(Const.SIN_DB_MY_CARE_FPLACE);
-			JSONArray jsonArr = null;
-			try {
-				if(!TextUtils.isEmpty(careFPlace)){
-					jsonArr = new JSONArray(careFPlace);
-				}else{
-					jsonArr = new JSONArray();
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			fPlaceList.setAdapter(AdapterExt.newInstance(fPlaceList,jsonArr,R.layout.listitem_fnews ));
+			final ListView fPlaceList = (ListView)vg.getChildAt(1);
+			AdapterExt ae = AdapterExt.newInstance(fPlaceList,new JSONArray(),R.layout.listitem_fnews );
+			ae.mFlag = AdapterExt.FLAG_MY_NEWS;
+			fPlaceList.setTag(User.self().userInfo.mobileNum);
+			fPlaceList.setAdapter(ae);
 		}
 	}
 	
 	private void onShowFNews(){//显示钓播 
 		ViewGroup vg = (ViewGroup)contentView.findViewById(R.id.ui_fnews_list_root);
-		{
-			final ListView fNListView = (ListView)vg.getChildAt(0);
-			JSONObject jsonObject = new JSONObject();
-			try {
-				jsonObject.put(Const.STA_START_INDEX, fNListView.getAdapter().getCount());
-				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+		for(int i = 0;i < vg.getChildCount() ; i++){
+			ListView fNListView = (ListView)vg.getChildAt(i);
+			if(fNListView.getVisibility() == View.VISIBLE){
+				getNetPodList(fNListView,String.valueOf(fNListView.getTag()));
 			}
-			//网络数据抓取,进行更新
-			NetTool.data().http(new NetTool.RequestListener() {
-				@Override
-				public void onStart() {
-					ViewHelper.showGlobalWaiting(getActivity(), null);
-				}
-				@Override
-				public void onEnd(byte[] data) {
-					onEnd();
-					JSONObject response = toJSONObject(data);
-					if(isRight(response)){
-						JSONArray arr= response.optJSONArray(Const.STA_DATA);
+		}
+	}
+
+	public static void getNetPodList(final ListView fNListView,final String mobileNum) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			int count = fNListView.getAdapter() != null ? fNListView.getAdapter().getCount() : 0;
+			count = 0;
+			jsonObject.put(Const.STA_START_INDEX, count);
+			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
+			jsonObject.put(Const.STA_MOBILE, mobileNum);//默认所有钓播
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		//网络数据抓取,进行更新
+		NetTool.data().http(new NetTool.RequestListener() {
+			@Override
+			public void onStart() {
+				onStart(fNListView.getContext());
+			}
+			@Override
+			public void onEnd(byte[] data) {
+				JSONObject response = toJSONObject(data);
+				if(isRight(fNListView.getContext(),response,true)){
+					JSONArray arr= response.optJSONArray(Const.STA_DATA);
+					if(arr != null && arr.length() > 0){
 						ListAdapter adapter = fNListView.getAdapter();
 						if(adapter instanceof AdapterExt){
 							((AdapterExt)adapter).updateAdapter(AdapterExt.makeFNewsDataArray(arr));
@@ -171,44 +160,12 @@ public class HomeFragment extends Fragment {
 							((AdapterExt)((HeaderViewListAdapter)adapter).getWrappedAdapter()).updateAdapter(AdapterExt.makeFNewsDataArray(arr));
 						}
 					}else{
-						
+						ViewHelper.showToast(fNListView.getContext(), Const.DEFT_NO_DATA);
 					}
+					onEnd();
 				}
-			}, jsonObject, UrlUtils.self().getPodCastList());
-		}
-		{
-			final ListView fNListView = (ListView)vg.getChildAt(1);
-			//网络数据抓取,进行更新
-			NetTool.RequestData rd = NetTool.RequestData.newInstance(new NetTool.RequestListener() {
-				@Override
-				public void onStart() {
-				}
-
-				@Override
-				public void onEnd(byte[] data) {
-					try {
-						try {
-							String str = new String(data,"utf-8");
-							JSONArray arr= new JSONArray(str);
-//							((AdapterExt)fNListView.getAdapter()).updateAdapter(AdapterExt.makeFNewsDataArray(arr));
-							ListAdapter adapter = fNListView.getAdapter();
-							if(adapter instanceof AdapterExt){
-								((AdapterExt)adapter).updateAdapter(AdapterExt.makeFNewsDataArray(arr));
-							}else if(adapter instanceof HeaderViewListAdapter){
-								((AdapterExt)((HeaderViewListAdapter)adapter).getWrappedAdapter()).updateAdapter(AdapterExt.makeFNewsDataArray(arr));
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-
-
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
-					} 
-				}
-			}, "my_fnews");
-			NetTool.data().http(rd.syncCallback());
-		}
+			}
+		}, jsonObject, UrlUtils.self().getPodCastList());
 	}
 
 	boolean showStatus = false;
@@ -255,7 +212,7 @@ public class HomeFragment extends Fragment {
 				if (response != null ){
 					if(isRight(response)) {
 						JSONObject data = response.optJSONObject(Const.STA_DATA);
-						User.self().userInfo = PersonData.newInstance(data);
+						User.self().userInfo = PersonData.newInstance(data.optJSONObject(Const.STA_MEMBER));
 						updateMyView(getView());
 					}
 				}
@@ -309,7 +266,7 @@ public class HomeFragment extends Fragment {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					// 我钓播况 我的关注 附近钓场 附近钓友 扫一扫
 					switch (position) {
-						case 0:
+						case 0://我的播况
 							UIMgr.showActivity(getActivity(),R.layout.ui_my_f_news);
 							break;
 						case 1:
@@ -325,7 +282,7 @@ public class HomeFragment extends Fragment {
 							UIMgr.showActivity(getActivity(), intent, SearchUI.class.getName());
 //							UIMgr.showActivity(getActivity(),R.layout.ui_near_fplace);
 							break;
-						case 3:
+						case 3://附近钓友
 							UIMgr.showActivity(getActivity(),R.layout.ui_near_friends);
 							break;
 						case 4:

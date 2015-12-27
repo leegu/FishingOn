@@ -74,9 +74,9 @@ public class CommentAdapter extends BaseAdapter {
         }
         mainLabeView = (TextView)item.findViewById(R.id.comment_listitem_name);
         CommentData itemData = listDatas.get(position);
-        mainLabeView.setText(itemData.uname);
+        mainLabeView.setText(itemData.memberName);
         TextView commentText = (TextView)item.findViewById(R.id.comment_listitem_text);
-        commentText.setText(itemData.text);
+        commentText.setText(itemData.commentStr);
         TextView timeView = (TextView)item.findViewById(R.id.comment_listitem_time);
         timeView.setText(""+itemData.commentTime);
         return item;

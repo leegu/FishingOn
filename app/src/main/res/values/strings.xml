@@ -108,10 +108,13 @@
 
     <string-array name="hfs_splace_type">
         <item>黑坑</item>
-        <item>夜钓</item>
-        <item>冰钓</item>
-        <item>野钓</item>
+        <item>大棚</item>
+        <item>定制</item>
+        <item>大物</item>
+        <item>练杆</item>
         <item>高钓</item>
+        <item>休闲</item>
+        <item>野钓</item>
     </string-array>
 
     <string name="home_search_btn">搜索</string>

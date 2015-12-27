@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
 							if(isRight(response)) {
 								JSONObject data = response.optJSONObject(Const.STA_DATA);
 								LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
-								User.self().userInfo = PersonData.newInstance(data);
+								User.self().userInfo = PersonData.newInstance(data.optJSONObject(Const.STA_MEMBER));
 								User.self().userInfo.mobileNum = num;
 								showHomeUI();
 							} else {

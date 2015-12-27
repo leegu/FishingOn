@@ -8,6 +8,7 @@ public interface Const {
 	String DEFT_COMMENTLIST_TYPE_PODCAST = "podcast";
 	String DEFT_GET_CHECK_CODE_SENDING = "验证码已发送";
 	String DEFT_GET_CHECK_CODE_FAILED = "验证码获取失败";
+	String DEFT_DEVING = "开发中";
 	String DEFT_REQUESTING = "请求中...";
 	String DEFT_GETTING = "获取中...";
 	String DEFT_COMMITTING = "提交中...";
@@ -19,6 +20,8 @@ public interface Const {
 	String DEFT_PLEASE_INPUT_RIGHT_PSWD = "请正确填写密码";
 	String DEFT_REGISTER_FAILED = "注册失败";
 	String DEFT_REPLY = "回复";
+	
+	String DEFT_AGAIN_EXIT = "再按一次退出";
 	
 	String DEFT_REPLY_ = ": ";
 	String DEFT_REPLY_TEXT = "我来评论一下";
@@ -33,6 +36,7 @@ public interface Const {
 	String DEFT_SUCCESS = "success";
 	String DEFT_TRUE = "true";
 	String DEFT_ZAN_TITLE = "点赞(%d)";
+	String DEFT_NO_DATA = "没有新数据";
 	
 	String K_DeviceId = "deviceId";
 	String K_LoginData = "loginData";
@@ -105,6 +109,7 @@ public interface Const {
 	String STA_MESSAGE = "message";
 	String STA_MOBILE = "mobile";
 	String STA_NAME = "name";
+	String STA_INFO_STR = "infoStr";
 	String STA_USER_NAME = "userName";
 	String STA_NEWS_ID = "news_id";
 
@@ -127,7 +132,6 @@ public interface Const {
 	String STA_TITLE = "title";
 	String STA_TAG = "tag";
 	String STA_TO_ID = "toId";
-	String STA_TO_MEMBER_ID = "toMemberId";
 	String STA_TO_NAME = "toName";
 	String STA_TOKEN = "token";
 	String STA_TYPE = "type";

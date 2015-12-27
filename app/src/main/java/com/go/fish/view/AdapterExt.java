@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,9 @@ public class AdapterExt extends BaseAdapter {
 	ListView mListView = null;
 	ArrayList<IBaseData> listDatas = null;
 	
+	public static final int FLAG_MY_NEWS = 1;
+	public static final int FLAG_NEWS = 2;
+	public int mFlag = FLAG_NEWS;
 	boolean useScroolListener = false;
 	private AdapterExt(ListView listView,JSONArray array,int layoutId){
 		mListView = listView;
@@ -115,13 +119,15 @@ public class AdapterExt extends BaseAdapter {
 	}
 	public static ArrayList<IBaseData> makePersonDataArray(JSONArray array){
 		ArrayList<IBaseData> arr = new ArrayList<IBaseData>();
-		int count = array.length();
-		count = count > 0 ? 50 : 0;
-		for(int i = 0; i < count; i++) {
-//			JSONObject jsonObject = array.optJSONObject(i);
-			JSONObject jsonObject = array.optJSONObject(0);
-			PersonData newsData = PersonData.newInstance(jsonObject);
-			arr.add(newsData);
+		if(array != null){
+			int count = array.length();
+//			count = count > 0 ? 50 : 0;
+			for(int i = 0; i < count; i++) {
+			JSONObject jsonObject = array.optJSONObject(i);
+//				JSONObject jsonObject = array.optJSONObject(0);
+				PersonData newsData = PersonData.newInstance(jsonObject);
+				arr.add(newsData);
+			}
 		}
 		return arr;
 	}
@@ -150,7 +156,7 @@ public class AdapterExt extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View item = null;
 		switch (layout_id) {
-		case R.layout.listitem_fnews:
+		case R.layout.listitem_fnews://钓播
 			item = onGetMyFNews(position, convertView, parent);
 			break;
 		case R.layout.listitem_friend:
@@ -231,12 +237,12 @@ public class AdapterExt extends BaseAdapter {
 		if(!TextUtils.isEmpty(commentData.imgUrl)){
 			ViewHelper.load(holder.comment_listitem_icon, commentData.imgUrl, true, false);
 		}
-		holder.comment_listitem_name.setText(commentData.uname);
-		holder.comment_listitem_name.setTag(commentData.uid);
+		holder.comment_listitem_name.setText(commentData.memberName);
+		holder.comment_listitem_name.setTag(commentData.memberId);
 		holder.comment_listitem_time_right_of.setText(BaseUtils.getTimeShow(commentData.commentTime));//设置日期
 		holder.comment_listitem_time_right_of.setVisibility(View.VISIBLE);//设置显示
 		holder.comment_listitem_time.setVisibility(View.GONE);//隐藏右边的时间
-		holder.comment_listitem_text.setText(commentData.text);//设置评论内容
+		holder.comment_listitem_text.setText(commentData.commentStr);//设置评论内容
 		holder.comment_listitem_reply.setVisibility(View.VISIBLE);//设置评论图标可见
 		holder.comment_listitem_reply.setTag(commentData);//设置评论图标tag数据，以供点击事情数据处理
 		holder.comment_listitem_lower_comments.setTag(new IHasComment(){//回复成功之后，二级评论有所改变
@@ -266,7 +272,7 @@ public class AdapterExt extends BaseAdapter {
 				String fromName = cData.fromName;
 				fromNameTv.setTag(fromId);
 				String toId = "-1";
-				String str = Const.DEFT_REPLY_ + cData.text;//设置评论
+				String str = Const.DEFT_REPLY_ + cData.commentStr;//设置评论
 				if(!TextUtils.isEmpty(cData.toId)){//回复某人评论
 					fromNameTv.setText(fromName);//设置联系人名字
 					fromTextTv.setText(Const.DEFT_REPLY);//设置"回复"
@@ -415,9 +421,10 @@ public class AdapterExt extends BaseAdapter {
 		return item;
 	}
 	class FNewsViewHolder {
-		TextView nameView,fYearView,fTimesView,textView,listitem_fnews_comment_count;
+		TextView nameView,fYearView,fTimesView,textView,listitem_fnews_comment_count,publish_time;
 		ImageView userIcon;
 		View listitem_friend_layout;
+		ViewGroup listitem_friend_tags;
 		HAutoAlign mHAutoAlign;
 		View[] childViews = null;
 	}
@@ -435,9 +442,11 @@ public class AdapterExt extends BaseAdapter {
 			holder.nameView = (TextView)fLayout.findViewById(R.id.listitem_friend_name);
 			holder.fYearView = (TextView)fLayout.findViewById(R.id.listitem_friend_fyear);
 			holder.fTimesView = (TextView)fLayout.findViewById(R.id.listitem_friend_ftimes);
+			holder.listitem_friend_tags = (ViewGroup)fLayout.findViewById(R.id.listitem_friend_tags);
 			
 			holder.textView = (TextView)item.findViewById(R.id.textView);
 			holder.listitem_fnews_comment_count = (TextView)item.findViewById(R.id.listitem_fnews_comment_count);
+			holder.publish_time = (TextView)item.findViewById(R.id.publish_time);
 			holder.userIcon = (ImageView)item.findViewById(R.id.user_icon);
 			if(newsData.netPicUrl != null){
 				int size = newsData.netPicUrl.length;
@@ -449,7 +458,6 @@ public class AdapterExt extends BaseAdapter {
 				}
 				holder.childViews = new LinearLayout[size];
 				OnClickListener listener = new OnClickListener() {
-					
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent();
@@ -474,12 +482,25 @@ public class AdapterExt extends BaseAdapter {
 			item = convertView;
 		}
 		
-		if(newsData.authorData.id == User.self().userInfo.id){
+		if(holder.listitem_friend_tags != null){
+			holder.listitem_friend_tags.setVisibility(View.VISIBLE);
+		}
+		if(
+//				newsData.authorData.id == User.self().userInfo.id || //不应该以当前用户id作为判断条件
+				 mFlag == AdapterExt.FLAG_MY_NEWS){//不需要当前用户信息
 			holder.listitem_friend_layout.setVisibility(View.GONE);
-		}else{
+			holder.publish_time.setVisibility(View.VISIBLE);
+			String showTime = BaseUtils.getTimeShow(newsData.publishTime);
+			if(!TextUtils.isEmpty(showTime)){
+				holder.publish_time.setText(showTime);
+			}else{
+				
+			}
+		}else{//需要用户信息
 			if(!TextUtils.isEmpty(newsData.authorData.photoUrl)){
 				ViewHelper.load(holder.userIcon,  UrlUtils.self().getNetUrl(newsData.authorData.photoUrl),true,false);
 			}
+			holder.publish_time.setVisibility(View.GONE);
 			holder.nameView.setText(newsData.authorData.userName);
 			holder.fYearView.setText(""+newsData.authorData.fYears);
 			holder.fTimesView.setText(""+newsData.authorData.fTimes);

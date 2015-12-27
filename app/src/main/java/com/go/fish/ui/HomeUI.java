@@ -109,6 +109,17 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 		initFirstTabItem();
 	}
 
+	final int TIME = 1500;
+	long lastBackTime = -1;
+	@Override
+	public void onBackPressed() {
+		if(lastBackTime == -1 || System.currentTimeMillis() - lastBackTime > TIME){
+			lastBackTime = System.currentTimeMillis();
+			ViewHelper.showToast(this, Const.DEFT_AGAIN_EXIT);
+		}else{
+			super.onBackPressed();
+		}
+	}
 	void initFirstTabItem() {
 		{// 设置foot item 获取焦点状态
 			int i = 0;
@@ -201,29 +212,34 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 	}
 
 	boolean justUplocation = false;
-
+	long lastQueryMapTime = -1;
+	final int TIME_QUERYMAP_INTERVAL = 10000;
 	@Override
 	protected void onResume() {
 		super.onResume();
-		justUplocation = false;
-		if(mFragmentIndex == 0){
-			updateLocation();
+		if(lastQueryMapTime == -1 || System.currentTimeMillis() - lastQueryMapTime > TIME_QUERYMAP_INTERVAL){
+			justUplocation = false;
 		}
-//		if(currentFragment != null){
-//			currentFragment.onShow();
-//		}
+		if(mFragmentIndex == 0){//地图界面
+			updateLocation();
+		}/*else if(mFragmentIndex == 3){//钓播
+			
+		}*/
+		if(currentFragment != null){
+			currentFragment.onShow();
+		}
 		updateUserData();
 	}
 
 	private void updateUserData(){
-		NetTool.data().http(new NetTool.RequestListener() {
+		NetTool.data().http(new NetTool.RequestListener() {//刷新用户信息
 			@Override
 			public void onEnd(byte[] bytes) {
 				JSONObject response = toJSONObject(bytes);
 				if (response != null ){
 					if(isRight(response)) {
 						JSONObject data = response.optJSONObject(Const.STA_DATA);
-						User.self().userInfo = PersonData.newInstance(data);
+						User.self().userInfo = PersonData.newInstance(data.optJSONObject(Const.STA_MEMBER));
 					}
 				}
 			}
@@ -599,13 +615,16 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 				}
 				{// 设置主内容区显示，隐藏
 					int rootViewId = 0;
-					if (R.id.ui_fnews_head_last_news == id) {
+					if (R.id.ui_fnews_head_last_news == id) {//Home钓播-【钓播|My钓播】
 						rootViewId = R.id.ui_fnews_list_root;
 					} else if (R.id.ui_zixun_head_last_news == id) {
 						rootViewId = R.id.ui_f_appear_list_root;
 					}
 					ViewGroup vg = (ViewGroup) findViewById(rootViewId);
 					vg.getChildAt(0).setVisibility(View.VISIBLE);
+					ListView listView  = (ListView)vg.getChildAt(0);
+					listView.setTag("0");
+					HomeFragment.getNetPodList(listView, "0");
 					vg.getChildAt(1).setVisibility(View.GONE);
 				}
 			}
@@ -613,6 +632,10 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 		}
 		case R.id.ui_fnews_head_mynews:
 		case R.id.ui_zixun_head_last_activity: {
+			if(R.id.ui_zixun_head_last_activity == id){
+				ViewHelper.showToast(this, Const.DEFT_DEVING);
+				return ;
+			}
 			boolean f = "true".equals(view.getTag());
 			if (!f) {
 				ViewGroup p = (ViewGroup) view;
@@ -641,6 +664,9 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 					}
 					ViewGroup vg = (ViewGroup) findViewById(rootViewId);
 					vg.getChildAt(1).setVisibility(View.VISIBLE);
+					ListView listView  = (ListView)vg.getChildAt(1);
+					listView.setTag(User.self().userInfo.mobileNum);
+					HomeFragment.getNetPodList(listView, User.self().userInfo.mobileNum);
 					vg.getChildAt(0).setVisibility(View.GONE);
 				}
 			}

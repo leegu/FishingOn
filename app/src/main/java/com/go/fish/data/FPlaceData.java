@@ -24,8 +24,8 @@ public class FPlaceData implements IBaseData{
 		ret.lng = json.optDouble(Const.STA_LNG);
 		ret.distance = MapUtil.getDistance(ret.alt, ret.lng);
 		ret.title = json.optString(Const.STA_NAME);
-//		ret.desp = json.optString(Const.STA_INTRODUCTION);
-		ret.desp = json.optString(Const.STA_NAME);
+		ret.desp = json.optString(Const.STA_INTRODUCTION);
+//		ret.desp = json.optString(Const.STA_NAME);
 		ret.sid = json.optString(Const.STA_ID);
 		return ret;
 	}
