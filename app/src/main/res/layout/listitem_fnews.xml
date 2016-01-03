@@ -14,7 +14,7 @@
 
         <include
             android:id="@+id/listitem_friend_layout"
-            layout="@layout/listitem_friend_for_ui_zan" >
+            layout="@layout/listitem_friend_2_rows" >
         </include>
         <!--  -->
 

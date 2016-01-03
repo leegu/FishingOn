@@ -64,6 +64,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/icon" />
 
                 <TextView

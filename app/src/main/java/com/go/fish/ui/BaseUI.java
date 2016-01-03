@@ -170,7 +170,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 					ViewHelper.load(
 							userIcon,
 							UrlUtils.self().getNetUrl(
-									User.self().userInfo.photoUrl), true);
+									User.self().userInfo.photoUrl), true,false);
 				}
 
 				TextView reg_next_location_input = (TextView) findViewById(R.id.reg_next_location_input);
@@ -360,94 +360,57 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		{// 钓场、渔具
 			ListView fPlaceList = new ListView(this);
 			vg.addView(fPlaceList);
-			// 本地先获取显示
-			String careFPlace = LocalMgr.self().getString(
-					Const.SIN_DB_MY_CARE_FPLACE);
-			JSONArray jsonArr = null;
-			try {
-				if (!TextUtils.isEmpty(careFPlace)) {
-					jsonArr = new JSONArray(careFPlace);
-				} else {
-					jsonArr = new JSONArray();
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(
-					R.layout.listitem_fpalce, jsonArr);
-			final FPlaceListAdapter mListAdapter = new FPlaceListAdapter(this,
-					fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT);
+			
+			ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce, new JSONArray());
+			final FPlaceListAdapter mListAdapter = new FPlaceListAdapter(this,fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT);
+			mListAdapter.flag = FPlaceListAdapter.FLAG_CARE_RESULT;
 			fPlaceList.setAdapter(mListAdapter);
 			// 网络数据抓取,进行更新
-			NetTool.RequestData rd = NetTool.RequestData.newInstance(
-					new NetTool.RequestListener() {
-						@Override
-						public void onStart() {
-						}
-
-						@Override
-						public void onEnd(byte[] data) {
-							try {
-								String str = new String(data, "utf-8");
-								mListAdapter.updateAdapter(DataMgr
-										.makeFPlaceDatas(
-												R.layout.listitem_fpalce,
-												new JSONArray(str)
-														.getJSONArray(0)));
-							} catch (UnsupportedEncodingException e) {
-								e.printStackTrace();
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
-						}
-					}, "fishing_place_near");
-			NetTool.data().http(rd.syncCallback());
+			HomeFragment.getNetPodList(fPlaceList, "0");
 		}
 
 		{// 钓播
 			final ListView fNewsList = new ListView(this);
 			fNewsList.setVisibility(View.GONE);
 			vg.addView(fNewsList);
-			// 本地先获取显示
-			String careFPlace = LocalMgr.self().getString(
-					Const.SIN_DB_MY_CARE_FNEWS);
-			ArrayList<IBaseData> arr = new ArrayList<IBaseData>();
-			JSONArray jsonArr = null;
+			JSONObject jsonObject = new JSONObject();
 			try {
-				if (!TextUtils.isEmpty(careFPlace)) {
-					jsonArr = new JSONArray(careFPlace);
-				} else {
-					jsonArr = new JSONArray();
-				}
+				jsonObject.put(Const.STA_LNG, User.self().userInfo.lng);
+				jsonObject.put(Const.STA_LAT, User.self().userInfo.lat);
+				jsonObject.put(Const.STA_START_INDEX, 0);
+				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			// friend界面此时最接近
-			final AdapterExt mListAdapter = AdapterExt.newInstance(fNewsList,
-					jsonArr, R.layout.listitem_friend);
-			fNewsList.setAdapter(mListAdapter);
-			// 网络数据抓取,进行更新
-			NetTool.RequestData rd = NetTool.RequestData.newInstance(
-					new NetTool.RequestListener() {
-						@Override
-						public void onStart() {
-							ViewHelper.showGlobalWaiting(BaseUI.this, null);
-						}
+			final ListView list = fNewsList;
+			list.setDividerHeight(0);
+			AdapterExt.newInstance(list, new JSONArray(),
+					R.layout.listitem_friend_2_rows);
+			NetTool.data().http(new RequestListener() {
+				@Override
+				public void onStart() {
+					super.onStart(BaseUI.this);
+				}
 
-						@Override
-						public void onEnd(byte[] data) {
-							mListAdapter.updateAdapter(AdapterExt
-									.makePersonDataArray(toJSONArray(data)));
-							ViewHelper.closeGlobalWaiting();
-						}
-					}, "my_friend");
-			NetTool.data().http(rd.syncCallback());
+				@Override
+				public void onEnd(byte[] data) {
+					// TODO Auto-generated method stub
+					JSONObject json = toJSONObject(data);
+					if (isRight(json)) {
+						JSONArray dataJson = json.optJSONArray(Const.STA_DATA);
+						ListView list = fNewsList;
+						list.setDividerHeight(0);
+						list.setAdapter(AdapterExt.newInstance(list, dataJson, R.layout.listitem_friend_3_rows));
+					}
+					onEnd();
+				}
+			}, jsonObject, UrlUtils.self().getAroundMember());
+			
 		}
 	}
 
 	private void onCreateNearFPlace() {// 创建附近钓场
-		String[] tabItemsTitle = getResources().getStringArray(
-				R.array.hfs_splace_type);
+		String[] tabItemsTitle = getResources().getStringArray(R.array.hfs_splace_type);
 		ViewGroup vg = (ViewGroup) findViewById(R.id.ui_near_fplace_root);
 		final ViewGroup mainVG = ViewHelper.newMainView(this,
 				getSupportFragmentManager(),
@@ -459,8 +422,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				}, tabItemsTitle);
 		vg.addView(mainVG);
 		ViewPager vp = (ViewPager) mainVG.findViewById(R.id.search_viewpager);
-		BaseFragmentPagerAdapter.initAdapterByNetData(vp,
-				R.layout.listitem_fpalce, null, vp.getCurrentItem());
+		BaseFragmentPagerAdapter.initAdapterByNetData(vp, R.layout.listitem_fpalce, null, vp.getCurrentItem());
 	}
 
 	private void onCreateNearFriend() {// 创建附近钓友
@@ -483,7 +445,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				final ListView list = (ListView) findViewById(R.id.ui_near_f_friends_listview);
 				list.setDividerHeight(0);
 				AdapterExt.newInstance(list, new JSONArray(),
-						R.layout.listitem_friend_for_ui_zan);
+						R.layout.listitem_friend_2_rows);
 				NetTool.data().http(new RequestListener() {
 					@Override
 					public void onStart() {
@@ -500,7 +462,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 							ListView list = (ListView) findViewById(R.id.ui_near_f_friends_listview);
 							list.setDividerHeight(0);
 							list.setAdapter(AdapterExt.newInstance(list,
-									dataJson, R.layout.listitem_friend));
+									dataJson, R.layout.listitem_friend_3_rows));
 						}
 						onEnd();
 					}
@@ -510,14 +472,17 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 	}
 
 	private void onCreateMyFNewsView() {// 创建我的钓播
-		// TODO 先加载本地数据
-		HomeFragment.getNetPodList((ListView) findViewById(R.id.my_f_news_list), User.self().userInfo.mobileNum);
+		ListView list = (ListView) findViewById(R.id.my_f_news_list);
+		AdapterExt ae = AdapterExt.newInstance(list, new JSONArray(),  R.layout.listitem_fnews);
+		ae.mFlag = AdapterExt.FLAG_MY_NEWS;
+		list.setAdapter(ae);
+		HomeFragment.getNetPodList(list, User.self().userInfo.mobileNum);
 	}
 
 	public void onIconClick(final View view) {
 		int id = view.getId();
 		switch (id) {
-		case R.id.reg_next_photo: {
+		case R.id.userIcon: {
 			GalleryUtils.self().crop(this, new GalleryUtils.GalleryCallback() {
 				@Override
 				public void onCompleted(String[] filePath, Bitmap bitmap0) {
@@ -576,7 +541,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		final ListView list = (ListView) findViewById(R.id.zan_listview);
 		list.setDividerHeight(0);
 		AdapterExt.newInstance(list, new JSONArray(),
-				R.layout.listitem_friend_for_ui_zan);
+				R.layout.listitem_friend_2_rows);
 		NetTool.data().http(new RequestListener() {
 			@Override
 			public void onStart() {
@@ -660,7 +625,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				public void onEnd(byte[] data) {
 					JSONObject response = toJSONObject(data);
 					if (isRight(BaseUI.this,response,true)) {// 文字数据提交成功
-						View view = findViewById(R.id.reg_next_photo);
+						View view = findViewById(R.id.userIcon);
 						if (TextUtils.isEmpty((String) view.getTag()) || !view.isSelected()) {
 							onEnd();
 							showHomeUI();
@@ -722,8 +687,8 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			}
 			RequestData rData = RequestData.newInstance(new RequestListener() {
 				@Override
-				public void onStart(Context context, String waitingMsg) {
-					super.onStart(context, Const.DEFT_COMMITTING);
+				public void onStart() {
+					super.onStart(BaseUI.this, Const.DEFT_PUBLISHING);
 				}
 
 				@Override
@@ -732,9 +697,9 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 					if (isRight(BaseUI.this, response, true)) {
 						//更新前界面界面数据
 						finish();
-						ViewHelper.showToast(BaseUI.this, response.optString(Const.STA_MESSAGE));
+						ViewHelper.showToast(BaseUI.this, Const.DEFT_PUBLISH_COMPLETED);
 					}else{
-						
+						ViewHelper.showToast(BaseUI.this, response.optString(Const.STA_MESSAGE));
 					}
 				}
 			}, (JSONObject) null, UrlUtils.self().getCreatePodCast());
@@ -812,10 +777,15 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		}
 		}
 	}
-
+	
+	public void onFishingNews(View view) {
+		Intent i = new Intent();
+		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_f_news_item_detail);
+		i.putExtra(Const.STA_ID, (String)view.getTag());
+		UIMgr.showActivity(this,i, BaseUI.class.getName());
+	}
 	@Override
 	public void onCommentIconClick(View view) {
-
 	}
 
 	private void onCreateCommentList() {

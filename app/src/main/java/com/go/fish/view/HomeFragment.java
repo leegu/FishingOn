@@ -26,9 +26,11 @@ import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.barcode.BarcodeUI;
+import com.go.fish.data.DataMgr;
 import com.go.fish.data.FPlaceData;
 import com.go.fish.data.MyListitemData;
 import com.go.fish.data.PersonData;
+import com.go.fish.ui.HomeUI;
 import com.go.fish.ui.SearchUI;
 import com.go.fish.ui.UICode;
 import com.go.fish.ui.UIMgr;
@@ -36,6 +38,7 @@ import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
+import com.go.fish.util.LogUtils;
 import com.go.fish.util.MessageHandler;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.NetTool.RequestData;
@@ -134,7 +137,7 @@ public class HomeFragment extends Fragment {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			int count = fNListView.getAdapter() != null ? fNListView.getAdapter().getCount() : 0;
-			count = 0;
+//			count = 0;
 			jsonObject.put(Const.STA_START_INDEX, count);
 			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
 			jsonObject.put(Const.STA_MOBILE, mobileNum);//默认所有钓播
@@ -151,13 +154,27 @@ public class HomeFragment extends Fragment {
 			public void onEnd(byte[] data) {
 				JSONObject response = toJSONObject(data);
 				if(isRight(fNListView.getContext(),response,true)){
-					JSONArray arr= response.optJSONArray(Const.STA_DATA);
+					final JSONArray arr= response.optJSONArray(Const.STA_DATA);
 					if(arr != null && arr.length() > 0){
-						ListAdapter adapter = fNListView.getAdapter();
+						final ListAdapter adapter = fNListView.getAdapter();
 						if(adapter instanceof AdapterExt){
-							((AdapterExt)adapter).updateAdapter(AdapterExt.makeFNewsDataArray(arr));
+							new Thread(){
+								public void run() {
+									final ArrayList<IBaseData> ai = AdapterExt.makeFNewsDataArray(arr);
+									fNListView.postDelayed(new Runnable() {
+										@Override
+										public void run() {
+											// TODO Auto-generated method stub
+											((AdapterExt)adapter).updateAdapter(ai);
+										}
+									}, 10);
+								};
+							}.start();
 						}else if(adapter instanceof HeaderViewListAdapter){
 							((AdapterExt)((HeaderViewListAdapter)adapter).getWrappedAdapter()).updateAdapter(AdapterExt.makeFNewsDataArray(arr));
+						}else if(adapter instanceof FPlaceListAdapter){
+							ArrayList<FPlaceData> fDataArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce,arr);
+							((FPlaceListAdapter)adapter).updateAdapter(fDataArr);
 						}
 					}else{
 						ViewHelper.showToast(fNListView.getContext(), Const.DEFT_NO_DATA);
@@ -178,12 +195,14 @@ public class HomeFragment extends Fragment {
 		case R.layout.ui_f_fplace:
 			break;
 		case R.layout.ui_f_care:{//关注页面
-	    	ViewPager viewPager = (ViewPager) contentView.findViewById(R.id.search_viewpager);
-			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce, null, viewPager.getCurrentItem());
+			onShowCare();
+//	    	ViewPager viewPager = (ViewPager) contentView.findViewById(R.id.search_viewpager);
+//			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce, null, viewPager.getCurrentItem());
 			break;
 		}
 		case R.layout.ui_f_zixun:{
-			onCreateZixunView((ViewGroup)contentView.findViewById(R.id.ui_f_appear_list_root));
+			onShowZixun();
+//			onCreateZixunView((ViewGroup)contentView.findViewById(R.id.ui_f_appear_list_root));
 //			ViewPager viewPager = (ViewPager) contentView.findViewById(R.id.ui_f_appear_list_root);
 //			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce);
 			break;
@@ -200,6 +219,19 @@ public class HomeFragment extends Fragment {
 	}
 	public void onHide(){
 		showStatus = false;
+	}
+	
+	void onShowCare(){
+		ListView fPlaceList = (ListView)getView().findViewById(R.id.ui_f_care_list);
+//    	ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce, new JSONArray());
+//		final FPlaceListAdapter mListAdapter = new FPlaceListAdapter(getActivity(),fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT);
+//		mListAdapter.flag = FPlaceListAdapter.FLAG_CARE_RESULT;
+//		fPlaceList.setAdapter(mListAdapter);
+		// 网络数据抓取,进行更新
+		HomeFragment.getNetPodList(fPlaceList, "0");
+	}
+	void onShowZixun(){
+		
 	}
 	void onShowMyView(){
 //		updateMyView(getView());
@@ -236,7 +268,7 @@ public class HomeFragment extends Fragment {
 			
 			if(!TextUtils.isEmpty(User.self().userInfo.photoUrl)){
 				ImageView userIcon = (ImageView)view.findViewById(R.id.userIcon);
-				ViewHelper.load(userIcon, UrlUtils.self().getNetUrl(User.self().userInfo.photoUrl), true);
+				ViewHelper.load(userIcon, UrlUtils.self().getNetUrl(User.self().userInfo.photoUrl), true,false);
 			}
 		}
 	}
@@ -269,7 +301,7 @@ public class HomeFragment extends Fragment {
 						case 0://我的播况
 							UIMgr.showActivity(getActivity(),R.layout.ui_my_f_news);
 							break;
-						case 1:
+						case 1://我的关注
 							UIMgr.showActivity(getActivity(),R.layout.ui_my_care);
 							break;
 						case 2://附近钓场
@@ -365,62 +397,86 @@ public class HomeFragment extends Fragment {
 			lastNews.setAdapter(mListAdapter);
 		}
 		{//最新活动
-			final ListView lastActivity = (ListView)view.findViewById(R.id.last_activity);
-			lastActivity.setVisibility(View.GONE);
-			//本地先获取显示
-			String careFPlace = LocalMgr.self().getString(Const.SIN_DB_MY_CARE_FPLACE);
-			JSONArray jsonArr = null;
-			try {
-				if(!TextUtils.isEmpty(careFPlace)){
-					jsonArr = new JSONArray(careFPlace);
-				}else{
-					jsonArr = new JSONArray();
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			final AdapterExt mListAdapter = AdapterExt.newInstance(lastActivity, jsonArr, R.layout.listitem_zixun);
-			
-			lastActivity.setAdapter(mListAdapter);
+//			final ListView lastActivity = (ListView)view.findViewById(R.id.last_activity);
+//			lastActivity.setVisibility(View.GONE);
+//			//本地先获取显示
+//			String careFPlace = LocalMgr.self().getString(Const.SIN_DB_MY_CARE_FPLACE);
+//			JSONArray jsonArr = null;
+//			try {
+//				if(!TextUtils.isEmpty(careFPlace)){
+//					jsonArr = new JSONArray(careFPlace);
+//				}else{
+//					jsonArr = new JSONArray();
+//				}
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//			final AdapterExt mListAdapter = AdapterExt.newInstance(lastActivity, jsonArr, R.layout.listitem_zixun);
+//			
+//			lastActivity.setAdapter(mListAdapter);
 		}
     }
     
     private void onCreateCareView(ViewGroup vg){
     	//创建 关注 页面
-    	String[] tabItemsTitle = LocalMgr.getFPlaceType();
-    	vg.addView(ViewHelper.newMainView(getActivity(), getChildFragmentManager(), new ResultForActivityCallback() {
-			@Override
-			public void onItemClick(View view,final FPlaceData fPlaceData) {
-				RequestData rData = RequestData.newInstance(new RequestListener() {
-					@Override
-					public void onStart() {
-						ViewHelper.showGlobalWaiting(getActivity(), null);
-					}
-
-					@Override
-					public void onEnd(byte[] data) {
-						try {
-							String jsonStr = new String(data, "UTF-8");
-							Bundle newBundle = new Bundle();
-							String fPlaceId = fPlaceData.sid;;
-							newBundle.putString(Const.STA_ID, fPlaceId);
-							newBundle.putString(Const.STA_TEXT, fPlaceData.title);
-							newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
-							newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
-							newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
-							newBundle.putInt(Const.PRI_FPLACE_RESULT_TYPE, FPlaceListAdapter.FLAG_CARE_RESULT);
-							Intent i = new Intent();
-							i.putExtras(newBundle);
-							UIMgr.showActivity(getActivity(),i, SearchUI.class.getName());
-							ViewHelper.closeGlobalWaiting();
-						} catch (Exception e) {
-						}
-					}
-				}, "fishing_place_" + fPlaceData.sid);
-	            rData.putData(Const.STA_ID, fPlaceData.sid);
-	            NetTool.data().http(rData.syncCallback());
-			}
-		}, tabItemsTitle));
+    	ListView fPlaceList = (ListView)vg.findViewById(R.id.ui_f_care_list);
+    	ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce, new JSONArray());
+		final FPlaceListAdapter mListAdapter = new FPlaceListAdapter(getActivity(),fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT);
+		mListAdapter.flag = FPlaceListAdapter.FLAG_CARE_RESULT;
+		fPlaceList.setAdapter(mListAdapter);
+		// 网络数据抓取,进行更新
+//		HomeFragment.getNetPodList(fPlaceList, "0");
+//		
+//    	String[] tabItemsTitle = LocalMgr.getFPlaceType();
+//    	vg.addView(ViewHelper.newMainView(getActivity(), getChildFragmentManager(), new ResultForActivityCallback() {
+//			@Override
+//			public void onItemClick(View view,final FPlaceData fPlaceData) {
+//				String fPlaceId = fPlaceData.sid;
+//				JSONObject jsonObject = new JSONObject();
+//				try {
+//					jsonObject.put(Const.STA_FIELDID, fPlaceId);
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				}
+//				NetTool.data().http(new RequestListener() {
+//					@Override
+//					public void onStart() {
+//						onStart(getActivity());
+//					}
+//
+//					@Override
+//					public void onEnd(byte[] data) {
+//						try {
+//							if (isOver()) {// 返回键取消联网之后不应该继续处理
+//
+//							} else {
+//								JSONObject response = toJSONObject(data);
+//								if (response != null) {
+//									if (isRight(response)) {
+//										String jsonStr = new String(data, "UTF-8");
+//										Bundle newBundle = new Bundle();
+//										newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
+//										newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
+//										newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
+//										Intent i = new Intent();
+//										i.putExtras(newBundle);
+//										UIMgr.showActivity(getActivity(), i, SearchUI.class.getName());
+//									} else {
+//										onDataError(getActivity(), response);
+//									}
+//								} else {
+//									onDataError(getActivity());
+//								}
+//							}
+//							onEnd();
+//						} catch (Exception e) {
+//						}
+//					}
+//				}, jsonObject, UrlUtils.self().getFieldInfo());
+//			}
+//		}, tabItemsTitle));
+//    	ViewPager viewPager = (ViewPager) vg.findViewById(R.id.search_viewpager);
+//    	BaseFragmentPagerAdapter.loadNetData(viewPager, listitemLayoutid, "", 0);
     }
     @Override
     public void onPause() {

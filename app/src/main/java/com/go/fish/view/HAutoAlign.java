@@ -46,6 +46,7 @@ public class HAutoAlign extends HorizontalScrollView {
 	int screenWidth = 0;
 	public void fillChilds(View[] childs) {
 		childViewArr = childs;
+		childWidth = childs.length > 1 ? childWidth : screenWidth;
 		for(View v : childs){
 			Log.d("yl", "childWidth=" + childWidth);
 			contentView.addView(v, childWidth, childHeight);

@@ -73,8 +73,8 @@ public class AdapterExt extends BaseAdapter {
 			useScroolListener = true;
 			arr = makeFNewsDataArray(array);
 			break;
-		case R.layout.listitem_friend_for_ui_zan:
-		case R.layout.listitem_friend:
+		case R.layout.listitem_friend_2_rows:
+		case R.layout.listitem_friend_3_rows:
 			arr = makePersonDataArray(array);
 			break;
 		case R.layout.listitem_comment:
@@ -159,10 +159,10 @@ public class AdapterExt extends BaseAdapter {
 		case R.layout.listitem_fnews://钓播
 			item = onGetMyFNews(position, convertView, parent);
 			break;
-		case R.layout.listitem_friend:
+		case R.layout.listitem_friend_3_rows:
 			item = onGetFriend(position, convertView, parent);
 			break;
-		case R.layout.listitem_friend_for_ui_zan:
+		case R.layout.listitem_friend_2_rows:
 			item = onGetZanFriend(position, convertView, parent);
 			break;
 		case R.layout.listitem_comment:
@@ -448,46 +448,42 @@ public class AdapterExt extends BaseAdapter {
 			holder.listitem_fnews_comment_count = (TextView)item.findViewById(R.id.listitem_fnews_comment_count);
 			holder.publish_time = (TextView)item.findViewById(R.id.publish_time);
 			holder.userIcon = (ImageView)item.findViewById(R.id.user_icon);
-			if(newsData.netPicUrl != null){
-				int size = newsData.netPicUrl.length;
-				ViewStub vs = (ViewStub)item.findViewById(R.id.fnews_image_contianer_view_stub);
-				if(vs != null){
-					holder.mHAutoAlign = (HAutoAlign)((ViewGroup)vs.inflate()).getChildAt(0);
-				}else{
-					holder.mHAutoAlign = (HAutoAlign)item.findViewById(R.id.h_image_view_container);
-				}
-				holder.childViews = new LinearLayout[size];
-				OnClickListener listener = new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent();
-						intent.putExtra(Const.PRI_EXTRA_IMAGE_INDEX, position);
-						intent.putExtra(Const.PRI_EXTRA_IMAGE_URLS, newsData.netPicUrl);
-						UIMgr.showActivity((Activity)context,intent,ImageViewUI.class.getName());
-					}
-				};
-				int p = item.getContext().getResources().getDimensionPixelSize(R.dimen.base_space_2);
-				for(int i = 0; i < size; i++){
-					holder.childViews[i] = mInflater.inflate(R.layout.h_image_view_item, null);
-//					holder.childViews[i].setBackgroundColor((int)new Random().nextLong());
-//					holder.childViews[i].setPadding(p,p,p,p);
-					holder.childViews[i].setTag(newsData.netPicUrl[i]);
-					holder.childViews[i].setOnClickListener(listener);
-//					ViewHelper.load((ImageView)((ViewGroup)holder.childViews[i]).getChildAt(0), (String)holder.childViews[i].getTag(), true,false);
-				}
-				holder.mHAutoAlign.fillChilds(holder.childViews);
-			}
+//			if(newsData.netPicUrl != null){//当有钓播图片时
+//				int size = newsData.netPicUrl.length;
+//				ViewStub vs = (ViewStub)item.findViewById(R.id.fnews_image_contianer_view_stub);
+//				if(vs != null){//还没有初始化需要inflate
+//					holder.mHAutoAlign = (HAutoAlign)((ViewGroup)vs.inflate()).getChildAt(0);
+//				}else{
+//					holder.mHAutoAlign = (HAutoAlign)item.findViewById(R.id.h_image_view_container);
+//				}
+//				holder.childViews = new LinearLayout[size];
+//				OnClickListener listener = new OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						Intent intent = new Intent();
+//						intent.putExtra(Const.PRI_EXTRA_IMAGE_INDEX, position);
+//						intent.putExtra(Const.PRI_EXTRA_IMAGE_URLS, newsData.netPicUrl);
+//						UIMgr.showActivity((Activity)context,intent,ImageViewUI.class.getName());
+//					}
+//				};
+//				for(int i = 0; i < size; i++){
+//					holder.childViews[i] = mInflater.inflate(R.layout.h_image_view_item, null);
+////					holder.childViews[i].setBackgroundColor((int)new Random().nextLong());
+////					holder.childViews[i].setPadding(p,p,p,p);
+//					String url = newsData.netPicUrl[i];
+////					url = "http://f.hiphotos.baidu.com/image/h%3D200/sign=129e451332fae6cd13b4ac613fb20f9e/1e30e924b899a901c9bdff121a950a7b0208f50e.jpg";
+//					holder.childViews[i].setTag(url);
+//					holder.childViews[i].setOnClickListener(listener);
+////					ViewHelper.load((ImageView)((ViewGroup)holder.childViews[i]).getChildAt(0), (String)holder.childViews[i].getTag(), true,false);
+//				}
+//				holder.mHAutoAlign.fillChilds(holder.childViews);
+//			}
 		} else {
 			holder = (FNewsViewHolder)convertView.getTag();
 			item = convertView;
 		}
-		
-		if(holder.listitem_friend_tags != null){
-			holder.listitem_friend_tags.setVisibility(View.VISIBLE);
-		}
-		if(
-//				newsData.authorData.id == User.self().userInfo.id || //不应该以当前用户id作为判断条件
-				 mFlag == AdapterExt.FLAG_MY_NEWS){//不需要当前用户信息
+
+		if( position != 0 &&  mFlag == AdapterExt.FLAG_MY_NEWS){//不需要当前用户信息
 			holder.listitem_friend_layout.setVisibility(View.GONE);
 			holder.publish_time.setVisibility(View.VISIBLE);
 			String showTime = BaseUtils.getTimeShow(newsData.publishTime);
@@ -497,83 +493,94 @@ public class AdapterExt extends BaseAdapter {
 				
 			}
 		}else{//需要用户信息
+			if(holder.listitem_friend_tags != null){
+				holder.listitem_friend_tags.setVisibility(View.VISIBLE);
+				String[] tags = newsData.authorData.aiHaos;
+				for(int i = 0; i < holder.listitem_friend_tags.getChildCount(); i++){//只对前三个进行显示
+					TextView tv = (TextView)holder.listitem_friend_tags.getChildAt(i);
+					if(i < tags.length){
+						tv.setVisibility(View.VISIBLE);
+						tv.setBackgroundColor(BaseUtils.getTagBg(tags[i]));
+						tv.setText(tags[i]);
+					}else{
+						tv.setVisibility(View.GONE);
+					}
+				}
+			}
+			
 			if(!TextUtils.isEmpty(newsData.authorData.photoUrl)){
-				ViewHelper.load(holder.userIcon,  UrlUtils.self().getNetUrl(newsData.authorData.photoUrl),true,false);
+				String url = newsData.authorData.photoUrl;
+//				url = "http://img2.baobao88.com/bbfile/allimg/101021/10930462436-14.gif";
+				ViewHelper.load(holder.userIcon,  UrlUtils.self().getNetUrl(url),true,false);
 			}
 			holder.publish_time.setVisibility(View.GONE);
-			holder.nameView.setText(newsData.authorData.userName);
+			holder.nameView.setText(newsData.authorData.userName + "--" + position);
 			holder.fYearView.setText(""+newsData.authorData.fYears);
 			holder.fTimesView.setText(""+newsData.authorData.fTimes);
 		}
+		if(holder.mHAutoAlign != null) holder.mHAutoAlign.scrollTo(0, 0);
 		holder.textView.setText(newsData.content);
-		holder.listitem_fnews_comment_count.setText(""+newsData.commentCount);
-		final FNewsViewHolder f_holder = holder;
-		if(newsData.netPicUrl != null && f_holder.childViews != null){
-			item.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-//					if(position >= mFirstVisibleItem && position <= mFirstVisibleItem + mVisibleItemCount){
-//						for(int i = 0; i < f_holder.childViews.length; i++){
-//							ViewHelper.load(f_holder.childViews[i], (String)f_holder.childViews[i].getTag(), true);
-//						}
-//					}
-				}
-			}, 1000);
-		}
+		if(newsData.commentCount > 0){holder.listitem_fnews_comment_count.setText(""+newsData.commentCount);}else{holder.listitem_fnews_comment_count.setVisibility(View.GONE);}
+//		final FNewsViewHolder f_holder = holder;
+//		if(newsData.netPicUrl != null && f_holder.childViews != null){
+//			item.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+////					if(position >= mFirstVisibleItem && position <= mFirstVisibleItem + mVisibleItemCount){
+////						for(int i = 0; i < f_holder.childViews.length; i++){
+////							ViewHelper.load(f_holder.childViews[i], (String)f_holder.childViews[i].getTag(), true);
+////						}
+////					}
+//				}
+//			}, 1000);
+//		}
 		return item;
 	}
 	
 	
-	private int mFirstVisibleItem;
-	// GridView中可见的图片的数量
-	private int mVisibleItemCount;
-	// 记录是否是第一次进入该界面
-	private boolean isFirstEnterThisActivity = true;
-	
 	private class ScrollListenerImpl implements OnScrollListener {
-		@Override
-		public void onScroll(AbsListView view, int firstVisibleItem,
-				int visibleItemCount, int totalItemCount) {
-			mFirstVisibleItem = firstVisibleItem;
-			mVisibleItemCount = visibleItemCount;
+		boolean isLastRow = false;    
+		int firstVisibleItem, visibleItemCount;
+        @Override    
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {    
+            //滚动时一直回调，直到停止滚动时才停止回调。单击时回调一次。    
+            //firstVisibleItem：当前能看见的第一个列表项ID（从0开始）    
+            //visibleItemCount：当前能看见的列表项个数（小半个也算）    
+            //totalItemCount：列表项共数    
+        	this.firstVisibleItem = firstVisibleItem;
+        	this.visibleItemCount = visibleItemCount;
+            //判断是否滚到最后一行    
+            if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount > 0) {    
+                isLastRow = true;    
+            }    
+        }    
+        @Override    
+        public void onScrollStateChanged(AbsListView view, int scrollState) {    
+            //正在滚动时回调，回调2-3次，手指没抛则回调2次。scrollState = 2的这次不回调    
+            //回调顺序如下    
+            //第1次：scrollState = SCROLL_STATE_TOUCH_SCROLL(1) 正在滚动    
+            //第2次：scrollState = SCROLL_STATE_FLING(2) 手指做了抛的动作（手指离开屏幕前，用力滑了一下）    
+            //第3次：scrollState = SCROLL_STATE_IDLE(0) 停止滚动             
+            //当屏幕停止滚动时为0；当屏幕滚动且用户使用的触碰或手指还在屏幕上时为1；  
+            //由于用户的操作，屏幕产生惯性滑动时为2  
+        
+            //当滚到最后一行且停止滚动时，执行加载    
+            if (/*isLastRow && */scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {    
+                //加载元素    
+            	update(firstVisibleItem, visibleItemCount);
+                isLastRow = false;    
+            }    
+        }    
+		
+		private void update(int firstVisibleItem,int visibleItemCount){
+			if(layout_id == R.layout.listitem_fnews){
+				for (int i = firstVisibleItem; i < firstVisibleItem + visibleItemCount; i++) {
+					FNewsData newsData = (FNewsData)listDatas.get(i);
+					
+				}
+			}
+			System.out.print(firstVisibleItem  +" ------ " + visibleItemCount);
 		}
 		
-		/**
-		 */
-		@Override
-		public void onScrollStateChanged(AbsListView view, int scrollState) {
-//			if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-//				Toast.makeText(view.getContext(), "onScrollStateChanged", Toast.LENGTH_LONG);
-//				update(mFirstVisibleItem, mVisibleItemCount);
-//			} else if(scrollState == OnScrollListener.){
-//				cancelAllTasks();
-//			}
-		}
-		
-//		private void update(int firstVisibleItem,int visibleItemCount){
-//			if(layout_id == R.layout.listitem_fnews){
-//				for (int i = firstVisibleItem; i < firstVisibleItem
-//						+ visibleItemCount; i++) {
-//					FNewsData newsData = (FNewsData)listDatas.get(i);
-//					ImageViewAdapter adapter = adapterHashMap.get(newsData);
-//					GridView gridView = ((GridView)mListView.findViewWithTag(String.valueOf(i)));
-//					if(gridView != null){//为null表示没有图片
-//						if(adapter != null){
-//							gridView.setAdapter(adapter);
-//							adapter.onScrollStateChanged();
-//						}else{
-//							adapter = new ImageViewAdapter(gridView);
-//							adapter.mContext = mListView.getContext();
-//							adapter.mUrls = new String[newsData.netPicUrl.length];
-//							for(int j = 0; j < newsData.netPicUrl.length; j++){
-//								adapter.mUrls[j] = newsData.netPicUrl[j];
-//							}
-//							gridView.setAdapter(adapter);
-//							adapterHashMap.put(newsData, adapter);
-//						}
-//					}
-//				}
-//			}
-//		}
 	}
 }

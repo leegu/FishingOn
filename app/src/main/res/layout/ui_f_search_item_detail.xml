@@ -234,6 +234,7 @@
                         <!-- menu 图标 end-->
                         <!-- menu 图标 对象介绍 begin-->
                         <FrameLayout
+                            android:padding="@dimen/base_space"
                             android:id="@+id/menu_item_contents"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">

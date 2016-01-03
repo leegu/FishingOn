@@ -6,6 +6,7 @@
     android:padding="@dimen/base_space" >
 
     <ImageView
+        android:src="@drawable/pic"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -85,7 +85,7 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
     	loadNetData(viewPager, listitemLayoutid, searchTitle, defaultIndex);
     }
 
-	private static void loadNetData(final ViewPager viewPager,
+    public static void loadNetData(final ViewPager viewPager,
 			final int listitemLayoutid, final String searchTitle,
 			final int defaultIndex) {
 		BaseFragmentPagerAdapter adapter = (BaseFragmentPagerAdapter) viewPager.getAdapter();
@@ -93,7 +93,7 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
     	JSONObject jsonObject = new JSONObject();
     	//活动聚焦页面的listFragment
     	final FPlaceListFragment listFragment = (FPlaceListFragment) adapter.getItem(defaultIndex);
-    	int startIndex = listFragment.mListAdapter.listDatas.size();
+    	int startIndex = listFragment.mListAdapter == null ? 0 : listFragment.mListAdapter.listDatas.size();
 		try {
 			jsonObject.put(Const.STA_LAT, String.valueOf(User.self().userInfo.lat));
 			jsonObject.put(Const.STA_LNG, String.valueOf(User.self().userInfo.lng));

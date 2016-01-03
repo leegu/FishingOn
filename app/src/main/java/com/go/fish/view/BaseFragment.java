@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -66,7 +67,7 @@ public class BaseFragment extends Fragment {
 		Bundle b = getArguments();
 		int layoutId = b.getInt(Const.PRI_LAYOUT_ID);
 		View view = inflater.inflate(layoutId, container, false);
-		if (layoutId == R.layout.ui_search_list) {
+		if (layoutId == R.layout.ui_search_list) {//搜索界面、附近钓场
 			onCreateSearchViewPager(view);
 		} else if (layoutId == R.layout.ui_f_search_list_in_map) {
 			onCreateSearchMap(view);
@@ -94,7 +95,11 @@ public class BaseFragment extends Fragment {
 		// TODO Auto-generated method stub
 //		String[] tabItemsTitle = getResources().getStringArray(R.array.hfs_splace_type);
 		String[] tabItemsTitle = LocalMgr.getFPlaceType();
-		((ViewGroup)view).addView(ViewHelper.newMainView(getActivity(), getChildFragmentManager(),mCallback, tabItemsTitle));
+		ViewGroup vg = ViewHelper.newMainView(getActivity(), getChildFragmentManager(),mCallback, tabItemsTitle);
+		((ViewGroup)view).addView(vg);
+		ViewPager viewPager = (ViewPager) vg.findViewById(R.id.search_viewpager);
+		String searchTitle = ((TextView)view.findViewById(R.id.search_list_edit)).getText().toString();
+		BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce, searchTitle, viewPager.getCurrentItem());
 	}
 
 	String[] strMenuLables = null;
@@ -211,10 +216,20 @@ public class BaseFragment extends Fragment {
 		{
 			//撒鱼动态
 			if (json.has(Const.STA_PIRCES)) {
-				AutoLayoutViewGroup container = new AutoLayoutViewGroup(getActivity());
+//				AutoLayoutViewGroup container = new AutoLayoutViewGroup(getActivity());
+//				menu_item_contents.addView(container,-2,-2);
+//				JSONArray datas = new JSONArray(json.getString(Const.STA_PIRCES));
+//				makePriceView(container, datas);
+				LinearLayout container = new LinearLayout(getActivity());
+				container.setOrientation(LinearLayout.VERTICAL);
 				menu_item_contents.addView(container,-2,-2);
-				JSONArray datas = new JSONArray(json.getString(Const.STA_PIRCES));
-				makePriceView(container, datas);
+				for(int i = 0;i < 5; i++){
+					ViewGroup vg = (ViewGroup)LayoutInflater.from(getActivity()).inflate(R.layout.fishing_fnews, null);
+					TextView tv = (TextView)vg.getChildAt(0);
+					tv.setTag("撒鱼信息id");
+					tv.setText(tv.getText().toString() + i);
+					container.addView(vg);
+				}
 			}
 			//配套环境
 			TextView surroundingView = new TextView(getActivity());

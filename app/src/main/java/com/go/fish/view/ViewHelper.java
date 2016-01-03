@@ -137,7 +137,7 @@ public class ViewHelper {
 		Resources res = context.getResources();
 		int sw = res.getDisplayMetrics().widthPixels;
 		int leftOrRightWidth = res.getDimensionPixelSize(R.dimen.base_space) * 8;
-		int tabItemWidth = (sw - leftOrRightWidth) / 4 - 6;
+//		int tabItemWidth = (sw - leftOrRightWidth) / 4 - 6;
 		final ViewPager viewPager = (ViewPager) vg.findViewById(R.id.search_viewpager);
 		final ArrayList<Fragment> fragmentArr = new ArrayList<Fragment>();
 		//初始化标题按钮item listener监听

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/base_space"
+    android:orientation="vertical" >
+    <TextView
+        android:text="【10-12】时代复分订书钉是否收到佛挡杀佛"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/fishing_news_item_text_color"
+        android:clickable="true"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:onClick="onFishingNews" />
+</LinearLayout>

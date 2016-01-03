@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 两行 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/base_background"
-    android:orientation="horizontal"
-    >
+    android:orientation="horizontal" >
 
     <LinearLayout
         android:id="@+id/listitem_friend_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/base_space"
-        >
+        android:layout_gravity="center"
+        android:padding="@dimen/base_space" >
 
         <com.go.fish.view.CircleImageView
             android:id="@+id/user_icon"
             android:layout_width="@dimen/friend_user_icon_size"
             android:layout_height="@dimen/friend_user_icon_size"
-            android:gravity="center"
+            android:scaleType="centerCrop"
             android:src="@drawable/icon" />
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" >
 
         <ImageView
             android:id="@+id/right_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/base_background"
-            android:padding="@dimen/base_space"
             android:clickable="true"
             android:onClick="onIconClick"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/hart_red" />
+            android:padding="@dimen/base_space"
+            android:src="@drawable/care_src" />
 
         <RelativeLayout
             android:id="@+id/user_detail"
@@ -43,23 +42,22 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="false"
             android:layout_toLeftOf="@id/right_icon"
-            android:paddingLeft="@dimen/base_space"
-            android:paddingRight="@dimen/base_space">
+            android:padding="@dimen/base_space" >
 
             <RelativeLayout
-                android:paddingTop="@dimen/base_space"
                 android:id="@+id/top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical" >
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/listitem_friend_time"
-                    android:layout_alignParentRight="true"
                     style="@style/friend_item_text_style"
-                    android:text="100米" />
+                    android:layout_alignParentRight="true"
+                    android:text="100米"
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/listitem_friend_name"
                     style="@style/friend_item_name_style"
@@ -67,22 +65,29 @@
                     android:layout_centerVertical="true" />
 
                 <LinearLayout
-                    android:id="@+id/tag_container"
+                    android:id="@+id/listitem_friend_tags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/listitem_friend_far"
+                    android:layout_alignBottom="@id/listitem_friend_name"
+                    android:layout_alignTop="@id/listitem_friend_name"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@id/listitem_friend_time"
                     android:layout_toRightOf="@id/listitem_friend_name"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/base_space_2"
-                    android:paddingRight="@dimen/base_space_2">
+                    android:paddingRight="@dimen/base_space_2" >
 
-                    <include layout="@layout/item_tag"></include>
+                    <TextView style="@style/user_tag_item_person" >
+                    </TextView>
 
-                    <include layout="@layout/item_tag"></include>
+                    <TextView style="@style/user_tag_item_person" >
+                    </TextView>
 
-                    <include layout="@layout/item_tag"></include>
+                    <TextView style="@style/user_tag_item_person" >
+                    </TextView>
                 </LinearLayout>
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -90,13 +95,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/top"
-                android:paddingTop="@dimen/base_space_2">
+                android:padding="@dimen/base_space" >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
                     <TextView
                         style="@style/friend_item_text_style"
@@ -113,7 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
                     <TextView
                         style="@style/friend_item_text_style"
@@ -133,7 +138,8 @@
             android:id="@+id/line1"
             style="@style/head_bar_bottom_line_style"
             android:layout_height="@dimen/base_border"
-            android:layout_below="@id/user_detail"
-            android:layout_marginTop="@dimen/base_space_2"></TextView>
+            android:layout_below="@id/user_detail" >
+        </TextView>
     </RelativeLayout>
+
 </LinearLayout>

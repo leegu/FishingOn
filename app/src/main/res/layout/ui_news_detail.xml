@@ -41,7 +41,7 @@
 
     <include
         android:id="@+id/listitem_friend_layout"
-        layout="@layout/listitem_friend_for_ui_zan"></include>
+        layout="@layout/listitem_friend_2_rows"></include>
 
     <RelativeLayout
         android:layout_width="wrap_content"

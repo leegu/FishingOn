@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import com.baidu.mapapi.model.LatLng;
 import com.go.fish.user.User;
+import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 import com.go.fish.util.MapUtil;
 import com.go.fish.util.UrlUtils;
@@ -39,6 +40,7 @@ public class PersonData implements IBaseData {
 	        personData.fTimes = member.optString(Const.STA_FREQUENCY);
 	        personData.address = member.optString(Const.STA_ADDRESS);
 	        personData.tag = member.optString(Const.STA_TAG);
+	        personData.aiHaos = BaseUtils.splitString(personData.tag);
 	        personData.lng = member.optDouble(Const.STA_LNG);
 	        personData.lat = member.optDouble(Const.STA_LAT);
         }

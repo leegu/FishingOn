@@ -27,7 +27,7 @@ public class ReplaceFragment extends Fragment{
 		View view = inflater.inflate(layoutId,container,false);
 		if(layoutId == R.layout.ui_my_sec){
 			PersonData userInfo = User.self().userInfo;
-			ImageView iv = (ImageView)view.findViewById(R.id.reg_next_photo);
+			ImageView iv = (ImageView)view.findViewById(R.id.userIcon);
 			if(!TextUtils.isEmpty(userInfo.photoUrl)){
 				ViewHelper.load(iv, UrlUtils.self().getNetUrl(userInfo.photoUrl), true);
 			}

@@ -3,6 +3,7 @@ package com.go.fish.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by DCloud on 2015/10/18.
@@ -11,6 +12,10 @@ public class BaseUtils {
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date curDate = new Date();
+    public static HashMap<String, Integer> tagColors = new HashMap<>();
+    public static int getTagBg(String tag){
+    	return tagColors.get(tag);
+    }
     public static String getCurrentTime(){
     	return sdf.format(new Date());
     }
@@ -61,7 +66,7 @@ public class BaseUtils {
 
     public static String[] splitString(Object str){
     	if(str != null){
-    		return String.valueOf(str).split("\\|");
+    		return String.valueOf(str).split("\\,");
     	}else{
     		return null;
     	}

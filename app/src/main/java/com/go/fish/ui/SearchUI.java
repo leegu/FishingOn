@@ -43,7 +43,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 			b.putString(Const.PRI_JSON_DATA, dataBundle.getString(Const.PRI_JSON_DATA));
 			detailFragment.setArguments(b);
 			fragmentMgr.beginTransaction().add(R.id.search_content, detailFragment).commit();
-		}else{
+		}else{//默认进入搜索列表页面
 			{
 				searchFragment = BaseFragment.newInstance(this, R.layout.ui_search_list);
 				searchFragment.isFront = true;
@@ -118,7 +118,6 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 								newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
 								newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
 								newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
-
 //								Bundle bundle = searchFragment.getArguments();
 //								bundle.putString(Const.PRI_JSON_DATA, jsonStr);
 //								bundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);

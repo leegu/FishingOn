@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 三行 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/base_listitem_background"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/base_space"
     android:paddingRight="@dimen/base_space"
-    android:paddingTop="@dimen/base_space"
-    android:background="@drawable/base_listitem_background" >
+    android:paddingTop="@dimen/base_space" >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:layout_marginLeft="@dimen/base_space"
         android:layout_marginRight="@dimen/base_space" >
 
@@ -24,8 +25,8 @@
                 android:id="@+id/user_icon"
                 android:layout_width="@dimen/friend_user_icon_size"
                 android:layout_height="@dimen/friend_user_icon_size"
-                android:src="@drawable/icon"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:src="@drawable/icon" />
         </LinearLayout>
 
         <FrameLayout
@@ -36,31 +37,31 @@
 
             <Button
                 android:id="@+id/delete_enable"
-                android:visibility="gone"
                 android:layout_width="@dimen/base_pic_drawable_x_width"
                 android:layout_height="@dimen/base_pic_drawable_x_height"
-                android:layout_marginTop="@dimen/base_space"
-                android:textColor="#ffffff"
-                android:text="——"
-                android:gravity="center"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/red_btn_bg_no_corners" />
+                android:layout_marginTop="@dimen/base_space"
+                android:background="@drawable/red_btn_bg_no_corners"
+                android:gravity="center"
+                android:text="——"
+                android:textColor="#ffffff"
+                android:visibility="gone" />
 
             <TextView
-                android:paddingLeft="@dimen/base_space_2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:drawableRight="@drawable/arrow_right" />
+                android:drawableRight="@drawable/arrow_right"
+                android:paddingLeft="@dimen/base_space_2" />
         </FrameLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="false"
             android:layout_toLeftOf="@id/listitem_friend_detail"
             android:layout_toRightOf="@id/listitem_friend_icon"
             android:gravity="center_vertical"
+            android:orientation="vertical"
             android:paddingLeft="@dimen/base_space"
             android:paddingRight="@dimen/base_space" >
 
@@ -68,61 +69,69 @@
                 android:id="@+id/top"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
-                android:paddingTop="@dimen/base_space"
                 android:paddingBottom="@dimen/base_space"
-                >
+                android:paddingTop="@dimen/base_space" >
 
                 <TextView
                     android:id="@+id/listitem_friend_far"
-                    android:layout_alignParentRight="true"
                     style="@style/friend_item_text_style"
+                    android:layout_alignParentRight="true"
                     android:text="100米" />
 
                 <TextView
                     android:id="@+id/listitem_friend_name"
+                    style="@style/friend_item_name_style"
                     android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@id/listitem_friend_far"
-                    style="@style/friend_item_name_style" />
+                    android:layout_toLeftOf="@id/listitem_friend_far" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical">
+                android:gravity="center_vertical" >
+
                 <LinearLayout
                     android:id="@+id/listitem_friend_tags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    >
-                    <include layout="@layout/item_tag"></include>
-                    <include layout="@layout/item_tag"></include>
-                    <include layout="@layout/item_tag"></include>
+                    android:layout_centerInParent="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <TextView style="@style/user_tag_item_person" >
+                    </TextView>
+
+                    <TextView style="@style/user_tag_item_person" >
+                    </TextView>
+
+                    <TextView style="@style/user_tag_item_person" >
+                    </TextView>
                 </LinearLayout>
+
                 <TextView
                     android:id="@+id/listitem_friend_last_info"
-                    android:drawableRight="@drawable/arrow_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:drawableRight="@drawable/arrow_right"
                     android:gravity="center"
                     android:text="最新播况"
-                    android:textColor="#666666"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textColor="#666666" />
             </RelativeLayout>
 
-
             <RelativeLayout
-                android:paddingTop="@dimen/base_space"
-                android:paddingBottom="@dimen/base_space"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:layout_gravity="center_vertical">
+                android:paddingBottom="@dimen/base_space"
+                android:paddingTop="@dimen/base_space" >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -131,8 +140,8 @@
                     android:orientation="horizontal" >
 
                     <TextView
-                        android:layout_alignParentLeft="true"
                         style="@style/friend_item_text_style"
+                        android:layout_alignParentLeft="true"
                         android:text="钓龄:" />
 
                     <TextView
@@ -160,9 +169,11 @@
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
+
     <TextView
         android:id="@+id/line2"
         style="@style/head_bar_bottom_line_style"
-        android:layout_height="@dimen/base_border"></TextView>
+        android:layout_height="@dimen/base_border" >
+    </TextView>
 
 </LinearLayout>

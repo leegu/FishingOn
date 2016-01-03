@@ -239,6 +239,27 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="user_tag_item_person">
+
+        <!-- user_tag_item 按钮样式 -->
+        <!--
+        <item name="android:paddingTop">@dimen/base_space</item>
+        <item name="android:paddingBottom">@dimen/base_space</item>
+        -->
+        <item name="android:paddingLeft">@dimen/base_space</item>
+        <item name="android:paddingRight">@dimen/base_space</item>
+        <item name="android:textColor">@color/base_btn_text_color</item>
+        <item name="android:textSize">@dimen/base_font_size_h2</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginRight">@dimen/base_space</item>
+        <item name="android:background">@color/base_btn_color_press</item>
+        <item name="android:text">黑坑</item>
+    </style>
+
     <style name="badger_style">
 
         <!-- badger样式 -->
@@ -281,7 +302,9 @@
         <item name="android:onClick">onFootItemClick</item>
         <item name="android:orientation">vertical</item>
     </style>
+
     <style name="foot_bar_item_style_unclickable">
+
         <!-- foot item按钮样式 -->
         <item name="android:layout_width">0dip</item>
         <item name="android:layout_height">match_parent</item>
@@ -635,6 +658,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
     <style name="title_nav_item_style_unclickable">
         <item name="android:orientation">vertical</item>
         <item name="android:layout_width">0dp</item>
@@ -659,7 +683,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">1分钟前</item>
         <item name="android:textColor">#d2d2d2</item>
-    </style>
+    </style>
     -->
     <style name="comment_list_time_style">
 
@@ -674,10 +698,10 @@
 
     <style name="comment_list_time_right_of_style">
         <item name="android:layout_toRightOf">@id/comment_listitem_name</item>
- <!-- 设置此在评论列表显示时间 -->
+        <!-- 设置此在评论列表显示时间 -->
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:paddingLeft">40dp</item>
- <!--  -->
+        <!--  -->
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">1分钟前</item>

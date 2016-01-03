@@ -40,7 +40,8 @@ public class CircleImageView extends ImageView {
 			canvas.save();
 			canvas.clipPath(mPath);
 	//		canvas.clipPath(mPath,Op.REPLACE);
-			canvas.drawColor(0xff00CCCC);
+//			canvas.drawColor(0xff00CCCC);
+			canvas.drawColor(0xffFFFFFF);
 			super.draw(canvas);
 			canvas.restore();
 		}

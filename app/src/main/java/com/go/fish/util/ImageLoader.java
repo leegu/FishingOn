@@ -120,6 +120,7 @@ public class ImageLoader {
 				task.cancel(false);
 			}
 		}
+		NetTool.bitmap();
 	}
 	/**
 	 * 

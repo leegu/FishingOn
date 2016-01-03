@@ -94,6 +94,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 	OverlayManager mOverlayManager= null;
 	BitmapDescriptor mDefaultMarkerBD = BitmapDescriptorFactory.fromResource(R.drawable.point);
 	BitmapDescriptor mDefaultMarkerBD_focus = BitmapDescriptorFactory.fromResource(R.drawable.point_);
+	BitmapDescriptor mDefaultMarkerBD_care = BitmapDescriptorFactory.fromResource(R.drawable.point_care);
 	ViewGroup mFloatViewInfo = null;
 	ViewGroup mHomeMainView = null;
 	LayoutInflater mLayoutInflater = null;
@@ -801,14 +802,19 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 		JSONArray jsonArray = resultData.optJSONArray(Const.STA_DATA);
 //		mSearchResult = new ArrayList<OverlayOptions>();
 		mOverlayOptions = new ArrayList<OverlayOptions>();
-		BitmapDescriptor bdA = mDefaultMarkerBD;
 		int count = jsonArray.length();
 		LogUtils.d("homeui", "makeQueryMapResultMarkers count=" + count);
 		for (int i = 0; i < count; i++) {
 			try {
 				JSONObject json = jsonArray.optJSONObject(i);// test
 				LatLng p = new LatLng(json.optDouble(Const.STA_LAT),json.optDouble(Const.STA_LNG));
-				MarkerOptions ooD = new MarkerOptions().position(p).icon(bdA);
+				boolean isAttention = json.optBoolean(Const.STA_IS_ATTENTION);
+				MarkerOptions ooD = new MarkerOptions().position(p);
+				if(isAttention){
+					ooD.icon(mDefaultMarkerBD_care);
+				}else{
+					ooD.icon(mDefaultMarkerBD);
+				}
 				Bundle b = new Bundle();
 //				Marker mMarkerD = (Marker) (mBaiduMap.addOverlay(ooD));
 //				mSearchResult.add(mMarkerD);
@@ -818,7 +824,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 				int fPlaceId = json.optInt(Const.STA_ID);
 				b.putString(Const.STA_NAME, json.optString(Const.STA_NAME));
 				b.putDouble(Const.PRI_DISTANCE, DistanceUtil.getDistance(userP, p));
-				b.putBoolean(Const.STA_IS_ATTENTION,json.optBoolean(Const.STA_IS_ATTENTION));
+				b.putBoolean(Const.STA_IS_ATTENTION,isAttention);
 				b.putInt(Const.STA_ID, fPlaceId);
 				b.putInt(Const.STA_CARE_COUNT, json.optInt(Const.STA_CARE_COUNT, 0));
 				if (json.has(Const.STA_PIRCES)) {
@@ -846,9 +852,16 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 		mOverlayManager.zoomToSpan();
 	}
 
+	private void updateMarkerToNormal(Marker marker){
+		if(marker.getExtraInfo().getBoolean(Const.STA_IS_ATTENTION, false)){
+			marker.setIcon(mDefaultMarkerBD_care);
+		}else{
+			marker.setIcon(mDefaultMarkerBD);
+		}
+	}
 	private boolean showFloatView(Marker marker) {
 		if(mLastMarker != null){
-			mLastMarker.setIcon(mDefaultMarkerBD);
+			updateMarkerToNormal(mLastMarker);
 		}
 		marker.setIcon(mDefaultMarkerBD_focus);
 		mLastMarker = marker;
@@ -867,171 +880,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 		care_text.setText(String.valueOf(data.getInt(Const.STA_CARE_COUNT)));
 		care_text.setSelected(data.getBoolean(Const.STA_IS_ATTENTION,false));
 		{
-			ViewStub vs = (ViewStub) mFloatViewInfo.findViewById(R.id.calendar_container);
-			if (data.containsKey(Const.STA_PIRCES)) {
-				ViewGroup calendar_container = null;
-				if (vs != null) {// viewstub不为空时，表示还没有初始化
-					calendar_container = (ViewGroup) vs.inflate();
-				} else {
-					calendar_container = (ViewGroup) mFloatViewInfo
-							.findViewById(R.id.calendar);
-				}
-				if (calendar_container.getVisibility() == View.GONE) {
-					calendar_container.setVisibility(View.VISIBLE);
-					// calendar_container.startAnimation(AnimationUtils.loadAnimation(HomeUI.this,R.anim.slide_in_from_bottom));
-				}
-				LinearLayout container = (LinearLayout) calendar_container
-						.findViewById(R.id.calendar);
-				((View) container.getParent()).scrollTo(0, 0);
-				try {
-					JSONArray datas = new JSONArray(data
-							.getString(Const.STA_PIRCES));
-					int size = datas.length();
-					int ciw = getResources().getDimensionPixelSize(
-							R.dimen.calender_item_width);
-					int cih = getResources().getDimensionPixelSize(
-							R.dimen.calender_item_height);
-					SimpleDateFormat sdf = new SimpleDateFormat(
-							"yyyy-MM-dd");
-					Date curDate = new Date();
-					for (int i = 0; i < size; i++) {
-						View view = null;
-						boolean needAdd = false;
-						if (container.getChildCount() > i) {
-							view = container.getChildAt(i);
-						} else {
-							view = mLayoutInflater.inflate(
-									R.layout.calender_item, null);
-							needAdd = true;
-						}
-						JSONObject item = datas.getJSONObject(i);
-						String priceTitle = item
-								.getString(Const.STA_PRICE_TITLE);
-						String date = item
-								.getString(Const.STA_PRICE_DATE);
-						int type = -1;
-						try {
-							Date pd = sdf.parse(date);
-							if ("正".equals(priceTitle)) {
-								type = 1;
-								if (!pd.after(curDate)) {
-									type = -1;
-								}
-							} else {
-								type = 2;
-								if (!pd.after(curDate)) {
-									type = -2;
-								}
-							}
-							date = (pd.getMonth() + 1) + "月"
-									+ pd.getDate() + "日";
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
-						int money = item.getInt(Const.STA_PRICE);
-						View statusView = view
-								.findViewById(R.id.calendar_pic_status);
-						TextView moneyView = (TextView) view
-								.findViewById(R.id.calendar_money);
-						TextView dateView = (TextView) view
-								.findViewById(R.id.calendar_date);
-						moneyView.setText(money + "￥");
-
-						dateView.setText(date);
-						if (needAdd) {
-							container.addView(view/*
-												 * , new
-												 * LinearLayout
-												 * .LayoutParams
-												 * (ciw, cih)
-												 */);
-						}
-						switch (type) {
-						case -1:
-							moneyView
-									.setTextColor(getResources()
-											.getColor(
-													R.color.calender_disable_money_text_color));
-							dateView.setTextColor(getResources()
-									.getColor(
-											R.color.calender_disable_text_color));
-							dateView.setBackgroundColor(getResources()
-									.getColor(
-											R.color.calender_disable_bg_color));
-							statusView
-									.setBackgroundResource(R.drawable.z_);
-							break;
-						case 1:
-							moneyView
-									.setTextColor(getResources()
-											.getColor(
-													R.color.calender_money_text_color));
-							dateView.setTextColor(getResources()
-									.getColor(
-											R.color.calender_z_text_color));
-							dateView.setBackgroundColor(getResources()
-									.getColor(
-											R.color.calender_z_bg_color));
-							statusView
-									.setBackgroundResource(R.drawable.z);
-							break;
-						case -2:
-							moneyView
-									.setTextColor(getResources()
-											.getColor(
-													R.color.calender_disable_money_text_color));
-							dateView.setTextColor(getResources()
-									.getColor(
-											R.color.calender_disable_text_color));
-							dateView.setBackgroundColor(getResources()
-									.getColor(
-											R.color.calender_disable_bg_color));
-							statusView
-									.setBackgroundResource(R.drawable.t_);
-							break;
-						case 2:
-							moneyView
-									.setTextColor(getResources()
-											.getColor(
-													R.color.calender_money_text_color));
-							dateView.setTextColor(getResources()
-									.getColor(
-											R.color.calender_t_text_color));
-							dateView.setBackgroundColor(getResources()
-									.getColor(
-											R.color.calender_t_bg_color));
-							statusView
-									.setBackgroundResource(R.drawable.t);
-							break;
-						}
-
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			} else if (vs == null) {// viewstub已经初始化，才有必要执行隐藏
-				if (mFloatViewInfo.findViewById(R.id.calendar)
-						.getVisibility() == View.VISIBLE) {
-					// Animation anim =
-					// AnimationUtils.loadAnimation(HomeUI.this,R.anim.slide_out_to_bottom);
-					// anim.setAnimationListener(new
-					// Animation.AnimationListener() {
-					// @Override
-					// public void onAnimationStart(Animation
-					// animation) {}
-					// @Override
-					// public void onAnimationEnd(Animation
-					// animation) {
-					mFloatViewInfo.findViewById(R.id.calendar)
-							.setVisibility(View.GONE);
-					// }
-					// @Override
-					// public void onAnimationRepeat(Animation
-					// animation) {}
-					// });
-					// mFloatViewInfo.startAnimation(anim);
-				}
-			}
+//			showOrHidePrice(data);
 		}
 		// 设置跟随点击marker位置
 		// Point p =
@@ -1040,5 +889,156 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 		// p.y, mFloatViewInfo.getPaddingRight(),
 		// mFloatViewInfo.getPaddingBottom());
 		return false;
+	}
+	private void showOrHidePrice(Bundle data) {
+		ViewStub vs = (ViewStub) mFloatViewInfo.findViewById(R.id.calendar_container);
+		if (data.containsKey(Const.STA_PIRCES)) {
+			ViewGroup calendar_container = null;
+			if (vs != null) {// viewstub不为空时，表示还没有初始化
+				calendar_container = (ViewGroup) vs.inflate();
+			} else {
+				calendar_container = (ViewGroup) mFloatViewInfo
+						.findViewById(R.id.calendar);
+			}
+			if (calendar_container.getVisibility() == View.GONE) {
+				calendar_container.setVisibility(View.VISIBLE);
+				// calendar_container.startAnimation(AnimationUtils.loadAnimation(HomeUI.this,R.anim.slide_in_from_bottom));
+			}
+			LinearLayout container = (LinearLayout) calendar_container
+					.findViewById(R.id.calendar);
+			((View) container.getParent()).scrollTo(0, 0);
+			try {
+				JSONArray datas = new JSONArray(data
+						.getString(Const.STA_PIRCES));
+				int size = datas.length();
+				int ciw = getResources().getDimensionPixelSize(
+						R.dimen.calender_item_width);
+				int cih = getResources().getDimensionPixelSize(
+						R.dimen.calender_item_height);
+				SimpleDateFormat sdf = new SimpleDateFormat(
+						"yyyy-MM-dd");
+				Date curDate = new Date();
+				for (int i = 0; i < size; i++) {
+					View view = null;
+					boolean needAdd = false;
+					if (container.getChildCount() > i) {
+						view = container.getChildAt(i);
+					} else {
+						view = mLayoutInflater.inflate(
+								R.layout.calender_item, null);
+						needAdd = true;
+					}
+					JSONObject item = datas.getJSONObject(i);
+					String priceTitle = item
+							.getString(Const.STA_PRICE_TITLE);
+					String date = item
+							.getString(Const.STA_PRICE_DATE);
+					int type = -1;
+					try {
+						Date pd = sdf.parse(date);
+						if ("正".equals(priceTitle)) {
+							type = 1;
+							if (!pd.after(curDate)) {
+								type = -1;
+							}
+						} else {
+							type = 2;
+							if (!pd.after(curDate)) {
+								type = -2;
+							}
+						}
+						date = (pd.getMonth() + 1) + "月"
+								+ pd.getDate() + "日";
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					int money = item.getInt(Const.STA_PRICE);
+					View statusView = view
+							.findViewById(R.id.calendar_pic_status);
+					TextView moneyView = (TextView) view
+							.findViewById(R.id.calendar_money);
+					TextView dateView = (TextView) view
+							.findViewById(R.id.calendar_date);
+					moneyView.setText(money + "￥");
+
+					dateView.setText(date);
+					if (needAdd) {
+						container.addView(view/*
+											 * , new
+											 * LinearLayout
+											 * .LayoutParams
+											 * (ciw, cih)
+											 */);
+					}
+					switch (type) {
+					case -1:
+						moneyView
+								.setTextColor(getResources()
+										.getColor(
+												R.color.calender_disable_money_text_color));
+						dateView.setTextColor(getResources()
+								.getColor(
+										R.color.calender_disable_text_color));
+						dateView.setBackgroundColor(getResources()
+								.getColor(
+										R.color.calender_disable_bg_color));
+						statusView
+								.setBackgroundResource(R.drawable.z_);
+						break;
+					case 1:
+						moneyView
+								.setTextColor(getResources()
+										.getColor(
+												R.color.calender_money_text_color));
+						dateView.setTextColor(getResources()
+								.getColor(
+										R.color.calender_z_text_color));
+						dateView.setBackgroundColor(getResources()
+								.getColor(
+										R.color.calender_z_bg_color));
+						statusView
+								.setBackgroundResource(R.drawable.z);
+						break;
+					case -2:
+						moneyView
+								.setTextColor(getResources()
+										.getColor(
+												R.color.calender_disable_money_text_color));
+						dateView.setTextColor(getResources()
+								.getColor(
+										R.color.calender_disable_text_color));
+						dateView.setBackgroundColor(getResources()
+								.getColor(
+										R.color.calender_disable_bg_color));
+						statusView
+								.setBackgroundResource(R.drawable.t_);
+						break;
+					case 2:
+						moneyView
+								.setTextColor(getResources()
+										.getColor(
+												R.color.calender_money_text_color));
+						dateView.setTextColor(getResources()
+								.getColor(
+										R.color.calender_t_text_color));
+						dateView.setBackgroundColor(getResources()
+								.getColor(
+										R.color.calender_t_bg_color));
+						statusView
+								.setBackgroundResource(R.drawable.t);
+						break;
+					}
+
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else if (vs == null) {// viewstub已经初始化，才有必要执行隐藏
+			if (mFloatViewInfo.findViewById(R.id.calendar)
+					.getVisibility() == View.VISIBLE) {
+				mFloatViewInfo.findViewById(R.id.calendar)
+						.setVisibility(View.GONE);
+			}
+		}
 	}
 }

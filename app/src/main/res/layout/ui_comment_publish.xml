@@ -73,7 +73,9 @@
             </ScrollView>
         </RelativeLayout>
 
-        <RelativeLayout style="@style/bottom_span_style" >
+        <RelativeLayout style="@style/bottom_span_style" 
+            android:padding="@dimen/base_space"
+            >
             
              <TextView
                 android:id="@+id/comment_publish_add_location"

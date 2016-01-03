@@ -63,7 +63,7 @@
                 android:paddingRight="@dimen/base_space" >
 
                 <com.go.fish.view.CircleImageView
-                    android:id="@+id/reg_next_photo"
+                    android:id="@+id/userIcon"
                     android:layout_width="@dimen/base_user_icon_size"
                     android:layout_height="@dimen/base_user_icon_size"
                     android:background="@drawable/circle_solid"

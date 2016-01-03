@@ -44,8 +44,8 @@ public class MainApplication extends Application {
 		AnalyticsConfig.setChannel(getPackageName().replace(".", "_"));
 		
         PushManager.getInstance().initialize(this);
-        LocalServer server = new LocalServer(this, null);
-		server.start();
+//        LocalServer server = new LocalServer(this, null);
+//		server.start();
     }
     
     

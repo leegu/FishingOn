@@ -5,8 +5,8 @@
     android:orientation="vertical"
     android:layout_gravity="center">
     <TextView
-        style="@style/user_tag_item"
-        android:text="野钓"
-        android:textColor="#ffcccc">
+         style="@style/user_tag_item_person"
+    android:text="野钓"
+    android:textColor="#ffcccc">
     </TextView>
 </LinearLayout>

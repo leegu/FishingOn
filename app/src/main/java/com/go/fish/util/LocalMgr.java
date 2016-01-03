@@ -41,6 +41,10 @@ public class LocalMgr {
         dbUrls = context.getSharedPreferences("urls", Context.MODE_PRIVATE);
         dbUserInfo = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         typesArray = context.getResources().getStringArray(R.array.hfs_splace_type);
+        int[] colors = new int[]{0xff88abda,0xffc797e2,0xff3fc3fe};
+        for(int i = 0; i < typesArray.length; i++){
+        	BaseUtils.tagColors.put(typesArray[i], colors[i/colors.length]);
+        }
     }
 
     static String[] typesArray = {};

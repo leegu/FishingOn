@@ -234,7 +234,15 @@ public class UrlUtils {
     	return getHost() + createPodCast;
     }
     String attentionPod = "/relevant/attentionPod";
-    public String getAttentionPod() {
+    public String getAttentionPod() {//关注/取消 钓播
     	return getHost() + attentionPod;
+    }
+    String praisePod = "/relevant/praisePod";
+    public String getpPraisePod() {
+    	return getHost() + praisePod;
+    }
+    String info = "/relevant/info";
+    public String getpInfo() {
+    	return getHost() + info;
     }
 }

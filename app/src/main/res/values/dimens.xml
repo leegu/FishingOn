@@ -63,7 +63,7 @@
 
     <dimen name="detail_bottom_item_size">50dp</dimen>
 
-    <dimen name="friend_user_icon_size">50dp</dimen>
+    <dimen name="friend_user_icon_size">45dp</dimen>
 
     <dimen name="base_user_icon_size">70dp</dimen>
     <dimen name="base_icon_width">90dp</dimen>

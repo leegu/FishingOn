@@ -1,9 +1,7 @@
 package com.go.fish.ui.pics;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -16,10 +14,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ResultReceiver;
@@ -344,7 +342,7 @@ public class GalleryUtils {
     }
 
     public static boolean isDeviceRootDir(String mUrl) {
-        return mUrl.startsWith("/sdcard/") || mUrl.startsWith("sdcard/");
+        return mUrl.startsWith("/sdcard/") || mUrl.startsWith("sdcard/") || mUrl.startsWith(Environment.getExternalStorageDirectory().getPath());
     }
 
     public interface GalleryCallback {

@@ -147,6 +147,10 @@ public class NetTool {
 		}
 		return bitmapNetTool;
 	}
+	
+	public void unhttp(String tag){
+		Handler.cancelAll(tag);
+	}
 
 	public void http(RequestListener listener,JSONObject jsonObject,String url){
 		RequestData rData = RequestData.newInstance(listener,jsonObject,url);
@@ -648,6 +652,9 @@ public class NetTool {
 				ret = Const.DEFT_1.equals(response.optString(Const.STA_CODE));
 				if(!ret && endWaiting){
 					onEnd();
+				}
+				if(!ret){
+					ViewHelper.showToast(context, response.optString(Const.STA_MESSAGE));
 				}
 			}else{
 				if(endWaiting){

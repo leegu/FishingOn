@@ -92,13 +92,15 @@ public class FPlaceListAdapter extends BaseAdapter{
 			item = (ViewGroup)convertView;
 			mViewHolder = (FPlaceViewHolder)item.getTag();
 		}
+		mViewHolder.listitem_fplace_title.setText(fPlace.title);
+		mViewHolder.fplace_desc.setText(fPlace.desp);
+		mViewHolder.float_view_distance.setText(fPlace.distance);
 		if(flag == FLAG_SEARCH_RESULT){
-			mViewHolder.listitem_fplace_title.setText(fPlace.title);
-			mViewHolder.fplace_desc.setText(fPlace.desp);
-			mViewHolder.float_view_distance.setText(fPlace.distance);
 			mViewHolder.fplace_state.getChildAt(0).setVisibility(View.GONE);
 			mViewHolder.fplace_state.getChildAt(1).setVisibility(View.VISIBLE);
 			mViewHolder.fplace_state.getChildAt(1).setTag(fPlace);
+		}else if(flag == FLAG_CARE_RESULT){
+		//
 		}
 		return item;
 	}

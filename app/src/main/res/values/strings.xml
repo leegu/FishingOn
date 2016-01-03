@@ -37,18 +37,19 @@
     <string name="reg_next_skip">跳过，先看看</string>
 
     <string-array name="reg_next_fishing_years_spinner">
-        <item>1年龄</item>
-        <item>2年龄</item>
-        <item>3年龄</item>
-        <item>4年龄</item>
-        <item>5年龄</item>
-        <item>6年龄</item>
+        <item>1年</item>
+        <item>2年</item>
+        <item>3年</item>
+        <item>4年</item>
+        <item>5年</item>
+        <item>5年+</item>
     </string-array>
     <string-array name="reg_next_fishing_times_spinner">
-        <item>天次</item>
-        <item>周次</item>
-        <item>月次</item>
-        <item>年次</item>
+        <item>1次/月</item>
+        <item>5次/月</item>
+        <item>10次/月</item>
+        <item>20次/月</item>
+        <item>30+次/月</item>
     </string-array>
 
     <!-- 注册页面 end -->
