@@ -49,6 +49,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.overlayutil.OverlayManager;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.go.fish.R;
+import com.go.fish.data.FPlaceData;
 import com.go.fish.data.PersonData;
 import com.go.fish.user.User;
 import com.go.fish.util.Const;
@@ -95,6 +96,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 	BitmapDescriptor mDefaultMarkerBD = BitmapDescriptorFactory.fromResource(R.drawable.point);
 	BitmapDescriptor mDefaultMarkerBD_focus = BitmapDescriptorFactory.fromResource(R.drawable.point_);
 	BitmapDescriptor mDefaultMarkerBD_care = BitmapDescriptorFactory.fromResource(R.drawable.point_care);
+	BitmapDescriptor mDefaultMarkerBD_care_focus = BitmapDescriptorFactory.fromResource(R.drawable.point_care_);
 	ViewGroup mFloatViewInfo = null;
 	ViewGroup mHomeMainView = null;
 	LayoutInflater mLayoutInflater = null;
@@ -249,56 +251,11 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 	public void onMapFloatViewClick(View view) {// 漂浮渔场信息
 		int id = view.getId();
 		switch (id) {
-		case R.id.float_view_detail_btn:// 详情
+		case R.id.float_view_detail_btn:// 钓场详情
 			View titleView = mFloatViewInfo.findViewById(R.id.float_view_title);
 			final Bundle b = (Bundle) titleView.getTag();
 			int fPlaceId = b.getInt(Const.STA_ID);
-			JSONObject jsonObject = new JSONObject();
-			try {
-				jsonObject.put(Const.STA_FIELDID, fPlaceId);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			NetTool.data().http(new RequestListener() {
-				@Override
-				public void onStart() {
-					onStart(HomeUI.this);
-				}
-
-				@Override
-				public void onEnd(byte[] data) {
-					try {
-						if (isOver()) {// 返回键取消联网之后不应该继续处理
-
-						} else {
-							JSONObject response = toJSONObject(data);
-							if (response != null) {
-								if (isRight(response)) {
-									String jsonStr = new String(data, "UTF-8");
-									Bundle newBundle = new Bundle();
-									newBundle.putString(Const.PRI_JSON_DATA,
-											jsonStr);
-									newBundle.putInt(Const.PRI_LAYOUT_ID,
-											R.layout.search);
-									newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID,
-											R.layout.ui_f_search_item_detail);
-									Intent i = new Intent();
-									i.putExtras(newBundle);
-									UIMgr.showActivity(HomeUI.this, i,
-											SearchUI.class.getName());
-									mFloatViewInfo.setVisibility(View.GONE);
-								} else {
-									onDataError(HomeUI.this, response);
-								}
-							} else {
-								onDataError(HomeUI.this);
-							}
-						}
-						onEnd();
-					} catch (Exception e) {
-					}
-				}
-			}, jsonObject, UrlUtils.self().getFieldInfo());
+			showFieldDetail("" + fPlaceId, true);
 			break;
 		case R.id.float_view_nav_btn://
 			break;
@@ -378,12 +335,9 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 					if (justUplocation) {// 更新实时位置
 						JSONObject jsonObject = new JSONObject();
 						try {
-							jsonObject.put(Const.STA_LAT,
-									String.valueOf(data.lat));
-							jsonObject.put(Const.STA_LNG,
-									String.valueOf(data.lng));
-							jsonObject.put(Const.STA_LOCATION,
-									User.self().userInfo.address);
+							jsonObject.put(Const.STA_LAT, String.valueOf(data.lat));
+							jsonObject.put(Const.STA_LNG, String.valueOf(data.lng));
+							jsonObject.put(Const.STA_LOCATION, User.self().userInfo.address);
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -570,7 +524,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 	}
 
 	private void showSearchView() {
-		UIMgr.showActivity(this, R.layout.search, SearchUI.class.getName());
+		UIMgr.showActivity(this, R.layout.ui_search_list, SearchUI.class.getName());
 	}
 
 	private void showFishingToolsStore() {
@@ -852,18 +806,22 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 		mOverlayManager.zoomToSpan();
 	}
 
-	private void updateMarkerToNormal(Marker marker){
-		if(marker.getExtraInfo().getBoolean(Const.STA_IS_ATTENTION, false)){
-			marker.setIcon(mDefaultMarkerBD_care);
+	private void updateMarkerToNormal(Marker marker,Marker newMarker){
+		if(marker != null){
+			if(marker.getExtraInfo().getBoolean(Const.STA_IS_ATTENTION, false)){
+				marker.setIcon(mDefaultMarkerBD_care);
+			}else{
+				marker.setIcon(mDefaultMarkerBD);
+			}
+		}
+		if(newMarker.getExtraInfo().getBoolean(Const.STA_IS_ATTENTION, false)){
+			newMarker.setIcon(mDefaultMarkerBD_care_focus);
 		}else{
-			marker.setIcon(mDefaultMarkerBD);
+			newMarker.setIcon(mDefaultMarkerBD_focus);
 		}
 	}
 	private boolean showFloatView(Marker marker) {
-		if(mLastMarker != null){
-			updateMarkerToNormal(mLastMarker);
-		}
-		marker.setIcon(mDefaultMarkerBD_focus);
+		updateMarkerToNormal(mLastMarker,marker);
 		mLastMarker = marker;
 		mFloatViewInfo.setVisibility(View.VISIBLE);
 		Bundle data = marker.getExtraInfo();
@@ -1040,5 +998,64 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 						.setVisibility(View.GONE);
 			}
 		}
+	}
+	
+	public void showFieldDetail(String fPlaceId,final boolean hideMapInfo){
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put(Const.STA_FIELDID, fPlaceId);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		NetTool.data().http(new RequestListener() {
+			@Override
+			public void onStart() {
+				onStart(HomeUI.this);
+			}
+			@Override
+			public void onEnd(byte[] data) {
+				try {
+					if (isOver()) {// 返回键取消联网之后不应该继续处理
+					} else {
+						if (data != null) {
+							String jsonStr = new String(data, "UTF-8");
+							JSONObject response = toJSONObject(jsonStr);
+							if (isRight(HomeUI.this,response,true)) {
+								Bundle newBundle = new Bundle();
+								newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
+								newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_detail_field);
+								Intent i = new Intent();
+								i.putExtras(newBundle);
+								UIMgr.showActivity(HomeUI.this, i, SearchUI.class.getName());
+								if(hideMapInfo){
+									mFloatViewInfo.setVisibility(View.GONE);
+								}
+							}
+						} else {
+							onDataError(HomeUI.this);
+						}
+					}
+					onEnd();
+				} catch (Exception e) {
+				}
+			}
+		}, jsonObject, UrlUtils.self().getFieldInfo());
+	}
+	public void onFieldClick(View view) {
+		FPlaceData fData = (FPlaceData)view.getTag();
+		String fPlaceId = fData.sid;
+		showFieldDetail(fPlaceId, false);
+	}
+	public void onDiaoBoDetailClick(View view) {
+		UIMgr.showActivity(this,R.layout.ui_detail_podcast,SearchUI.class.getName());
+	}
+	public void onPersonClick(View view) {
+		PersonData personData = (PersonData)view.getTag();
+		Intent i = new Intent();
+		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_podcast_person);
+		i.putExtra(Const.STA_TITLE, personData.userName + "钓播");
+		i.putExtra(Const.PRI_HIDE_PUBLISH, true);
+		i.putExtra(Const.STA_MOBILE, personData.mobileNum);
+		UIMgr.showActivity(this,i,BaseUI.class.getName());
 	}
 }

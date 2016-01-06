@@ -71,7 +71,7 @@ public class BaseFragment extends Fragment {
 			onCreateSearchViewPager(view);
 		} else if (layoutId == R.layout.ui_f_search_list_in_map) {
 			onCreateSearchMap(view);
-		} else if (layoutId == R.layout.ui_f_search_item_detail) {
+		} else if (layoutId == R.layout.ui_detail_field || layoutId == R.layout.ui_detail_podcast) {
 			onCreateSearchDetail(view);
 		}
 		return view;

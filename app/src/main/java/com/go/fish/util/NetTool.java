@@ -58,6 +58,7 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -631,13 +632,21 @@ public class NetTool {
 			return BitmapFactory.decodeByteArray(data, 0, data.length);
 		}
 
-		public JSONObject toJSONObject(byte[] data) {
-			try {
-				if(data != null){
-					String json = new String(data, "utf-8");
-					return new JSONObject(json);
+		public JSONObject toJSONObject(String data){
+			if(data != null){
+				try {
+					return new JSONObject(data);
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
+			}
+			return null;
+		}
+		public JSONObject toJSONObject(byte[] data) {
+			if(data == null) return null;
+			try {
+				return toJSONObject(new String(data,"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
 			return null;

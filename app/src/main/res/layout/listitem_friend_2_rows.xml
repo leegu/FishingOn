@@ -26,22 +26,24 @@
         android:layout_height="wrap_content" >
 
         <ImageView
-            android:id="@+id/right_icon"
+            android:id="@+id/care_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_gravity="center_vertical"
             android:clickable="true"
-            android:onClick="onIconClick"
+            android:onClick="onCareClick"
             android:padding="@dimen/base_space"
             android:src="@drawable/care_src" />
 
         <RelativeLayout
             android:id="@+id/user_detail"
+            android:clickable="true"
+ 			android:onClick="onPersonClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="false"
-            android:layout_toLeftOf="@id/right_icon"
+            android:layout_toLeftOf="@id/care_btn"
             android:padding="@dimen/base_space" >
 
             <RelativeLayout

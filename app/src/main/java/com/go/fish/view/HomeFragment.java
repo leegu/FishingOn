@@ -30,6 +30,7 @@ import com.go.fish.data.DataMgr;
 import com.go.fish.data.FPlaceData;
 import com.go.fish.data.MyListitemData;
 import com.go.fish.data.PersonData;
+import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.HomeUI;
 import com.go.fish.ui.SearchUI;
 import com.go.fish.ui.UICode;
@@ -172,10 +173,11 @@ public class HomeFragment extends Fragment {
 							}.start();
 						}else if(adapter instanceof HeaderViewListAdapter){
 							((AdapterExt)((HeaderViewListAdapter)adapter).getWrappedAdapter()).updateAdapter(AdapterExt.makeFNewsDataArray(arr));
-						}else if(adapter instanceof FPlaceListAdapter){
-							ArrayList<FPlaceData> fDataArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce,arr);
-							((FPlaceListAdapter)adapter).updateAdapter(fDataArr);
 						}
+//						else if(adapter instanceof FPlaceListAdapter){
+//							ArrayList<FPlaceData> fDataArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce,arr);
+//							((FPlaceListAdapter)adapter).updateAdapter(fDataArr);
+//						}
 					}else{
 						ViewHelper.showToast(fNListView.getContext(), Const.DEFT_NO_DATA);
 					}
@@ -228,7 +230,7 @@ public class HomeFragment extends Fragment {
 //		mListAdapter.flag = FPlaceListAdapter.FLAG_CARE_RESULT;
 //		fPlaceList.setAdapter(mListAdapter);
 		// 网络数据抓取,进行更新
-		HomeFragment.getNetPodList(fPlaceList, "0");
+		BaseFragmentPagerAdapter.loadNetData(fPlaceList.getContext(), (FPlaceListAdapter)fPlaceList.getAdapter(), R.layout.listitem_fpalce, "", fPlaceList.getAdapter().getCount(), LocalMgr.getFPlaceTypes());
 	}
 	void onShowZixun(){
 		
@@ -298,32 +300,38 @@ public class HomeFragment extends Fragment {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					// 我钓播况 我的关注 附近钓场 附近钓友 扫一扫
 					switch (position) {
-						case 0://我的播况
-							UIMgr.showActivity(getActivity(),R.layout.ui_my_f_news);
+						case 0:{//我的播况
+							Intent i = new Intent();
+							i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_podcast_person);
+							i.putExtra(Const.STA_MOBILE, User.self().userInfo.mobileNum);
+							i.putExtra(Const.PRI_HIDE_CARE, true);
+							UIMgr.showActivity(getActivity(),i,BaseUI.class.getName());
 							break;
+						}
 						case 1://我的关注
 							UIMgr.showActivity(getActivity(),R.layout.ui_my_care);
 							break;
-						case 2://附近钓场
+						case 2:{//附近钓场
 							Bundle newBundle = new Bundle();
-							newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
+							newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_search_list);
 							newBundle.putInt(Const.PRI_FPLACE_RESULT_TYPE, FPlaceListAdapter.FLAG_NEAR_RESULT);
-							newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_search_list);
 							Intent intent = new Intent();
 							intent.putExtras(newBundle);
 							UIMgr.showActivity(getActivity(), intent, SearchUI.class.getName());
 //							UIMgr.showActivity(getActivity(),R.layout.ui_near_fplace);
 							break;
+						}
 						case 3://附近钓友
 							UIMgr.showActivity(getActivity(),R.layout.ui_near_friends);
 							break;
-						case 4:
+						case 4:{
 							Intent i = new Intent();
 							i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_barcode);
 //							i.putExtra(Const.PRI_TO_QR_CONTENT,"我是一个兵");
 							i.setClassName(getActivity(), BarcodeUI.class.getName());
 							UIMgr.showActivity(getActivity(),i,UICode.RequestCode.REQUEST_BARCODE);
 							break;
+						}
 					}
 				}
 			});
@@ -421,62 +429,9 @@ public class HomeFragment extends Fragment {
     	//创建 关注 页面
     	ListView fPlaceList = (ListView)vg.findViewById(R.id.ui_f_care_list);
     	ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce, new JSONArray());
-		final FPlaceListAdapter mListAdapter = new FPlaceListAdapter(getActivity(),fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT);
-		mListAdapter.flag = FPlaceListAdapter.FLAG_CARE_RESULT;
-		fPlaceList.setAdapter(mListAdapter);
+    	FPlaceListAdapter.setAdapter(fPlaceList,fPlaceArr,FPlaceListAdapter.FLAG_CARE_RESULT);
 		// 网络数据抓取,进行更新
 //		HomeFragment.getNetPodList(fPlaceList, "0");
-//		
-//    	String[] tabItemsTitle = LocalMgr.getFPlaceType();
-//    	vg.addView(ViewHelper.newMainView(getActivity(), getChildFragmentManager(), new ResultForActivityCallback() {
-//			@Override
-//			public void onItemClick(View view,final FPlaceData fPlaceData) {
-//				String fPlaceId = fPlaceData.sid;
-//				JSONObject jsonObject = new JSONObject();
-//				try {
-//					jsonObject.put(Const.STA_FIELDID, fPlaceId);
-//				} catch (JSONException e) {
-//					e.printStackTrace();
-//				}
-//				NetTool.data().http(new RequestListener() {
-//					@Override
-//					public void onStart() {
-//						onStart(getActivity());
-//					}
-//
-//					@Override
-//					public void onEnd(byte[] data) {
-//						try {
-//							if (isOver()) {// 返回键取消联网之后不应该继续处理
-//
-//							} else {
-//								JSONObject response = toJSONObject(data);
-//								if (response != null) {
-//									if (isRight(response)) {
-//										String jsonStr = new String(data, "UTF-8");
-//										Bundle newBundle = new Bundle();
-//										newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
-//										newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
-//										newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
-//										Intent i = new Intent();
-//										i.putExtras(newBundle);
-//										UIMgr.showActivity(getActivity(), i, SearchUI.class.getName());
-//									} else {
-//										onDataError(getActivity(), response);
-//									}
-//								} else {
-//									onDataError(getActivity());
-//								}
-//							}
-//							onEnd();
-//						} catch (Exception e) {
-//						}
-//					}
-//				}, jsonObject, UrlUtils.self().getFieldInfo());
-//			}
-//		}, tabItemsTitle));
-//    	ViewPager viewPager = (ViewPager) vg.findViewById(R.id.search_viewpager);
-//    	BaseFragmentPagerAdapter.loadNetData(viewPager, listitemLayoutid, "", 0);
     }
     @Override
     public void onPause() {

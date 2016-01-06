@@ -53,11 +53,12 @@ public interface Const {
 	String PRI_EXTRA_DATA = "extra_data";
 	String PRI_EXTRA_IMAGE_INDEX = "image_index";
 	String PRI_EXTRA_IMAGE_URLS = "image_urls";
-	String PRI_EXTRA_LAYOUT_ID = "extra_layout_id";
 	String PRI_FPLACE_RESULT_TYPE = "fplace_result_type";
 	String PRI_FRAGMENT_TAG = "fragment_tag";
 	String PRI_JSON_DATA = "json";
 	String PRI_LAYOUT_ID = "layout_id";
+	String PRI_HIDE_PUBLISH = "hide_publish";
+	String PRI_HIDE_CARE = "hide_care";
 	String PRI_REG_OP = "reg_op";
 	String PRI_QR_RESULT = "qr_result";
 	String PRI_TO_QR_CONTENT = "to_qr_content";

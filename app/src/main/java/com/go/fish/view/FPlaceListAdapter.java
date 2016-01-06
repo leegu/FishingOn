@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.go.fish.R;
@@ -23,14 +24,32 @@ public class FPlaceListAdapter extends BaseAdapter{
 	public static final int FLAG_SEARCH_RESULT = 0;
 	public static final int FLAG_NEAR_RESULT = 1;
 	public static final int FLAG_CARE_RESULT = 2;
-	public int flag = 0;
+	public int flag = FLAG_SEARCH_RESULT;
 	private LayoutInflater mInflater;
-	Context context = null;
+	View mFooterTextView = null;
+	ListView mListView = null;
 	ArrayList<FPlaceData> listDatas = null;
-	public FPlaceListAdapter(Context context,ArrayList<FPlaceData> array, int fPlaceResultType){
-		this.context = context;
+	/**
+	 * @param listView
+	 * @param array
+	 * @param resultFlag
+	 */
+	FPlaceListAdapter(ListView listView,ArrayList<FPlaceData> array,int resultFlag){
+		mListView = listView;
+		this.flag = resultFlag;
 		listDatas = array;
-		mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mInflater = (LayoutInflater)mListView.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		listView.setAdapter(this);
+	}
+	static public FPlaceListAdapter setAdapter(ListView listView,ArrayList<FPlaceData> array) {
+		return setAdapter(listView, array, FLAG_SEARCH_RESULT);
+	}
+	static public FPlaceListAdapter setAdapter(ListView listView,ArrayList<FPlaceData> array,int resultFlag) {
+		if(listView.getAdapter() == null){
+			return new FPlaceListAdapter(listView, array, resultFlag);
+		}else{
+			return (FPlaceListAdapter)listView.getAdapter();
+		}
 	}
 	@Override
 	public int getCount() {
@@ -66,7 +85,10 @@ public class FPlaceListAdapter extends BaseAdapter{
 	}
 
 	public void updateAdapter(ArrayList<FPlaceData> array){
-		listDatas.addAll(array);
+		if(mListView.getFooterViewsCount() > 0) {
+			mListView.removeFooterView(mFooterTextView);
+		}
+		listDatas.addAll(0,array);
 		notifyDataSetChanged();
 	}
 
@@ -74,6 +96,7 @@ public class FPlaceListAdapter extends BaseAdapter{
 		TextView listitem_fplace_title,fplace_desc,float_view_distance;
 		ImageView listitem_fplace_icon;
 		ViewGroup fplace_state;
+		View float_view_detail_btn;
 	}
 	private View onGetNearFPlace(FPlaceData fPlace, View convertView, ViewGroup parent){//搜索结果展示，附件钓场
 		ViewGroup item = null;
@@ -83,6 +106,7 @@ public class FPlaceListAdapter extends BaseAdapter{
 			item = (ViewGroup)mInflater.inflate(fPlace.layout_id, parent, false);
 			mViewHolder = new FPlaceViewHolder();
 			item.setTag(mViewHolder);
+			mViewHolder.float_view_detail_btn = item.findViewById(R.id.float_view_detail_btn);
 			mViewHolder.listitem_fplace_title = ((TextView)item.findViewById(R.id.listitem_fplace_title));
 			mViewHolder.fplace_desc = ((TextView)item.findViewById(R.id.fplace_desc));
 			mViewHolder.float_view_distance = ((TextView)item.findViewById(R.id.float_view_distance));
@@ -92,6 +116,7 @@ public class FPlaceListAdapter extends BaseAdapter{
 			item = (ViewGroup)convertView;
 			mViewHolder = (FPlaceViewHolder)item.getTag();
 		}
+		mViewHolder.float_view_detail_btn.setTag(fPlace);
 		mViewHolder.listitem_fplace_title.setText(fPlace.title);
 		mViewHolder.fplace_desc.setText(fPlace.desp);
 		mViewHolder.float_view_distance.setText(fPlace.distance);

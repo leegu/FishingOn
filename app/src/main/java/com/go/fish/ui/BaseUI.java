@@ -103,7 +103,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		case R.layout.ui_webview_left_close:
 			onCreateWebview();
 			break;
-		case R.layout.ui_my_f_news:
+		case R.layout.ui_podcast_person:
 			onCreateMyFNewsView();
 			break;
 		case R.layout.ui_near_fplace:
@@ -362,9 +362,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			vg.addView(fPlaceList);
 			
 			ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce, new JSONArray());
-			final FPlaceListAdapter mListAdapter = new FPlaceListAdapter(this,fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT);
-			mListAdapter.flag = FPlaceListAdapter.FLAG_CARE_RESULT;
-			fPlaceList.setAdapter(mListAdapter);
+			FPlaceListAdapter.setAdapter(fPlaceList,fPlaceArr,FPlaceListAdapter.FLAG_CARE_RESULT);
 			// 网络数据抓取,进行更新
 			HomeFragment.getNetPodList(fPlaceList, "0");
 		}
@@ -384,8 +382,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			}
 			final ListView list = fNewsList;
 			list.setDividerHeight(0);
-			AdapterExt.newInstance(list, new JSONArray(),
-					R.layout.listitem_friend_2_rows);
+			AdapterExt.newInstance(list, new JSONArray(), R.layout.listitem_friend_2_rows);
 			NetTool.data().http(new RequestListener() {
 				@Override
 				public void onStart() {
@@ -471,14 +468,27 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		});
 	}
 
-	private void onCreateMyFNewsView() {// 创建我的钓播
+	private void onCreateMyFNewsView() {// 创建 我的钓播[钓友钓播]
 		ListView list = (ListView) findViewById(R.id.my_f_news_list);
+		String title = getIntent().getStringExtra(Const.STA_TITLE);
+		if(!TextUtils.isEmpty(title)){
+			((TextView)findViewById(R.id.base_head_bar_title)).setText(title);
+		}
+		boolean hide_publish = getIntent().getBooleanExtra(Const.PRI_HIDE_PUBLISH, false);
+		if(hide_publish){
+			findViewById(R.id.base_head_bar_next).setVisibility(View.INVISIBLE);
+		}
 		AdapterExt ae = AdapterExt.newInstance(list, new JSONArray(),  R.layout.listitem_fnews);
 		ae.mFlag = AdapterExt.FLAG_MY_NEWS;
+		ae.mHideCare = getIntent().getBooleanExtra(Const.PRI_HIDE_CARE, ae.mHideCare);
 		list.setAdapter(ae);
-		HomeFragment.getNetPodList(list, User.self().userInfo.mobileNum);
+		String mobile = getIntent().getStringExtra(Const.STA_MOBILE);
+		HomeFragment.getNetPodList(list,mobile);
 	}
 
+	public void onCareClick(final View view) {
+
+	}
 	public void onIconClick(final View view) {
 		int id = view.getId();
 		switch (id) {
@@ -510,7 +520,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 
 			return;
 		}
-		case R.id.right_icon: {
+		case R.id.care_btn: {
 			return;
 		}
 		}
@@ -780,7 +790,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 	
 	public void onFishingNews(View view) {
 		Intent i = new Intent();
-		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_f_news_item_detail);
+		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_detail_sayu_info);
 		i.putExtra(Const.STA_ID, (String)view.getTag());
 		UIMgr.showActivity(this,i, BaseUI.class.getName());
 	}
@@ -1364,7 +1374,15 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		TextView titleView = (TextView) findViewById(R.id.base_ui_webview_title);
 		titleView.setText(title);
 	}
-
+	public void onPersonClick(View view) {
+		PersonData personData = (PersonData)view.getTag();
+		Intent i = new Intent();
+		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_podcast_person);
+		i.putExtra(Const.STA_TITLE, personData.userName + "钓播");
+		i.putExtra(Const.PRI_HIDE_PUBLISH, true);
+		i.putExtra(Const.STA_MOBILE, personData.mobileNum);
+		UIMgr.showActivity(this,i,BaseUI.class.getName());
+	}
 	@Override
 	public void onTagClick(View view) {
 		// view self seting background child[1] setVisible
@@ -1376,5 +1394,12 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			view.setBackgroundResource(R.drawable.tag_background);
 			child.setVisibility(View.GONE);
 		}
+	}
+	
+	public void onDiaoBoDetailClick(View view) {
+		UIMgr.showActivity(this,R.layout.ui_detail_podcast,SearchUI.class.getName());
+	}
+	public void onFieldClick(View view) {
+		
 	}
 }

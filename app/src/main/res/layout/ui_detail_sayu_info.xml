@@ -31,7 +31,7 @@
             style="@style/head_bar_title_style"
             android:layout_toLeftOf="@id/search_item_detail_share"
             android:layout_toRightOf="@id/base_ui_close"
-            android:text="钓场详情" >
+            android:text="撒鱼详情" >
         </TextView>
 
         <TextView

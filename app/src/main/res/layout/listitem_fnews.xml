@@ -13,7 +13,7 @@
         android:weightSum="1" >
 
         <include
-            android:id="@+id/listitem_friend_layout"
+            android:id="@+id/listitem_friend_person_layout"
             layout="@layout/listitem_friend_2_rows" >
         </include>
         <!--  -->
@@ -24,6 +24,7 @@
             android:layout_weight="0.25"
             android:background="@drawable/base_background"
             android:clickable="true"
+            android:onClick="onDiaoBoDetailClick"
             android:orientation="horizontal"
             android:padding="@dimen/base_space" >
 
@@ -107,6 +108,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_space_2"
-        android:background="#eeeeee" />
+        android:background="#e3e2e1" />
 
 </LinearLayout>

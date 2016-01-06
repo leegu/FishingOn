@@ -34,22 +34,21 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		fragmentMgr = getSupportFragmentManager();
-		int layout = getIntent().getIntExtra(Const.PRI_EXTRA_LAYOUT_ID, 0);
-		if(layout == R.layout.ui_f_search_item_detail){
-			initDetailFragment();
+		setContentView(R.layout.search);
+		int layout = getIntent().getIntExtra(Const.PRI_LAYOUT_ID, 0);
+		if(layout != R.layout.ui_search_list){//
+			initDetailFragment(layout);
 			detailFragment.isFront = true;
 			Bundle dataBundle = getIntent().getExtras();
 			Bundle b = detailFragment.getArguments();
 			b.putString(Const.PRI_JSON_DATA, dataBundle.getString(Const.PRI_JSON_DATA));
 			detailFragment.setArguments(b);
 			fragmentMgr.beginTransaction().add(R.id.search_content, detailFragment).commit();
-		}else{//默认进入搜索列表页面
-			{
-				searchFragment = BaseFragment.newInstance(this, R.layout.ui_search_list);
-				searchFragment.isFront = true;
-				fragmentMgr.beginTransaction().add(R.id.search_content, searchFragment).commit();
-			}
-		}
+		} else{//R.layout.ui_detail_field R.layout.ui_detail_podcast
+			searchFragment = BaseFragment.newInstance(this, R.layout.ui_search_list);
+			searchFragment.isFront = true;
+			fragmentMgr.beginTransaction().add(R.id.search_content, searchFragment).commit();
+		} 
 	}
 	public  void onHeadClick(View view) {
 		int id = view.getId();
@@ -82,16 +81,16 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 				break;
 		}
 	}
-	private void initDetailFragment() {
+	private void initDetailFragment(int layoutId) {
 		if(detailFragment == null){
-			detailFragment = BaseFragment.newInstance(this,R.layout.ui_f_search_item_detail);
+			detailFragment = BaseFragment.newInstance(this,layoutId);
 		}
 	}
 	
 
 	@Override
 	public void onItemClick(View view, FPlaceData data) {
-		initDetailFragment();
+		initDetailFragment(R.layout.ui_detail_field);
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.put(Const.STA_FIELDID, data.sid);
@@ -111,25 +110,17 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 
 					} else {
 						JSONObject response = toJSONObject(data);
-						if (response != null) {
-							if (isRight(response)) {
-								String jsonStr = new String(data, "UTF-8");
-								Bundle newBundle = new Bundle();
-								newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
-								newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.search);
-								newBundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
+						if (isRight(SearchUI.this,response,true)) {
+							String jsonStr = new String(data, "UTF-8");
+							Bundle newBundle = new Bundle();
+							newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
+							newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_detail_field);//搜索列表进入到钓场详情页
 //								Bundle bundle = searchFragment.getArguments();
 //								bundle.putString(Const.PRI_JSON_DATA, jsonStr);
 //								bundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
-								detailFragment.setArguments(newBundle);
-								showFragment(detailFragment);
-								
-							} else {
-								onDataError(SearchUI.this, response);
-							}
-						} else {
-							onDataError(SearchUI.this);
-						}
+							detailFragment.setArguments(newBundle);
+							showFragment(detailFragment);
+						} 
 					}
 					onEnd();
 				} catch (Exception e) {
@@ -141,7 +132,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 	
 	private void showFragment(Fragment f){
 		FragmentTransaction ft = fragmentMgr.beginTransaction();
-		ft.replace(R.id.search_content, f);
+		ft.add(R.id.search_content, f);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		ft.addToBackStack(null);
 		ft.commit();

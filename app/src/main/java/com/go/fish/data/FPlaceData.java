@@ -26,7 +26,7 @@ public class FPlaceData implements IBaseData{
 		ret.title = json.optString(Const.STA_NAME);
 		ret.desp = json.optString(Const.STA_INTRODUCTION);
 //		ret.desp = json.optString(Const.STA_NAME);
-		ret.sid = json.optString(Const.STA_ID);
+//		ret.sid = json.optString(Const.STA_ID);
 		return ret;
 	}
 	public String toJSONString(){

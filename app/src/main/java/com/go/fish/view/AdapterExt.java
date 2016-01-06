@@ -50,6 +50,7 @@ public class AdapterExt extends BaseAdapter {
 	public static final int FLAG_MY_NEWS = 1;
 	public static final int FLAG_NEWS = 2;
 	public int mFlag = FLAG_NEWS;
+	public boolean mHideCare = false;
 	boolean useScroolListener = false;
 	private AdapterExt(ListView listView,JSONArray array,int layoutId){
 		mListView = listView;
@@ -123,7 +124,7 @@ public class AdapterExt extends BaseAdapter {
 			int count = array.length();
 //			count = count > 0 ? 50 : 0;
 			for(int i = 0; i < count; i++) {
-			JSONObject jsonObject = array.optJSONObject(i);
+				JSONObject jsonObject = array.optJSONObject(i);
 //				JSONObject jsonObject = array.optJSONObject(0);
 				PersonData newsData = PersonData.newInstance(jsonObject);
 				arr.add(newsData);
@@ -352,6 +353,7 @@ public class AdapterExt extends BaseAdapter {
 	class ZanFriendViewHolder {
 		TextView nameView,fYearView,fTimesView,lineView;
 		ImageView userIcon;
+		View user_detail;
 	}
 	private View onGetZanFriend(int position, View convertView, ViewGroup parent){
 		ViewGroup item = null;
@@ -362,11 +364,16 @@ public class AdapterExt extends BaseAdapter {
 			item = (ViewGroup)mInflater.inflate(layout_id, parent, false);
 			holder = new ZanFriendViewHolder();
 			item.setTag(holder);
+			holder.user_detail = item.findViewById(R.id.user_detail);
+			
 			holder.nameView = ((TextView)item.findViewById(R.id.listitem_friend_name));
 			holder.fYearView = ((TextView)item.findViewById(R.id.listitem_friend_fyear));
 			holder.fTimesView = ((TextView)item.findViewById(R.id.listitem_friend_ftimes));
 			holder.userIcon = (ImageView)item.findViewById(R.id.user_icon);
 			holder.lineView = (TextView)item.findViewById(R.id.line1);
+			if(mHideCare){
+				item.findViewById(R.id.care_btn).setVisibility(View.GONE);
+			}
 		} else {
 			item = (ViewGroup)convertView;
 			holder = (ZanFriendViewHolder)convertView.getTag();
@@ -374,6 +381,7 @@ public class AdapterExt extends BaseAdapter {
 		if(!TextUtils.isEmpty(personData.photoUrl)){
 			ViewHelper.load(holder.userIcon, UrlUtils.self().getNetUrl(personData.photoUrl), true, false);
 		}
+		holder.user_detail.setTag(personData);
 		holder.nameView.setText(personData.userName);
 		holder.fYearView.setText(""+personData.fYears);
 		holder.fTimesView.setText(personData.fTimes + "次/月");
@@ -386,6 +394,7 @@ public class AdapterExt extends BaseAdapter {
 	class FriendViewHolder {
 		TextView nameView,farView,fYearView,fTimesView,listitem_friend_last_info,lineView;
 		ImageView userIcon;
+		View user_detail;
 	}
 	private View onGetFriend(int position, View convertView, ViewGroup parent){
 		ViewGroup item = null;
@@ -396,6 +405,7 @@ public class AdapterExt extends BaseAdapter {
 			item = (ViewGroup)mInflater.inflate(layout_id, parent, false);
 			holder = new FriendViewHolder();
 			item.setTag(holder);
+			holder.user_detail = item.findViewById(R.id.user_detail);
 			holder.nameView = ((TextView)item.findViewById(R.id.listitem_friend_name));
 			holder.farView = ((TextView)item.findViewById(R.id.listitem_friend_far));
 			holder.fYearView = ((TextView)item.findViewById(R.id.listitem_friend_fyear));
@@ -410,6 +420,7 @@ public class AdapterExt extends BaseAdapter {
 		if(!TextUtils.isEmpty(personData.photoUrl)){
 			ViewHelper.load(holder.userIcon, UrlUtils.self().getNetUrl(personData.photoUrl), true, false);
 		}
+		holder.user_detail.setTag(personData);
 		holder.listitem_friend_last_info.setVisibility(View.GONE);
 		holder.nameView.setText(personData.userName);
 		holder.farView.setText(personData.far);
@@ -423,7 +434,7 @@ public class AdapterExt extends BaseAdapter {
 	class FNewsViewHolder {
 		TextView nameView,fYearView,fTimesView,textView,listitem_fnews_comment_count,publish_time;
 		ImageView userIcon;
-		View listitem_friend_layout;
+		View listitem_friend_layout,user_detail;
 		ViewGroup listitem_friend_tags;
 		HAutoAlign mHAutoAlign;
 		View[] childViews = null;
@@ -437,7 +448,8 @@ public class AdapterExt extends BaseAdapter {
 			item = mInflater.inflate(layout_id, parent, false);
 			holder = new FNewsViewHolder();
 			item.setTag(holder);
-			View fLayout = item.findViewById(R.id.listitem_friend_layout);
+			View fLayout = item.findViewById(R.id.listitem_friend_person_layout);
+			holder.user_detail = item.findViewById(R.id.user_detail);
 			holder.listitem_friend_layout = fLayout;
 			holder.nameView = (TextView)fLayout.findViewById(R.id.listitem_friend_name);
 			holder.fYearView = (TextView)fLayout.findViewById(R.id.listitem_friend_fyear);
@@ -493,6 +505,7 @@ public class AdapterExt extends BaseAdapter {
 				
 			}
 		}else{//需要用户信息
+			holder.user_detail.setTag(newsData.authorData);
 			if(holder.listitem_friend_tags != null){
 				holder.listitem_friend_tags.setVisibility(View.VISIBLE);
 				String[] tags = newsData.authorData.aiHaos;
