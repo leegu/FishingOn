@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 import com.go.fish.data.DataMgr;
+import com.go.fish.data.FPlaceData;
 import com.go.fish.user.User;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
@@ -82,7 +83,7 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
 				loadNetData(viewPager, listitemLayoutid, searchTitle, index);
 			}
 		});
-    	loadNetData(viewPager, listitemLayoutid, searchTitle, defaultIndex);
+    	loadNetData(viewPager, listitemLayoutid, searchTitle, defaultIndex);//刚进来没必要去加载
     }
 
     public static void loadNetData(final Context context,final FPlaceListAdapter  listAdapter,
@@ -128,6 +129,9 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
 			final int defaultIndex) {
     	BaseFragmentPagerAdapter adapter = (BaseFragmentPagerAdapter) viewPager.getAdapter();
     	final FPlaceListFragment listFragment = (FPlaceListFragment) adapter.getItem(defaultIndex);
+    	if(listFragment.mListAdapter == null){
+    		listFragment.mListAdapter = FPlaceListAdapter.setAdapter(viewPager.getContext(), null, new ArrayList<FPlaceData>());
+    	}
     	int startIndex = listFragment.mListAdapter == null ? 0 : listFragment.mListAdapter.listDatas.size();
 		String defaultTag = null;
     	defaultTag = LocalMgr.getFPlaceType()[defaultIndex];

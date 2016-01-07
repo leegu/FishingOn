@@ -1041,11 +1041,6 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 			}
 		}, jsonObject, UrlUtils.self().getFieldInfo());
 	}
-	public void onFieldClick(View view) {
-		FPlaceData fData = (FPlaceData)view.getTag();
-		String fPlaceId = fData.sid;
-		showFieldDetail(fPlaceId, false);
-	}
 	public void onDiaoBoDetailClick(View view) {
 		UIMgr.showActivity(this,R.layout.ui_detail_podcast,SearchUI.class.getName());
 	}

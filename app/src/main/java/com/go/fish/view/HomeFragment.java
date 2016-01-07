@@ -429,7 +429,14 @@ public class HomeFragment extends Fragment {
     	//创建 关注 页面
     	ListView fPlaceList = (ListView)vg.findViewById(R.id.ui_f_care_list);
     	ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce, new JSONArray());
-    	FPlaceListAdapter.setAdapter(fPlaceList,fPlaceArr,FPlaceListAdapter.FLAG_CARE_RESULT);
+    	FPlaceListAdapter.setAdapter(getActivity(),fPlaceList,fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT).setmResultForActivityCallback(new ResultForActivityCallback() {
+			
+			@Override
+			public void onItemClick(View view, FPlaceData data) {
+				String fPlaceId = data.sid;
+				((HomeUI)getActivity()).showFieldDetail(fPlaceId, false);
+			}
+		});
 		// 网络数据抓取,进行更新
 //		HomeFragment.getNetPodList(fPlaceList, "0");
     }

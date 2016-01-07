@@ -43,6 +43,7 @@ import com.go.fish.view.ObservableScrollView.ScrollViewListener;
 public class BaseFragment extends Fragment {
 	private static final String TAG = "MainView";
 	ResultForActivityCallback mCallback = null;
+	public int mFlag = FPlaceListAdapter.FLAG_SEARCH_RESULT;
 	public boolean isFront = false;
 
 	public static BaseFragment newInstance(ResultForActivityCallback callback,
@@ -68,7 +69,7 @@ public class BaseFragment extends Fragment {
 		int layoutId = b.getInt(Const.PRI_LAYOUT_ID);
 		View view = inflater.inflate(layoutId, container, false);
 		if (layoutId == R.layout.ui_search_list) {//搜索界面、附近钓场
-			onCreateSearchViewPager(view);
+			onCreateFieldViewPager(view);
 		} else if (layoutId == R.layout.ui_f_search_list_in_map) {
 			onCreateSearchMap(view);
 		} else if (layoutId == R.layout.ui_detail_field || layoutId == R.layout.ui_detail_podcast) {
@@ -91,7 +92,7 @@ public class BaseFragment extends Fragment {
 		detail_text.setText(orderId + "." + data.getString(Const.STA_TEXT));
 	}
 
-	private void onCreateSearchViewPager(View view) {
+	private void onCreateFieldViewPager(View view) {
 		// TODO Auto-generated method stub
 //		String[] tabItemsTitle = getResources().getStringArray(R.array.hfs_splace_type);
 		String[] tabItemsTitle = LocalMgr.getFPlaceType();
@@ -99,7 +100,9 @@ public class BaseFragment extends Fragment {
 		((ViewGroup)view).addView(vg);
 		ViewPager viewPager = (ViewPager) vg.findViewById(R.id.search_viewpager);
 		String searchTitle = ((TextView)view.findViewById(R.id.search_list_edit)).getText().toString();
-		BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce, searchTitle, viewPager.getCurrentItem());
+		if(mFlag == FPlaceListAdapter.FLAG_NEAR_RESULT){
+			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce, searchTitle, viewPager.getCurrentItem());
+		}
 	}
 
 	String[] strMenuLables = null;

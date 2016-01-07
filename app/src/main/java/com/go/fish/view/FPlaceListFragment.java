@@ -23,12 +23,12 @@ import com.go.fish.data.FPlaceData;
 import com.go.fish.util.Const;
 import com.go.fish.view.BaseFragment.ResultForActivityCallback;
 
-public class FPlaceListFragment extends Fragment implements OnItemClickListener,OnLongClickListener{
+public class FPlaceListFragment extends Fragment {
 	public String name = null;
 	FPlaceListAdapter mListAdapter = null;
 	ListView mListView = null;
 //	TextView mFooterTextView = null;
-	ResultForActivityCallback mCallback = null;
+	private ResultForActivityCallback mCallback = null;
 //	private boolean created = false;
 	public static FPlaceListFragment newInstance(ResultForActivityCallback callback,int layoutId){
 		FPlaceListFragment listFragment = new FPlaceListFragment();
@@ -51,6 +51,8 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 			int layoutId = b.getInt(Const.PRI_LAYOUT_ID);//list_fragment.xml 钓场列表
 			mListView = (ListView)inflater.inflate(layoutId, container, false);
 			updateAdapter();
+			mListAdapter.setmResultForActivityCallback(mCallback);
+			mListAdapter.attachToListView(mListView);
 			if(mListAdapter.isEmpty()) {
 				TextView mFooterTextView = new TextView(getActivity());
 				mListAdapter.mFooterTextView = mFooterTextView;
@@ -58,10 +60,11 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 				mFooterTextView.setClickable(false);
 				mFooterTextView.setGravity(Gravity.CENTER);
 				mListView.addFooterView(mFooterTextView, null, false);
+			}else{
+				if(mListView.getFooterViewsCount() > 0) {
+					mListView.removeFooterView(mListAdapter.mFooterTextView);
+				}
 			}
-			mListView.setOnItemClickListener(this);
-			mListView.setOnLongClickListener(this);
-			mListView.setAdapter(mListAdapter);
 //			mListView.setBackgroundColor((int)new Random().nextLong());//设置随机背景色
 		}
 		return mListView;
@@ -71,10 +74,7 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 		mListAdapter.updateAdapter(arr);
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
-		mCallback.onItemClick(view, mListAdapter.listDatas.get(position));
-	}
+	
 
 	//更新适配器内容
 	public void updateAdapter(){
@@ -86,7 +86,7 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 				ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(listitemLayoutid, jsonArr);
 				if(mListAdapter == null) {
 					//构造钓场列表所需list 适配器
-					mListAdapter = FPlaceListAdapter.setAdapter(mListView, fPlaceArr);
+					mListAdapter = FPlaceListAdapter.setAdapter(getActivity(), mListView, fPlaceArr);
 				} else {
 					updateData(fPlaceArr);
 				}
@@ -96,7 +96,7 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 			bundle.remove(Const.PRI_EXTRA_DATA);
 		}else{
 			if(mListAdapter == null && mListView != null) {
-				mListAdapter = FPlaceListAdapter.setAdapter(mListView, new ArrayList<FPlaceData>());
+				mListAdapter = FPlaceListAdapter.setAdapter(getActivity(), mListView, new ArrayList<FPlaceData>());
 			}
 		}
 	}
@@ -108,10 +108,5 @@ public class FPlaceListFragment extends Fragment implements OnItemClickListener,
 			return 0;
 		}
 	}
-
-	@Override
-	public boolean onLongClick(View v) {
-		ViewHelper.showToast(getActivity(), "长按" + v);
-		return false;
-	}
+	
 }

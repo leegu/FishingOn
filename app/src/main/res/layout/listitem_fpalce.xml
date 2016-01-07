@@ -15,10 +15,10 @@
         android:background="@drawable/circle_solid"
         android:src="@drawable/icon" />
 
+  <!--   android:clickable="true"
+        android:onClick="onFieldClick" -->
     <LinearLayout
         android:id="@+id/float_view_detail_btn"
-        android:clickable="true"
-        android:onClick="onFieldClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"

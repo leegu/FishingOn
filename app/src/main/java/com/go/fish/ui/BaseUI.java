@@ -362,7 +362,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			vg.addView(fPlaceList);
 			
 			ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce, new JSONArray());
-			FPlaceListAdapter.setAdapter(fPlaceList,fPlaceArr,FPlaceListAdapter.FLAG_CARE_RESULT);
+			FPlaceListAdapter.setAdapter(BaseUI.this.getApplicationContext(),fPlaceList,fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT);
 			// 网络数据抓取,进行更新
 			HomeFragment.getNetPodList(fPlaceList, "0");
 		}
