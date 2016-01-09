@@ -36,10 +36,10 @@
             android:padding="@dimen/base_space"
             android:src="@drawable/care_src" />
 
+                   <!--  android:clickable="true"
+ 			android:onClick="onPersonClick" -->
         <RelativeLayout
             android:id="@+id/user_detail"
-            android:clickable="true"
- 			android:onClick="onPersonClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="false"

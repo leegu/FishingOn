@@ -6,7 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.go.fish.util.Const;
 import com.go.fish.view.IBaseData;
@@ -35,11 +37,11 @@ public class CommentData implements IBaseData{
 	public void setRootCommentData(CommentData rootComment){
 		rootCommentData = rootComment;
 	}
-	public static CommentData newInstance(JSONObject json){
+	private static CommentData newInstance(JSONObject json,String defalutId){
 		CommentData cd = new CommentData();
 //		try {
 			cd.jsonData = json;
-			cd.id = json.optString(Const.STA_ID);
+			cd.id = json.optString(Const.STA_ID,defalutId);
 			cd.memberId = json.optString(Const.STA_MEMBER_ID);
 			cd.fromId = json.optString(Const.STA_FROM_ID);
 			if(TextUtils.isEmpty(cd.memberId) && !TextUtils.isEmpty(cd.fromId)){
@@ -65,7 +67,7 @@ public class CommentData implements IBaseData{
 			if(arr != null && arr.length() > 0){
 				cd.lowerComments = new ArrayList<CommentData>();
 				for(int i = 0; i < arr.length(); i++){
-					CommentData cData = CommentData.newInstance(arr.optJSONObject(i));
+					CommentData cData = CommentData.newInstance(arr.optJSONObject(i),cd.id);
 					cData.rootCommentData = cd;
 					cd.lowerComments.add(cData);
 				}
@@ -74,5 +76,12 @@ public class CommentData implements IBaseData{
 //			e.printStackTrace();
 //		}
 		return cd;
+	}
+	public static CommentData newInstance(JSONObject json){
+		return newInstance(json, "0");
+	}
+	@Override
+	public void OnClick(Activity activity, IBaseDataHandledCallback handledCallback, View attachedView) {
+		
 	}
 }

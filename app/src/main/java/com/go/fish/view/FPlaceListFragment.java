@@ -19,7 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.go.fish.data.DataMgr;
-import com.go.fish.data.FPlaceData;
+import com.go.fish.data.FieldData;
 import com.go.fish.util.Const;
 import com.go.fish.view.BaseFragment.ResultForActivityCallback;
 
@@ -70,7 +70,7 @@ public class FPlaceListFragment extends Fragment {
 		return mListView;
 	}
 	
-	public void updateData(ArrayList<FPlaceData> arr){
+	public void updateData(ArrayList<FieldData> arr){
 		mListAdapter.updateAdapter(arr);
 	}
 
@@ -83,7 +83,7 @@ public class FPlaceListFragment extends Fragment {
 			try {
 				int listitemLayoutid = bundle.getInt(Const.PRI_LAYOUT_ID);
 				JSONArray jsonArr = new JSONArray(bundle.getString(Const.PRI_EXTRA_DATA));
-				ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(listitemLayoutid, jsonArr);
+				ArrayList<FieldData> fPlaceArr = DataMgr.makeFPlaceDatas(listitemLayoutid, jsonArr);
 				if(mListAdapter == null) {
 					//构造钓场列表所需list 适配器
 					mListAdapter = FPlaceListAdapter.setAdapter(getActivity(), mListView, fPlaceArr);
@@ -96,7 +96,7 @@ public class FPlaceListFragment extends Fragment {
 			bundle.remove(Const.PRI_EXTRA_DATA);
 		}else{
 			if(mListAdapter == null && mListView != null) {
-				mListAdapter = FPlaceListAdapter.setAdapter(getActivity(), mListView, new ArrayList<FPlaceData>());
+				mListAdapter = FPlaceListAdapter.setAdapter(getActivity(), mListView, new ArrayList<FieldData>());
 			}
 		}
 	}

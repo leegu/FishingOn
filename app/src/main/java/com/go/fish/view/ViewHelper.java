@@ -152,7 +152,7 @@ public class ViewHelper {
 		for (int i = 0; i < itemLabels.length; i++) {//标题
 			String title = itemLabels[i];
 			{
-				ViewGroup tabitemLinear = (ViewGroup) inflater.inflate( R.layout.tabitem_fplace_type, null);
+				ViewGroup tabitemLinear = (ViewGroup) inflater.inflate( R.layout.tabitem_field, null);
 				{//设置tabitem显示名称
 					TextView tabitem = (TextView) tabitemLinear.getChildAt(0);
 					tabitem.setText(title);

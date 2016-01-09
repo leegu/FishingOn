@@ -19,6 +19,7 @@
             android:layout_height="@dimen/base_pic_icon_height"
             android:background="@drawable/circle_solid"
             android:clickable="true"
+            android:scaleType="centerCrop"
             android:onClick="onCommentIconClick"
             android:src="@drawable/icon_user" />
 

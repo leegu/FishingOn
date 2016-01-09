@@ -5,7 +5,14 @@ import java.util.Random;
 
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.view.View;
+
 import com.baidu.mapapi.model.LatLng;
+import com.go.fish.R;
+import com.go.fish.ui.BaseUI;
+import com.go.fish.ui.UIMgr;
 import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
@@ -55,4 +62,16 @@ public class PersonData implements IBaseData {
         }
         return personData;
     }
+
+	@Override
+	public void OnClick(Activity activity, IBaseDataHandledCallback handledCallback, View attachedView) {
+		// TODO Auto-generated method stub
+		PersonData personData = this;
+		Intent i = new Intent();
+		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_podcast_person);
+		i.putExtra(Const.STA_TITLE, personData.userName + "钓播");
+		i.putExtra(Const.PRI_HIDE_PUBLISH, true);
+		i.putExtra(Const.STA_MOBILE, personData.mobileNum);
+		UIMgr.showActivity(activity,i,BaseUI.class.getName());
+	}
 }

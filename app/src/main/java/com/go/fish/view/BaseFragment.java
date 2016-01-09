@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 import com.baidu.mapapi.map.MapView;
 import com.go.fish.R;
-import com.go.fish.data.FPlaceData;
+import com.go.fish.data.FieldData;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
@@ -101,7 +101,7 @@ public class BaseFragment extends Fragment {
 		ViewPager viewPager = (ViewPager) vg.findViewById(R.id.search_viewpager);
 		String searchTitle = ((TextView)view.findViewById(R.id.search_list_edit)).getText().toString();
 		if(mFlag == FPlaceListAdapter.FLAG_NEAR_RESULT){
-			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce, searchTitle, viewPager.getCurrentItem());
+			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_field, searchTitle, viewPager.getCurrentItem());
 		}
 	}
 
@@ -226,11 +226,13 @@ public class BaseFragment extends Fragment {
 				LinearLayout container = new LinearLayout(getActivity());
 				container.setOrientation(LinearLayout.VERTICAL);
 				menu_item_contents.addView(container,-2,-2);
-				for(int i = 0;i < 5; i++){
-					ViewGroup vg = (ViewGroup)LayoutInflater.from(getActivity()).inflate(R.layout.fishing_fnews, null);
+				JSONArray pricesArr = json.optJSONArray(Const.STA_PIRCES);
+				for(int i = 0;i < pricesArr.length(); i++){
+					JSONObject price = pricesArr.optJSONObject(i);
+					ViewGroup vg = (ViewGroup)LayoutInflater.from(getActivity()).inflate(R.layout.listitem_fishing_news, null);
 					TextView tv = (TextView)vg.getChildAt(0);
-					tv.setTag("撒鱼信息id");
-					tv.setText(tv.getText().toString() + i);
+					tv.setTag(price.opt(Const.STA_ID));
+					tv.setText(price.optString(Const.STA_TITLE));
 					container.addView(vg);
 				}
 			}
@@ -615,6 +617,6 @@ public class BaseFragment extends Fragment {
 	}
 
 	public interface ResultForActivityCallback {
-		void onItemClick(View view, FPlaceData data);
+		void onItemClick(View view, FieldData data);
 	}
 }

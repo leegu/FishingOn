@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.go.fish.R;
-import com.go.fish.data.FPlaceData;
+import com.go.fish.data.FieldData;
 import com.go.fish.util.Const;
 import com.go.fish.util.IME;
 import com.go.fish.util.NetTool;
@@ -76,7 +76,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 				IME.hideIME(view);
 				ViewPager viewPager = (ViewPager) searchFragment.getView().findViewById(R.id.search_viewpager);
 				String searchTitle = ((TextView)findViewById(R.id.search_list_edit)).getText().toString();
-				BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce, searchTitle, viewPager.getCurrentItem());
+				BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_field, searchTitle, viewPager.getCurrentItem());
 				break;
 			default:
 				super.onClick(view);
@@ -92,7 +92,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 	
 
 	@Override
-	public void onItemClick(View view, FPlaceData data) {
+	public void onItemClick(View view, FieldData data) {
 		initDetailFragment(R.layout.ui_detail_field);
 		JSONObject jsonObject = new JSONObject();
 		try {

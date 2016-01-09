@@ -19,6 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/base_space"
+            android:scaleType="centerCrop"
             android:layout_weight="2"
             android:src="@drawable/incon_116" />
 
@@ -27,9 +28,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="onMapFloatViewClick"
             android:orientation="vertical"
             android:paddingLeft="@dimen/base_space"
             android:paddingRight="@dimen/base_space">
@@ -67,7 +65,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical">
 
-                <TextView
+                <!-- <TextView
                     android:id="@+id/listitem_zixun_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -81,9 +79,9 @@
                     android:padding="@dimen/base_space_m"
                     android:text="120"
                     android:textColor="#d2d2d2"
-                    android:textSize="@dimen/base_font_size_h2" />
+                    android:textSize="@dimen/base_font_size_h2" /> -->
 
-                <TextView
+                <!-- <TextView
                     android:id="@+id/listitem_zixun_zan"
                     android:background="@drawable/base_background"
                     android:layout_width="wrap_content"
@@ -96,7 +94,19 @@
                     android:singleLine="true"
                     android:text="120"
                     android:textColor="#d2d2d2"
-                    android:textSize="@dimen/base_font_size_h2" />
+                    android:textSize="@dimen/base_font_size_h2" /> -->
+
+				<TextView
+                    android:id="@+id/listitem_zixun_field_name"
+                    android:background="@drawable/base_background"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="TITLE"
+                    android:textColor="#030303"
+                    android:textSize="@dimen/base_font_size_h3" />
 
                 <TextView
                     android:id="@+id/listitem_zixun_time"

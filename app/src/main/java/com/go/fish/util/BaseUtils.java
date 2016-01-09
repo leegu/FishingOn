@@ -12,7 +12,7 @@ public class BaseUtils {
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date curDate = new Date();
-    public static HashMap<String, Integer> tagColors = new HashMap<>();
+    public static HashMap<String, Integer> tagColors = new HashMap<String, Integer>();
     public static int getTagBg(String tag){
     	return tagColors.get(tag);
     }

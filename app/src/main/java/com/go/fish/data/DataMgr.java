@@ -11,13 +11,13 @@ import com.go.fish.util.Const;
 public class DataMgr {
 
 	
-	public static ArrayList<FPlaceData> makeFPlaceDatas(int layoutId, JSONArray jsonArr){
+	public static ArrayList<FieldData> makeFPlaceDatas(int layoutId, JSONArray jsonArr){
 		
-		ArrayList<FPlaceData> arr = new ArrayList<FPlaceData>();
+		ArrayList<FieldData> arr = new ArrayList<FieldData>();
 		try {
 			for(int i = 0;i < jsonArr.length(); i++){
 				JSONObject json = jsonArr.getJSONObject(i);
-				FPlaceData ld = FPlaceData.newInstance(json);
+				FieldData ld = FieldData.newInstance(json);
 				ld.layout_id = layoutId;
 				arr.add(ld);
 			}

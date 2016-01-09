@@ -242,7 +242,29 @@ public class UrlUtils {
     	return getHost() + praisePod;
     }
     String info = "/relevant/info";
-    public String getpInfo() {
+    public String getInfo() {
     	return getHost() + info;
+    }
+    String priceList = "/relevant/priceList";
+    public String getPriceList() {//列表参数  startIndex  size
+    	return getHost() + priceList;
+    }
+    
+    String attentionPrice = "/relevant/attentionPrice";
+    public String getAttentionPrice() {//pirceId   type
+    	return getHost() + attentionPrice;
+    }
+    
+    String praisePrice = "/relevant/praisePrice";
+    public String getPraisePrice() {
+    	return getHost() + priceList;
+    }
+    String attListForM = "/merchant/attListForM";
+    public String getAttListForM() {//  startIndex size
+    	return getHost() + attListForM;
+    }
+    String priceInfo = "/relevant/priceInfo";
+    public String getPriceInfo() {//  startIndex size
+    	return getHost() + priceInfo;
     }
 }

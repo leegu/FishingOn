@@ -1,34 +1,30 @@
 package com.go.fish.view;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.barcode.BarcodeUI;
 import com.go.fish.data.DataMgr;
-import com.go.fish.data.FPlaceData;
-import com.go.fish.data.MyListitemData;
+import com.go.fish.data.FieldData;
 import com.go.fish.data.PersonData;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.HomeUI;
@@ -39,24 +35,38 @@ import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
-import com.go.fish.util.LogUtils;
 import com.go.fish.util.MessageHandler;
 import com.go.fish.util.NetTool;
-import com.go.fish.util.NetTool.RequestData;
 import com.go.fish.util.NetTool.RequestListener;
 import com.go.fish.util.UrlUtils;
+import com.go.fish.view.AdapterExt.OnBaseDataClickListener;
 import com.go.fish.view.BaseFragment.ResultForActivityCallback;
 
 public class HomeFragment extends Fragment {
     private static final String TAG = "MainView";
     /**fragment中的根view*/
     ViewGroup contentView;
+    OnBaseDataClickListener mOnBaseDataClickListener = null;
     private int layoutId = 0;
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if(getActivity() instanceof OnBaseDataClickListener){
+//    		mOnBaseDataClickListener = (OnBaseDataClickListener)mOnBaseDataClickListener;
+//    	}
+//    }
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		if(activity instanceof OnBaseDataClickListener){
+    		mOnBaseDataClickListener = (OnBaseDataClickListener)activity;
+    	}
+	}
+//    @Override
+//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+//    	super.onActivityCreated(savedInstanceState);
+//    	
+//    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,7 +94,7 @@ public class HomeFragment extends Fragment {
 			break;
 		case R.id.home_fishing_news://钓播
 //			layoutId = R.layout.ui_f_fishing_news;
-			layoutId = R.layout.ui_fnews;
+			layoutId = R.layout.ui_podcast;
 			view = inflater.inflate(layoutId,container,false);
 			onCreateFNewsView((ViewGroup) view);
 			break;
@@ -111,13 +121,13 @@ public class HomeFragment extends Fragment {
 			final ListView fNewsList = (ListView)vg.getChildAt(0);
 			fNewsList.setTag("0");
 			//本地先获取显示
-			final AdapterExt mListAdapter = AdapterExt.newInstance(fNewsList, new JSONArray(), R.layout.listitem_fnews);
+			final AdapterExt mListAdapter = AdapterExt.newInstance(fNewsList, mOnBaseDataClickListener, new JSONArray(), R.layout.listitem_podcast);
 			fNewsList.setAdapter(mListAdapter);
 		}
 		{//my钓播
 //			ListView fPlaceList = new ReFreshListView(getActivity());
 			final ListView fPlaceList = (ListView)vg.getChildAt(1);
-			AdapterExt ae = AdapterExt.newInstance(fPlaceList,new JSONArray(),R.layout.listitem_fnews );
+			AdapterExt ae = AdapterExt.newInstance(fPlaceList,mOnBaseDataClickListener,new JSONArray(), R.layout.listitem_podcast );
 			ae.mFlag = AdapterExt.FLAG_MY_NEWS;
 			fPlaceList.setTag(User.self().userInfo.mobileNum);
 			fPlaceList.setAdapter(ae);
@@ -129,62 +139,9 @@ public class HomeFragment extends Fragment {
 		for(int i = 0;i < vg.getChildCount() ; i++){
 			ListView fNListView = (ListView)vg.getChildAt(i);
 			if(fNListView.getVisibility() == View.VISIBLE){
-				getNetPodList(fNListView,String.valueOf(fNListView.getTag()));
+				PodCastHelper.getNetPodList(fNListView,String.valueOf(fNListView.getTag()), true);
 			}
 		}
-	}
-
-	public static void getNetPodList(final ListView fNListView,final String mobileNum) {
-		JSONObject jsonObject = new JSONObject();
-		try {
-			int count = fNListView.getAdapter() != null ? fNListView.getAdapter().getCount() : 0;
-//			count = 0;
-			jsonObject.put(Const.STA_START_INDEX, count);
-			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
-			jsonObject.put(Const.STA_MOBILE, mobileNum);//默认所有钓播
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-		//网络数据抓取,进行更新
-		NetTool.data().http(new NetTool.RequestListener() {
-			@Override
-			public void onStart() {
-				onStart(fNListView.getContext());
-			}
-			@Override
-			public void onEnd(byte[] data) {
-				JSONObject response = toJSONObject(data);
-				if(isRight(fNListView.getContext(),response,true)){
-					final JSONArray arr= response.optJSONArray(Const.STA_DATA);
-					if(arr != null && arr.length() > 0){
-						final ListAdapter adapter = fNListView.getAdapter();
-						if(adapter instanceof AdapterExt){
-							new Thread(){
-								public void run() {
-									final ArrayList<IBaseData> ai = AdapterExt.makeFNewsDataArray(arr);
-									fNListView.postDelayed(new Runnable() {
-										@Override
-										public void run() {
-											// TODO Auto-generated method stub
-											((AdapterExt)adapter).updateAdapter(ai);
-										}
-									}, 10);
-								};
-							}.start();
-						}else if(adapter instanceof HeaderViewListAdapter){
-							((AdapterExt)((HeaderViewListAdapter)adapter).getWrappedAdapter()).updateAdapter(AdapterExt.makeFNewsDataArray(arr));
-						}
-//						else if(adapter instanceof FPlaceListAdapter){
-//							ArrayList<FPlaceData> fDataArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce,arr);
-//							((FPlaceListAdapter)adapter).updateAdapter(fDataArr);
-//						}
-					}else{
-						ViewHelper.showToast(fNListView.getContext(), Const.DEFT_NO_DATA);
-					}
-					onEnd();
-				}
-			}
-		}, jsonObject, UrlUtils.self().getPodCastList());
 	}
 
 	boolean showStatus = false;
@@ -209,7 +166,7 @@ public class HomeFragment extends Fragment {
 //			BaseFragmentPagerAdapter.initAdapterByNetData(viewPager,R.layout.listitem_fpalce);
 			break;
 		}
-		case R.layout.ui_fnews:
+		case R.layout.ui_podcast:
 			onShowFNews();
 			break;
 		case R.layout.ui_my:
@@ -230,10 +187,34 @@ public class HomeFragment extends Fragment {
 //		mListAdapter.flag = FPlaceListAdapter.FLAG_CARE_RESULT;
 //		fPlaceList.setAdapter(mListAdapter);
 		// 网络数据抓取,进行更新
-		BaseFragmentPagerAdapter.loadNetData(fPlaceList.getContext(), (FPlaceListAdapter)fPlaceList.getAdapter(), R.layout.listitem_fpalce, "", fPlaceList.getAdapter().getCount(), LocalMgr.getFPlaceTypes());
+		FPlaceListAdapter adapter = (FPlaceListAdapter)fPlaceList.getAdapter();
+		if(adapter.listDatas.size() == 0){
+			BaseFragmentPagerAdapter.loadNetData(fPlaceList.getContext(),adapter , R.layout.listitem_field, "", fPlaceList.getAdapter().getCount(), LocalMgr.getFPlaceTypes());
+		}
 	}
 	void onShowZixun(){
-		
+		final ListView lastNews = (ListView)getView().findViewById(R.id.last_news);
+		final AdapterExt mListAdapter = (AdapterExt)lastNews.getAdapter(); 
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put(Const.STA_START_INDEX, 0);
+			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		NetTool.data().http(new RequestListener() {
+			@Override
+			public void onEnd(byte[] data) {
+				// TODO Auto-generated method stub
+				JSONObject json = toJSONObject(data);
+				if(isRight(json)){
+					JSONArray arr = json.optJSONArray(Const.STA_DATA);
+					if(arr != null && arr.length() > 0) {
+						mListAdapter.updateAdapter(arr);
+					}
+				}
+			}
+		}, jsonObject, UrlUtils.self().getPriceList());
 	}
 	void onShowMyView(){
 //		updateMyView(getView());
@@ -380,28 +361,7 @@ public class HomeFragment extends Fragment {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			final AdapterExt mListAdapter = AdapterExt.newInstance(lastNews, jsonArr, R.layout.listitem_zixun);
-			JSONObject jsonObject = new JSONObject();
-			try {
-				jsonObject.put(Const.STA_START_INDEX, 0);
-				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			NetTool.data().http(new RequestListener() {
-				
-				@Override
-				public void onEnd(byte[] data) {
-					// TODO Auto-generated method stub
-					JSONObject json = toJSONObject(data);
-					if(isRight(json)){
-						JSONArray arr = json.optJSONArray(Const.STA_DATA);
-						if(arr != null && arr.length() > 0) {
-							mListAdapter.updateAdapter(arr);
-						}
-					}
-				}
-			}, jsonObject, UrlUtils.self().getInfoList());
+			final AdapterExt mListAdapter = AdapterExt.newInstance(lastNews, mOnBaseDataClickListener, jsonArr, R.layout.listitem_zixun);
 			lastNews.setAdapter(mListAdapter);
 		}
 		{//最新活动
@@ -428,15 +388,17 @@ public class HomeFragment extends Fragment {
     private void onCreateCareView(ViewGroup vg){
     	//创建 关注 页面
     	ListView fPlaceList = (ListView)vg.findViewById(R.id.ui_f_care_list);
-    	ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce, new JSONArray());
-    	FPlaceListAdapter.setAdapter(getActivity(),fPlaceList,fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT).setmResultForActivityCallback(new ResultForActivityCallback() {
+    	ArrayList<FieldData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_field, new JSONArray());
+    	FPlaceListAdapter adapter = FPlaceListAdapter.setAdapter(getActivity(),fPlaceList,fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT);
+    	adapter.setmResultForActivityCallback(new ResultForActivityCallback() {
 			
 			@Override
-			public void onItemClick(View view, FPlaceData data) {
+			public void onItemClick(View view, FieldData data) {
 				String fPlaceId = data.sid;
 				((HomeUI)getActivity()).showFieldDetail(fPlaceId, false);
 			}
 		});
+    	adapter.isAttentionList = true;
 		// 网络数据抓取,进行更新
 //		HomeFragment.getNetPodList(fPlaceList, "0");
     }

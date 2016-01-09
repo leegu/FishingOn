@@ -29,7 +29,8 @@ public interface Const {
 	String DEFT_REPLY_TEXT = "我来评论一下";
 	String DEFT_YC = "yc";
 	String DEFT_YJD = "yjd";
-	int DEFT_REQ_COUNT = 100;
+	int DEFT_REQ_COUNT_100 = 100;
+	int DEFT_REQ_COUNT_10 = 10;
 	String DEFT_SHARE_CONTENT = "钓鱼帮的分享,精彩尽在http://115.29.51.39/";
 
 	
@@ -94,6 +95,7 @@ public interface Const {
 	String STA_FISH_YEAR = "fishYear";
 	String STA_FREQUENCY = "frequency";
 	String STA_FROM_ID = "fromId";
+	String STA_PRICE_ID = "priceId";
 	String STA_FROM_NAME = "fromName";
 	String STA_GOOD_COUNT = "goodCount";
 	String STA_ID = "id";
@@ -133,6 +135,7 @@ public interface Const {
 	String STA_SURROUNDING = "surrounding";
 	String STA_TEXT = "text";
 	String STA_TITLE = "title";
+	String STA_FIELD_NAME = "fieldName";
 	String STA_TAG = "tag";
 	String STA_TO_ID = "toId";
 	String STA_TO_NAME = "toName";

@@ -2,21 +2,23 @@ package com.go.fish.data;
 
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.go.fish.util.Const;
 import com.go.fish.util.MapUtil;
 import com.go.fish.view.IBaseData;
 
-public class FPlaceData implements IBaseData{
+public class FieldData implements IBaseData{
 	public int layout_id ;
 	public String title = null,desp = null,phoneNum = null,sid = null,distance = null;
 	public double lng,alt;
 	public boolean isAttentionByUser = false;
 	private JSONObject mData = null;
-	FPlaceData(){}
-	public static FPlaceData newInstance(JSONObject json){
-		FPlaceData ret = new FPlaceData();
+	FieldData(){}
+	public static FieldData newInstance(JSONObject json){
+		FieldData ret = new FieldData();
 		ret.mData = json;
 		ret.sid = json.optString(Const.STA_ID);
 		ret.isAttentionByUser = json.optBoolean(Const.STA_IS_ATTENTION);
@@ -31,6 +33,11 @@ public class FPlaceData implements IBaseData{
 	}
 	public String toJSONString(){
 		return mData.toString();
+	}
+	@Override
+	public void OnClick(Activity activity, IBaseDataHandledCallback handledCallback, View attachedView) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

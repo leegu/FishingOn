@@ -62,9 +62,7 @@
             android:layout_alignParentRight="false"
             android:layout_toLeftOf="@id/listitem_friend_detail"
             android:layout_toRightOf="@id/listitem_friend_icon"
-            android:clickable="true"
             android:gravity="center_vertical"
-            android:onClick="onPersonClick"
             android:orientation="vertical"
             android:paddingLeft="@dimen/base_space"
             android:paddingRight="@dimen/base_space" >

@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.go.fish.R;
-import com.go.fish.data.FPlaceData;
+import com.go.fish.data.FieldData;
 import com.go.fish.view.BaseFragment.ResultForActivityCallback;
 
 /**
@@ -29,18 +29,19 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 	public static final int FLAG_NEAR_RESULT = 1;
 	public static final int FLAG_CARE_RESULT = 2;
 	public int flag = FLAG_SEARCH_RESULT;
+	boolean isAttentionList = false;
 	private LayoutInflater mInflater;
 	private ResultForActivityCallback mCallback;
 	View mFooterTextView = null;
 	ListView mListView = null;
-	ArrayList<FPlaceData> listDatas = null;
+	ArrayList<FieldData> listDatas = null;
 	/**
 	 * @param context TODO
 	 * @param listView
 	 * @param array
 	 * @param resultFlag
 	 */
-	FPlaceListAdapter(Context context,ListView listView,ArrayList<FPlaceData> array, int resultFlag){
+	FPlaceListAdapter(Context context,ListView listView,ArrayList<FieldData> array, int resultFlag){
 		mListView = listView;
 		this.flag = resultFlag;
 		listDatas = array;
@@ -49,10 +50,10 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 			attachToListView(mListView);
 		}
 	}
-	static public FPlaceListAdapter setAdapter(Context context,ListView listView, ArrayList<FPlaceData> array) {
+	static public FPlaceListAdapter setAdapter(Context context,ListView listView, ArrayList<FieldData> array) {
 		return setAdapter(context, listView, array, FLAG_SEARCH_RESULT);
 	}
-	static public FPlaceListAdapter setAdapter(Context context,ListView listView,ArrayList<FPlaceData> array, int resultFlag) {
+	static public FPlaceListAdapter setAdapter(Context context,ListView listView,ArrayList<FieldData> array, int resultFlag) {
 		if(listView == null || listView.getAdapter() == null){
 			return new FPlaceListAdapter(context, listView, array, resultFlag);
 		}else{
@@ -99,12 +100,12 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		View item = null;
-		FPlaceData ld = listDatas.get(position);
+		FieldData ld = listDatas.get(position);
 		switch (ld.layout_id) {
 //		case R.layout.listitem_search:
 //			item = onGetSearchListitem(ld, convertView, parent);
 //			break;
-		case R.layout.listitem_fpalce:
+		case R.layout.listitem_field:
 			item = onGetNearFPlace(ld, convertView, parent);
 			break;
 		default:
@@ -113,7 +114,7 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
         return item;
 	}
 
-	public void updateAdapter(ArrayList<FPlaceData> array){
+	public void updateAdapter(ArrayList<FieldData> array){
 		boolean hasListView = mListView != null;
 		if(hasListView){
 			if(mListView.getFooterViewsCount() > 0) {
@@ -132,7 +133,7 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 		ViewGroup fplace_state;
 		View float_view_detail_btn;
 	}
-	private View onGetNearFPlace(FPlaceData fPlace, View convertView, ViewGroup parent){//搜索结果展示，附件钓场
+	private View onGetNearFPlace(FieldData fPlace, View convertView, ViewGroup parent){//搜索结果展示，附件钓场
 		ViewGroup item = null;
 		FPlaceViewHolder mViewHolder = null;
 		//周边调用列表

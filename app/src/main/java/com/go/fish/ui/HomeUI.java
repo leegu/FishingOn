@@ -49,7 +49,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.overlayutil.OverlayManager;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.go.fish.R;
-import com.go.fish.data.FPlaceData;
+import com.go.fish.data.FieldData;
 import com.go.fish.data.PersonData;
 import com.go.fish.user.User;
 import com.go.fish.util.Const;
@@ -61,7 +61,10 @@ import com.go.fish.util.MapUtil.OnGetLocationListener;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.NetTool.RequestListener;
 import com.go.fish.util.UrlUtils;
+import com.go.fish.view.AdapterExt.OnBaseDataClickListener;
 import com.go.fish.view.HomeFragment;
+import com.go.fish.view.IBaseData;
+import com.go.fish.view.PodCastHelper;
 import com.go.fish.view.PopWinListItemAdapter;
 import com.go.fish.view.ViewHelper;
 
@@ -78,7 +81,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class HomeUI extends FragmentActivity implements IHasHeadBar {
+public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataClickListener {
 
 	FragmentManager fragmentMgr = null;
 	HomeFragment currentFragment = null;
@@ -349,7 +352,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 					try {
 						jsonObject.put(Const.STA_LAT, String.valueOf(data.lat));
 						jsonObject.put(Const.STA_LNG, String.valueOf(data.lng));
-						jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
+						jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_100);
 						String tags = LocalMgr.getFPlaceTypes();
 						jsonObject.put(Const.STA_TAG, tags);
 						jsonObject.put(Const.STA_TYPE, Const.DEFT_YC);
@@ -579,7 +582,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 					vg.getChildAt(0).setVisibility(View.VISIBLE);
 					ListView listView  = (ListView)vg.getChildAt(0);
 					listView.setTag("0");
-					HomeFragment.getNetPodList(listView, "0");
+					PodCastHelper.getNetPodList(listView, "0", true);
 					vg.getChildAt(1).setVisibility(View.GONE);
 				}
 			}
@@ -621,7 +624,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 					vg.getChildAt(1).setVisibility(View.VISIBLE);
 					ListView listView  = (ListView)vg.getChildAt(1);
 					listView.setTag(User.self().userInfo.mobileNum);
-					HomeFragment.getNetPodList(listView, User.self().userInfo.mobileNum);
+					PodCastHelper.getNetPodList(listView, User.self().userInfo.mobileNum, true);
 					vg.getChildAt(0).setVisibility(View.GONE);
 				}
 			}
@@ -1041,7 +1044,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 			}
 		}, jsonObject, UrlUtils.self().getFieldInfo());
 	}
-	public void onDiaoBoDetailClick(View view) {
+	public void onPodCastDetailClick(View view) {
 		UIMgr.showActivity(this,R.layout.ui_detail_podcast,SearchUI.class.getName());
 	}
 	public void onPersonClick(View view) {
@@ -1052,5 +1055,9 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar {
 		i.putExtra(Const.PRI_HIDE_PUBLISH, true);
 		i.putExtra(Const.STA_MOBILE, personData.mobileNum);
 		UIMgr.showActivity(this,i,BaseUI.class.getName());
+	}
+	@Override
+	public void onItemClick(View view, IBaseData data) {
+		data.OnClick(HomeUI.this, null, view);
 	}
 }

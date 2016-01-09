@@ -14,7 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 import com.go.fish.data.DataMgr;
-import com.go.fish.data.FPlaceData;
+import com.go.fish.data.FieldData;
 import com.go.fish.user.User;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
@@ -90,14 +90,20 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
 			final int listitemLayoutid, final String searchTitle,
 			final int startIndex,String defaultTag) {
     	JSONObject jsonObject = new JSONObject();
+    	String url = null;
     	try {
-			jsonObject.put(Const.STA_LAT, String.valueOf(User.self().userInfo.lat));
-			jsonObject.put(Const.STA_LNG, String.valueOf(User.self().userInfo.lng));
-			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
-			jsonObject.put(Const.STA_START_INDEX, startIndex);
-			jsonObject.put(Const.STA_TAG, defaultTag);
-			jsonObject.put(Const.STA_TYPE, Const.DEFT_YC);
-			jsonObject.put(Const.STA_TITLE, searchTitle);
+    		if(listAdapter.isAttentionList){
+    			url = UrlUtils.self().getAttListForM();
+    		}else{
+    			url = UrlUtils.self().getQueryForMap();
+				jsonObject.put(Const.STA_LAT, String.valueOf(User.self().userInfo.lat));
+				jsonObject.put(Const.STA_LNG, String.valueOf(User.self().userInfo.lng));
+				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
+				jsonObject.put(Const.STA_START_INDEX, startIndex);
+				jsonObject.put(Const.STA_TAG, defaultTag);
+				jsonObject.put(Const.STA_TYPE, Const.DEFT_YC);
+				jsonObject.put(Const.STA_TITLE, searchTitle);
+    		}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -122,7 +128,7 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
 					onEnd();
 				}
 			}
-		}, jsonObject, UrlUtils.self().getQueryForMap());
+		}, jsonObject, url);
     }
     public static void loadNetData(final ViewPager viewPager,
 			final int listitemLayoutid, final String searchTitle,
@@ -130,7 +136,7 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
     	BaseFragmentPagerAdapter adapter = (BaseFragmentPagerAdapter) viewPager.getAdapter();
     	final FPlaceListFragment listFragment = (FPlaceListFragment) adapter.getItem(defaultIndex);
     	if(listFragment.mListAdapter == null){
-    		listFragment.mListAdapter = FPlaceListAdapter.setAdapter(viewPager.getContext(), null, new ArrayList<FPlaceData>());
+    		listFragment.mListAdapter = FPlaceListAdapter.setAdapter(viewPager.getContext(), null, new ArrayList<FieldData>());
     	}
     	int startIndex = listFragment.mListAdapter == null ? 0 : listFragment.mListAdapter.listDatas.size();
 		String defaultTag = null;
