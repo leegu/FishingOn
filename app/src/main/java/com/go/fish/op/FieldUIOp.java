@@ -10,7 +10,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Layout;
@@ -31,6 +33,8 @@ import com.go.fish.data.FieldData;
 import com.go.fish.data.load.FieldDataLoader;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.HomeUI;
+import com.go.fish.ui.SearchUI;
+import com.go.fish.ui.UIMgr;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
@@ -49,7 +53,7 @@ public class FieldUIOp {
 	static class FPlaceViewHolder{
 		TextView listitem_fplace_title,fplace_desc,float_view_distance;
 		ImageView listitem_fplace_icon;
-		ViewGroup fplace_state;
+		ViewGroup fplace_state,listitem_field_tags;
 		View float_view_detail_btn;
 	}
 	
@@ -135,7 +139,7 @@ public class FieldUIOp {
 				}else if(i > careCountThumb){
 					careItem.setVisibility(View.GONE);
 				}else {
-					JSONObject member = members.optJSONObject(0);
+					JSONObject member = members.optJSONObject(i);
 					if(!TextUtils.isEmpty(member.optString(Const.STA_IMGURL))){
 //						String imgUrl = "http://images.banma.com/v0/app-feed/soft/icons/_bigIcon76e029e26dce486c9c969c23b99bf31f.png";
 						String imgUrl = member.optString(Const.STA_IMGURL, member.optString(Const.STA_IMGURL));
@@ -148,7 +152,7 @@ public class FieldUIOp {
 				if(careCountThumb < 7 && i >= careCountThumb) {
 					careItem.setVisibility(View.GONE);
 				}else{
-					JSONObject member = members.optJSONObject(0);
+					JSONObject member = members.optJSONObject(i);
 					if(!TextUtils.isEmpty(member.optString(Const.STA_IMGURL))){
 //						String imgUrl = "http://images.banma.com/v0/app-feed/soft/icons/_bigIcon76e029e26dce486c9c969c23b99bf31f.png";
 						String imgUrl = member.optString(Const.STA_IMGURL, member.optString(Const.STA_IMGURL));
@@ -400,21 +404,36 @@ public class FieldUIOp {
 		},jsonObject, UrlUtils.self().getAttention());
 	}
 
+	public static void onCreateCareFieldView(final Activity activity,ViewGroup vg, OpBack backListener){
+		onCreateCareFieldView(activity, vg, R.layout.listitem_field_3_rows, backListener);
+	}
 	/**
 	 * 创建关注钓场页面
 	 * @param activity
 	 * @param vg
+	 * @param backListener TODO
 	 */
-	public static void onCreateCareFieldView(final Activity activity,ViewGroup vg){
+	public static void onCreateCareFieldView(final Activity activity,ViewGroup vg,int layoutId, OpBack backListener){
     	//创建 关注 页面
     	ListView fPlaceList = (ListView)vg.findViewById(R.id.ui_f_care_list);
-    	ArrayList<FieldData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_field, new JSONArray());
+    	ArrayList<FieldData> fPlaceArr = DataMgr.makeFPlaceDatas(layoutId, new JSONArray());
     	FPlaceListAdapter adapter = FPlaceListAdapter.setAdapter(activity,fPlaceList,fPlaceArr, FieldUIOp.FLAG_CARE_RESULT);
     	adapter.setmResultForActivityCallback(new ResultForActivityCallback() {
 			@Override
 			public void onItemClick(View view, FieldData data) {
 				String fPlaceId = data.sid;
-				((HomeUI)activity).showFieldDetail(fPlaceId, false);
+				FieldDataLoader.loadFieldInfo(fPlaceId, new OpBack() {
+					@Override
+					public void onBack(boolean suc, JSONObject json, Activity activity) {
+						// TODO Auto-generated method stub
+						Bundle newBundle = new Bundle();
+						newBundle.putString(Const.PRI_JSON_DATA, json.toString());
+						newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_detail_field);
+						Intent i = new Intent();
+						i.putExtras(newBundle);
+						UIMgr.showActivity(activity, i, SearchUI.class.getName());
+					}
+				}, activity);
 			}
 		});
     	adapter.isAttentionList = true;
@@ -506,23 +525,44 @@ public class FieldUIOp {
 			mViewHolder.float_view_distance = ((TextView)item.findViewById(R.id.float_view_distance));
 			mViewHolder.fplace_state = ((ViewGroup)item.findViewById(R.id.fplace_state));
 			mViewHolder.listitem_fplace_icon = ((ImageView)item.findViewById(R.id.listitem_fplace_icon));
+			if(layout_id == R.layout.listitem_field_3_rows){
+				mViewHolder.listitem_field_tags = (ViewGroup)item.findViewById(R.id.listitem_friend_tags);
+			}
 		} else {
 			item = (ViewGroup)convertView;
 			mViewHolder = (FPlaceViewHolder)item.getTag();
 		}
 		if(!TextUtils.isEmpty(fPlace.imgUrl)){
-			ViewHelper.load(mViewHolder.listitem_fplace_icon,fPlace.imgUrl,true);
+			ViewHelper.load(mViewHolder.listitem_fplace_icon,fPlace.imgUrl,true,false);
 		}
 		mViewHolder.float_view_detail_btn.setTag(fPlace);
 		mViewHolder.listitem_fplace_title.setText(fPlace.title);
 		mViewHolder.fplace_desc.setText(fPlace.desp);
 		mViewHolder.float_view_distance.setText(fPlace.distance);
-		mViewHolder.fplace_state.getChildAt(1).setSelected(fPlace.isAttentionByUser);
+		mViewHolder.fplace_state.getChildAt(1).setTag(String.valueOf(fPlace.sid));
+		
+		if(layout_id == R.layout.listitem_field_3_rows){
+			if(mViewHolder.listitem_field_tags != null){
+				mViewHolder.listitem_field_tags.setVisibility(View.VISIBLE);
+				String[] tags = fPlace.tagArray;
+				for(int i = 0; i < mViewHolder.listitem_field_tags.getChildCount(); i++){//只对前三个进行显示
+					TextView tv = (TextView)mViewHolder.listitem_field_tags.getChildAt(i);
+					if(i < tags.length){
+						tv.setVisibility(View.VISIBLE);
+						tv.setBackgroundColor(BaseUtils.getTagBg(tags[i]));
+						tv.setText(tags[i]);
+					}else{
+						tv.setVisibility(View.GONE);
+					}
+				}
+			}
+		}
 		if(flag == FLAG_SEARCH_RESULT){
 			mViewHolder.fplace_state.getChildAt(0).setVisibility(View.GONE);
 			mViewHolder.fplace_state.getChildAt(1).setVisibility(View.VISIBLE);
 			mViewHolder.fplace_state.getChildAt(1).setTag(fPlace);
 		}else if(flag == FLAG_CARE_RESULT){
+			mViewHolder.fplace_state.getChildAt(1).setSelected(true);
 		//
 		}
 		return item;
@@ -552,15 +592,14 @@ public class FieldUIOp {
 		},jsonObject, UrlUtils.self().getPraise());
 	}
 	public static void onShowCareFieldView(ViewGroup view){
+		onShowCareFieldView(view, R.layout.listitem_field_3_rows);
+	}
+	public static void onShowCareFieldView(ViewGroup view,int layoutId){
 		ListView fPlaceList = (ListView)view.findViewById(R.id.ui_f_care_list);
-//    	ArrayList<FPlaceData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce, new JSONArray());
-//		final FPlaceListAdapter mListAdapter = new FPlaceListAdapter(getActivity(),fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT);
-//		mListAdapter.flag = FPlaceListAdapter.FLAG_CARE_RESULT;
-//		fPlaceList.setAdapter(mListAdapter);
 		// 网络数据抓取,进行更新
 		FPlaceListAdapter adapter = (FPlaceListAdapter)fPlaceList.getAdapter();
 		if(adapter.listDatas.size() == 0){
-			FieldDataLoader.loadNetData(fPlaceList.getContext(),adapter , R.layout.listitem_field, "", fPlaceList.getAdapter().getCount(), LocalMgr.getFPlaceTypes());
+			FieldDataLoader.loadNetData(fPlaceList.getContext(),adapter , layoutId, "", fPlaceList.getAdapter().getCount(), LocalMgr.getFPlaceTypes());
 		}
 	}
 	private static void updateState(Activity activity,ViewGroup menu_contents,ViewGroup menu_item_contents,int postion,OnClickListener listener){

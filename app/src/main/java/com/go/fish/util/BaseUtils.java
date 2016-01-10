@@ -14,7 +14,11 @@ public class BaseUtils {
     Date curDate = new Date();
     public static HashMap<String, Integer> tagColors = new HashMap<String, Integer>();
     public static int getTagBg(String tag){
-    	return tagColors.get(tag);
+    	if(tagColors.containsKey(tag)){
+    		return tagColors.get(tag);
+    	}else{
+    		return 0xff3fc3fe;
+    	}
     }
     public static String getCurrentTime(){
     	return sdf.format(new Date());

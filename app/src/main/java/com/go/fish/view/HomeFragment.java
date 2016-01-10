@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment {
 		case R.id.home_care://关注
 			layoutId = R.layout.ui_f_care;
 			view = inflater.inflate(layoutId,container,false);
-			FieldUIOp.onCreateCareFieldView(getActivity(),(ViewGroup)view);
+			FieldUIOp.onCreateCareFieldView(getActivity(),(ViewGroup)view, null);
 			break;
 		case R.id.home_zixun:
 			layoutId = R.layout.ui_f_zixun;

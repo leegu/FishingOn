@@ -103,6 +103,7 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 //			item = onGetSearchListitem(ld, convertView, parent);
 //			break;
 		case R.layout.listitem_field:
+		case R.layout.listitem_field_3_rows:
 			item = FieldUIOp.onGetFieldView((Activity)mListView.getContext(), mInflater, ld.layout_id, flag, ld, convertView, parent);
 			break;
 		default:

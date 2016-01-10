@@ -1,5 +1,6 @@
 package com.go.fish.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -51,8 +52,10 @@ import com.baidu.mapapi.utils.DistanceUtil;
 import com.go.fish.R;
 import com.go.fish.data.FieldData;
 import com.go.fish.data.PersonData;
+import com.go.fish.data.load.FieldDataLoader;
 import com.go.fish.data.load.PodCastDataLoader;
 import com.go.fish.op.FieldUIOp;
+import com.go.fish.op.OpBack;
 import com.go.fish.op.PodCastUIOp;
 import com.go.fish.user.User;
 import com.go.fish.util.Const;
@@ -260,7 +263,21 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 			View titleView = mFloatViewInfo.findViewById(R.id.float_view_title);
 			final Bundle b = (Bundle) titleView.getTag();
 			int fPlaceId = b.getInt(Const.STA_ID);
-			showFieldDetail("" + fPlaceId, true);
+			FieldDataLoader.loadFieldInfo(String.valueOf(fPlaceId), new OpBack() {
+				
+				@Override
+				public void onBack(boolean suc, JSONObject json, Activity activity) {
+					Bundle newBundle = new Bundle();
+					if(suc){
+						newBundle.putString(Const.PRI_JSON_DATA, json.toString());
+						newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_detail_field);
+						Intent i = new Intent();
+						i.putExtras(newBundle);
+						UIMgr.showActivity(HomeUI.this, i, SearchUI.class.getName());
+						mFloatViewInfo.setVisibility(View.GONE);
+					}
+				}
+			}, HomeUI.this);
 			break;
 		case R.id.float_view_nav_btn://
 			break;
@@ -695,11 +712,15 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 	public void onCommentPodCastClick(View view) {
 		PodCastUIOp.onCommentPodCastClick(this,view);
 	}
+	public void onPodCastTextClick(View view) {
+		Object[] obj = (Object[])view.getTag();
+		PodCastUIOp.onPodCastTextClick(this,(PersonData)obj[0], String.valueOf(obj[1]));
+	}
 	public void onCarePodCastClick(View view) {
-		PodCastUIOp.onCarePodCastClick((ImageView)view);
+		PodCastUIOp.onCarePodCastClick((ImageView)view, null,String.valueOf(view.getTag()));
 	}
 	public void onPraisePodCastClick(View view) {
-		PodCastUIOp.onPraisePodCastClick((ImageView)view);
+		PodCastUIOp.onPraisePodCastClick((ImageView)view, null,String.valueOf(view.getTag()));
 	}
 	public void onCareFieldClick(View view) {
 		FieldUIOp.onCareFieldClick((ImageView)view, (TextView) mFloatViewInfo.findViewById(R.id.float_view_care_text), (String)view.getTag());
@@ -1020,50 +1041,6 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		}
 	}
 	
-	public void showFieldDetail(String fPlaceId,final boolean hideMapInfo){
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put(Const.STA_FIELDID, fPlaceId);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		NetTool.data().http(new RequestListener() {
-			@Override
-			public void onStart() {
-				onStart(HomeUI.this);
-			}
-			@Override
-			public void onEnd(byte[] data) {
-				try {
-					if (isOver()) {// 返回键取消联网之后不应该继续处理
-					} else {
-						if (data != null) {
-							String jsonStr = new String(data, "UTF-8");
-							JSONObject response = toJSONObject(jsonStr);
-							if (isRight(HomeUI.this,response,true)) {
-								Bundle newBundle = new Bundle();
-								newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
-								newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_detail_field);
-								Intent i = new Intent();
-								i.putExtras(newBundle);
-								UIMgr.showActivity(HomeUI.this, i, SearchUI.class.getName());
-								if(hideMapInfo){
-									mFloatViewInfo.setVisibility(View.GONE);
-								}
-							}
-						} else {
-							onDataError(HomeUI.this);
-						}
-					}
-					onEnd();
-				} catch (Exception e) {
-				}
-			}
-		}, jsonObject, UrlUtils.self().getFieldInfo());
-	}
-	public void onPodCastDetailClick(View view) {
-		UIMgr.showActivity(this,R.layout.ui_detail_podcast,SearchUI.class.getName());
-	}
 	public void onPersonClick(View view) {
 		PersonData personData = (PersonData)view.getTag();
 		Intent i = new Intent();

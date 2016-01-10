@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.go.fish.R;
+import com.go.fish.data.load.PodCastDataLoader;
+import com.go.fish.op.OpBack;
+import com.go.fish.op.PodCastUIOp;
 import com.go.fish.ui.HomeUI;
 import com.go.fish.ui.SearchUI;
 import com.go.fish.ui.UIMgr;
@@ -23,9 +26,11 @@ public class PodCastData implements IBaseData{
 
 	public PersonData authorData = null;
 	public int newsId = 0;
+	public int id = 0;
 	public String content;
 	public String publishTime;
 	public int goodCount,careCount,commentCount,shareCount;
+	public boolean isAttentaion,isZan;
 	public String[] netPicUrl = null;
 //	public String[] localPicUrl = null;
 	
@@ -47,48 +52,15 @@ public class PodCastData implements IBaseData{
 		newsData.goodCount =jsonObject.optInt(Const.STA_GOOD_COUNT);
 		newsData.commentCount =jsonObject.optInt(Const.STA_COMMENT_COUNT);
 		newsData.careCount =jsonObject.optInt(Const.STA_CARE_COUNT);
+		newsData.id =jsonObject.optInt(Const.STA_ID);
 		newsData.newsId =jsonObject.optInt(Const.STA_NEWS_ID);
 		newsData.authorData = PersonData.newInstance(jsonObject.optJSONObject(Const.STA_MEMBER));
 		return newsData;
 	}
 	@Override
 	public void OnClick(final Activity activity, IBaseDataHandledCallback handledCallback, View attachedView) {
-		// TODO Auto-generated method stub
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put(Const.STA_ID, newsId);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		NetTool.data().http(new RequestListener() {
-			@Override
-			public void onStart() {
-				onStart(activity);
-			}
-			@Override
-			public void onEnd(byte[] data) {
-				try {
-					if (isOver()) {// 返回键取消联网之后不应该继续处理
-					} else {
-						if (data != null) {
-							String jsonStr = new String(data, "UTF-8");
-							JSONObject response = toJSONObject(jsonStr);
-							if (isRight(activity,response,true)) {
-								Bundle newBundle = new Bundle();
-								newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
-								newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_detail_podcast);
-								Intent i = new Intent();
-								i.putExtras(newBundle);
-								UIMgr.showActivity(activity, i, SearchUI.class.getName());
-							}
-						} else {
-							onDataError(activity);
-						}
-					}
-					onEnd();
-				} catch (Exception e) {
-				}
-			}
-		}, jsonObject, UrlUtils.self().getInfo());
+		PodCastUIOp.onPodCastTextClick(activity, authorData, String.valueOf(id));
 	}
+	
+	
 }

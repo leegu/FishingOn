@@ -6,23 +6,66 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
+import com.go.fish.R;
 import com.go.fish.data.DataMgr;
 import com.go.fish.data.FieldData;
+import com.go.fish.op.OpBack;
+import com.go.fish.ui.HomeUI;
+import com.go.fish.ui.SearchUI;
+import com.go.fish.ui.UIMgr;
 import com.go.fish.user.User;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
 import com.go.fish.util.LogUtils;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.UrlUtils;
+import com.go.fish.util.NetTool.RequestListener;
 import com.go.fish.view.BaseFragmentPagerAdapter;
 import com.go.fish.view.FPlaceListAdapter;
 import com.go.fish.view.FPlaceListFragment;
 
 public class FieldDataLoader {
 
+	public static void loadFieldInfo(String fPlaceId,final OpBack backListener,final Activity activity){
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put(Const.STA_FIELDID, fPlaceId);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		NetTool.data().http(new RequestListener() {
+			@Override
+			public void onStart() {
+				onStart(activity);
+			}
+			@Override
+			public void onEnd(byte[] data) {
+				try {
+					if (isOver()) {// 返回键取消联网之后不应该继续处理
+					} else {
+						if (data != null) {
+							String jsonStr = new String(data, "UTF-8");
+							JSONObject response = toJSONObject(jsonStr);
+							if(backListener != null){
+								backListener.onBack(isRight(response), response, activity);
+							}
+						} else {
+							onDataError(activity);
+						}
+					}
+					onEnd();
+				} catch (Exception e) {
+				}
+			}
+		}, jsonObject, UrlUtils.self().getFieldInfo());
+	}
 	public static void loadNetData(final Context context,final FPlaceListAdapter  listAdapter,
 			final int listitemLayoutid, final String searchTitle,
 			final int startIndex,String defaultTag) {

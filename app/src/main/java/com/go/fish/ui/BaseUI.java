@@ -41,10 +41,12 @@ import com.go.fish.data.DataMgr;
 import com.go.fish.data.FieldData;
 import com.go.fish.data.FishingNewsData;
 import com.go.fish.data.PersonData;
+import com.go.fish.data.load.FieldDataLoader;
 import com.go.fish.data.load.PodCastDataLoader;
 import com.go.fish.op.CommentUIOp;
 import com.go.fish.op.FieldUIOp;
 import com.go.fish.op.FishingNewsUIOp;
+import com.go.fish.op.PodCastUIOp;
 import com.go.fish.ui.pic.ImageViewUI;
 import com.go.fish.ui.pics.GalleryUtils;
 import com.go.fish.user.User;
@@ -106,7 +108,10 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			setContentView(layout_id);
 		}
 		switch (layout_id) {
-		case R.layout.ui_detail_sayu_info:
+		case R.layout.ui_detail_podcast:
+			PodCastUIOp.onCreatePodCastDetail(this, getIntent().getExtras());
+			break;
+		case R.layout.ui_detail_fishing_news:
 			FishingNewsUIOp.onCreateFishingNewsDetail(this);
 			break;
 		case R.layout.ui_webview_left_close:
@@ -370,11 +375,12 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		{// 钓场、渔具
 			ListView fPlaceList = new ListView(this);
 			vg.addView(fPlaceList);
-			
-			ArrayList<FieldData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_field, new JSONArray());
-			FPlaceListAdapter.setAdapter(BaseUI.this.getApplicationContext(),fPlaceList,fPlaceArr, FieldUIOp.FLAG_CARE_RESULT);
+			fPlaceList.setId(R.id.ui_f_care_list);
+//			ArrayList<FieldData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_field, new JSONArray());
+//			FPlaceListAdapter.setAdapter(BaseUI.this.getApplicationContext(),fPlaceList,fPlaceArr, FieldUIOp.FLAG_CARE_RESULT);
 			// 网络数据抓取,进行更新
-			PodCastDataLoader.getNetPodList(fPlaceList, "0", true);
+			FieldUIOp.onCreateCareFieldView(this, vg,R.layout.listitem_field, null);
+			FieldUIOp.onShowCareFieldView(vg,R.layout.listitem_field);
 		}
 
 		{// 钓播

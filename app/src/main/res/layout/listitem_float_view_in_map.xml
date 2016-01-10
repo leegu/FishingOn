@@ -71,6 +71,7 @@
                 android:textSize="@dimen/base_font_size_h4" />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/float_view_nav_btn"
                 style="@style/nav_btn_style"
                  />

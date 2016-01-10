@@ -44,7 +44,7 @@ public class FishingNewsData implements IBaseData{
 	}
 	public static void StaticOnClick(Activity activity,int id){
 		Intent i = new Intent();
-		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_detail_sayu_info);
+		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_detail_fishing_news);
 		i.putExtra(Const.STA_PRICE_ID, id);
 		UIMgr.showActivity(activity,i, BaseUI.class.getName());
 	}

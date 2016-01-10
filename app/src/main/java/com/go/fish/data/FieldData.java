@@ -6,16 +6,18 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 import com.go.fish.util.MapUtil;
 import com.go.fish.view.IBaseData;
 
 public class FieldData implements IBaseData{
 	public int layout_id ;
-	public String title = null,desp = null,phoneNum = null,sid = null,distance = null,imgUrl = null;
+	public String title = null,desp = null,phoneNum = null,sid = null,distance = null,imgUrl = null,tag = null;
 	public double lng,alt;
 	public boolean isAttentionByUser = false;
 	private JSONObject mData = null;
+	public String[] tagArray;
 	FieldData(){}
 	public static FieldData newInstance(JSONObject json){
 		FieldData ret = new FieldData();
@@ -25,6 +27,8 @@ public class FieldData implements IBaseData{
 		ret.alt = json.optDouble(Const.STA_LAT);
 		ret.lng = json.optDouble(Const.STA_LNG);
 		ret.distance = MapUtil.getDistance(ret.alt, ret.lng);
+		ret.tag = json.optString(Const.STA_TAG);
+		ret.tagArray = BaseUtils.splitString(ret.tag);
 		ret.title = json.optString(Const.STA_NAME);
 		ret.imgUrl = json.optString(Const.STA_IMGURL);
 		ret.desp = json.optString(Const.STA_INTRODUCTION);

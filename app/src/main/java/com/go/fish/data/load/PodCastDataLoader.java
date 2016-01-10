@@ -6,13 +6,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.go.fish.data.PodCastData;
+import com.go.fish.op.OpBack;
 import com.go.fish.util.Const;
 import com.go.fish.util.NetTool;
+import com.go.fish.util.NetTool.RequestListener;
 import com.go.fish.util.UrlUtils;
 import com.go.fish.view.AdapterExt;
 import com.go.fish.view.IBaseData;
@@ -20,13 +23,48 @@ import com.go.fish.view.ViewHelper;
 
 public class PodCastDataLoader {
 	
+	public static void getPodCastInfo(String id,final OpBack backListener,final Activity activity){
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put(Const.STA_ID, id);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		NetTool.data().http(new RequestListener() {
+			@Override
+			public void onStart() {
+				onStart(activity);
+			}
+			@Override
+			public void onEnd(byte[] data) {
+				try {
+					if (isOver()) {// 返回键取消联网之后不应该继续处理
+					} else {
+						if (data != null) {
+							String jsonStr = new String(data, "UTF-8");
+							JSONObject response = toJSONObject(jsonStr);
+							if(backListener != null){
+								backListener.onBack(isRight(response), response, activity);
+							}
+						} else {
+							onDataError(activity);
+						}
+					}
+					onEnd();
+				} catch (Exception e) {
+				}
+			}
+		}, jsonObject, UrlUtils.self().getInfo());
+	}
+	
 	public static void getNetPodList(final ListView fNListView,final String mobileNum,final boolean pullRefresh) {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			int count = fNListView.getAdapter() != null ? fNListView.getAdapter().getCount() : 0;
 //			count = 0;
 			jsonObject.put(Const.STA_START_INDEX, count);
-			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
+			jsonObject.put(Const.STA_SIZE, 4);
+//			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
 			jsonObject.put(Const.STA_MOBILE, mobileNum);//默认所有钓播
 		} catch (JSONException e1) {
 			e1.printStackTrace();

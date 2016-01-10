@@ -54,7 +54,7 @@ public class BaseFragment extends Fragment {
 			onCreateFieldViewPager(view);
 //		} else if (layoutId == R.layout.ui_f_search_list_in_map) {
 //			onCreateSearchMap(view);
-		} else if (layoutId == R.layout.ui_detail_field || layoutId == R.layout.ui_detail_podcast) {
+		} else if (layoutId == R.layout.ui_detail_field) {
 			String jsonStr = b.getString(Const.PRI_JSON_DATA);
 			try {
 				JSONObject resultData = new JSONObject(jsonStr);

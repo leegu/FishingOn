@@ -80,7 +80,7 @@ public class FishingNewsUIOp {
 		}
     }
 	
-	public static void onShowFishingNewsView(ViewGroup view){
+	public static void onShowFishingNewsView(final ViewGroup view){
 		final ListView lastNews = (ListView)view.findViewById(R.id.last_news);
 		final AdapterExt mListAdapter = (AdapterExt)lastNews.getAdapter(); 
 		JSONObject jsonObject = new JSONObject();
@@ -95,7 +95,7 @@ public class FishingNewsUIOp {
 			public void onEnd(byte[] data) {
 				// TODO Auto-generated method stub
 				JSONObject json = toJSONObject(data);
-				if(isRight(json)){
+				if(isRight(view.getContext(),json,true)){
 					JSONArray arr = json.optJSONArray(Const.STA_DATA);
 					if(arr != null && arr.length() > 0) {
 						mListAdapter.updateAdapter(arr);

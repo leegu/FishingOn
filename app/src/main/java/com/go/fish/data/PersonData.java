@@ -26,7 +26,7 @@ public class PersonData implements IBaseData {
     public  String photoUrl;
     public String userName;
     public String mobileNum;
-    public String[] aiHaos = null;
+    public String[] tagArray = null;
     public String far = null;
     public String address = null;
     public String tag = null;
@@ -47,7 +47,7 @@ public class PersonData implements IBaseData {
 	        personData.fTimes = member.optString(Const.STA_FREQUENCY);
 	        personData.address = member.optString(Const.STA_ADDRESS);
 	        personData.tag = member.optString(Const.STA_TAG);
-	        personData.aiHaos = BaseUtils.splitString(personData.tag);
+	        personData.tagArray = BaseUtils.splitString(personData.tag);
 	        personData.lng = member.optDouble(Const.STA_LNG);
 	        personData.lat = member.optDouble(Const.STA_LAT);
         }

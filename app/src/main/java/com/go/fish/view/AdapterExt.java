@@ -120,16 +120,16 @@ public class AdapterExt extends BaseAdapter {
 		View item = null;
 		switch (layout_id) {
 		case R.layout.listitem_podcast://钓播
-			item = PodCastUIOp.onGetPodCastView((Activity)context,mInflater, layout_id, mFlag, position, listDatas, convertView, parent);
+			item = PodCastUIOp.onGetPodCastView((Activity)context,mInflater, layout_id, position, mFlag, listDatas, convertView, parent);
 			break;
 		case R.layout.listitem_friend_3_rows:
-			item = PersonUIOp.onGetFriend((Activity)context, mInflater, position, layout_id, mHideCare, listDatas, convertView, parent);
+			item = PersonUIOp.onGetFriend((Activity)context, mInflater, layout_id,position,  mHideCare, listDatas, convertView, parent);
 			break;
 		case R.layout.listitem_friend_2_rows:
-			item = PersonUIOp.onGetZanFriend((Activity)context, mInflater, position, layout_id, mHideCare, listDatas, convertView, parent);
+			item = PersonUIOp.onGetZanFriend((Activity)context, mInflater, layout_id, position, mHideCare, listDatas, convertView, parent);
 			break;
 		case R.layout.listitem_comment:
-			item = CommentUIOp.onGetComment((Activity)context, mInflater, position, layout_id,listDatas, convertView, parent);
+			item = CommentUIOp.onGetComment((Activity)context, mInflater, layout_id,position, listDatas, convertView, parent);
 			break;
 		case R.layout.listitem_fishing_news_3_row:
 			item = FishingNewsUIOp.onGetFishingNewsView((Activity)context, mInflater, position, layout_id,listDatas, convertView, parent);
@@ -240,17 +240,17 @@ public class AdapterExt extends BaseAdapter {
         private void loadRecent(){
         	LogUtils.d(TAG, "loadRecent start =" + listDatas.size());
         	if(layout_id == R.layout.listitem_podcast){
-        		PodCastDataLoader.getNetPodList(mListView, (String)mListView.getTag(), true);
+        		PodCastDataLoader.getNetPodList(mListView, String.valueOf(mListView.getTag()), true);
         	}else if(layout_id == R.layout.listitem_comment){
-        		CommentDataLoader.loadList(mListView.getContext(), AdapterExt.this, (String)mListView.getTag(),true);
+        		CommentDataLoader.loadList(mListView.getContext(), AdapterExt.this, String.valueOf(mListView.getTag()),true);
         	}
         }
         private void loadMore(){
         	LogUtils.d(TAG, "loadMore start =" + listDatas.size());
         	if(layout_id == R.layout.listitem_podcast){
-        		PodCastDataLoader.getNetPodList(mListView, (String)mListView.getTag(), false);
+        		PodCastDataLoader.getNetPodList(mListView,String.valueOf(mListView.getTag()), false);
         	}else if(layout_id == R.layout.listitem_comment){
-        		CommentDataLoader.loadList(mListView.getContext(), AdapterExt.this, (String)mListView.getTag(),false);
+        		CommentDataLoader.loadList(mListView.getContext(), AdapterExt.this,String.valueOf(mListView.getTag()),false);
         	}
         }
 		private void update(int firstVisibleItem,int visibleItemCount){
