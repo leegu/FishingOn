@@ -1,4 +1,4 @@
-package com.go.fish.view;
+package com.go.fish.data.load;
 
 import java.util.ArrayList;
 
@@ -10,11 +10,15 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.go.fish.data.PodCastData;
 import com.go.fish.util.Const;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.UrlUtils;
+import com.go.fish.view.AdapterExt;
+import com.go.fish.view.IBaseData;
+import com.go.fish.view.ViewHelper;
 
-public class PodCastHelper {
+public class PodCastDataLoader {
 	
 	public static void getNetPodList(final ListView fNListView,final String mobileNum,final boolean pullRefresh) {
 		JSONObject jsonObject = new JSONObject();
@@ -43,7 +47,7 @@ public class PodCastHelper {
 						if(adapter instanceof AdapterExt){
 							new Thread(){
 								public void run() {
-									final ArrayList<IBaseData> ai = AdapterExt.makePodCastDataArray(arr);
+									final ArrayList<IBaseData> ai = makePodCastDataArray(arr);
 									fNListView.postDelayed(new Runnable() {
 										@Override
 										public void run() {
@@ -53,7 +57,7 @@ public class PodCastHelper {
 								};
 							}.start();
 						}else if(adapter instanceof HeaderViewListAdapter){
-							((AdapterExt)((HeaderViewListAdapter)adapter).getWrappedAdapter()).updateAdapter(AdapterExt.makePodCastDataArray(arr), pullRefresh);
+							((AdapterExt)((HeaderViewListAdapter)adapter).getWrappedAdapter()).updateAdapter(makePodCastDataArray(arr), pullRefresh);
 						}
 //						else if(adapter instanceof FPlaceListAdapter){
 //							ArrayList<FPlaceData> fDataArr = DataMgr.makeFPlaceDatas(R.layout.listitem_fpalce,arr);
@@ -66,5 +70,14 @@ public class PodCastHelper {
 				}
 			}
 		}, jsonObject, UrlUtils.self().getPodCastList());
+	}
+	public static ArrayList<IBaseData> makePodCastDataArray(JSONArray array){
+		ArrayList<IBaseData> arr = new ArrayList<IBaseData>();
+		for(int i = 0; i < array.length(); i++) {
+			JSONObject jsonObject = array.optJSONObject(i);
+			PodCastData newsData = PodCastData.newInstance(jsonObject);
+			arr.add(newsData);
+		}
+		return arr;
 	}
 }

@@ -25,7 +25,7 @@ import com.go.fish.view.BaseFragment.ResultForActivityCallback;
 
 public class FPlaceListFragment extends Fragment {
 	public String name = null;
-	FPlaceListAdapter mListAdapter = null;
+	public FPlaceListAdapter mListAdapter = null;
 	ListView mListView = null;
 //	TextView mFooterTextView = null;
 	private ResultForActivityCallback mCallback = null;

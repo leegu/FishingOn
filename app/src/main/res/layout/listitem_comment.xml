@@ -20,7 +20,7 @@
             android:background="@drawable/circle_solid"
             android:clickable="true"
             android:scaleType="centerCrop"
-            android:onClick="onCommentIconClick"
+            android:onClick="onPersonClick"
             android:src="@drawable/icon_user" />
 
         <LinearLayout
@@ -74,6 +74,7 @@
                 android:id="@+id/comment_listitem_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/base_background"
                 android:clickable="true"
                 android:onClick="onCommentReplyClick"
                 android:paddingLeft="@dimen/base_space"

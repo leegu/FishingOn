@@ -9,7 +9,7 @@ import android.view.View;
 public class MyPagerAdapter<E> extends PagerAdapter {
 
 	private ArrayList<?> views;
-	MyPagerAdapter(ArrayList<? extends E> pviews){
+	public MyPagerAdapter(ArrayList<? extends E> pviews){
 		views = pviews;
 	}
 

@@ -51,6 +51,9 @@ import com.baidu.mapapi.utils.DistanceUtil;
 import com.go.fish.R;
 import com.go.fish.data.FieldData;
 import com.go.fish.data.PersonData;
+import com.go.fish.data.load.PodCastDataLoader;
+import com.go.fish.op.FieldUIOp;
+import com.go.fish.op.PodCastUIOp;
 import com.go.fish.user.User;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
@@ -64,7 +67,6 @@ import com.go.fish.util.UrlUtils;
 import com.go.fish.view.AdapterExt.OnBaseDataClickListener;
 import com.go.fish.view.HomeFragment;
 import com.go.fish.view.IBaseData;
-import com.go.fish.view.PodCastHelper;
 import com.go.fish.view.PopWinListItemAdapter;
 import com.go.fish.view.ViewHelper;
 
@@ -152,7 +154,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 			}
 			vg.addView(mMapView);
 
-			LayoutInflater.from(this).inflate(R.layout.float_view_fplace, vg);
+			LayoutInflater.from(this).inflate(R.layout.float_view_in_map, vg);
 			// LayoutInflater.from(this).inflate(R.layout.float_view_mylocation_fplace,
 			// vg);
 			mFloatViewInfo = (ViewGroup) LayoutInflater.from(HomeUI.this)
@@ -582,7 +584,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 					vg.getChildAt(0).setVisibility(View.VISIBLE);
 					ListView listView  = (ListView)vg.getChildAt(0);
 					listView.setTag("0");
-					PodCastHelper.getNetPodList(listView, "0", true);
+					PodCastDataLoader.getNetPodList(listView, "0", true);
 					vg.getChildAt(1).setVisibility(View.GONE);
 				}
 			}
@@ -624,7 +626,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 					vg.getChildAt(1).setVisibility(View.VISIBLE);
 					ListView listView  = (ListView)vg.getChildAt(1);
 					listView.setTag(User.self().userInfo.mobileNum);
-					PodCastHelper.getNetPodList(listView, User.self().userInfo.mobileNum, true);
+					PodCastDataLoader.getNetPodList(listView, User.self().userInfo.mobileNum, true);
 					vg.getChildAt(0).setVisibility(View.GONE);
 				}
 			}
@@ -689,6 +691,19 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		}
 	}
 
+	
+	public void onCommentPodCastClick(View view) {
+		PodCastUIOp.onCommentPodCastClick(this,view);
+	}
+	public void onCarePodCastClick(View view) {
+		PodCastUIOp.onCarePodCastClick((ImageView)view);
+	}
+	public void onPraisePodCastClick(View view) {
+		PodCastUIOp.onPraisePodCastClick((ImageView)view);
+	}
+	public void onCareFieldClick(View view) {
+		FieldUIOp.onCareFieldClick((ImageView)view, (TextView) mFloatViewInfo.findViewById(R.id.float_view_care_text), (String)view.getTag());
+	}
 	public void onMyClick(View view) {
 		int id = view.getId();
 		switch (id) {
@@ -839,7 +854,9 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		}
 		TextView care_text = (TextView) mFloatViewInfo.findViewById(R.id.float_view_care_text);
 		care_text.setText(String.valueOf(data.getInt(Const.STA_CARE_COUNT)));
-		care_text.setSelected(data.getBoolean(Const.STA_IS_ATTENTION,false));
+		View stateView = mFloatViewInfo.findViewById(R.id.listitem_fplace_care);
+		stateView.setSelected(data.getBoolean(Const.STA_IS_ATTENTION,false));
+		stateView.setTag(String.valueOf(data.getInt(Const.STA_ID)));
 		{
 //			showOrHidePrice(data);
 		}

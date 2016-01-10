@@ -18,6 +18,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:visibility="invisible"
             android:id="@+id/search_item_detail_share"
             style="@style/head_bar_pic_right_btn_style" >
 
@@ -174,7 +175,7 @@
                         android:textSize="@dimen/base_font_size_h5" />
 
                     <TextView
-                        android:id="@+id/value"
+                        android:id="@+id/content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/base_space_2"
@@ -185,11 +186,10 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/imgs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
-                    <include layout="@layout/fishing_news_image"/>
-                    <include layout="@layout/fishing_news_image"/>
                 </LinearLayout>
             </LinearLayout>
         </com.go.fish.view.ObservableScrollView>

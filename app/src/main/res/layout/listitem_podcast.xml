@@ -56,6 +56,7 @@
                 android:layout_marginRight="@dimen/base_space" >
 
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/listitem_fnews_share"
                     style="@style/fnew_bottom_item_style"
                     android:src="@drawable/share_bg" />
@@ -63,11 +64,13 @@
                 <ImageView
                     android:id="@+id/listitem_fnews_care"
                     style="@style/fnew_bottom_item_style"
+                    android:onClick="onCarePodCastClick"
                     android:src="@drawable/care_src" />
 
                 <ImageView
                     android:id="@+id/listitem_fnews_good"
                     style="@style/fnew_bottom_item_style"
+                    android:onClick="onPraisePodCastClick"
                     android:src="@drawable/zan_src" />
 
                 <RelativeLayout
@@ -77,6 +80,7 @@
                     <ImageView
                         android:id="@+id/listitem_fnews_comment"
                         style="@style/fnew_bottom_item_style"
+                        android:onClick="onCommentPodCastClick"
                         android:src="@drawable/comment" />
 
                     <TextView

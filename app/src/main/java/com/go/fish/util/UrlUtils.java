@@ -177,11 +177,11 @@ public class UrlUtils {
     }
 
     String attention = "/merchant/attention";
-    public String getAttention() {
+    public String getAttention() {//关注
         return getHost() + attention;
     }
     String praise = "/merchant/praise";
-    public String getPraise() {
+    public String getPraise() {//点赞
     	return getHost() + praise;
     }
     
@@ -234,15 +234,15 @@ public class UrlUtils {
     	return getHost() + createPodCast;
     }
     String attentionPod = "/relevant/attentionPod";
-    public String getAttentionPod() {//关注/取消 钓播
+    public String getAttentionPod() {//关注/取消 钓播 infoId type
     	return getHost() + attentionPod;
     }
     String praisePod = "/relevant/praisePod";
-    public String getpPraisePod() {
+    public String getpPraisePod() {//点赞/取消赞 钓播 infoId type
     	return getHost() + praisePod;
     }
     String info = "/relevant/info";
-    public String getInfo() {
+    public String getInfo() {//钓播详情
     	return getHost() + info;
     }
     String priceList = "/relevant/priceList";

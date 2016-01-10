@@ -23,8 +23,12 @@ public class BaseUtils {
         String ret = null;
         try {
             str = str.trim();
-            Date d2 = sdf.parse(str);
-            Date d1 = new Date();
+            Date d2 = sdf.parse(str);//传入时间
+            Date d1 = new Date();//当前时间
+            int diffYear = d1.getYear() - d2.getYear();
+            if(diffYear > 0){
+            	return str.split(" ")[0];
+            }
             long diff = d1.getTime() - d2.getTime();//这样得到的差值是微秒级别
             long days = diff / (1000 * 60 * 60 * 24);
             long hours = (diff-days*(1000 * 60 * 60 * 24))/(1000* 60 * 60);

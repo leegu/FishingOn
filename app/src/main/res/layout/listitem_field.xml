@@ -54,7 +54,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="@dimen/base_space"
                     android:clickable="true"
-             		android:onClick="onClick"
+             		android:onClick="onCareFieldClick"
                     android:src="@drawable/care_bg"
                     android:visibility="gone" />
             </FrameLayout>
@@ -101,6 +101,7 @@
                 android:textSize="@dimen/base_font_size_h2" />
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/listitem_fnews_share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

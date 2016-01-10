@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.go.fish.R;
 import com.go.fish.data.FieldData;
+import com.go.fish.op.FieldUIOp;
 import com.go.fish.util.Const;
 import com.go.fish.util.IME;
 import com.go.fish.util.NetTool;
@@ -47,7 +48,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 			fragmentMgr.beginTransaction().add(R.id.search_content, detailFragment).commit();
 		} else{//R.layout.ui_detail_field R.layout.ui_detail_podcast
 			searchFragment = BaseFragment.newInstance(this, R.layout.ui_search_list);
-			searchFragment.mFlag = getIntent().getIntExtra(Const.PRI_FPLACE_RESULT_TYPE, FPlaceListAdapter.FLAG_SEARCH_RESULT);
+			searchFragment.mFlag = getIntent().getIntExtra(Const.PRI_FPLACE_RESULT_TYPE, FieldUIOp.FLAG_SEARCH_RESULT);
 			searchFragment.isFront = true;
 			fragmentMgr.beginTransaction().add(R.id.search_content, searchFragment).commit();
 		} 
@@ -87,7 +88,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 		if(detailFragment == null){
 			detailFragment = BaseFragment.newInstance(this,layoutId);
 		}
-		detailFragment.mFlag = getIntent().getIntExtra(Const.PRI_FPLACE_RESULT_TYPE, FPlaceListAdapter.FLAG_SEARCH_RESULT);
+		detailFragment.mFlag = getIntent().getIntExtra(Const.PRI_FPLACE_RESULT_TYPE, FieldUIOp.FLAG_SEARCH_RESULT);
 	}
 	
 

@@ -2,20 +2,20 @@ package com.go.fish.view;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import com.go.fish.R;
 import com.go.fish.data.FieldData;
+import com.go.fish.op.FieldUIOp;
 import com.go.fish.view.BaseFragment.ResultForActivityCallback;
 
 /**
@@ -25,16 +25,13 @@ import com.go.fish.view.BaseFragment.ResultForActivityCallback;
  */
 public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListener,OnLongClickListener{
 
-	public static final int FLAG_SEARCH_RESULT = 0;
-	public static final int FLAG_NEAR_RESULT = 1;
-	public static final int FLAG_CARE_RESULT = 2;
-	public int flag = FLAG_SEARCH_RESULT;
-	boolean isAttentionList = false;
+	public int flag = FieldUIOp.FLAG_SEARCH_RESULT;
+	public boolean isAttentionList = false;
 	private LayoutInflater mInflater;
 	private ResultForActivityCallback mCallback;
 	View mFooterTextView = null;
 	ListView mListView = null;
-	ArrayList<FieldData> listDatas = null;
+	public ArrayList<FieldData> listDatas = null;
 	/**
 	 * @param context TODO
 	 * @param listView
@@ -51,7 +48,7 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 		}
 	}
 	static public FPlaceListAdapter setAdapter(Context context,ListView listView, ArrayList<FieldData> array) {
-		return setAdapter(context, listView, array, FLAG_SEARCH_RESULT);
+		return setAdapter(context, listView, array, FieldUIOp.FLAG_SEARCH_RESULT);
 	}
 	static public FPlaceListAdapter setAdapter(Context context,ListView listView,ArrayList<FieldData> array, int resultFlag) {
 		if(listView == null || listView.getAdapter() == null){
@@ -106,7 +103,7 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 //			item = onGetSearchListitem(ld, convertView, parent);
 //			break;
 		case R.layout.listitem_field:
-			item = onGetNearFPlace(ld, convertView, parent);
+			item = FieldUIOp.onGetFieldView((Activity)mListView.getContext(), mInflater, ld.layout_id, flag, ld, convertView, parent);
 			break;
 		default:
 			break;
@@ -127,41 +124,5 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 		}
 	}
 
-	class FPlaceViewHolder{
-		TextView listitem_fplace_title,fplace_desc,float_view_distance;
-		ImageView listitem_fplace_icon;
-		ViewGroup fplace_state;
-		View float_view_detail_btn;
-	}
-	private View onGetNearFPlace(FieldData fPlace, View convertView, ViewGroup parent){//搜索结果展示，附件钓场
-		ViewGroup item = null;
-		FPlaceViewHolder mViewHolder = null;
-		//周边调用列表
-		if (convertView == null) {
-			item = (ViewGroup)mInflater.inflate(fPlace.layout_id, parent, false);
-			mViewHolder = new FPlaceViewHolder();
-			item.setTag(mViewHolder);
-			mViewHolder.float_view_detail_btn = item.findViewById(R.id.float_view_detail_btn);
-			mViewHolder.listitem_fplace_title = ((TextView)item.findViewById(R.id.listitem_fplace_title));
-			mViewHolder.fplace_desc = ((TextView)item.findViewById(R.id.fplace_desc));
-			mViewHolder.float_view_distance = ((TextView)item.findViewById(R.id.float_view_distance));
-			mViewHolder.fplace_state = ((ViewGroup)item.findViewById(R.id.fplace_state));
-			mViewHolder.listitem_fplace_icon = ((ImageView)item.findViewById(R.id.listitem_fplace_icon));
-		} else {
-			item = (ViewGroup)convertView;
-			mViewHolder = (FPlaceViewHolder)item.getTag();
-		}
-		mViewHolder.float_view_detail_btn.setTag(fPlace);
-		mViewHolder.listitem_fplace_title.setText(fPlace.title);
-		mViewHolder.fplace_desc.setText(fPlace.desp);
-		mViewHolder.float_view_distance.setText(fPlace.distance);
-		if(flag == FLAG_SEARCH_RESULT){
-			mViewHolder.fplace_state.getChildAt(0).setVisibility(View.GONE);
-			mViewHolder.fplace_state.getChildAt(1).setVisibility(View.VISIBLE);
-			mViewHolder.fplace_state.getChildAt(1).setTag(fPlace);
-		}else if(flag == FLAG_CARE_RESULT){
-		//
-		}
-		return item;
-	}
+	
 }

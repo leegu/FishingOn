@@ -12,7 +12,7 @@ import com.go.fish.view.IBaseData;
 
 public class FieldData implements IBaseData{
 	public int layout_id ;
-	public String title = null,desp = null,phoneNum = null,sid = null,distance = null;
+	public String title = null,desp = null,phoneNum = null,sid = null,distance = null,imgUrl = null;
 	public double lng,alt;
 	public boolean isAttentionByUser = false;
 	private JSONObject mData = null;
@@ -26,6 +26,7 @@ public class FieldData implements IBaseData{
 		ret.lng = json.optDouble(Const.STA_LNG);
 		ret.distance = MapUtil.getDistance(ret.alt, ret.lng);
 		ret.title = json.optString(Const.STA_NAME);
+		ret.imgUrl = json.optString(Const.STA_IMGURL);
 		ret.desp = json.optString(Const.STA_INTRODUCTION);
 //		ret.desp = json.optString(Const.STA_NAME);
 //		ret.sid = json.optString(Const.STA_ID);

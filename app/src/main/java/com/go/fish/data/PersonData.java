@@ -65,13 +65,15 @@ public class PersonData implements IBaseData {
 
 	@Override
 	public void OnClick(Activity activity, IBaseDataHandledCallback handledCallback, View attachedView) {
-		// TODO Auto-generated method stub
-		PersonData personData = this;
+		StaticOnClick(activity, userName, mobileNum);
+	}
+	
+	public static void StaticOnClick(Activity activity,String name,String mobileNum){
 		Intent i = new Intent();
 		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_podcast_person);
-		i.putExtra(Const.STA_TITLE, personData.userName + "钓播");
+		i.putExtra(Const.STA_TITLE, name + "钓播");
 		i.putExtra(Const.PRI_HIDE_PUBLISH, true);
-		i.putExtra(Const.STA_MOBILE, personData.mobileNum);
+		i.putExtra(Const.STA_MOBILE, mobileNum);
 		UIMgr.showActivity(activity,i,BaseUI.class.getName());
 	}
 }

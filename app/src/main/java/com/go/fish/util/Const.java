@@ -3,6 +3,7 @@ package com.go.fish.util;
 public interface Const {
 
 	String DEFT_1 = "1";
+	String DEFT_NO_SUPPORT_COMMENT_PODCAST = "未开通";
 	String DEFT_COMMENTLIST_TYPE_FIELD = "field";
 	String DEFT_COMMENTLIST_TYPE_INFO = "info";
 	String DEFT_COMMENTLIST_TYPE_PODCAST = "podcast";
@@ -117,6 +118,7 @@ public interface Const {
 	String STA_INFO_STR = "infoStr";
 	String STA_USER_NAME = "userName";
 	String STA_NEWS_ID = "news_id";
+	String STA_INFO_ID = "infoId";
 
 	String STA_OBJECTID = "objectId";
 	String STA_ORDER_ID = "orderid";

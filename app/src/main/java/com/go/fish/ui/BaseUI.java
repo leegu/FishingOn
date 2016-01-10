@@ -39,7 +39,12 @@ import com.go.fish.R;
 import com.go.fish.data.CommentData;
 import com.go.fish.data.DataMgr;
 import com.go.fish.data.FieldData;
+import com.go.fish.data.FishingNewsData;
 import com.go.fish.data.PersonData;
+import com.go.fish.data.load.PodCastDataLoader;
+import com.go.fish.op.CommentUIOp;
+import com.go.fish.op.FieldUIOp;
+import com.go.fish.op.FishingNewsUIOp;
 import com.go.fish.ui.pic.ImageViewUI;
 import com.go.fish.ui.pics.GalleryUtils;
 import com.go.fish.user.User;
@@ -63,7 +68,6 @@ import com.go.fish.view.BaseFragmentPagerAdapter;
 import com.go.fish.view.FPlaceListAdapter;
 import com.go.fish.view.HomeFragment;
 import com.go.fish.view.IBaseData;
-import com.go.fish.view.PodCastHelper;
 import com.go.fish.view.ViewHelper;
 import com.umeng.analytics.MobclickAgent;
 
@@ -103,13 +107,13 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		}
 		switch (layout_id) {
 		case R.layout.ui_detail_sayu_info:
-			onCreateSayuDetail();
+			FishingNewsUIOp.onCreateFishingNewsDetail(this);
 			break;
 		case R.layout.ui_webview_left_close:
 			onCreateWebview();
 			break;
 		case R.layout.ui_podcast_person:
-			onCreateMyFNewsView();
+			onCreatePodCastListView();
 			break;
 		case R.layout.ui_near_fplace:
 			onCreateNearFPlace();
@@ -118,13 +122,13 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			onCreateNearFriend();
 			break;
 		case R.layout.ui_my_care:
-			onCreateMyCare();
+			onCreateUserCare();
 			break;
 		case R.layout.ui_comment_publish:
 			onCreateCommentPublish();
 			break;
 		case R.layout.ui_comment_list:
-			onCreateCommentList();
+			CommentUIOp.onCreateCommentList(this);
 			break;
 		case R.layout.ui_zan:
 			onCreateZanList();
@@ -232,29 +236,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			break;
 		}
 	}
-
-	private void onCreateSayuDetail() {
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put(Const.STA_PRICE_ID, getIntent().getIntExtra(Const.STA_PRICE_ID,0));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		NetTool.data().http(new RequestListener() {
-			@Override
-			public void onStart() {
-				super.onStart(BaseUI.this);
-			}
-
-			@Override
-			public void onEnd(byte[] data) {
-				JSONObject json = toJSONObject(data);
-				if (isRight(json)) {
-				}
-				onEnd();
-			}
-		}, jsonObject, UrlUtils.self().getPriceInfo());
-	}
+	
 
 	public void onUserTagClick(View view) {
 		view.setSelected(!view.isSelected());
@@ -383,16 +365,16 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		// }) ;
 	}
 
-	private void onCreateMyCare() {// 创建我的关注 钓场 钓友
+	private void onCreateUserCare() {// 创建我的关注 钓场 钓友
 		ViewGroup vg = (ViewGroup) findViewById(R.id.ui_my_care_list_root);
 		{// 钓场、渔具
 			ListView fPlaceList = new ListView(this);
 			vg.addView(fPlaceList);
 			
 			ArrayList<FieldData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_field, new JSONArray());
-			FPlaceListAdapter.setAdapter(BaseUI.this.getApplicationContext(),fPlaceList,fPlaceArr, FPlaceListAdapter.FLAG_CARE_RESULT);
+			FPlaceListAdapter.setAdapter(BaseUI.this.getApplicationContext(),fPlaceList,fPlaceArr, FieldUIOp.FLAG_CARE_RESULT);
 			// 网络数据抓取,进行更新
-			PodCastHelper.getNetPodList(fPlaceList, "0", true);
+			PodCastDataLoader.getNetPodList(fPlaceList, "0", true);
 		}
 
 		{// 钓播
@@ -496,7 +478,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		});
 	}
 
-	private void onCreateMyFNewsView() {// 创建 我的钓播[钓友钓播]
+	private void onCreatePodCastListView() {// 创建 我的钓播[钓友钓播]
 		ListView list = (ListView) findViewById(R.id.my_f_news_list);
 		String title = getIntent().getStringExtra(Const.STA_TITLE);
 		if(!TextUtils.isEmpty(title)){
@@ -512,11 +494,14 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		list.setAdapter(ae);
 		String mobile = getIntent().getStringExtra(Const.STA_MOBILE);
 		list.setTag(mobile);
-		PodCastHelper.getNetPodList(list,mobile, true);
+		PodCastDataLoader.getNetPodList(list,mobile, true);
 	}
 
 	public void onCareClick(final View view) {
 
+	}
+	public void onCareFieldClick(final View view) {
+		FieldUIOp.onCareFieldClick((ImageView)view, null, String.valueOf(view.getTag()));
 	}
 	public void onIconClick(final View view) {
 		int id = view.getId();
@@ -816,58 +801,9 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 	}
 	
 	public void onFishingNews(View view) {
-		Intent i = new Intent();
-		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_detail_sayu_info);
-		i.putExtra(Const.STA_PRICE_ID, (Integer)view.getTag());
-		UIMgr.showActivity(this,i, BaseUI.class.getName());
-	}
-	@Override
-	public void onCommentIconClick(View view) {
+		FishingNewsData.StaticOnClick(BaseUI.this, (Integer)view.getTag());
 	}
 
-	private void onCreateCommentList() {
-		int fieldId = getIntent().getIntExtra(Const.STA_ID, -1);
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put(Const.STA_OBJECTID, fieldId);
-			jsonObject.put(Const.STA_START_INDEX, 0);
-			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
-			jsonObject.put(Const.STA_TYPE, Const.DEFT_COMMENTLIST_TYPE_FIELD);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		if (fieldId < 1)
-			finish();
-		ListView listView = (ListView) findViewById(R.id.comment_list);
-		listView.setDividerHeight(0);
-		listView.setTag(fieldId);
-		onBaseCreateListView(listView, R.layout.listitem_comment, jsonObject,
-				UrlUtils.self().getCommentList(), 0);
-	}
-
-	private void onBaseCreateListView(ListView listView, int itemLayoutId,
-			JSONObject jsonObject, String url, int extraData) {
-		final ListView list = listView;
-		AdapterExt.newInstance(list, this, new JSONArray(), itemLayoutId);
-		NetTool.data().http(new RequestListener() {
-			@Override
-			public void onStart() {
-				super.onStart();
-				ViewHelper.showGlobalWaiting(BaseUI.this, null);
-			}
-
-			@Override
-			public void onEnd(byte[] data) {
-				// TODO Auto-generated method stub
-				JSONObject json = toJSONObject(data);
-				if (isRight(json)) {
-					JSONArray dataJson = json.optJSONArray(Const.STA_DATA);
-					((AdapterExt) list.getAdapter()).updateAdapter(dataJson);
-				}
-				ViewHelper.closeGlobalWaiting();
-			}
-		}, jsonObject, url);
-	}
 
 	public void onShowUser(View view) {
 
@@ -877,6 +813,9 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 	public void onCommentReplyClick(View view) {// 回复，发布评论
 		int id = view.getId();
 		switch (id) {
+		case R.id.comment_listitem_text:
+			
+			break;
 		case R.id.comment_list_reply_text:
 			((TextView) view).setCompoundDrawables(null, null, null, null);
 			// view.setBackgroundResource(R.drawable.base_border_bg);

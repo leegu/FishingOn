@@ -13,7 +13,7 @@ import com.go.fish.ui.UIMgr;
 import com.go.fish.util.Const;
 import com.go.fish.view.IBaseData;
 
-public class FieldInfoData implements IBaseData{
+public class FishingNewsData implements IBaseData{
 	public int layout_id ;
 	public int orderId;
 	public String title = null,content = null,attNum = null,comNum = null,imgUrl = null,createdAt = null,fieldName = null;
@@ -21,10 +21,10 @@ public class FieldInfoData implements IBaseData{
 	int id = 0;
 
 	public long dataId,lng,alt;
-	FieldInfoData(){}
+	FishingNewsData(){}
 
-	public static FieldInfoData newInstance(JSONObject jsonObject){
-		FieldInfoData o = new FieldInfoData();
+	public static FishingNewsData newInstance(JSONObject jsonObject){
+		FishingNewsData o = new FishingNewsData();
 		o.id = jsonObject.optInt(Const.STA_ID);
 		o.imgs = jsonObject.optJSONArray(Const.STA_IMGURL);
 		o.title = jsonObject.optString(Const.STA_TITLE);
@@ -40,6 +40,9 @@ public class FieldInfoData implements IBaseData{
 	@Override
 	public void OnClick(Activity activity, IBaseDataHandledCallback handledCallback, View attachedView) {
 		// TODO Auto-generated method stub
+		StaticOnClick(activity, id);
+	}
+	public static void StaticOnClick(Activity activity,int id){
 		Intent i = new Intent();
 		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_detail_sayu_info);
 		i.putExtra(Const.STA_PRICE_ID, id);

@@ -79,19 +79,27 @@
                 android:layout_alignParentRight="true"
                 android:paddingTop="@dimen/base_space"
                 android:paddingBottom="@dimen/base_space"
+                android:gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+                 <ImageView
+                    android:id="@+id/listitem_fplace_care"
+                    android:layout_width="@dimen/base_pic_drawable_x_width"
+                    android:layout_height="@dimen/base_pic_drawable_x_height"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/base_space"
+                    android:clickable="true"
+             		android:onClick="onCareFieldClick"
+                    android:src="@drawable/care_bg"
+                     />
                 <TextView
                     android:id="@+id/float_view_care_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:padding="@dimen/base_space"
                     android:clickable="true"
-                    android:drawableLeft="@drawable/care_src"
                     android:tag="false"
                     android:gravity="center_vertical"
-                    android:onClick="onMapFloatViewClick"
                     android:text="0"
                     android:textColor="@color/text_btn_color"
                     android:textSize="@dimen/base_font_size_h4" />
