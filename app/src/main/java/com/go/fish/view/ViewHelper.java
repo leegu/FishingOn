@@ -5,22 +5,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -30,8 +25,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.webkit.URLUtil;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -414,59 +407,9 @@ public class ViewHelper {
 		load(view, url, allowNetLoad, true);
 	}
 	public static void load(ImageView view,String url,boolean allowNetLoad,final boolean forBg){
-		Bitmap bm = ImageLoader.self().getBitmapFromLruCache(url);
-		if(bm == null && allowNetLoad){//从缓存取
-			if(bm == null){
-				bm = LocalMgr.self().getBitmap(url);
-			}
-			if(bm == null && url.startsWith(LocalMgr.sRootPath)){
-				bm = LocalMgr.self().getLowBitmap(url);
-				if(bm != null){
-					if(forBg){
-						((ImageView)view).setBackgroundDrawable(new BitmapDrawable(bm));
-					}else{
-						((ImageView)view).setImageBitmap(bm);
-					}
-					ImageLoader.self().addBitmapToLruCache(url, bm);
-				}
-				return ;
-			}
-			if(bm == null){//从本地取
-				ImageLoader.self().loadNetImage(new ImageLoader.DownloadTask<ImageView>(url, view){
-					@Override
-					public void onStart() {
-//						taskReceiver.setBackgroundResource(R.drawable.pic);
-					}
-					@Override
-					public void onEnd(String downUrl, Bitmap bitmap) {
-						if(bitmap != null){
-							if(taskReceiver instanceof ImageView){
-								if(forBg){
-									((ImageView)taskReceiver).setBackgroundDrawable(new BitmapDrawable(bitmap));
-								}else{
-									((ImageView)taskReceiver).setImageBitmap(bitmap);
-								}
-								LocalMgr.self().save(downUrl, bitmap);
-							}
-							ImageLoader.self().addBitmapToLruCache(downUrl, bitmap);
-						}
-					}
-				});
-			}else{
-				if(forBg){
-					view.setBackgroundDrawable(new BitmapDrawable(bm));
-				}else{
-					view.setImageBitmap(bm);
-				}
-			}
-		}else{
-			if(forBg){
-				view.setBackgroundDrawable(new BitmapDrawable(bm));
-			}else{
-				view.setImageBitmap(bm);
-			}
-		}
+		ImageLoader.self().loadNetImage(url,view,null,allowNetLoad,forBg);
 	}
+	
 
 	public static void share(Activity activity,String text){
 		Intent sendIntent = new Intent(android.content.Intent.ACTION_SEND);

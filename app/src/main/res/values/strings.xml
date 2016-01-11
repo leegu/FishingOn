@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">去哪钓</string>
+    <string name="app_name">斗钓</string>
     <string name="base_ui_close">关闭</string>
     <string name="rule_link">http://www.qndiao.cn/index.html</string>
     <string name="help_link">http://www.qndiao.cn/index.html</string>

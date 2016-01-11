@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.go.fish.ui.pics.data.ImageLoader.Type;
+import com.go.fish.util.ImageLoader;
+import com.go.fish.util.ImageLoader.Type;
 
 public class ViewHolder
 {

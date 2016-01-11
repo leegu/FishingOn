@@ -8,6 +8,7 @@
     <ImageView
         android:src="@drawable/pic"
         android:scaleType="centerCrop"
+        android:background="@color/head_bar_press_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >

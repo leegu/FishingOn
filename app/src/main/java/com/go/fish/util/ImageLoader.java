@@ -1,211 +1,502 @@
 package com.go.fish.util;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.util.LruCache;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.ViewGroup.LayoutParams;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.go.fish.util.NetTool.RequestData;
-import com.go.fish.util.NetTool.RequestListener;
-
-public class ImageLoader {
-	static ImageLoader instance = null;
-	// 图片缓存类
+public class ImageLoader
+{
+	/**
+	 * 图片缓存的核心类
+	 */
 	private LruCache<String, Bitmap> mLruCache;
-	// 记录所有正在下载或等待下载的任务
-	private HashSet<DownloadBitmapAsyncTask> mDownloadBitmapAsyncTaskHashSet;
+	/**
+	 * 线程池
+	 */
+	private ExecutorService mThreadPool;
+	/**
+	 * 线程池的线程数量，默认为1
+	 */
+	private int mThreadCount = 1;
+	/**
+	 * 队列的调度方式
+	 */
+	private Type mType = Type.LIFO;
+	/**
+	 * 任务队列
+	 */
+	private LinkedList<Runnable> mTasks;
+	/**
+	 * 轮询的线程
+	 */
+	private Thread mPoolThread;
+	private Handler mPoolThreadHander;
 
-	private ImageLoader() {
-		mDownloadBitmapAsyncTaskHashSet = new HashSet<DownloadBitmapAsyncTask>();
+	/**
+	 * 运行在UI线程的handler，用于给ImageView设置图片
+	 */
+	private Handler mHandler;
+
+	/**
+	 * 引入一个值为1的信号量，防止mPoolThreadHander未初始化完成
+	 */
+	private volatile Semaphore mSemaphore = new Semaphore(0);
+
+	/**
+	 * 引入一个值为1的信号量，由于线程池内部也有一个阻塞线程，防止加入任务的速度过快，使LIFO效果不明显
+	 */
+	private volatile Semaphore mPoolSemaphore;
+
+	private static ImageLoader mInstance;
+
+	/**
+	 * 队列的调度方式
+	 * 
+	 * @author zhy
+	 * 
+	 */
+	public enum Type
+	{
+		FIFO, LIFO
+	}
+
+
+	/**
+	 * 单例获得该实例对象
+	 * 
+	 * @return
+	 */
+	public static ImageLoader self()
+	{
+
+		if (mInstance == null)
+		{
+			synchronized (ImageLoader.class)
+			{
+				if (mInstance == null)
+				{
+					mInstance = new ImageLoader(1, Type.LIFO);
+				}
+			}
+		}
+		return mInstance;
+	}
+
+	private ImageLoader(int threadCount, Type type)
+	{
+		init(threadCount, type);
+	}
+
+	private void init(int threadCount, Type type)
+	{
+		// loop thread
+		mPoolThread = new Thread()
+		{
+			@Override
+			public void run()
+			{
+				Looper.prepare();
+
+				mPoolThreadHander = new Handler()
+				{
+					@Override
+					public void handleMessage(Message msg)
+					{
+						mThreadPool.execute(getTask());
+						try
+						{
+							mPoolSemaphore.acquire();
+						} catch (InterruptedException e)
+						{
+						}
+					}
+				};
+				// 释放一个信号量
+				mSemaphore.release();
+				Looper.loop();
+			}
+		};
+		mPoolThread.start();
 
 		// 获取应用程序最大可用内存
 		int maxMemory = (int) Runtime.getRuntime().maxMemory();
-		// 设置图片缓存大小为maxMemory的1/6
-		int cacheSize = maxMemory / 6;
-		mLruCache = new LruCache<String, Bitmap>(cacheSize) {
+		int cacheSize = maxMemory / 8;
+		mLruCache = new LruCache<String, Bitmap>(cacheSize)
+		{
 			@Override
-			protected int sizeOf(String key, Bitmap bitmap) {
-				return bitmap.getRowBytes() * bitmap.getHeight();
-//				return bitmap.getByteCount();
-			}
+			protected int sizeOf(String key, Bitmap value)
+			{
+				return value.getRowBytes() * value.getHeight();
+			};
 		};
+
+		mThreadPool = Executors.newFixedThreadPool(threadCount);
+		mPoolSemaphore = new Semaphore(threadCount);
+		mTasks = new LinkedList<Runnable>();
+		mType = type == null ? Type.LIFO : type;
 	}
 
-	public static ImageLoader self() {
-		if (instance == null) {
-			instance = new ImageLoader();
+	public static interface ImageLoaderListener{
+		public void onStart();
+		public void onEnd(String downUrl, Bitmap bitmap);
+	}
+	public void loadImage(final String path, final ImageView imageView){
+		loadNetImage(path, imageView, null,false,false);
+	}
+	/**
+	 * 加载图片
+	 * 
+	 * @param url
+	 * @param imageView
+	 */
+	public void loadNetImage(final String url, final ImageView imageView,final ImageLoaderListener listener,final boolean allowNetLoad,boolean forBg)
+	{
+		// set tag
+		imageView.setTag(url);
+		// UI线程
+		if (mHandler == null)
+		{
+			mHandler = new Handler()
+			{
+				@Override
+				public void handleMessage(Message msg)
+				{
+					ImgBeanHolder holder = (ImgBeanHolder) msg.obj;
+					ImageView imageView = holder.imageView;
+					Bitmap bm = holder.bitmap;
+					String path = holder.path;
+					if (imageView.getTag().toString().equals(path))
+					{
+						if(holder.forBg){
+							imageView.setImageBitmap(bm);
+						}else{
+							imageView.setBackgroundDrawable(new BitmapDrawable(bm));
+						}
+					}
+				}
+			};
 		}
-		return instance;
+
+		Bitmap bm = getBitmapFromLruCache(url);
+		if (bm != null)
+		{
+			ImgBeanHolder holder = new ImgBeanHolder();
+			holder.bitmap = bm;
+			holder.imageView = imageView;
+			holder.path = url;
+			holder.forBg = forBg;
+			Message message = Message.obtain();
+			message.obj = holder;
+			mHandler.sendMessage(message);
+		} else
+		{
+			addTask(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+
+					ImageSize imageSize = getImageViewWidth(imageView);
+
+					int reqWidth = imageSize.width;
+					int reqHeight = imageSize.height;
+					
+					String path = LocalMgr.self().getString(url);
+					Bitmap bm = null;
+					if(!TextUtils.isEmpty(path)){
+						bm = decodeSampledBitmapFromResource(path, reqWidth, reqHeight);
+					}
+					if(bm == null && allowNetLoad && URLUtil.isNetworkUrl(url) ){
+						bm = downloadBitmap(url);
+						LocalMgr.self().save(url, bm);
+					}
+					if(bm != null){
+						end(bm);
+					}
+				}
+				
+				private Bitmap downloadBitmap(String imageUrl) {
+					Bitmap bitmap = null;
+					HttpURLConnection conn = null;
+					try {
+						conn = createConnection(imageUrl);
+						int redirectCount = 0;
+						while ((conn.getResponseCode() / 100 == 3) && (redirectCount < 5)) {
+							conn = createConnection(conn.getHeaderField("Location"));
+							redirectCount++;
+						}
+						bitmap = BitmapFactory.decodeStream(conn.getInputStream());
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						if (conn != null) {
+							conn.disconnect();
+						}
+					}
+					return bitmap;
+				}
+
+				int connectTimeout = 5 * 1000;
+
+				protected HttpURLConnection createConnection(String url) throws IOException {
+					String encodedUrl = Uri.encode(url, "@#&=*+-_.,:!?()/~'%");
+					HttpURLConnection conn = (HttpURLConnection) new URL(encodedUrl)
+							.openConnection();
+					conn.setConnectTimeout(this.connectTimeout);
+					conn.setReadTimeout(this.connectTimeout);
+					// conn.setDoInput(true);
+					// conn.setDoOutput(true);
+					return conn;
+				}
+				private void end(Bitmap bm){
+					
+					addBitmapToLruCache(url, bm);
+					ImgBeanHolder holder = new ImgBeanHolder();
+					holder.bitmap = getBitmapFromLruCache(url);
+					holder.imageView = imageView;
+					holder.path = url;
+					Message message = Message.obtain();
+					message.obj = holder;
+					// Log.e("TAG", "mHandler.sendMessage(message);");
+					mHandler.sendMessage(message);
+					mPoolSemaphore.release();
+				}
+			});
+		}
+
+	}
+	
+	/**
+	 * 添加一个任务
+	 * 
+	 * @param runnable
+	 */
+	private synchronized void addTask(Runnable runnable)
+	{
+		try
+		{
+			// 请求信号量，防止mPoolThreadHander为null
+			if (mPoolThreadHander == null)
+				mSemaphore.acquire();
+		} catch (InterruptedException e)
+		{
+		}
+		mTasks.add(runnable);
+		
+		mPoolThreadHander.sendEmptyMessage(0x110);
 	}
 
 	/**
+	 * 取出一个任务
+	 * 
+	 * @return
 	 */
-	public synchronized Bitmap getBitmapFromLruCache(String key) {
+	private synchronized Runnable getTask()
+	{
+		if (mType == Type.FIFO)
+		{
+			return mTasks.removeFirst();
+		} else if (mType == Type.LIFO)
+		{
+			return mTasks.removeLast();
+		}
+		return null;
+	}
+	
+	/**
+	 * 单例获得该实例对象
+	 * 
+	 * @return
+	 */
+	public static ImageLoader getInstance(int threadCount, Type type)
+	{
+
+		if (mInstance == null)
+		{
+			synchronized (ImageLoader.class)
+			{
+				if (mInstance == null)
+				{
+					mInstance = new ImageLoader(threadCount, type);
+				}
+			}
+		}
+		return mInstance;
+	}
+
+
+	/**
+	 * 根据ImageView获得适当的压缩的宽和高
+	 * 
+	 * @param imageView
+	 * @return
+	 */
+	private ImageSize getImageViewWidth(ImageView imageView)
+	{
+		ImageSize imageSize = new ImageSize();
+		final DisplayMetrics displayMetrics = imageView.getContext()
+				.getResources().getDisplayMetrics();
+		final LayoutParams params = imageView.getLayoutParams();
+
+		int width = params.width == LayoutParams.WRAP_CONTENT ? 0 : imageView
+				.getWidth(); // Get actual image width
+		if (width <= 0)
+			width = params.width; // Get layout width parameter
+		if (width <= 0)
+			width = getImageViewFieldValue(imageView, "mMaxWidth"); // Check
+																	// maxWidth
+																	// parameter
+		if (width <= 0)
+			width = displayMetrics.widthPixels;
+		int height = params.height == LayoutParams.WRAP_CONTENT ? 0 : imageView
+				.getHeight(); // Get actual image height
+		if (height <= 0)
+			height = params.height; // Get layout height parameter
+		if (height <= 0)
+			height = getImageViewFieldValue(imageView, "mMaxHeight"); // Check
+																		// maxHeight
+																		// parameter
+		if (height <= 0)
+			height = displayMetrics.heightPixels;
+		imageSize.width = width;
+		imageSize.height = height;
+		return imageSize;
+
+	}
+
+	/**
+	 * 从LruCache中获取一张图片，如果不存在就返回null。
+	 */
+	public Bitmap getBitmapFromLruCache(String key)
+	{
 		return mLruCache.get(key);
 	}
 
-
-	public void clearCache() {
-        if (mLruCache != null) {
-            if (mLruCache.size() > 0) {
-                Log.d("CacheUtils",
-                        "mLruCache.size() " + mLruCache.size());
-                mLruCache.evictAll();
-                Log.d("CacheUtils", "mLruCache.size()" + mLruCache.size());
-            }
-            mLruCache = null;
-        }
-    }
-
-    public synchronized void addBitmapToLruCache(String key, Bitmap bitmap) {
-        if (mLruCache.get(key) == null) {
-            if (key != null && bitmap != null)
-                mLruCache.put(key, bitmap);
-        } else
-            Log.w("ImageLoader", "the res is aready exits");
-    }
-
-    /**
-     * 移除缓存
-     * 
-     * @param key
-     */
-    public synchronized void removeImageCache(String key) {
-        if (key != null) {
-            if (mLruCache != null) {
-                Bitmap bm = mLruCache.remove(key);
-                if (bm != null)
-                    bm.recycle();
-            }
-        }
-    }
-	public void loadNetImage(final DownloadTask<ImageView> task) {
-//		DownloadBitmapAsyncTask downloadBitmapAsyncTask = new DownloadBitmapAsyncTask();
-//		mDownloadBitmapAsyncTaskHashSet.add(downloadBitmapAsyncTask);
-//		task.onStart();
-//		downloadBitmapAsyncTask.execute(task);
-		
-//		RequestData rData = RequestData.newInstance(new RequestListener() {
-//			@Override
-//			public void onStart() {
-//				task.onStart();
-//			}
-//			@Override
-//			public void onEnd(byte[] data) {
-//				// TODO Auto-generated method stub
-//				if(data == null){
-//					task.onEnd(task.downUrl, null);
-//				}else {
-//					Bitmap bitmap = toBitmap(data);
-//					task.onEnd(task.downUrl, bitmap);
-//				}
-//			}
-//		}, task.downUrl,null);
-//		NetTool.bitmap().http(rData.syncCallback());
-		
-//		new com.android.volley.toolbox.ImageLoader().get(task.downUrl, new ImageListener() {
-//			
-//			@Override
-//			public void onErrorResponse(VolleyError error) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//			
-//			@Override
-//			public void onResponse(ImageContainer response, boolean isImmediate) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//		});
-	}
-
 	/**
-	 */
-	private void cancelAllTasks() {
-		if (mDownloadBitmapAsyncTaskHashSet != null) {
-			for (DownloadBitmapAsyncTask task : mDownloadBitmapAsyncTaskHashSet) {
-				task.cancel(false);
-			}
-		}
-		NetTool.bitmap();
-	}
-	/**
+	 * 往LruCache中添加一张图片
 	 * 
-	 * @author DCloud
-	 *
-	 * @param <T> 下载完成后数据的接收者
+	 * @param key
+	 * @param bitmap
 	 */
-	public static abstract class DownloadTask<T> {
-		public String downUrl = null;
-		public T taskReceiver = null;
-		public DownloadTask(String url,T receiver) {
-			downUrl = url;
-			this.taskReceiver = receiver;
-		}
-		public abstract  void onEnd(String downUrl,Bitmap bitmap);
-		public void onStart(){
-			
-		}
-	}
-	
-	private class DownloadBitmapAsyncTask extends AsyncTask<DownloadTask, Void, Bitmap> {
-		private DownloadTask task;
-
-		@Override
-		protected Bitmap doInBackground(DownloadTask... params) {
-			task = params[0];
-			return downloadBitmap(task.downUrl);
-		}
-
-		@Override
-		protected void onPostExecute(Bitmap bitmap) {
-			super.onPostExecute(bitmap);
-			task.onEnd(task.downUrl, bitmap);
-			mDownloadBitmapAsyncTaskHashSet.remove(this);
+	public void addBitmapToLruCache(String key, Bitmap bitmap)
+	{
+		if (getBitmapFromLruCache(key) == null)
+		{
+			if (bitmap != null)
+				mLruCache.put(key, bitmap);
 		}
 	}
 
-	private Bitmap downloadBitmap(String imageUrl) {
-		Bitmap bitmap = null;
-		HttpURLConnection conn = null;
-		try {
-			conn = createConnection(imageUrl);
-			int redirectCount = 0;
-			while ((conn.getResponseCode() / 100 == 3) && (redirectCount < 5)) {
-				conn = createConnection(conn.getHeaderField("Location"));
-				redirectCount++;
-			}
-			bitmap = BitmapFactory.decodeStream(conn.getInputStream());
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (conn != null) {
-				conn.disconnect();
-			}
+	/**
+	 * 计算inSampleSize，用于压缩图片
+	 * 
+	 * @param options
+	 * @param reqWidth
+	 * @param reqHeight
+	 * @return
+	 */
+	private int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight)
+	{
+		// 源图片的宽度
+		int width = options.outWidth;
+		int height = options.outHeight;
+		int inSampleSize = 1;
+
+		if (width > reqWidth && height > reqHeight)
+		{
+			// 计算出实际宽度和目标宽度的比率
+			int widthRatio = Math.round((float) width / (float) reqWidth);
+			int heightRatio = Math.round((float) width / (float) reqWidth);
+			inSampleSize = Math.max(widthRatio, heightRatio);
 		}
+		return inSampleSize;
+	}
+
+	/**
+	 * 根据计算的inSampleSize，得到压缩后图片
+	 * 
+	 * @param pathName
+	 * @param reqWidth
+	 * @param reqHeight
+	 * @return
+	 */
+	private Bitmap decodeSampledBitmapFromResource(String pathName,
+			int reqWidth, int reqHeight)
+	{
+		// 第一次解析将inJustDecodeBounds设置为true，来获取图片大小
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(pathName, options);
+		// 调用上面定义的方法计算inSampleSize值
+		options.inSampleSize = calculateInSampleSize(options, reqWidth,
+				reqHeight);
+		// 使用获取到的inSampleSize值再次解析图片
+		options.inJustDecodeBounds = false;
+		Bitmap bitmap = BitmapFactory.decodeFile(pathName, options);
+
 		return bitmap;
 	}
 
-	int connectTimeout = 5 * 1000;
-
-	protected HttpURLConnection createConnection(String url) throws IOException {
-		String encodedUrl = Uri.encode(url, "@#&=*+-_.,:!?()/~'%");
-		HttpURLConnection conn = (HttpURLConnection) new URL(encodedUrl)
-				.openConnection();
-		conn.setConnectTimeout(this.connectTimeout);
-		conn.setReadTimeout(this.connectTimeout);
-		// conn.setDoInput(true);
-		// conn.setDoOutput(true);
-		return conn;
+	private class ImgBeanHolder
+	{
+		Bitmap bitmap;
+		ImageView imageView;
+		String path;
+		boolean forBg = false;
 	}
+
+	private class ImageSize
+	{
+		int width;
+		int height;
+	}
+
+	/**
+	 * 反射获得ImageView设置的最大宽度和高度
+	 * 
+	 * @param object
+	 * @param fieldName
+	 * @return
+	 */
+	private static int getImageViewFieldValue(Object object, String fieldName)
+	{
+		int value = 0;
+		try
+		{
+			Field field = ImageView.class.getDeclaredField(fieldName);
+			field.setAccessible(true);
+			int fieldValue = (Integer) field.get(object);
+			if (fieldValue > 0 && fieldValue < Integer.MAX_VALUE)
+			{
+				value = fieldValue;
+
+				Log.e("TAG", value + "");
+			}
+		} catch (Exception e)
+		{
+		}
+		return value;
+	}
+
 }

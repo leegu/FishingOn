@@ -164,7 +164,6 @@ public class PodCastUIOp extends Op{
 		View listitem_friend_layout,user_detail,listitem_fnews_care,listitem_fnews_good;
 		ViewGroup listitem_friend_tags;
 		HAutoAlign mHAutoAlign;
-		View[] childViews = null;
 	}
 	public static View onGetPodCastView(final Activity activity,LayoutInflater mInflater,int layout_id,final int position, int mFlag,ArrayList<IBaseData> listDatas, View convertView, ViewGroup parent){
 		PodCastViewHolder holder = null;
@@ -199,13 +198,13 @@ public class PodCastUIOp extends Op{
 		
 		if(newsData.netPicUrl != null){//当有钓播图片时
 			int size = newsData.netPicUrl.length;
-			ViewStub vs = (ViewStub)convertView.findViewById(R.id.fnews_image_contianer_view_stub);
-			if(vs != null){//还没有初始化需要inflate
-				holder.mHAutoAlign = (HAutoAlign)((ViewGroup)vs.inflate()).getChildAt(0);
-			}else{
+//			ViewStub vs = (ViewStub)convertView.findViewById(R.id.fnews_image_contianer_view_stub);
+//			if(vs != null){//还没有初始化需要inflate
+//				holder.mHAutoAlign = (HAutoAlign)((ViewGroup)vs.inflate()).getChildAt(0);
+//			}else{
 				holder.mHAutoAlign = (HAutoAlign)convertView.findViewById(R.id.h_image_view_container);
-			}
-			holder.childViews = new LinearLayout[size];
+//			}
+			int oldCount = holder.mHAutoAlign.getChildCount();
 			OnClickListener listener = new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -216,18 +215,38 @@ public class PodCastUIOp extends Op{
 				}
 			};
 			for(int i = 0; i < size; i++){
-				holder.childViews[i] = mInflater.inflate(R.layout.h_image_view_item, null);
-//					holder.childViews[i].setBackgroundColor((int)new Random().nextLong());
-//					holder.childViews[i].setPadding(p,p,p,p);
+				View view = ((ViewGroup)holder.mHAutoAlign.getChildAt(0)).getChildAt(i);
+//				if(vs == null){
+					if(view == null){//新创建
+						view = mInflater.inflate(R.layout.h_image_view_item, null);
+						holder.mHAutoAlign.addChild(view, size);
+					}else{
+						if(size == 1){//只有一个，使用屏幕宽
+							holder.mHAutoAlign.updateChild(view, true);
+						}else{//多个更新子view的宽
+							holder.mHAutoAlign.updateChild(view, false);
+						}
+					}
+//				}else{
+//					view = mInflater.inflate(R.layout.h_image_view_item, null);
+//					holder.mHAutoAlign.addChild(view, size);
+//				}
+				
 				String url = newsData.netPicUrl[i];
 //					url = "http://f.hiphotos.baidu.com/image/h%3D200/sign=129e451332fae6cd13b4ac613fb20f9e/1e30e924b899a901c9bdff121a950a7b0208f50e.jpg";
-				holder.childViews[i].setTag(url);
-				holder.childViews[i].setOnClickListener(listener);
-				ViewHelper.load((ImageView)((ViewGroup)holder.childViews[i]).getChildAt(0), (String)holder.childViews[i].getTag(), true,false);
+				view.setTag(url);
+				view.setOnClickListener(listener);
+//				try{
+					ViewHelper.load((ImageView)((ViewGroup)view).getChildAt(0), (String)view.getTag(), true,false);
+//				}catch(Exception e){
+//					ViewHelper.load((ImageView)((ViewGroup)view).getChildAt(0), (String)view.getTag(), true,false);
+//				}
 			}
-			holder.mHAutoAlign.fillChilds(holder.childViews);
+			for(int i = size; i < oldCount; i++){//隐藏多余的imageview
+				holder.mHAutoAlign.getChildAt(i).setVisibility(View.GONE);
+			}
 		}else{
-			holder.mHAutoAlign.removeAllViews();
+//			holder.mHAutoAlign.removeAllViews();
 			holder.mHAutoAlign.setVisibility(View.GONE);
 		}
 
@@ -270,19 +289,6 @@ public class PodCastUIOp extends Op{
 		holder.textView.setText(newsData.content);
 		holder.textView.setTag(new Object[]{newsData.authorData,newsData.id});
 		if(newsData.commentCount > 0){holder.listitem_fnews_comment_count.setText(""+newsData.commentCount);}else{holder.listitem_fnews_comment_count.setVisibility(View.GONE);}
-//		final FNewsViewHolder f_holder = holder;
-//		if(newsData.netPicUrl != null && f_holder.childViews != null){
-//			item.postDelayed(new Runnable() {
-//				@Override
-//				public void run() {
-////					if(position >= mFirstVisibleItem && position <= mFirstVisibleItem + mVisibleItemCount){
-////						for(int i = 0; i < f_holder.childViews.length; i++){
-////							ViewHelper.load(f_holder.childViews[i], (String)f_holder.childViews[i].getTag(), true);
-////						}
-////					}
-//				}
-//			}, 1000);
-//		}
 		long curTime = System.currentTimeMillis();
 		LogUtils.d("podcast", "useTime = " + (curTime - startTime) + ";" + position + ";" + newsData.content + ";convertView=" + hasValue);
 		return convertView;

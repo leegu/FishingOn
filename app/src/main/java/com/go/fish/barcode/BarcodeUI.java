@@ -18,7 +18,6 @@ import com.go.fish.barcode.decoding.CaptureActivityHandler;
 import com.go.fish.barcode.view.DetectorViewConfig;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.util.Const;
-import com.go.fish.util.ImageLoader;
 import com.go.fish.util.LocalMgr;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;

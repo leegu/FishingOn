@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,19 +41,23 @@ public class HAutoAlign extends HorizontalScrollView {
 		space = screenWidth - childWidth; 
 	}
 
-	View[] childViewArr = null;
 	int space = 0;
 	int childWidth = 0,childHeight = 0;
 	int screenWidth = 0;
-	public void fillChilds(View[] childs) {
-		childViewArr = childs;
-		childWidth = childs.length > 1 ? childWidth : screenWidth;
-		for(View v : childs){
-			Log.d("yl", "childWidth=" + childWidth);
-			contentView.addView(v, childWidth, childHeight);
-		}
+	
+	public void addChild(View child,int maybeCount) {
+		childWidth = (maybeCount < 0 ? getChildCount() : maybeCount) > 1 ? childWidth : screenWidth;
+		contentView.addView(child, childWidth, childHeight);
 	}
 
+	public void updateChild(View child,boolean useScreenWidth){
+		ViewGroup.LayoutParams lp = child.getLayoutParams();
+		int destWidth = !useScreenWidth ? childWidth : screenWidth;
+		if(lp.width != destWidth){
+			lp.width = destWidth;
+			child.setLayoutParams(lp);
+		}
+	}
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		if(ev.getAction() == MotionEvent.ACTION_UP){
@@ -67,8 +72,8 @@ public class HAutoAlign extends HorizontalScrollView {
 						}else{
 							need_scrollX = 0;
 						}
-					}else if(s == childViewArr.length - 1){//
-						need_scrollX = childViewArr.length * childWidth - screenWidth;
+					}else if(s == getChildCount() - 1){//
+						need_scrollX = getChildCount() * childWidth - screenWidth;
 					}else{
 						int ss = getScrollX() % childWidth;
 						if(ss >= childWidth / 2){
