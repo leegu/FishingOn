@@ -152,7 +152,7 @@ public class PodCastUIOp extends Op{
 		ViewGroup vg = (ViewGroup)contentView.findViewById(R.id.ui_fnews_list_root);
 		for(int i = 0;i < vg.getChildCount() ; i++){
 			ListView fNListView = (ListView)vg.getChildAt(i);
-			if(fNListView.getVisibility() == View.VISIBLE){
+			if(fNListView.getVisibility() == View.VISIBLE && fNListView.getAdapter().getCount() == 0 ){
 				PodCastDataLoader.getNetPodList(fNListView,String.valueOf(fNListView.getTag()), true);
 			}
 		}
@@ -250,15 +250,15 @@ public class PodCastUIOp extends Op{
 			holder.mHAutoAlign.setVisibility(View.GONE);
 		}
 
+		holder.publish_time.setVisibility(View.VISIBLE);
+		String showTime = BaseUtils.getTimeShow(newsData.publishTime);
+		if(!TextUtils.isEmpty(showTime)){
+			holder.publish_time.setText(showTime);
+		}else{
+			
+		}
 		if( position != 0 &&  mFlag == AdapterExt.FLAG_MY_NEWS){//不需要当前用户信息
 			holder.listitem_friend_layout.setVisibility(View.GONE);
-			holder.publish_time.setVisibility(View.VISIBLE);
-			String showTime = BaseUtils.getTimeShow(newsData.publishTime);
-			if(!TextUtils.isEmpty(showTime)){
-				holder.publish_time.setText(showTime);
-			}else{
-				
-			}
 		}else{//需要用户信息
 			holder.user_detail.setTag(newsData.authorData);
 			if(holder.listitem_friend_tags != null){
@@ -335,12 +335,12 @@ public class PodCastUIOp extends Op{
 			
 			if(resultData != null && Const.DEFT_1.equals(resultData.optString(Const.STA_CODE))){
 				
-				if(!TextUtils.isEmpty(photoUrl)){
-					String url = photoUrl;
-					ImageView userIcon = (ImageView)activity.findViewById(R.id.user_icon);
-//					url = "http://img2.baobao88.com/bbfile/allimg/101021/10930462436-14.gif";
-					ViewHelper.load(userIcon,  UrlUtils.self().getNetUrl(url),true,false);
-				}
+//				if(!TextUtils.isEmpty(photoUrl)){
+//					String url = photoUrl;
+//					ImageView userIcon = (ImageView)activity.findViewById(R.id.user_icon);
+////					url = "http://img2.baobao88.com/bbfile/allimg/101021/10930462436-14.gif";
+//					ViewHelper.load(userIcon,  UrlUtils.self().getNetUrl(url),true,false);
+//				}
 				((TextView)activity.findViewById(R.id.listitem_friend_name)).setText(userName);
 				((TextView)activity.findViewById(R.id.listitem_friend_fyear)).setText(fYears);
 				((TextView)activity.findViewById(R.id.listitem_friend_ftimes)).setText(fTimes);

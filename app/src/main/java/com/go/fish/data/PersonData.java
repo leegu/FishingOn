@@ -1,19 +1,15 @@
 package com.go.fish.data;
 
 
-import java.util.Random;
-
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
-import com.baidu.mapapi.model.LatLng;
 import com.go.fish.R;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.UIMgr;
-import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 import com.go.fish.util.MapUtil;

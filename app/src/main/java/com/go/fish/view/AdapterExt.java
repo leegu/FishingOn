@@ -75,8 +75,8 @@ public class AdapterExt extends BaseAdapter {
 			useScroolListener = true;
 			arr = PodCastDataLoader.makePodCastDataArray(array);
 			break;
-		case R.layout.listitem_friend_2_rows:
-		case R.layout.listitem_friend_3_rows:
+		case R.layout.listitem_person_2_rows:
+		case R.layout.listitem_person_3_rows:
 			arr = PersonDataLoader.makePersonDataArray(array);
 			break;
 		case R.layout.listitem_comment:
@@ -122,15 +122,15 @@ public class AdapterExt extends BaseAdapter {
 		case R.layout.listitem_podcast://钓播
 			item = PodCastUIOp.onGetPodCastView((Activity)context,mInflater, layout_id, position, mFlag, listDatas, convertView, parent);
 			break;
-		case R.layout.listitem_friend_3_rows:
-		case R.layout.listitem_friend_2_rows:
+		case R.layout.listitem_person_3_rows:
+		case R.layout.listitem_person_2_rows:
 			item = PersonUIOp.onGetFriend((Activity)context, mInflater, layout_id, position, mHideCare, listDatas, convertView, parent);
 			break;
 		case R.layout.listitem_comment:
 			item = CommentUIOp.onGetComment((Activity)context, mInflater, layout_id,position, listDatas, convertView, parent);
 			break;
 		case R.layout.listitem_fishing_news_3_row:
-			item = FishingNewsUIOp.onGetFishingNewsView((Activity)context, mInflater, position, layout_id,listDatas, convertView, parent);
+			item = FishingNewsUIOp.onGetFishingNewsView((Activity)context, mInflater, layout_id,position, listDatas, convertView, parent);
 			break;
 		default:
 			break;

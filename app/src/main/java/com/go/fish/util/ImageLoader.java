@@ -95,7 +95,7 @@ public class ImageLoader
 			{
 				if (mInstance == null)
 				{
-					mInstance = new ImageLoader(1, Type.LIFO);
+					mInstance = new ImageLoader(5, Type.LIFO);
 				}
 			}
 		}
@@ -171,6 +171,7 @@ public class ImageLoader
 	 */
 	public void loadNetImage(final String url, final ImageView imageView,final ImageLoaderListener listener,final boolean allowNetLoad,boolean forBg)
 	{
+		LogUtils.d("ImageLoader", "loadNetImage url=" + url);
 		// set tag
 		imageView.setTag(url);
 		// UI线程
@@ -185,107 +186,117 @@ public class ImageLoader
 					ImageView imageView = holder.imageView;
 					Bitmap bm = holder.bitmap;
 					String path = holder.path;
+					LogUtils.d("ImageLoader", "handleMessage url=" + path + ";" + holder.forBg);
 					if (imageView.getTag().toString().equals(path))
 					{
+						LogUtils.d("ImageLoader", "handleMessage will set Bitmap ");
 						if(holder.forBg){
-							imageView.setImageBitmap(bm);
-						}else{
 							imageView.setBackgroundDrawable(new BitmapDrawable(bm));
+						}else{
+							imageView.setImageBitmap(bm);
 						}
+//						imageView.requestLayout();
+//						imageView.invalidate();
 					}
 				}
 			};
 		}
 
 		Bitmap bm = getBitmapFromLruCache(url);
+		ImgBeanHolder holder = new ImgBeanHolder();
+		holder.bitmap = bm;
+		holder.imageView = imageView;
+		holder.path = url;
+		holder.forBg = forBg;
+		holder.allowNetLoad = allowNetLoad;
 		if (bm != null)
 		{
-			ImgBeanHolder holder = new ImgBeanHolder();
-			holder.bitmap = bm;
-			holder.imageView = imageView;
-			holder.path = url;
-			holder.forBg = forBg;
 			Message message = Message.obtain();
 			message.obj = holder;
 			mHandler.sendMessage(message);
 		} else
 		{
-			addTask(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-
-					ImageSize imageSize = getImageViewWidth(imageView);
-
-					int reqWidth = imageSize.width;
-					int reqHeight = imageSize.height;
-					
-					String path = LocalMgr.self().getString(url);
-					Bitmap bm = null;
-					if(!TextUtils.isEmpty(path)){
-						bm = decodeSampledBitmapFromResource(path, reqWidth, reqHeight);
-					}
-					if(bm == null && allowNetLoad && URLUtil.isNetworkUrl(url) ){
-						bm = downloadBitmap(url);
-						LocalMgr.self().save(url, bm);
-					}
-					if(bm != null){
-						end(bm);
-					}
-				}
-				
-				private Bitmap downloadBitmap(String imageUrl) {
-					Bitmap bitmap = null;
-					HttpURLConnection conn = null;
-					try {
-						conn = createConnection(imageUrl);
-						int redirectCount = 0;
-						while ((conn.getResponseCode() / 100 == 3) && (redirectCount < 5)) {
-							conn = createConnection(conn.getHeaderField("Location"));
-							redirectCount++;
-						}
-						bitmap = BitmapFactory.decodeStream(conn.getInputStream());
-					} catch (Exception e) {
-						e.printStackTrace();
-					} finally {
-						if (conn != null) {
-							conn.disconnect();
-						}
-					}
-					return bitmap;
-				}
-
-				int connectTimeout = 5 * 1000;
-
-				protected HttpURLConnection createConnection(String url) throws IOException {
-					String encodedUrl = Uri.encode(url, "@#&=*+-_.,:!?()/~'%");
-					HttpURLConnection conn = (HttpURLConnection) new URL(encodedUrl)
-							.openConnection();
-					conn.setConnectTimeout(this.connectTimeout);
-					conn.setReadTimeout(this.connectTimeout);
-					// conn.setDoInput(true);
-					// conn.setDoOutput(true);
-					return conn;
-				}
-				private void end(Bitmap bm){
-					
-					addBitmapToLruCache(url, bm);
-					ImgBeanHolder holder = new ImgBeanHolder();
-					holder.bitmap = getBitmapFromLruCache(url);
-					holder.imageView = imageView;
-					holder.path = url;
-					Message message = Message.obtain();
-					message.obj = holder;
-					// Log.e("TAG", "mHandler.sendMessage(message);");
-					mHandler.sendMessage(message);
-					mPoolSemaphore.release();
-				}
-			});
+			LogUtils.d("ImageLoader", "loadNetImage addTask url=" + url);
+			LoadTask task = new LoadTask();
+			task.mImgBeanHolder = holder;
+			addTask(task);
 		}
 
 	}
 	
+	class LoadTask implements Runnable{
+		ImgBeanHolder mImgBeanHolder = null;
+		@Override
+		public void run()
+		{
+			LogUtils.d("ImageLoader", "NetTask 0 run =" + mImgBeanHolder.path);
+			ImageSize imageSize = getImageViewWidth(mImgBeanHolder.imageView);
+			int reqWidth = imageSize.width;
+			int reqHeight = imageSize.height;
+			
+			String path = LocalMgr.self().getString(mImgBeanHolder.path);
+			Bitmap bm = null;
+			if(!TextUtils.isEmpty(path)){
+				bm = decodeSampledBitmapFromResource(path, reqWidth, reqHeight);
+			}
+			LogUtils.d("ImageLoader", "NetTask 1 url=" + mImgBeanHolder.path);
+			if(bm == null && mImgBeanHolder.allowNetLoad && URLUtil.isNetworkUrl(mImgBeanHolder.path) ){
+				LogUtils.d("ImageLoader", "NetTask 2 url=" + mImgBeanHolder.path);
+				bm = downloadBitmap(mImgBeanHolder.path);
+				LogUtils.d("ImageLoader", "NetTask 3 url=" + mImgBeanHolder.path);
+				if(bm != null){
+					LocalMgr.self().save(mImgBeanHolder.path, bm);
+				}
+			}
+			if(bm != null){
+				LogUtils.d("ImageLoader", "NetTask 4 url=" + mImgBeanHolder.path);
+				end(bm);
+			}
+		}
+		
+		private Bitmap downloadBitmap(String imageUrl) {
+			Bitmap bitmap = null;
+			HttpURLConnection conn = null;
+			try {
+				conn = createConnection(imageUrl);
+				int redirectCount = 0;
+				while ((conn.getResponseCode() / 100 == 3) && (redirectCount < 5)) {
+					conn = createConnection(conn.getHeaderField("Location"));
+					redirectCount++;
+				}
+				bitmap = BitmapFactory.decodeStream(conn.getInputStream());
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (conn != null) {
+					conn.disconnect();
+				}
+			}
+			return bitmap;
+		}
+
+		static final int connectTimeout = 5 * 1000;
+
+		protected HttpURLConnection createConnection(String url) throws IOException {
+			String encodedUrl = Uri.encode(url, "@#&=*+-_.,:!?()/~'%");
+			HttpURLConnection conn = (HttpURLConnection) new URL(encodedUrl)
+					.openConnection();
+			conn.setConnectTimeout(connectTimeout);
+			conn.setReadTimeout(connectTimeout);
+			// conn.setDoInput(true);
+			// conn.setDoOutput(true);
+			return conn;
+		}
+		private void end(Bitmap bm){
+			addBitmapToLruCache(mImgBeanHolder.path, bm);
+			Message message = Message.obtain();
+			message.obj = mImgBeanHolder;
+			// Log.e("TAG", "mHandler.sendMessage(message);");
+			mHandler.sendMessage(message);
+			mPoolSemaphore.release();
+		}
+		
+	}
 	/**
 	 * 添加一个任务
 	 * 
@@ -357,27 +368,35 @@ public class ImageLoader
 		final DisplayMetrics displayMetrics = imageView.getContext()
 				.getResources().getDisplayMetrics();
 		final LayoutParams params = imageView.getLayoutParams();
-
-		int width = params.width == LayoutParams.WRAP_CONTENT ? 0 : imageView
-				.getWidth(); // Get actual image width
-		if (width <= 0)
-			width = params.width; // Get layout width parameter
+		int width = 0;
+		int height = 0;
+		if(params != null ){
+			width = params.width == LayoutParams.WRAP_CONTENT ? 0 : imageView
+					.getWidth(); // Get actual image width
+			if (width <= 0)
+				width = params.width; // Get layout width parameter
+			
+			height = params.height == LayoutParams.WRAP_CONTENT ? 0 : imageView
+					.getHeight(); // Get actual image height
+			if (height <= 0)
+				height = params.height; // Get layout height parameter
+		}
 		if (width <= 0)
 			width = getImageViewFieldValue(imageView, "mMaxWidth"); // Check
 																	// maxWidth
 																	// parameter
 		if (width <= 0)
 			width = displayMetrics.widthPixels;
-		int height = params.height == LayoutParams.WRAP_CONTENT ? 0 : imageView
-				.getHeight(); // Get actual image height
-		if (height <= 0)
-			height = params.height; // Get layout height parameter
+		
+		
 		if (height <= 0)
 			height = getImageViewFieldValue(imageView, "mMaxHeight"); // Check
 																		// maxHeight
 																		// parameter
 		if (height <= 0)
 			height = displayMetrics.heightPixels;
+		
+		
 		imageSize.width = width;
 		imageSize.height = height;
 		return imageSize;
@@ -464,6 +483,7 @@ public class ImageLoader
 		ImageView imageView;
 		String path;
 		boolean forBg = false;
+		boolean allowNetLoad = false;
 	}
 
 	private class ImageSize

@@ -4,14 +4,15 @@
     android:layout_height="wrap_content"
     android:background="#ffffff"
     android:orientation="vertical"
-    android:paddingTop="@dimen/base_space"
+    android:paddingLeft="@dimen/base_space"
     android:paddingRight="@dimen/base_space"
-    android:paddingLeft="@dimen/base_space"><!--android:background="@drawable/base_background"-->
-    <LinearLayout
+    android:paddingTop="@dimen/base_space" >
+ <!-- android:background="@drawable/base_background" -->
 
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal" >
 
         <com.go.fish.view.CircleImageView
             android:id="@+id/comment_listitem_icon"
@@ -19,18 +20,18 @@
             android:layout_height="@dimen/base_pic_icon_height"
             android:background="@drawable/circle_solid"
             android:clickable="true"
-            android:scaleType="centerCrop"
             android:onClick="onPersonClick"
+            android:scaleType="centerCrop"
             android:src="@drawable/icon_user" />
 
         <LinearLayout
-            android:layout_alignTop="@id/comment_listitem_icon"
-            android:layout_alignBottom="@id/comment_listitem_icon"
-            android:layout_toRightOf="@id/comment_listitem_icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/comment_listitem_icon"
+            android:layout_alignTop="@id/comment_listitem_icon"
+            android:layout_toRightOf="@id/comment_listitem_icon"
             android:orientation="vertical"
-            android:padding="@dimen/base_space">
+            android:padding="@dimen/base_space" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -38,7 +39,7 @@
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/base_space"
                 android:paddingLeft="@dimen/base_space"
-                android:paddingRight="@dimen/base_space">
+                android:paddingRight="@dimen/base_space" >
 
                 <TextView
                     android:id="@+id/comment_listitem_name"
@@ -48,9 +49,10 @@
                     android:textColor="#888888" />
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/comment_listitem_time_right_of"
-                    style="@style/comment_list_time_right_of_style" />
+                    style="@style/comment_list_time_right_of_style"
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/comment_listitem_time"
                     style="@style/comment_list_time_style" />
@@ -60,39 +62,45 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:padding="@dimen/base_space"
-                    android:background="@drawable/base_background"
                     android:layout_gravity="right"
+                    android:background="@drawable/base_background"
                     android:clickable="true"
                     android:onClick="onCommentReplyClick"
+                    android:padding="@dimen/base_space"
                     android:src="@drawable/comment"
-                    android:visibility="gone"
-                     />
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/comment_listitem_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/base_background"
+                android:background="@drawable/base_gray_background"
                 android:clickable="true"
                 android:onClick="onCommentReplyClick"
-                android:paddingLeft="@dimen/base_space"
+                android:paddingBottom="@dimen/base_space_m"
+                android:paddingLeft="@dimen/base_space_m"
                 android:paddingRight="@dimen/base_space"
+                android:paddingTop="@dimen/base_space_m"
                 android:text="很长很评论"
                 android:textColor="#888888" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_space_m"
+                android:background="#ffffff" />
+
             <LinearLayout
                 android:id="@+id/comment_listitem_lower_comments"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:background="@color/comment_bg_color"
-                android:paddingLeft="@dimen/base_space"
-                android:paddingTop="@dimen/base_space_m"
-                android:paddingBottom="@dimen/base_space_m"
-                android:paddingRight="@dimen/base_space"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/comment_bg_color"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/base_space_m"
+                android:paddingLeft="@dimen/base_space"
+                android:paddingRight="@dimen/base_space"
+                android:paddingTop="@dimen/base_space_m"
+                android:visibility="gone" >
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -103,4 +111,5 @@
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/base_space"
         android:background="@drawable/line" />
+
 </LinearLayout>

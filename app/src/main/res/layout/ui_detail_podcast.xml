@@ -45,7 +45,7 @@
 
     <include
         android:id="@+id/listitem_friend_person_layout"
-        layout="@layout/listitem_friend_2_rows" >
+        layout="@layout/listitem_person_2_rows" >
     </include>
 
     <LinearLayout

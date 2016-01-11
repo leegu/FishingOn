@@ -404,7 +404,7 @@ public class ViewHelper {
 		load(view, url, true);
 	}
 	public static void load(ImageView view,String url,boolean allowNetLoad){
-		load(view, url, allowNetLoad, true);
+		load(view, url, allowNetLoad, false);
 	}
 	public static void load(ImageView view,String url,boolean allowNetLoad,final boolean forBg){
 		ImageLoader.self().loadNetImage(url,view,null,allowNetLoad,forBg);

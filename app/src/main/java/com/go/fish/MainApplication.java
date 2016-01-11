@@ -1,6 +1,5 @@
 package com.go.fish;
 
-import test.net.fishserver.util.LocalServer;
 import android.app.Application;
 import android.app.Service;
 import android.os.Vibrator;
@@ -15,8 +14,6 @@ import com.go.fish.util.LocalMgr;
 import com.go.fish.util.MapUtil.LocationData;
 import com.go.fish.util.MapUtil.OnGetLocationListener;
 import com.go.fish.util.UrlUtils;
-import com.igexin.sdk.PushManager;
-import com.umeng.analytics.AnalyticsConfig;
 
 public class MainApplication extends Application {
 	private static MainApplication instance = null;
@@ -39,11 +36,11 @@ public class MainApplication extends Application {
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
         LocalMgr.initEnv(this);
         UrlUtils.initEnv(this);
-        String umkey = "5627058667e58e29b9002f81";
-		AnalyticsConfig.setAppkey(this, umkey);
-		AnalyticsConfig.setChannel(getPackageName().replace(".", "_"));
-		
-        PushManager.getInstance().initialize(this);
+//        String umkey = "5627058667e58e29b9002f81";
+//		AnalyticsConfig.setAppkey(this, umkey);
+//		AnalyticsConfig.setChannel(getPackageName().replace(".", "_"));
+//		
+//        PushManager.getInstance().initialize(this);
 //        LocalServer server = new LocalServer(this, null);
 //		server.start();
     }

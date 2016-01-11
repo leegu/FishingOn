@@ -63,7 +63,6 @@ import com.go.fish.view.BaseFragment;
 import com.go.fish.view.BaseFragmentPagerAdapter;
 import com.go.fish.view.IBaseData;
 import com.go.fish.view.ViewHelper;
-import com.umeng.analytics.MobclickAgent;
 
 public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		IHasComment,OnBaseDataClickListener {
@@ -81,13 +80,13 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 	@Override
 	public void onPause() {
 		super.onPause();
-		MobclickAgent.onPause(this);
+//		MobclickAgent.onPause(this);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		MobclickAgent.onResume(this);
+//		MobclickAgent.onResume(this);
 	}
 
 	@Override
@@ -361,7 +360,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		}
 		final ListView list = (ListView) findViewById(R.id.zan_listview);
 		list.setDividerHeight(0);
-		AdapterExt.newInstance(list, BaseUI.this,new JSONArray(), R.layout.listitem_friend_2_rows);
+		AdapterExt.newInstance(list, BaseUI.this,new JSONArray(), R.layout.listitem_person_2_rows);
 		NetTool.data().http(new RequestListener() {
 			@Override
 			public void onStart() {
@@ -610,9 +609,6 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 	public void onCommentReplyClick(View view) {// 回复，发布评论
 		int id = view.getId();
 		switch (id) {
-		case R.id.comment_listitem_text:
-			
-			break;
 		case R.id.comment_list_reply_text:
 			((TextView) view).setCompoundDrawables(null, null, null, null);
 			// view.setBackgroundResource(R.drawable.base_border_bg);
@@ -655,6 +651,8 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 							comment.put("id", f_object);
 							comment.put("imgUrl", User.self().userInfo.photoUrl);
 							comment.put("name", User.self().userInfo.userName);
+							comment.put(Const.STA_MEMBER_ID,User.self().userInfo.id);
+							comment.put(Const.STA_FROM_ID,User.self().userInfo.id);
 							comment.put("createdAt", BaseUtils.getCurrentTime());
 							CommentData newCommentData = CommentData.newInstance(comment);// 即将发布的新评论
 							if (replayComment == null) {// 对渔场的评论
@@ -694,6 +692,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 
 			break;
 		}
+		case R.id.comment_listitem_text:// 点击回复图标
 		case R.id.comment_listitem_reply:// 点击回复图标
 		case -1: {// 点击评论信息 回复图标
 			TextView replyText = ((TextView) findViewById(R.id.comment_list_reply_text));// 向输入框view设置数据

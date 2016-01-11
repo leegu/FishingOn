@@ -172,6 +172,7 @@ public class CommentUIOp extends Op{
 		holder.comment_listitem_time_right_of.setVisibility(View.VISIBLE);//设置显示
 		holder.comment_listitem_time.setVisibility(View.GONE);//隐藏右边的时间
 		holder.comment_listitem_text.setText(commentData.commentStr);//设置评论内容
+		holder.comment_listitem_text.setTag(commentData);//设置评论图标tag数据，以供点击事情数据处理
 		holder.comment_listitem_reply.setVisibility(View.VISIBLE);//设置评论图标可见
 		holder.comment_listitem_reply.setTag(commentData);//设置评论图标tag数据，以供点击事情数据处理
 		holder.comment_listitem_lower_comments.setTag(new IHasComment(){//回复成功之后，二级评论有所改变
@@ -180,9 +181,12 @@ public class CommentUIOp extends Op{
 				// TODO Auto-generated method stub
 				
 			}});
-		if(commentData.lowerComments != null){
-			holder.comment_listitem_lower_comments.setVisibility(View.VISIBLE);
+		if(holder.comment_listitem_lower_comments != null){//清除原来item保存的数据
 			holder.comment_listitem_lower_comments.removeAllViews();
+			holder.comment_listitem_lower_comments.setVisibility(View.GONE);
+		}
+		if(commentData.lowerComments != null && commentData.lowerComments.size() > 0){
+			holder.comment_listitem_lower_comments.setVisibility(View.VISIBLE);
 			for(int i = 0; i < commentData.lowerComments.size();i++){
 				CommentData cData = commentData.lowerComments.get(i);
 				ViewGroup replyContainer = (ViewGroup)mInflater.inflate(R.layout.listitem_comment_reply, null, false);
@@ -225,7 +229,8 @@ public class CommentUIOp extends Op{
 				holder.comment_listitem_lower_comments.addView(replyContainer);
 			}
 //			holder.comment_listitem_lower_comments
-		}else{
+		}else{//
+			
 		}
 		if(position == listDatas.size() - 1){
 			holder.lineView.setVisibility(View.INVISIBLE);

@@ -1,21 +1,15 @@
 package com.go.fish.push;
 
-import org.json.JSONObject;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.text.TextUtils;
-
-import com.igexin.sdk.PushConsts;
 
 public class PushMessageReceiver extends BroadcastReceiver {
 
 	@Override
-	public void onReceive(Context context, Intent intent) {try{
+	public void onReceive(Context context, Intent intent) {try{/*
 		Bundle bundle = intent.getExtras();
 		switch (bundle.getInt(PushConsts.CMD_ACTION)) {
 
@@ -82,7 +76,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
 		default:
 			break;
 		}
-	}catch(Exception e){}}
+	*/}catch(Exception e){}}
 
 	public String getApplicationName(Context context) {
 		PackageManager packageManager = null;

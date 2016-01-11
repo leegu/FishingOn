@@ -55,7 +55,7 @@ public class UserUIOp extends Op{
 					public void onItemClick(View view, IBaseData data) {
 						data.OnClick(activity, null, view);
 					}};
-				final AdapterExt adapter = AdapterExt.newInstance(list, listener, new JSONArray(), R.layout.listitem_friend_3_rows);
+				final AdapterExt adapter = AdapterExt.newInstance(list, listener, new JSONArray(), R.layout.listitem_person_3_rows);
 				
 				PersonDataLoader.getAroundMember(activity, adapter);
 			}
@@ -86,7 +86,7 @@ public class UserUIOp extends Op{
 				public void onItemClick(View view, IBaseData data) {
 					data.OnClick(activity, null, view);
 				}};
-			final AdapterExt adapter = AdapterExt.newInstance(list, listener, new JSONArray(), R.layout.listitem_friend_3_rows);
+			final AdapterExt adapter = AdapterExt.newInstance(list, listener, new JSONArray(), R.layout.listitem_person_3_rows);
 			
 			PersonDataLoader.getAroundMember(activity, adapter);
 		}
