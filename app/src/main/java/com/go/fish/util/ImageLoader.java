@@ -13,6 +13,8 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.go.fish.util.NetTool.RequestData;
 import com.go.fish.util.NetTool.RequestListener;
 
@@ -93,23 +95,38 @@ public class ImageLoader {
 //		task.onStart();
 //		downloadBitmapAsyncTask.execute(task);
 		
-		RequestData rData = RequestData.newInstance(new RequestListener() {
-			@Override
-			public void onStart() {
-				task.onStart();
-			}
-			@Override
-			public void onEnd(byte[] data) {
-				// TODO Auto-generated method stub
-				if(data == null){
-					task.onEnd(task.downUrl, null);
-				}else {
-					Bitmap bitmap = toBitmap(data);
-					task.onEnd(task.downUrl, bitmap);
-				}
-			}
-		}, task.downUrl,null);
-		NetTool.bitmap().http(rData.syncCallback());
+//		RequestData rData = RequestData.newInstance(new RequestListener() {
+//			@Override
+//			public void onStart() {
+//				task.onStart();
+//			}
+//			@Override
+//			public void onEnd(byte[] data) {
+//				// TODO Auto-generated method stub
+//				if(data == null){
+//					task.onEnd(task.downUrl, null);
+//				}else {
+//					Bitmap bitmap = toBitmap(data);
+//					task.onEnd(task.downUrl, bitmap);
+//				}
+//			}
+//		}, task.downUrl,null);
+//		NetTool.bitmap().http(rData.syncCallback());
+		
+//		new com.android.volley.toolbox.ImageLoader().get(task.downUrl, new ImageListener() {
+//			
+//			@Override
+//			public void onErrorResponse(VolleyError error) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//			
+//			@Override
+//			public void onResponse(ImageContainer response, boolean isImmediate) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//		});
 	}
 
 	/**

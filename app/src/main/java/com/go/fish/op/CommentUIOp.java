@@ -6,6 +6,8 @@ import org.json.JSONArray;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,15 +19,104 @@ import android.widget.TextView;
 import com.go.fish.R;
 import com.go.fish.data.CommentData;
 import com.go.fish.data.load.CommentDataLoader;
+import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.IHasComment;
+import com.go.fish.ui.pics.GalleryUtils;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
+import com.go.fish.util.LocalMgr;
 import com.go.fish.view.AdapterExt;
 import com.go.fish.view.AdapterExt.OnBaseDataClickListener;
+import com.go.fish.view.AutoLayoutViewGroup;
 import com.go.fish.view.IBaseData;
 import com.go.fish.view.ViewHelper;
 
-public class CommentUIOp {
+public class CommentUIOp extends Op{
+	
+	public static void onCreateCommentPublish(Activity activity) {// 创建钓播发布页面
+		ViewGroup root = (ViewGroup) findViewById(activity,R.id.comment_pics);
+		AutoLayoutViewGroup autoLayout = new AutoLayoutViewGroup(activity);
+		addImageView(activity,autoLayout, null, R.drawable.p);
+		root.addView(autoLayout, -1, -2);
+		// final EditText et = (EditText) findViewById(R.id.comment_text);
+		// TextView t = (TextView)findViewById(R.id.comment_has_len);
+		// et.setSelection(et.getText().length());
+		// final int maxCount =
+		// getResources().getInteger(R.integer.comment_max_count);
+		// t.setText(String.format(getString(R.string.input_text_count),maxCount
+		// - et.getText().length() ));
+		// IMETools.showIME(et);
+		// et.addTextChangedListener(new TextWatcher() {
+		// @Override
+		// public void beforeTextChanged(CharSequence s, int start, int count,
+		// int after) {
+		//
+		// }
+		//
+		// @Override
+		// public void onTextChanged(CharSequence s, int start, int before, int
+		// count) {
+		// TextView t = (TextView) findViewById(R.id.comment_has_len);
+		// int lessCount = 0;
+		// if (et.getText().length() >= maxCount) {
+		// et.removeTextChangedListener(this);
+		// et.setText(et.getText().subSequence(0, maxCount));
+		// et.setSelection(et.getText().length());
+		// et.addTextChangedListener(this);
+		// }
+		// t.setText(String.format(getString(R.string.input_text_count),
+		// maxCount - et.getText().length()));
+		// }
+		//
+		// @Override
+		// public void afterTextChanged(Editable s) {
+		// }
+		// }) ;
+	}
+	
+	static int PADDING = 20;
+	private static void addImageView(final Activity activity,final ViewGroup parent, final String filePath,
+			int resId) {
+		ImageView t = new ImageView(activity);
+		t.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		t.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(final View v) {
+				// ViewHelper.showToast(BaseUI.this, "show a");
+				GalleryUtils.self().pick(activity,
+						new GalleryUtils.GalleryCallback() {
+							@Override
+							public void onCompleted(String[] filePaths,
+									Bitmap bitmap0) {
+								if (!(v.getTag() instanceof Integer)) {
+									int w = (activity.getResources().getDisplayMetrics().widthPixels - PADDING * 4) / 3;
+									Bitmap bitmap = LocalMgr.self()
+											.getSuitBimap(filePaths[0], w, w);
+									((ImageView) v)
+											.setImageDrawable(new BitmapDrawable(
+													bitmap));
+									// bitmap.recycle();
+									((ImageView) v).setTag(filePath);
+								} else if (filePaths != null) {
+									addImageView(activity,parent, filePaths[0], -1);
+								}
+							}
+						}, null, false);
+			}
+		});
+		t.setPadding(PADDING, PADDING, PADDING, PADDING);
+		t.setBackgroundResource(R.drawable.base_background);
+		int w = (activity.getResources().getDisplayMetrics().widthPixels - PADDING * 6) / 3;
+		if (filePath == null) {
+			t.setImageResource(resId);
+			t.setTag(resId);
+		} else {
+			Bitmap bitmap = LocalMgr.self().getSuitBimap(filePath, w, w);
+			t.setImageDrawable(new BitmapDrawable(bitmap));
+			t.setTag(filePath);
+		}
+		parent.addView(t, 0, new ViewGroup.LayoutParams(w, w));
+	}
 	
 	public static void onCreateCommentList(final Activity activity) {
 		Intent intent = activity.getIntent();

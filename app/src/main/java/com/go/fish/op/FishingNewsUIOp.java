@@ -30,7 +30,7 @@ import com.go.fish.view.AdapterExt.OnBaseDataClickListener;
 import com.go.fish.view.IBaseData;
 import com.go.fish.view.ViewHelper;
 
-public class FishingNewsUIOp {
+public class FishingNewsUIOp extends Op{
 
 	public static void onCreateFishingNewsView(final Activity activity,ViewGroup view){
 		{//最新播况 撒鱼信息
@@ -48,15 +48,7 @@ public class FishingNewsUIOp {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			OnBaseDataClickListener mOnBaseDataClickListener = new OnBaseDataClickListener(){
-
-				@Override
-				public void onItemClick(View view, IBaseData data) {
-					data.OnClick(activity, null, view);
-				}
-				
-			};
-			final AdapterExt mListAdapter = AdapterExt.newInstance(lastNews, mOnBaseDataClickListener, jsonArr, R.layout.listitem_fishing_news_3_row);
+			final AdapterExt mListAdapter = AdapterExt.newInstance(lastNews, getDefault(activity), jsonArr, R.layout.listitem_fishing_news_3_row);
 			lastNews.setAdapter(mListAdapter);
 		}
 		{//最新活动
@@ -105,9 +97,6 @@ public class FishingNewsUIOp {
 		}, jsonObject, UrlUtils.self().getPriceList());
 	}
 	
-	private static View findViewById(Activity activity,int id){
-		return activity.findViewById(id);
-	}
 	public static void onCreateFishingNewsDetail(final Activity activity) {
 		Intent intent = activity.getIntent();
 		JSONObject jsonObject = new JSONObject();

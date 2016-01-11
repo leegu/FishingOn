@@ -1,14 +1,12 @@
 package com.go.fish.ui;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -16,7 +14,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -37,16 +34,14 @@ import android.widget.Toast;
 
 import com.go.fish.R;
 import com.go.fish.data.CommentData;
-import com.go.fish.data.DataMgr;
 import com.go.fish.data.FieldData;
 import com.go.fish.data.FishingNewsData;
 import com.go.fish.data.PersonData;
-import com.go.fish.data.load.FieldDataLoader;
-import com.go.fish.data.load.PodCastDataLoader;
 import com.go.fish.op.CommentUIOp;
 import com.go.fish.op.FieldUIOp;
 import com.go.fish.op.FishingNewsUIOp;
 import com.go.fish.op.PodCastUIOp;
+import com.go.fish.op.UserUIOp;
 import com.go.fish.ui.pic.ImageViewUI;
 import com.go.fish.ui.pics.GalleryUtils;
 import com.go.fish.user.User;
@@ -64,11 +59,8 @@ import com.go.fish.util.UrlUtils;
 import com.go.fish.view.ActionSheet;
 import com.go.fish.view.AdapterExt;
 import com.go.fish.view.AdapterExt.OnBaseDataClickListener;
-import com.go.fish.view.AutoLayoutViewGroup;
 import com.go.fish.view.BaseFragment;
 import com.go.fish.view.BaseFragmentPagerAdapter;
-import com.go.fish.view.FPlaceListAdapter;
-import com.go.fish.view.HomeFragment;
 import com.go.fish.view.IBaseData;
 import com.go.fish.view.ViewHelper;
 import com.umeng.analytics.MobclickAgent;
@@ -118,19 +110,19 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			onCreateWebview();
 			break;
 		case R.layout.ui_podcast_person:
-			onCreatePodCastListView();
+			PodCastUIOp.onCreatePodCastListView(this);
 			break;
 		case R.layout.ui_near_fplace:
 			onCreateNearFPlace();
 			break;
 		case R.layout.ui_near_friends:
-			onCreateNearFriend();
+			UserUIOp.onCreateNearFriend(this);
 			break;
 		case R.layout.ui_my_care:
-			onCreateUserCare();
+			UserUIOp.onCreateUserCare(this);
 			break;
 		case R.layout.ui_comment_publish:
-			onCreateCommentPublish();
+			CommentUIOp.onCreateCommentPublish(this);
 			break;
 		case R.layout.ui_comment_list:
 			CommentUIOp.onCreateCommentList(this);
@@ -247,50 +239,6 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		view.setSelected(!view.isSelected());
 	}
 
-	int PADDING = 20;
-
-	private void addImageView(final ViewGroup parent, final String filePath,
-			int resId) {
-		ImageView t = new ImageView(this);
-		t.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		t.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(final View v) {
-				// ViewHelper.showToast(BaseUI.this, "show a");
-				GalleryUtils.self().pick(BaseUI.this,
-						new GalleryUtils.GalleryCallback() {
-							@Override
-							public void onCompleted(String[] filePaths,
-									Bitmap bitmap0) {
-								if (!(v.getTag() instanceof Integer)) {
-									int w = (getResources().getDisplayMetrics().widthPixels - PADDING * 4) / 3;
-									Bitmap bitmap = LocalMgr.self()
-											.getSuitBimap(filePaths[0], w, w);
-									((ImageView) v)
-											.setImageDrawable(new BitmapDrawable(
-													bitmap));
-									// bitmap.recycle();
-									((ImageView) v).setTag(filePath);
-								} else if (filePaths != null) {
-									addImageView(parent, filePaths[0], -1);
-								}
-							}
-						}, null, false);
-			}
-		});
-		t.setPadding(PADDING, PADDING, PADDING, PADDING);
-		t.setBackgroundResource(R.drawable.base_background);
-		int w = (getResources().getDisplayMetrics().widthPixels - PADDING * 6) / 3;
-		if (filePath == null) {
-			t.setImageResource(resId);
-			t.setTag(resId);
-		} else {
-			Bitmap bitmap = LocalMgr.self().getSuitBimap(filePath, w, w);
-			t.setImageDrawable(new BitmapDrawable(bitmap));
-			t.setTag(filePath);
-		}
-		parent.addView(t, 0, new ViewGroup.LayoutParams(w, w));
-	}
 
 	private boolean makeSureExitPushlish() {
 		if (mRootViewLayoutId == R.layout.ui_comment_publish
@@ -329,99 +277,6 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		GalleryUtils.self().onActivityResult(requestCode, resultCode, data);
 	}
 
-	private void onCreateCommentPublish() {// 创建钓播发布页面
-		ViewGroup root = (ViewGroup) findViewById(R.id.comment_pics);
-		AutoLayoutViewGroup autoLayout = new AutoLayoutViewGroup(this);
-		addImageView(autoLayout, null, R.drawable.p);
-		root.addView(autoLayout, -1, -2);
-		// final EditText et = (EditText) findViewById(R.id.comment_text);
-		// TextView t = (TextView)findViewById(R.id.comment_has_len);
-		// et.setSelection(et.getText().length());
-		// final int maxCount =
-		// getResources().getInteger(R.integer.comment_max_count);
-		// t.setText(String.format(getString(R.string.input_text_count),maxCount
-		// - et.getText().length() ));
-		// IMETools.showIME(et);
-		// et.addTextChangedListener(new TextWatcher() {
-		// @Override
-		// public void beforeTextChanged(CharSequence s, int start, int count,
-		// int after) {
-		//
-		// }
-		//
-		// @Override
-		// public void onTextChanged(CharSequence s, int start, int before, int
-		// count) {
-		// TextView t = (TextView) findViewById(R.id.comment_has_len);
-		// int lessCount = 0;
-		// if (et.getText().length() >= maxCount) {
-		// et.removeTextChangedListener(this);
-		// et.setText(et.getText().subSequence(0, maxCount));
-		// et.setSelection(et.getText().length());
-		// et.addTextChangedListener(this);
-		// }
-		// t.setText(String.format(getString(R.string.input_text_count),
-		// maxCount - et.getText().length()));
-		// }
-		//
-		// @Override
-		// public void afterTextChanged(Editable s) {
-		// }
-		// }) ;
-	}
-
-	private void onCreateUserCare() {// 创建我的关注 钓场 钓友
-		ViewGroup vg = (ViewGroup) findViewById(R.id.ui_my_care_list_root);
-		{// 钓场、渔具
-			ListView fPlaceList = new ListView(this);
-			vg.addView(fPlaceList);
-			fPlaceList.setId(R.id.ui_f_care_list);
-//			ArrayList<FieldData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_field, new JSONArray());
-//			FPlaceListAdapter.setAdapter(BaseUI.this.getApplicationContext(),fPlaceList,fPlaceArr, FieldUIOp.FLAG_CARE_RESULT);
-			// 网络数据抓取,进行更新
-			FieldUIOp.onCreateCareFieldView(this, vg,R.layout.listitem_field, null);
-			FieldUIOp.onShowCareFieldView(vg,R.layout.listitem_field);
-		}
-
-		{// 钓播
-			final ListView fNewsList = new ListView(this);
-			fNewsList.setVisibility(View.GONE);
-			vg.addView(fNewsList);
-			JSONObject jsonObject = new JSONObject();
-			try {
-				jsonObject.put(Const.STA_LNG, User.self().userInfo.lng);
-				jsonObject.put(Const.STA_LAT, User.self().userInfo.lat);
-				jsonObject.put(Const.STA_START_INDEX, 0);
-				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			final ListView list = fNewsList;
-			list.setDividerHeight(0);
-			AdapterExt.newInstance(list, this, new JSONArray(), R.layout.listitem_friend_2_rows);
-			NetTool.data().http(new RequestListener() {
-				@Override
-				public void onStart() {
-					super.onStart(BaseUI.this);
-				}
-
-				@Override
-				public void onEnd(byte[] data) {
-					// TODO Auto-generated method stub
-					JSONObject json = toJSONObject(data);
-					if (isRight(json)) {
-						JSONArray dataJson = json.optJSONArray(Const.STA_DATA);
-						ListView list = fNewsList;
-						list.setDividerHeight(0);
-						list.setAdapter(AdapterExt.newInstance(list, BaseUI.this, dataJson, R.layout.listitem_friend_3_rows));
-					}
-					onEnd();
-				}
-			}, jsonObject, UrlUtils.self().getAroundMember());
-			
-		}
-	}
-
 	private void onCreateNearFPlace() {// 创建附近钓场
 		String[] tabItemsTitle = getResources().getStringArray(R.array.hfs_splace_type);
 		ViewGroup vg = (ViewGroup) findViewById(R.id.ui_near_fplace_root);
@@ -438,70 +293,6 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		BaseFragmentPagerAdapter.initAdapterByNetData(vp, R.layout.listitem_field, null, vp.getCurrentItem());
 	}
 
-	private void onCreateNearFriend() {// 创建附近钓友
-
-		MapUtil.getLocation(BaseUI.this, new OnGetLocationListener() {
-
-			@Override
-			public void onGetLocation(LocationData data) {
-				User.self().userInfo.lng = data.lng;
-				User.self().userInfo.lat = data.lat;
-				JSONObject jsonObject = new JSONObject();
-				try {
-					jsonObject.put(Const.STA_LNG, User.self().userInfo.lng);
-					jsonObject.put(Const.STA_LAT, User.self().userInfo.lat);
-					jsonObject.put(Const.STA_START_INDEX, 0);
-					jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				final ListView list = (ListView) findViewById(R.id.ui_near_f_friends_listview);
-				list.setDividerHeight(0);
-				AdapterExt.newInstance(list, BaseUI.this,
-						new JSONArray(), R.layout.listitem_friend_2_rows);
-				NetTool.data().http(new RequestListener() {
-					@Override
-					public void onStart() {
-						super.onStart(BaseUI.this);
-					}
-
-					@Override
-					public void onEnd(byte[] data) {
-						// TODO Auto-generated method stub
-						JSONObject json = toJSONObject(data);
-						if (isRight(json)) {
-							JSONArray dataJson = json
-									.optJSONArray(Const.STA_DATA);
-							ListView list = (ListView) findViewById(R.id.ui_near_f_friends_listview);
-							list.setDividerHeight(0);
-							list.setAdapter(AdapterExt.newInstance(list,
-									BaseUI.this, dataJson, R.layout.listitem_friend_3_rows));
-						}
-						onEnd();
-					}
-				}, jsonObject, UrlUtils.self().getAroundMember());
-			}
-		});
-	}
-
-	private void onCreatePodCastListView() {// 创建 我的钓播[钓友钓播]
-		ListView list = (ListView) findViewById(R.id.my_f_news_list);
-		String title = getIntent().getStringExtra(Const.STA_TITLE);
-		if(!TextUtils.isEmpty(title)){
-			((TextView)findViewById(R.id.base_head_bar_title)).setText(title);
-		}
-		boolean hide_publish = getIntent().getBooleanExtra(Const.PRI_HIDE_PUBLISH, false);
-		if(hide_publish){
-			findViewById(R.id.base_head_bar_next).setVisibility(View.INVISIBLE);
-		}
-		AdapterExt ae = AdapterExt.newInstance(list, BaseUI.this,  new JSONArray(), R.layout.listitem_podcast);
-		ae.mFlag = AdapterExt.FLAG_MY_NEWS;
-		ae.mHideCare = getIntent().getBooleanExtra(Const.PRI_HIDE_CARE, ae.mHideCare);
-		list.setAdapter(ae);
-		String mobile = getIntent().getStringExtra(Const.STA_MOBILE);
-		list.setTag(mobile);
-		PodCastDataLoader.getNetPodList(list,mobile, true);
-	}
 
 	public void onCareClick(final View view) {
 

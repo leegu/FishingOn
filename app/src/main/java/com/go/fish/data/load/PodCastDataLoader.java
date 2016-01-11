@@ -63,8 +63,8 @@ public class PodCastDataLoader {
 			int count = fNListView.getAdapter() != null ? fNListView.getAdapter().getCount() : 0;
 //			count = 0;
 			jsonObject.put(Const.STA_START_INDEX, count);
-			jsonObject.put(Const.STA_SIZE, 4);
-//			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
+//			jsonObject.put(Const.STA_SIZE, 4);
+			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
 			jsonObject.put(Const.STA_MOBILE, mobileNum);//默认所有钓播
 		} catch (JSONException e1) {
 			e1.printStackTrace();

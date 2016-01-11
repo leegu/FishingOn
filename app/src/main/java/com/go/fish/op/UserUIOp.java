@@ -1,5 +1,6 @@
 package com.go.fish.op;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.go.fish.R;
 import com.go.fish.barcode.BarcodeUI;
 import com.go.fish.data.PersonData;
+import com.go.fish.data.load.PersonDataLoader;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.SearchUI;
 import com.go.fish.ui.UICode;
@@ -24,14 +26,72 @@ import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
+import com.go.fish.util.MapUtil;
+import com.go.fish.util.MapUtil.LocationData;
+import com.go.fish.util.MapUtil.OnGetLocationListener;
 import com.go.fish.util.MessageHandler;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.UrlUtils;
+import com.go.fish.view.AdapterExt;
+import com.go.fish.view.AdapterExt.OnBaseDataClickListener;
+import com.go.fish.view.IBaseData;
 import com.go.fish.view.MyListitemAdapter;
 import com.go.fish.view.ViewHelper;
 
-public class UserUIOp {
+public class UserUIOp extends Op{
 
+	public static void onCreateNearFriend(final Activity activity) {// 创建附近钓友
+
+		MapUtil.getLocation(activity, new OnGetLocationListener() {
+
+			@Override
+			public void onGetLocation(LocationData data) {
+				User.self().userInfo.lng = data.lng;
+				User.self().userInfo.lat = data.lat;
+				final ListView list = (ListView) findViewById(activity,R.id.ui_near_f_friends_listview);
+				list.setDividerHeight(0);
+				OnBaseDataClickListener listener = new OnBaseDataClickListener(){
+					@Override
+					public void onItemClick(View view, IBaseData data) {
+						data.OnClick(activity, null, view);
+					}};
+				final AdapterExt adapter = AdapterExt.newInstance(list, listener, new JSONArray(), R.layout.listitem_friend_3_rows);
+				
+				PersonDataLoader.getAroundMember(activity, adapter);
+			}
+		});
+	}
+	
+	public static void onCreateUserCare(final Activity activity) {// 创建我的关注 钓场 钓友
+		ViewGroup vg = (ViewGroup) findViewById(activity,R.id.ui_my_care_list_root);
+		{// 钓场、渔具
+			ListView fPlaceList = new ListView(activity);
+			vg.addView(fPlaceList);
+			fPlaceList.setId(R.id.ui_f_care_list);
+//			ArrayList<FieldData> fPlaceArr = DataMgr.makeFPlaceDatas(R.layout.listitem_field, new JSONArray());
+//			FPlaceListAdapter.setAdapter(BaseUI.this.getApplicationContext(),fPlaceList,fPlaceArr, FieldUIOp.FLAG_CARE_RESULT);
+			// 网络数据抓取,进行更新
+			FieldUIOp.onCreateCareFieldView(activity, vg,R.layout.listitem_field, null);
+			FieldUIOp.onShowCareFieldView(vg,R.layout.listitem_field);
+		}
+
+		{// 钓播
+			final ListView fNewsList = new ListView(activity);
+			fNewsList.setVisibility(View.GONE);
+			vg.addView(fNewsList);
+			ListView list = fNewsList;
+			list.setDividerHeight(0);
+			OnBaseDataClickListener listener = new OnBaseDataClickListener(){
+				@Override
+				public void onItemClick(View view, IBaseData data) {
+					data.OnClick(activity, null, view);
+				}};
+			final AdapterExt adapter = AdapterExt.newInstance(list, listener, new JSONArray(), R.layout.listitem_friend_3_rows);
+			
+			PersonDataLoader.getAroundMember(activity, adapter);
+		}
+	}
+	
 	public static void onShowMyView(final ViewGroup view){
 //		updateMyView(getView());
 		//更新关注数量，头像信息，昵称

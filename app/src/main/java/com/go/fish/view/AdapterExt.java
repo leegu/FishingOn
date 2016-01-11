@@ -123,10 +123,8 @@ public class AdapterExt extends BaseAdapter {
 			item = PodCastUIOp.onGetPodCastView((Activity)context,mInflater, layout_id, position, mFlag, listDatas, convertView, parent);
 			break;
 		case R.layout.listitem_friend_3_rows:
-			item = PersonUIOp.onGetFriend((Activity)context, mInflater, layout_id,position,  mHideCare, listDatas, convertView, parent);
-			break;
 		case R.layout.listitem_friend_2_rows:
-			item = PersonUIOp.onGetZanFriend((Activity)context, mInflater, layout_id, position, mHideCare, listDatas, convertView, parent);
+			item = PersonUIOp.onGetFriend((Activity)context, mInflater, layout_id, position, mHideCare, listDatas, convertView, parent);
 			break;
 		case R.layout.listitem_comment:
 			item = CommentUIOp.onGetComment((Activity)context, mInflater, layout_id,position, listDatas, convertView, parent);
@@ -168,11 +166,10 @@ public class AdapterExt extends BaseAdapter {
 		}else{
 			listDatas.addAll(arr);
 		}
-		setheight(mListView);
-		notifyDataSetChanged();
+		updateAdapter();
 	}
 	public void updateAdapter(){
-		setheight(mListView);
+//		setheight(mListView);
 		notifyDataSetChanged();
 	}
 	public void updateAdapter(IBaseData data){
@@ -180,8 +177,7 @@ public class AdapterExt extends BaseAdapter {
 	}
 	public void updateAdapter(IBaseData data, boolean pullRefresh){
 		listDatas.add(0, data);
-		setheight(mListView);
-		notifyDataSetChanged();
+		updateAdapter();
 	}
 	
 	public void updateAdapter(JSONArray array){
@@ -263,6 +259,7 @@ public class AdapterExt extends BaseAdapter {
 			LogUtils.d(TAG,"update" + firstVisibleItem  +" ------ " + visibleItemCount);
 		}
 	}
+	
 	
 	public interface OnBaseDataClickListener {
 		void onItemClick(View view, IBaseData data);
