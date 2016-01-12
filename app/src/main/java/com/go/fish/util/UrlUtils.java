@@ -188,12 +188,10 @@ public class UrlUtils {
     String commentList = "/merchant/commentList";//?objectId=1&type=field
     public String getCommentList() {
     	return getHost() + commentList;
-//    	return Const.SIN_HOST + "commentList";
     }
     
     String attListForField = "/merchant/attListForField";
     public String getAttListForField() {
-//    	return Const.SIN_HOST + "attListForField";
     	return getHost() + attListForField;
     }
     

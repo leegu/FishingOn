@@ -95,7 +95,7 @@ public class ImageLoader
 			{
 				if (mInstance == null)
 				{
-					mInstance = new ImageLoader(5, Type.LIFO);
+					mInstance = new ImageLoader(1, Type.LIFO);
 				}
 			}
 		}
@@ -171,7 +171,7 @@ public class ImageLoader
 	 */
 	public void loadNetImage(final String url, final ImageView imageView,final ImageLoaderListener listener,final boolean allowNetLoad,boolean forBg)
 	{
-		LogUtils.d("ImageLoader", "loadNetImage url=" + url);
+		d("ImageLoader", "loadNetImage url=" + url);
 		// set tag
 		imageView.setTag(url);
 		// UI线程
@@ -186,10 +186,10 @@ public class ImageLoader
 					ImageView imageView = holder.imageView;
 					Bitmap bm = holder.bitmap;
 					String path = holder.path;
-					LogUtils.d("ImageLoader", "handleMessage url=" + path + ";" + holder.forBg);
+					d("ImageLoader", "handleMessage url=" + path + ";" + holder.forBg);
 					if (imageView.getTag().toString().equals(path))
 					{
-						LogUtils.d("ImageLoader", "handleMessage will set Bitmap ");
+						d("ImageLoader", "handleMessage will set Bitmap ");
 						if(holder.forBg){
 							imageView.setBackgroundDrawable(new BitmapDrawable(bm));
 						}else{
@@ -216,20 +216,22 @@ public class ImageLoader
 			mHandler.sendMessage(message);
 		} else
 		{
-			LogUtils.d("ImageLoader", "loadNetImage addTask url=" + url);
+			d("ImageLoader", "loadNetImage addTask url=" + url);
 			LoadTask task = new LoadTask();
 			task.mImgBeanHolder = holder;
 			addTask(task);
 		}
 
 	}
-	
+	public static void d(String tag,String msg){
+		LogUtils.d(tag, msg);
+	}
 	class LoadTask implements Runnable{
 		ImgBeanHolder mImgBeanHolder = null;
 		@Override
 		public void run()
 		{
-			LogUtils.d("ImageLoader", "NetTask 0 run =" + mImgBeanHolder.path);
+			d("ImageLoader", "NetTask 0 run =" + mImgBeanHolder.path);
 			ImageSize imageSize = getImageViewWidth(mImgBeanHolder.imageView);
 			int reqWidth = imageSize.width;
 			int reqHeight = imageSize.height;
@@ -239,17 +241,17 @@ public class ImageLoader
 			if(!TextUtils.isEmpty(path)){
 				bm = decodeSampledBitmapFromResource(path, reqWidth, reqHeight);
 			}
-			LogUtils.d("ImageLoader", "NetTask 1 url=" + mImgBeanHolder.path);
+			d("ImageLoader", "NetTask 1 url=" + mImgBeanHolder.path + ";filePath=" + path);
 			if(bm == null && mImgBeanHolder.allowNetLoad && URLUtil.isNetworkUrl(mImgBeanHolder.path) ){
-				LogUtils.d("ImageLoader", "NetTask 2 url=" + mImgBeanHolder.path);
+				d("ImageLoader", "NetTask 2 url=" + mImgBeanHolder.path);
 				bm = downloadBitmap(mImgBeanHolder.path);
-				LogUtils.d("ImageLoader", "NetTask 3 url=" + mImgBeanHolder.path);
+				d("ImageLoader", "NetTask 3 url=" + mImgBeanHolder.path);
 				if(bm != null){
 					LocalMgr.self().save(mImgBeanHolder.path, bm);
 				}
 			}
 			if(bm != null){
-				LogUtils.d("ImageLoader", "NetTask 4 url=" + mImgBeanHolder.path);
+				d("ImageLoader", "NetTask 4 url=" + mImgBeanHolder.path);
 				end(bm);
 			}
 		}

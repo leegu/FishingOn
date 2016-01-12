@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment {
 			FieldUIOp.onCreateCareFieldView(getActivity(),(ViewGroup)view, null);
 			break;
 		case R.id.home_zixun:
-			layoutId = R.layout.ui_f_zixun;
+			layoutId = R.layout.ui_f_fishing_news;
 			view = inflater.inflate(layoutId,container,false);
 			FishingNewsUIOp.onCreateFishingNewsView(getActivity(),(ViewGroup) view);
 			break;
@@ -98,7 +98,7 @@ public class HomeFragment extends Fragment {
 			FieldUIOp.onShowCareFieldView(contentView);
 			break;
 		}
-		case R.layout.ui_f_zixun:{
+		case R.layout.ui_f_fishing_news:{
 			FishingNewsUIOp.onShowFishingNewsView(contentView);
 			break;
 		}

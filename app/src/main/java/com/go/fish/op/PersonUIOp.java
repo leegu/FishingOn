@@ -2,23 +2,37 @@ package com.go.fish.op;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+
 import android.app.Activity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.data.PersonData;
+import com.go.fish.data.load.PersonDataLoader;
 import com.go.fish.util.BaseUtils;
+import com.go.fish.util.Const;
 import com.go.fish.util.UrlUtils;
+import com.go.fish.view.AdapterExt;
 import com.go.fish.view.IBaseData;
 import com.go.fish.view.ViewHelper;
 
 public class PersonUIOp extends Op{
 
+	public static void onCreatePrasizeList(final Activity activity,String pariseListType,final TextView callbackView) {
+		final ListView list = (ListView) findViewById(activity,R.id.zan_listview);
+		list.setDividerHeight(0);
+		final AdapterExt ada = AdapterExt.newInstance(list, getDefault(activity),new JSONArray(), R.layout.listitem_person_2_rows);
+		int fieldId = activity.getIntent().getIntExtra(Const.STA_ID, -1);
+		PersonDataLoader.loadPraiseList(activity, callbackView, ada, fieldId);
+	}
+	
 	static class FriendViewHolder {
 		TextView nameView,farView,fYearView,fTimesView,listitem_friend_last_info,lineView;
 		ImageView userIcon;

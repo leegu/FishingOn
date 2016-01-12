@@ -31,7 +31,7 @@
             style="@style/head_bar_title_style"
             android:layout_toLeftOf="@id/base_head_bar_next"
             android:layout_toRightOf="@id/search_head_back"
-            android:text="点赞（100）" >
+            android:text="" >
         </TextView>
         
         <TextView

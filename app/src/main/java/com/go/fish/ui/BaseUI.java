@@ -40,6 +40,7 @@ import com.go.fish.data.PersonData;
 import com.go.fish.op.CommentUIOp;
 import com.go.fish.op.FieldUIOp;
 import com.go.fish.op.FishingNewsUIOp;
+import com.go.fish.op.PersonUIOp;
 import com.go.fish.op.PodCastUIOp;
 import com.go.fish.op.UserUIOp;
 import com.go.fish.ui.pic.ImageViewUI;
@@ -126,8 +127,8 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		case R.layout.ui_comment_list:
 			CommentUIOp.onCreateCommentList(this);
 			break;
-		case R.layout.ui_zan:
-			onCreateZanList();
+		case R.layout.ui_praise_list:
+			PersonUIOp.onCreatePrasizeList(this,"field",(TextView)findViewById(R.id.base_head_bar_title));
 			break;
 		case R.layout.ui_about:
 			try {
@@ -234,10 +235,24 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 	}
 	
 
+	public void onPariseBarClick(View view) {
+		String fieldId = String.valueOf(view.getTag());
+		if (!TextUtils.isEmpty(fieldId)) {
+//			if (tag.startsWith("more")) {
+				Intent intent = new Intent();
+//				intent.putExtra(Const.STA_ID,
+//						Integer.parseInt((tag.split("\\|")[1])));
+				intent.putExtra(Const.STA_ID, fieldId);
+				intent.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_praise_list);
+				UIMgr.showActivity(this, intent);
+//			}
+		}
+	}
 	public void onUserTagClick(View view) {
 		view.setSelected(!view.isSelected());
 	}
 
+	
 
 	private boolean makeSureExitPushlish() {
 		if (mRootViewLayoutId == R.layout.ui_comment_publish
@@ -334,55 +349,11 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			return;
 		}
 		}
-		String tag = String.valueOf(view.getTag());
-		if (!TextUtils.isEmpty(tag)) {
-			if (tag.startsWith("more")) {
-				Intent intent = new Intent();
-				intent.putExtra(Const.STA_ID,
-						Integer.parseInt((tag.split("\\|")[1])));
-				intent.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_zan);
-				UIMgr.showActivity(this, intent);
-			}
-		}
 		// UIMgr.showActivity(this,R.layout.ui_pic_selecte,PicUI.class.getName());
 		// UIMgr.showActivity(this, 0, ImageViewUI.class.getName());
 	}
 
-	private void onCreateZanList() {
-		int fieldId = getIntent().getIntExtra(Const.STA_ID, -1);
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put(Const.STA_FIELDID, fieldId);
-			jsonObject.put(Const.STA_START_INDEX, 0);
-			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		final ListView list = (ListView) findViewById(R.id.zan_listview);
-		list.setDividerHeight(0);
-		AdapterExt.newInstance(list, BaseUI.this,new JSONArray(), R.layout.listitem_person_2_rows);
-		NetTool.data().http(new RequestListener() {
-			@Override
-			public void onStart() {
-				super.onStart(BaseUI.this);
-			}
-
-			@Override
-			public void onEnd(byte[] data) {
-				// TODO Auto-generated method stub
-				JSONObject json = toJSONObject(data);
-				AdapterExt ada = (AdapterExt) list.getAdapter();
-				if (isRight(json)) {
-					JSONArray dataJson = json.optJSONArray(Const.STA_DATA);
-					ada.updateAdapter(dataJson);
-				}
-				TextView title = (TextView) findViewById(R.id.base_head_bar_title);
-				title.setText(String.format(Const.DEFT_ZAN_TITLE,
-						ada.getCount()));
-				onEnd();
-			}
-		}, jsonObject, UrlUtils.self().getAttListForField());
-	}
+	
 
 	public void onHeadClick(View view) {
 		int id = view.getId();

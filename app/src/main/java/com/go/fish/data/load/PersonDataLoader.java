@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.widget.TextView;
 
 import com.go.fish.data.PersonData;
 import com.go.fish.user.User;
@@ -19,6 +20,38 @@ import com.go.fish.view.IBaseData;
 
 public class PersonDataLoader {
 
+	public static void loadPraiseList(final Activity activity,
+			final TextView callbackView, final AdapterExt ada, int fieldId) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put(Const.STA_FIELDID, fieldId);
+			jsonObject.put(Const.STA_START_INDEX, 0);
+			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		NetTool.data().http(new RequestListener() {
+			@Override
+			public void onStart() {
+				super.onStart(activity);
+			}
+
+			@Override
+			public void onEnd(byte[] data) {
+				// TODO Auto-generated method stub
+				JSONObject json = toJSONObject(data);
+				if (isRight(json)) {
+					JSONArray dataJson = json.optJSONArray(Const.STA_DATA);
+					ada.updateAdapter(dataJson);
+				}
+				if(callbackView != null){
+					callbackView.setText(String.format(Const.DEFT_ZAN_TITLE, ada.getCount()));
+				}
+				onEnd();
+			}
+		}, jsonObject, UrlUtils.self().getAttListForField());
+	}
+	
 	public static void getAroundMember(final Activity activity,
 			final AdapterExt adapter) {
 		JSONObject jsonObject = new JSONObject();

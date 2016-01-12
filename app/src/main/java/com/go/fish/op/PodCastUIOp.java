@@ -257,9 +257,9 @@ public class PodCastUIOp extends Op{
 		}else{
 			
 		}
-		if( position != 0 &&  mFlag == AdapterExt.FLAG_MY_NEWS){//不需要当前用户信息
+		/*if( position != 0 &&  mFlag == AdapterExt.FLAG_MY_NEWS){//不需要当前用户信息
 			holder.listitem_friend_layout.setVisibility(View.GONE);
-		}else{//需要用户信息
+		}else*/{//需要用户信息
 			holder.user_detail.setTag(newsData.authorData);
 			if(holder.listitem_friend_tags != null){
 				holder.listitem_friend_tags.setVisibility(View.VISIBLE);
@@ -280,7 +280,7 @@ public class PodCastUIOp extends Op{
 				String url = newsData.authorData.photoUrl;
 				ViewHelper.load(holder.userIcon,  UrlUtils.self().getNetUrl(url),true,false);
 			}
-			holder.publish_time.setVisibility(View.GONE);
+//			holder.publish_time.setVisibility(View.GONE);
 			holder.nameView.setText(newsData.authorData.userName /*+ "--" + position*/);
 			holder.fYearView.setText(""+newsData.authorData.fYears);
 			holder.fTimesView.setText(""+newsData.authorData.fTimes);

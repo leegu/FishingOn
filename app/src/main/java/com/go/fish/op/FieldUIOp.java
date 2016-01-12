@@ -108,21 +108,16 @@ public class FieldUIOp {
 
 	private static void  makeCareView(final Activity activity,final View view, final int fieldId,
 			JSONArray members) {//构造关注栏
-		int careCountThumb = members.length();//详情页待会关注数，永远小总关注数
-		OnClickListener careIcon = new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				((BaseUI)activity).onIconClick(v);
-			}
-		};
+		int careCountThumb = members.length();//详情页待会关注数，永远小于关注数
 		ViewGroup care_container = (ViewGroup)view;
+		care_container.setTag(fieldId);
 		for (int i = 0 ; i < 7; i++){
 			ImageView careItem = (ImageView) ((ViewGroup)care_container.getChildAt(i)).getChildAt(0);
-			careItem.setOnClickListener(careIcon);
+//			careItem.setOnClickListener(careIcon);
 			if(careCountThumb > 7){
 				//显示剩余20+
 				if(i == 6){
-					careItem.setTag("more|" + fieldId);
+//					careItem.setTag("more|" + fieldId);
 					TextDrawable td = new TextDrawable(activity);
 					td.setTextSize(activity.getResources().getDimensionPixelSize(R.dimen.base_font_size_h6));
 					td.setTextColor(0xFF888888);

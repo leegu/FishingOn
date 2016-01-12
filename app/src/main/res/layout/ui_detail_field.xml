@@ -284,6 +284,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/care_container_height"
                         android:orientation="horizontal"
+                        android:clickable="true"
+                        android:onClick="onPariseBarClick"
                         android:padding="@dimen/base_space">
 
                         <LinearLayout style="@style/average_width_weight_1">
