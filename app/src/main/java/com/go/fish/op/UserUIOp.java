@@ -207,7 +207,18 @@ public class UserUIOp extends Op{
 							UIMgr.showActivity(activity,R.layout.ui_advice);
 							break;
 						case 1://清除缓存
-							LocalMgr.self().clearCache();
+							ViewHelper.showGlobalWaiting(activity, null,"清理中");
+							new Thread(){
+								public void run() {
+									LocalMgr.self().clearCache();
+									activity.runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											ViewHelper.closeGlobalWaiting();
+										}
+									});
+								};
+							}.start();
 							break;
 						case 2:
 							UIMgr.showActivity(activity,R.layout.ui_about);

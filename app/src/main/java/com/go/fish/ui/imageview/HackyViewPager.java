@@ -1,4 +1,4 @@
-package com.go.fish.ui.pic;
+package com.go.fish.ui.imageview;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

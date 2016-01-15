@@ -74,7 +74,7 @@
             >
         </activity>
         <activity
-            android:name="com.go.fish.ui.pic.ImageViewUI"
+            android:name="com.go.fish.ui.imageview.ImageViewUI"
             android:screenOrientation="portrait" 
             android:windowSoftInputMode="adjustNothing"
             >

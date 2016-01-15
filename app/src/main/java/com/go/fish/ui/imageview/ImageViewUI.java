@@ -1,23 +1,24 @@
-package com.go.fish.ui.pic;
+package com.go.fish.ui.imageview;
 
 import java.util.ArrayList;
 
+import com.go.fish.R;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.widget.TextView;
 
-import com.go.fish.R;
-import com.go.fish.ui.BaseUI;
-import com.go.fish.util.Const;
-
 /**
  * 图片查看器
  */
-public class ImageViewUI extends BaseUI {
+public class ImageViewUI extends FragmentActivity {
 	private static final String STATE_POSITION = "STATE_POSITION";
+	public static final String EXTRA_IMAGE_INDEX = "image_index"; 
+	public static final String EXTRA_IMAGE_URLS = "image_urls";
 
 	private HackyViewPager mPager;
 	private int pagerPosition;
@@ -26,11 +27,11 @@ public class ImageViewUI extends BaseUI {
 	@Override 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.ui_imageview);
+		setContentView(R.layout.image_detail_pager);
 
-		pagerPosition = getIntent().getIntExtra(Const.PRI_EXTRA_IMAGE_INDEX, 0);
-		String[] urls = getIntent().getStringArrayExtra(Const.PRI_EXTRA_IMAGE_URLS);
-		
+		pagerPosition = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
+		String[] urls = getIntent().getStringArrayExtra(EXTRA_IMAGE_URLS);
+
 		mPager = (HackyViewPager) findViewById(R.id.pager);
 		ImagePagerAdapter mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), urls);
 		mPager.setAdapter(mAdapter);

@@ -3,7 +3,6 @@ package com.go.fish.ui;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,7 +42,6 @@ import com.go.fish.op.FishingNewsUIOp;
 import com.go.fish.op.PersonUIOp;
 import com.go.fish.op.PodCastUIOp;
 import com.go.fish.op.UserUIOp;
-import com.go.fish.ui.pic.ImageViewUI;
 import com.go.fish.ui.pics.GalleryUtils;
 import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
@@ -122,7 +120,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			UserUIOp.onCreateUserCare(this);
 			break;
 		case R.layout.ui_comment_publish:
-			CommentUIOp.onCreateCommentPublish(this);
+			PodCastUIOp.onCreatePodCastPublishView(this);
 			break;
 		case R.layout.ui_comment_list:
 			CommentUIOp.onCreateCommentList(this);
@@ -965,10 +963,10 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			// replace(regNextFragment);
 			break;
 		}
-		case R.id.my_fishing_item_pics_gridview: {
-			UIMgr.showActivity(this, 0, ImageViewUI.class.getName());
-			break;
-		}
+//		case R.id.my_fishing_item_pics_gridview: {
+//			UIMgr.showActivity(this, 0, ImageViewUI.class.getName());
+//			break;
+//		}
 		case R.id.login_pswd_forget: {
 			UIMgr.showActivity(BaseUI.this, R.layout.ui_forget_pswd);
 			break;

@@ -162,7 +162,9 @@ public class AdapterExt extends BaseAdapter {
     }
 	public void updateAdapter(ArrayList<IBaseData> arr, boolean pullRefresh){
 		if(pullRefresh){
-			listDatas.addAll(0,arr);
+			listDatas.clear();
+			listDatas.addAll(arr);
+//			listDatas.addAll(0,arr);//20161014 下拉刷新删除之前的重新加载列表内的数据
 		}else{
 			listDatas.addAll(arr);
 		}

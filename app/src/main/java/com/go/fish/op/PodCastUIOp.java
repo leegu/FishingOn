@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -17,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -30,15 +31,17 @@ import com.go.fish.data.PodCastData;
 import com.go.fish.data.load.PodCastDataLoader;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.UIMgr;
-import com.go.fish.ui.pic.ImageViewUI;
+import com.go.fish.ui.imageview.ImageViewUI;
+import com.go.fish.ui.pics.GalleryUtils;
 import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
+import com.go.fish.util.LocalMgr;
 import com.go.fish.util.LogUtils;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.UrlUtils;
 import com.go.fish.view.AdapterExt;
-import com.go.fish.view.HAutoAlign;
+import com.go.fish.view.AutoLayoutViewGroup;
 import com.go.fish.view.IBaseData;
 import com.go.fish.view.MyPagerAdapter;
 import com.go.fish.view.TextDrawable;
@@ -46,6 +49,88 @@ import com.go.fish.view.ViewHelper;
 
 public class PodCastUIOp extends Op{
 
+	public static void onCreatePodCastPublishView(Activity activity) {// 创建钓播发布页面
+		ViewGroup root = (ViewGroup) findViewById(activity,R.id.comment_pics);
+		AutoLayoutViewGroup autoLayout = new AutoLayoutViewGroup(activity);
+		addImageView(activity,autoLayout, null, R.drawable.p);
+		root.addView(autoLayout, -1, -2);
+		// final EditText et = (EditText) findViewById(R.id.comment_text);
+		// TextView t = (TextView)findViewById(R.id.comment_has_len);
+		// et.setSelection(et.getText().length());
+		// final int maxCount =
+		// getResources().getInteger(R.integer.comment_max_count);
+		// t.setText(String.format(getString(R.string.input_text_count),maxCount
+		// - et.getText().length() ));
+		// IMETools.showIME(et);
+		// et.addTextChangedListener(new TextWatcher() {
+		// @Override
+		// public void beforeTextChanged(CharSequence s, int start, int count,
+		// int after) {
+		//
+		// }
+		//
+		// @Override
+		// public void onTextChanged(CharSequence s, int start, int before, int
+		// count) {
+		// TextView t = (TextView) findViewById(R.id.comment_has_len);
+		// int lessCount = 0;
+		// if (et.getText().length() >= maxCount) {
+		// et.removeTextChangedListener(this);
+		// et.setText(et.getText().subSequence(0, maxCount));
+		// et.setSelection(et.getText().length());
+		// et.addTextChangedListener(this);
+		// }
+		// t.setText(String.format(getString(R.string.input_text_count),
+		// maxCount - et.getText().length()));
+		// }
+		//
+		// @Override
+		// public void afterTextChanged(Editable s) {
+		// }
+		// }) ;
+	}
+	
+	static int PADDING = 20;
+	private static void addImageView(final Activity activity,final ViewGroup parent, final String filePath,
+			int resId) {
+		ImageView t = new ImageView(activity);
+		t.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		t.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(final View v) {
+				// ViewHelper.showToast(BaseUI.this, "show a");
+				GalleryUtils.self().pick(activity,
+						new GalleryUtils.GalleryCallback() {
+							@Override
+							public void onCompleted(String[] filePaths,
+									Bitmap bitmap0) {
+								if (!(v.getTag() instanceof Integer)) {
+									int w = (activity.getResources().getDisplayMetrics().widthPixels - PADDING * 4) / 3;
+									Bitmap bitmap = LocalMgr.self().getSuitBimap(filePaths[0], w, w);
+									((ImageView) v).setImageDrawable(new BitmapDrawable(bitmap));
+									// bitmap.recycle();
+									((ImageView) v).setTag(filePath);
+								} else if (filePaths != null) {
+									addImageView(activity,parent, filePaths[0], -1);
+								}
+							}
+						}, null, false);
+			}
+		});
+		t.setPadding(PADDING, PADDING, PADDING, PADDING);
+		t.setBackgroundResource(R.drawable.base_background);
+		int w = (activity.getResources().getDisplayMetrics().widthPixels - PADDING * 6) / 3;
+		if (filePath == null) {
+			t.setImageResource(resId);
+			t.setTag(resId);
+		} else {
+			Bitmap bitmap = LocalMgr.self().getSuitBimap(filePath, w, w);
+			t.setImageDrawable(new BitmapDrawable(bitmap));
+			t.setTag(filePath);
+		}
+		parent.addView(t,parent.getChildCount() - 1, new ViewGroup.LayoutParams(w, w));
+	}
+	
 	public static void onCreatePodCastListView(Activity activity) {// 创建 我的钓播[钓友钓播]
 		Intent intent = activity.getIntent();
 		ListView list = (ListView) findViewById(activity,R.id.my_f_news_list);
@@ -163,7 +248,8 @@ public class PodCastUIOp extends Op{
 		ImageView userIcon;
 		View listitem_friend_layout,user_detail,listitem_fnews_care,listitem_fnews_good;
 		ViewGroup listitem_friend_tags;
-		HAutoAlign mHAutoAlign;
+//		HAutoAlign mHAutoAlign;
+		ViewGroup mHAutoAlign;
 	}
 	public static View onGetPodCastView(final Activity activity,LayoutInflater mInflater,int layout_id,final int position, int mFlag,ArrayList<IBaseData> listDatas, View convertView, ViewGroup parent){
 		PodCastViewHolder holder = null;
@@ -183,6 +269,7 @@ public class PodCastUIOp extends Op{
 			holder.fYearView = (TextView)fLayout.findViewById(R.id.listitem_friend_fyear);
 			holder.fTimesView = (TextView)fLayout.findViewById(R.id.listitem_friend_ftimes);
 			holder.listitem_friend_tags = (ViewGroup)fLayout.findViewById(R.id.listitem_friend_tags);
+			holder.mHAutoAlign = (ViewGroup)convertView.findViewById(R.id.h_image_view_container);
 			
 			holder.textView = (TextView)convertView.findViewById(R.id.textView);
 			holder.listitem_fnews_comment_count = (TextView)convertView.findViewById(R.id.listitem_fnews_comment_count);
@@ -196,14 +283,9 @@ public class PodCastUIOp extends Op{
 		holder.listitem_fnews_good.setTag(newsData.id);
 		holder.listitem_fnews_good.setSelected(newsData.isZan);
 		
-		if(newsData.netPicUrl != null){//当有钓播图片时
+		if(newsData.netPicUrl != null && newsData.netPicUrl.length > 0){//当有钓播图片时
 			int size = newsData.netPicUrl.length;
-//			ViewStub vs = (ViewStub)convertView.findViewById(R.id.fnews_image_contianer_view_stub);
-//			if(vs != null){//还没有初始化需要inflate
-//				holder.mHAutoAlign = (HAutoAlign)((ViewGroup)vs.inflate()).getChildAt(0);
-//			}else{
-				holder.mHAutoAlign = (HAutoAlign)convertView.findViewById(R.id.h_image_view_container);
-//			}
+			holder.mHAutoAlign.setVisibility(View.VISIBLE);
 			int oldCount = holder.mHAutoAlign.getChildCount();
 			OnClickListener listener = new OnClickListener() {
 				@Override
@@ -214,18 +296,21 @@ public class PodCastUIOp extends Op{
 					UIMgr.showActivity(activity,intent,ImageViewUI.class.getName());
 				}
 			};
+			ViewGroup imgParent = ((ViewGroup)holder.mHAutoAlign.getChildAt(0));
 			for(int i = 0; i < size; i++){
-				View view = ((ViewGroup)holder.mHAutoAlign.getChildAt(0)).getChildAt(i);
+				View view = imgParent.getChildAt(i);
+//				View view = holder.mHAutoAlign.getChildAt(i);
 //				if(vs == null){
 					if(view == null){//新创建
 						view = mInflater.inflate(R.layout.h_image_view_item, null);
-						holder.mHAutoAlign.addChild(view, size);
+//						holder.mHAutoAlign.addChild(view, size);
+						imgParent.addView(view);
 					}else{
-						if(size == 1){//只有一个，使用屏幕宽
-							holder.mHAutoAlign.updateChild(view, true);
-						}else{//多个更新子view的宽
-							holder.mHAutoAlign.updateChild(view, false);
-						}
+//						if(size == 1){//只有一个，使用屏幕宽
+//							holder.mHAutoAlign.updateChild(view, true);
+//						}else{//多个更新子view的宽
+//							holder.mHAutoAlign.updateChild(view, false);
+//						}
 					}
 //				}else{
 //					view = mInflater.inflate(R.layout.h_image_view_item, null);
@@ -236,11 +321,7 @@ public class PodCastUIOp extends Op{
 //					url = "http://f.hiphotos.baidu.com/image/h%3D200/sign=129e451332fae6cd13b4ac613fb20f9e/1e30e924b899a901c9bdff121a950a7b0208f50e.jpg";
 				view.setTag(url);
 				view.setOnClickListener(listener);
-//				try{
-					ViewHelper.load((ImageView)((ViewGroup)view).getChildAt(0), (String)view.getTag(), true,false);
-//				}catch(Exception e){
-//					ViewHelper.load((ImageView)((ViewGroup)view).getChildAt(0), (String)view.getTag(), true,false);
-//				}
+				ViewHelper.load((ImageView)((ViewGroup)view).getChildAt(0), (String)view.getTag(), true,false);
 			}
 			for(int i = size; i < oldCount; i++){//隐藏多余的imageview
 				holder.mHAutoAlign.getChildAt(i).setVisibility(View.GONE);

@@ -5,16 +5,22 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
@@ -33,7 +39,7 @@ public class ImageLoader
 	/**
 	 * 线程池
 	 */
-	private ExecutorService mThreadPool;
+	private MyThreadPool mThreadPool;
 	/**
 	 * 线程池的线程数量，默认为1
 	 */
@@ -42,15 +48,15 @@ public class ImageLoader
 	 * 队列的调度方式
 	 */
 	private Type mType = Type.LIFO;
-	/**
-	 * 任务队列
-	 */
-	private LinkedList<Runnable> mTasks;
-	/**
-	 * 轮询的线程
-	 */
-	private Thread mPoolThread;
-	private Handler mPoolThreadHander;
+//	/**
+//	 * 任务队列
+//	 */
+//	private LinkedList<Runnable> mTasks;
+//	/**
+//	 * 轮询的线程
+//	 */
+//	private Thread mPoolThread;
+//	private Handler mPoolThreadHander;
 
 	/**
 	 * 运行在UI线程的handler，用于给ImageView设置图片
@@ -60,12 +66,12 @@ public class ImageLoader
 	/**
 	 * 引入一个值为1的信号量，防止mPoolThreadHander未初始化完成
 	 */
-	private volatile Semaphore mSemaphore = new Semaphore(0);
+//	private volatile Semaphore mSemaphore = new Semaphore(0);
 
-	/**
-	 * 引入一个值为1的信号量，由于线程池内部也有一个阻塞线程，防止加入任务的速度过快，使LIFO效果不明显
-	 */
-	private volatile Semaphore mPoolSemaphore;
+//	/**
+//	 * 引入一个值为1的信号量，由于线程池内部也有一个阻塞线程，防止加入任务的速度过快，使LIFO效果不明显
+//	 */
+//	private volatile Semaphore mPoolSemaphore;
 
 	private static ImageLoader mInstance;
 
@@ -107,36 +113,57 @@ public class ImageLoader
 		init(threadCount, type);
 	}
 
+	class MyThreadPool {
+		private final static int POOL_SIZE = 2;// 线程池的大小最好设置成为CUP核数的2N  
+	    private final static int MAX_POOL_SIZE = 3;// 设置线程池的最大线程数  
+	    private final static int KEEP_ALIVE_TIME = 2;// 设置线程的存活时间  
+	    private final Executor mExecutor;  
+	    public MyThreadPool() {  
+	        // 创建工作队列  
+	        BlockingQueue<Runnable> workQueue = new LinkedBlockingDeque<Runnable>();  
+	        mExecutor = new ThreadPoolExecutor(POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, workQueue);  
+	    }  
+	    // 在线程池中执行线程  
+	    public void submit(Runnable command){  
+	        mExecutor.execute(command);  
+	    }  
+	}
 	private void init(int threadCount, Type type)
 	{
 		// loop thread
-		mPoolThread = new Thread()
-		{
-			@Override
-			public void run()
-			{
-				Looper.prepare();
-
-				mPoolThreadHander = new Handler()
-				{
-					@Override
-					public void handleMessage(Message msg)
-					{
-						mThreadPool.execute(getTask());
-						try
-						{
-							mPoolSemaphore.acquire();
-						} catch (InterruptedException e)
-						{
-						}
-					}
-				};
-				// 释放一个信号量
-				mSemaphore.release();
-				Looper.loop();
-			}
-		};
-		mPoolThread.start();
+//		mPoolThread = new Thread()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				Looper.prepare();
+//
+//				mPoolThreadHander = new Handler()
+//				{
+//					@Override
+//					public void handleMessage(Message msg)
+//					{
+//						d("ImageLoader", "handleMessage msg=" + msg);
+//						mThreadPool.execute(getTask());
+//						try
+//						{
+//							mPoolSemaphore.acquire();
+//						} catch (InterruptedException e)
+//						{
+//						}
+//					}
+//				};
+//				// 释放一个信号量
+//				mSemaphore.release();
+//				Looper.loop();
+//				 synchronized (mTasks){
+//					 for(int i = 0; i < mTasks.size(); i++){
+//						 
+//					 }
+//				 }
+//			}
+//		};
+//		mPoolThread.start();
 
 		// 获取应用程序最大可用内存
 		int maxMemory = (int) Runtime.getRuntime().maxMemory();
@@ -149,10 +176,10 @@ public class ImageLoader
 				return value.getRowBytes() * value.getHeight();
 			};
 		};
-
-		mThreadPool = Executors.newFixedThreadPool(threadCount);
-		mPoolSemaphore = new Semaphore(threadCount);
-		mTasks = new LinkedList<Runnable>();
+//		mThreadPool = Executors.newFixedThreadPool(threadCount);
+		mThreadPool = new MyThreadPool();
+//		mPoolSemaphore = new Semaphore(threadCount);
+//		mTasks = new LinkedList<Runnable>();
 		mType = type == null ? Type.LIFO : type;
 	}
 
@@ -195,8 +222,6 @@ public class ImageLoader
 						}else{
 							imageView.setImageBitmap(bm);
 						}
-//						imageView.requestLayout();
-//						imageView.invalidate();
 					}
 				}
 			};
@@ -209,17 +234,18 @@ public class ImageLoader
 		holder.path = url;
 		holder.forBg = forBg;
 		holder.allowNetLoad = allowNetLoad;
+		
 		if (bm != null)
 		{
 			Message message = Message.obtain();
 			message.obj = holder;
 			mHandler.sendMessage(message);
-		} else
-		{
-			d("ImageLoader", "loadNetImage addTask url=" + url);
+		} else {
+			d("ImageLoader", "loadNetImage 0 addTask url=" + url);
 			LoadTask task = new LoadTask();
 			task.mImgBeanHolder = holder;
 			addTask(task);
+			d("ImageLoader", "loadNetImage 1 addTask url=" + url);
 		}
 
 	}
@@ -251,6 +277,7 @@ public class ImageLoader
 				}
 			}
 			if(bm != null){
+				mImgBeanHolder.bitmap = bm;
 				d("ImageLoader", "NetTask 4 url=" + mImgBeanHolder.path);
 				end(bm);
 			}
@@ -295,7 +322,7 @@ public class ImageLoader
 			message.obj = mImgBeanHolder;
 			// Log.e("TAG", "mHandler.sendMessage(message);");
 			mHandler.sendMessage(message);
-			mPoolSemaphore.release();
+//			mPoolSemaphore.release();
 		}
 		
 	}
@@ -306,35 +333,37 @@ public class ImageLoader
 	 */
 	private synchronized void addTask(Runnable runnable)
 	{
-		try
-		{
-			// 请求信号量，防止mPoolThreadHander为null
-			if (mPoolThreadHander == null)
-				mSemaphore.acquire();
-		} catch (InterruptedException e)
-		{
-		}
-		mTasks.add(runnable);
 		
-		mPoolThreadHander.sendEmptyMessage(0x110);
+		mThreadPool.submit(runnable);
+//		try
+//		{
+//			// 请求信号量，防止mPoolThreadHander为null
+//			if (mPoolThreadHander == null)
+//				mSemaphore.acquire();
+//		} catch (InterruptedException e)
+//		{
+//		}
+//		mTasks.add(runnable);
+//		d("ImageLoader", "addTask to mTasks");
+//		mPoolThreadHander.sendEmptyMessage(0x110);
 	}
 
-	/**
-	 * 取出一个任务
-	 * 
-	 * @return
-	 */
-	private synchronized Runnable getTask()
-	{
-		if (mType == Type.FIFO)
-		{
-			return mTasks.removeFirst();
-		} else if (mType == Type.LIFO)
-		{
-			return mTasks.removeLast();
-		}
-		return null;
-	}
+//	/**
+//	 * 取出一个任务
+//	 * 
+//	 * @return
+//	 */
+//	private synchronized Runnable getTask()
+//	{
+//		if (mType == Type.FIFO)
+//		{
+//			return mTasks.removeFirst();
+//		} else if (mType == Type.LIFO)
+//		{
+//			return mTasks.removeLast();
+//		}
+//		return null;
+//	}
 	
 	/**
 	 * 单例获得该实例对象
