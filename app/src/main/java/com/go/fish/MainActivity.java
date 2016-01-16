@@ -1,9 +1,10 @@
 package com.go.fish;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -18,10 +19,6 @@ import com.go.fish.util.LogUtils;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.UrlUtils;
 import com.go.fish.view.SplashView;
-import com.go.fish.view.ViewHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MainActivity extends Activity {
 
@@ -59,7 +56,7 @@ public class MainActivity extends Activity {
 							if(isRight(response)) {
 								JSONObject data = response.optJSONObject(Const.STA_DATA);
 								LocalMgr.self().saveUserInfo(Const.K_LoginData, data.toString());
-								User.self().userInfo = PersonData.newInstance(data.optJSONObject(Const.STA_MEMBER));
+								User.self().userInfo = PersonData.updatePerson(User.self().userInfo,data.optJSONObject(Const.STA_MEMBER));
 								User.self().userInfo.mobileNum = num;
 								showHomeUI();
 							} else {
@@ -91,6 +88,12 @@ public class MainActivity extends Activity {
 //		intent.setClass(MainActivity.this, TestActivity.class);
 //		startActivity(intent);
 //		finish();
+//		Intent intent = new Intent();
+//		intent.putExtra(Const.PRI_EXTRA_IMAGE_INDEX, 0);
+//		String[] urls = new String[]{"http://i0.letvimg.com/lc05_isvrs/201601/16/11/52/12206bf7-1f49-488c-92f2-fb843b625bbe.jpg","http://i2.letvimg.com/lc03_iscms/201601/13/22/20/6aeb875f751e4f5f93dcb6b2d720f38f.jpg"};
+//		intent.putExtra(Const.PRI_EXTRA_IMAGE_URLS, urls);
+//		UIMgr.showActivity(this,intent,ImageViewUI.class.getName());
+//		finish();
 //		return true;
 		return false;
 	}
@@ -101,6 +104,7 @@ public class MainActivity extends Activity {
 				JSONObject data = new JSONObject(userInfo);
 				if (data != null && data.has(Const.STA_TOKEN)){
 					UrlUtils.self().setToken(data.optString(Const.STA_TOKEN));
+					User.self().userInfo.photoUrl = LocalMgr.self().getUserInfo(Const.K_photo_url);
 					User.self().userInfo.mobileNum = LocalMgr.self().getUserInfo(Const.K_num);
                     return true;
                 }

@@ -35,8 +35,8 @@ public class CommentUIOp extends Op{
 	
 	public static void onCreateCommentList(final Activity activity) {
 		Intent intent = activity.getIntent();
-		int fieldId = intent.getIntExtra(Const.STA_ID, -1);
-		if (fieldId < 1)
+		String fieldId = intent.getStringExtra(Const.STA_ID);
+		if (fieldId == null)
 			activity.finish();
 		ListView listView = (ListView) activity.findViewById(R.id.comment_list);
 		listView.setDividerHeight(0);
@@ -49,7 +49,7 @@ public class CommentUIOp extends Op{
 //			}
 //		};
 		AdapterExt adapter = AdapterExt.newInstance(listView, listener, new JSONArray(), R.layout.listitem_comment);
-		CommentDataLoader.loadList(activity, adapter, String.valueOf(fieldId),true);
+		CommentDataLoader.loadList(activity, adapter, fieldId,true);
 	}
 
 	static class CommentViewHolder{

@@ -27,7 +27,9 @@ import android.text.TextUtils;
 
 import com.go.fish.ui.UICode;
 import com.go.fish.ui.pic.ClipPicUI;
+import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
+import com.go.fish.view.ViewHelper;
 
 @SuppressLint("NewApi")
 public class GalleryUtils {
@@ -88,27 +90,35 @@ public class GalleryUtils {
         pick(activity, new GalleryCallback() {
 			@Override
 			public void onCompleted(String[] filePath, Bitmap bitmap0) {
-					ResultReceiver resultRcrv = new ResultReceiver(new Handler(Looper.getMainLooper())) {
-	                    @Override
-	                    protected void onReceiveResult(int resultCode, Bundle resultData) {
-	                    	super.onReceiveResult(resultCode, resultData);
-	//                    	byte[] bis = resultData.getByteArray("bitmap");
-	//                    	Bitmap bitmap = BitmapFactory.decodeByteArray(bis, 0, bis.length);
-	                    	Bitmap bitmap = (Bitmap)resultData.get("bitmap");
-	                    	String filePath = LocalMgr.sRootPath + "temp.jpg";
-	                    	try {
-								bitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(new File(filePath)));
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-	                    	callback.onCompleted(new String[]{filePath}, bitmap);
-	                    }
-	                };
-	                Intent intent = new Intent();
-	                intent.setClass(activity, ClipPicUI.class);
-	                intent.putExtra("bitmap",filePath[0]);
-	                intent.putExtra("onResult",resultRcrv);
-	                activity.startActivity(intent);
+				if(filePath == null || filePath.length == 0){
+					ViewHelper.showToast(activity, Const.DEFT_CANCEL);
+					return;
+				}
+				ResultReceiver resultRcrv = new ResultReceiver(new Handler(Looper.getMainLooper())) {
+                    @Override
+                    protected void onReceiveResult(int resultCode, Bundle resultData) {
+                    	super.onReceiveResult(resultCode, resultData);
+//                    	byte[] bis = resultData.getByteArray("bitmap");
+//                    	Bitmap bitmap = BitmapFactory.decodeByteArray(bis, 0, bis.length);
+                    	final Bitmap bitmap = (Bitmap)resultData.get("bitmap");
+                    	final String filePath = LocalMgr.sRootPath + "temp.jpg";
+                    	new Thread(){
+                    		public void run() {
+                    			try {
+                    				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(new File(filePath)));
+                    			} catch (Exception e) {
+                    				e.printStackTrace();
+                    			}
+                    		};
+                    	}.start();
+                    	callback.onCompleted(new String[]{filePath}, bitmap);
+                    }
+                };
+                Intent intent = new Intent();
+                intent.setClass(activity, ClipPicUI.class);
+                intent.putExtra("bitmap",filePath[0]);
+                intent.putExtra("onResult",resultRcrv);
+                activity.startActivity(intent);
 			}
 		}, null, false);
     }

@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.go.fish.R;
 import com.go.fish.data.DataMgr;
 import com.go.fish.data.FieldData;
+import com.go.fish.data.PersonData;
 import com.go.fish.data.load.FieldDataLoader;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.HomeUI;
@@ -135,10 +136,12 @@ public class FieldUIOp {
 					careItem.setVisibility(View.GONE);
 				}else {
 					JSONObject member = members.optJSONObject(i);
-					if(!TextUtils.isEmpty(member.optString(Const.STA_IMGURL))){
+					if(member.has(Const.STA_IMGURL)){
 //						String imgUrl = "http://images.banma.com/v0/app-feed/soft/icons/_bigIcon76e029e26dce486c9c969c23b99bf31f.png";
-						String imgUrl = member.optString(Const.STA_IMGURL, member.optString(Const.STA_IMGURL));
-						ViewHelper.load(careItem, imgUrl, true, false);
+						String imgUrl = member.optString(Const.STA_IMGURL);
+						if(!TextUtils.isEmpty(imgUrl)){
+							ViewHelper.load(careItem, imgUrl, true, false);
+						}
 					}
 					int id = member.optInt(Const.STA_ID);
 					careItem.setTag(id);
@@ -148,10 +151,12 @@ public class FieldUIOp {
 					careItem.setVisibility(View.GONE);
 				}else{
 					JSONObject member = members.optJSONObject(i);
-					if(!TextUtils.isEmpty(member.optString(Const.STA_IMGURL))){
+					if(member.has(Const.STA_IMGURL)){
 //						String imgUrl = "http://images.banma.com/v0/app-feed/soft/icons/_bigIcon76e029e26dce486c9c969c23b99bf31f.png";
-						String imgUrl = member.optString(Const.STA_IMGURL, member.optString(Const.STA_IMGURL));
-						ViewHelper.load(careItem, imgUrl, true, false);
+						String imgUrl = member.optString(Const.STA_IMGURL);
+						if(!TextUtils.isEmpty(imgUrl)){
+							ViewHelper.load(careItem, imgUrl, true, false);
+						}
 					}
 					int id = member.optInt(Const.STA_ID);
 					careItem.setTag(id);
@@ -160,7 +165,7 @@ public class FieldUIOp {
 		}
 	}
 
-	private static void  makeCommentView(JSONArray comments, ViewGroup commentListView) {
+	private static void  makeCommentView(JSONArray comments, ViewGroup commentListView, int fieldId) {
 		int commentSizeThumb = comments.length();//详情页返回评论数
 		for(int i = 0; i < 3;  i++){
 			boolean able = true;
@@ -189,6 +194,7 @@ public class FieldUIOp {
 				String str_time = commentJson.optString(Const.STA_CREATED_AT_TIME);
 				comment_listitem_time.setText(BaseUtils.getTimeShow(str_time));
 				TextView comment_listitem_text = (TextView)item.findViewById(R.id.comment_listitem_text);
+				comment_listitem_text.setTag(fieldId);
 				comment_listitem_text.setText(commentJson.optString(Const.STA_COMMENT_STR));
 			}
 		}
@@ -464,7 +470,7 @@ public class FieldUIOp {
 				if(json.has(Const.STA_COMMENTS)){
 					JSONArray comments = json.optJSONArray(Const.STA_COMMENTS);
 					ViewGroup commentListView = (ViewGroup) view.findViewById(R.id.last_comment);
-					makeCommentView(comments, commentListView);
+					makeCommentView(comments, commentListView, fieldId);
 				}
 				//构造详情底部栏
 				int zanCount = json.optInt(Const.STA_ZANCOUNT);
@@ -534,6 +540,7 @@ public class FieldUIOp {
 		mViewHolder.listitem_fplace_title.setText(fPlace.title);
 		mViewHolder.fplace_desc.setText(fPlace.desp);
 		mViewHolder.float_view_distance.setText(fPlace.distance);
+		mViewHolder.fplace_state.getChildAt(1).setSelected(fPlace.isAttentionByUser);
 		mViewHolder.fplace_state.getChildAt(1).setTag(String.valueOf(fPlace.sid));
 		
 		if(layout_id == R.layout.listitem_field_3_rows){

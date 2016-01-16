@@ -253,13 +253,12 @@ public class AdapterExt extends BaseAdapter {
         }
 		private void update(int firstVisibleItem,int visibleItemCount){
 			if(layout_id == R.layout.listitem_podcast){
-				for (int i = firstVisibleItem; i < firstVisibleItem + visibleItemCount; i++) {
-					PodCastData newsData = (PodCastData)listDatas.get(i);
-					
-				}
+				ArrayList<IBaseData> listData = AdapterExt.this.listDatas;
+				PodCastUIOp.updateList(AdapterExt.this.mInflater,listData, firstVisibleItem, visibleItemCount);
 			}
-			LogUtils.d(TAG,"update" + firstVisibleItem  +" ------ " + visibleItemCount);
+			LogUtils.d(TAG,"update    " + firstVisibleItem  +" ------ " + visibleItemCount);
 		}
+		
 	}
 	
 	

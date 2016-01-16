@@ -103,12 +103,14 @@ public class UserUIOp extends Op{
 				if (response != null ){
 					if(isRight(response)) {
 						JSONObject data = response.optJSONObject(Const.STA_DATA);
-						User.self().userInfo = PersonData.newInstance(data.optJSONObject(Const.STA_MEMBER));
+						User.self().userInfo = PersonData.updatePerson(User.self().userInfo,data.optJSONObject(Const.STA_MEMBER));
+						LocalMgr.self().saveUserInfo(Const.K_photo_url,User.self().userInfo.photoUrl);
 						updateMyView(view);
 					}
 				}
 			}
 		},jsonObject,UrlUtils.self().getSettingData());
+		updateMyView(view);
 	}
 	
 	private static void updateMyView(View view){

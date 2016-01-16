@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.go.fish.R;
 import com.go.fish.data.FieldData;
+import com.go.fish.op.CommentUIOp;
 import com.go.fish.op.FieldUIOp;
 import com.go.fish.util.Const;
 import com.go.fish.util.IME;
@@ -90,7 +91,13 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 		}
 		detailFragment.mFlag = getIntent().getIntExtra(Const.PRI_FPLACE_RESULT_TYPE, FieldUIOp.FLAG_SEARCH_RESULT);
 	}
-	
+	@Override
+	public void onCommentReplyClick(View view) {
+		Intent intent = new Intent();
+		intent.putExtra(Const.STA_ID, String.valueOf(view.getTag()));
+		intent.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_comment_list);// 跳转到评论列表页面
+		UIMgr.showActivity(this, intent);
+	}
 
 	@Override
 	public void onItemClick(View view, FieldData data) {

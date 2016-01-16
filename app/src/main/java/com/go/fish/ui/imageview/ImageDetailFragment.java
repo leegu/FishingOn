@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.go.fish.R;
+import com.go.fish.util.ImageLoader.ImageLoaderListener;
 
 /**
  * 单张图片显示Fragment
@@ -44,7 +45,6 @@ public class ImageDetailFragment extends Fragment {
 		final View v = inflater.inflate(R.layout.image_detail_fragment, container, false);
 		mImageView = (ImageView) v.findViewById(R.id.image);
 		mAttacher = new PhotoViewAttacher(mImageView);
-
 		mAttacher.setOnPhotoTapListener(new OnPhotoTapListener() {
 
 			@Override
@@ -60,6 +60,17 @@ public class ImageDetailFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		com.go.fish.util.ImageLoader.self().loadImage(mImageUrl, mImageView);
+		com.go.fish.util.ImageLoader.self().loadNetImage(mImageUrl, mImageView,new ImageLoaderListener() {
+			@Override
+			public void onStart() {
+				progressBar.setVisibility(View.VISIBLE);
+			}
+			
+			@Override
+			public void onEnd(String downUrl, Bitmap bitmap) {
+				progressBar.setVisibility(View.GONE);
+				mAttacher.update();
+			}
+		},true,false);
 	}
 }

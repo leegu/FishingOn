@@ -20,9 +20,11 @@ public class CommentDataLoader {
 
 	public static void loadList(final Context context, final AdapterExt adapter, String fieldId,final boolean pullRefresh) {
 		JSONObject jsonObject = new JSONObject();
+		int startIndex = adapter != null ? adapter.getCount() : 0;
+		startIndex = pullRefresh ? 0 : startIndex;
 		try {
 			jsonObject.put(Const.STA_OBJECTID, fieldId);
-			jsonObject.put(Const.STA_START_INDEX, 0);
+			jsonObject.put(Const.STA_START_INDEX, startIndex);
 			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
 			jsonObject.put(Const.STA_TYPE, Const.DEFT_COMMENTLIST_TYPE_FIELD);
 		} catch (JSONException e) {

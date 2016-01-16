@@ -1,9 +1,5 @@
 package com.go.fish.ui.imageview;
 
-import java.util.ArrayList;
-
-import com.go.fish.R;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.widget.TextView;
+
+import com.go.fish.R;
 
 /**
  * 图片查看器

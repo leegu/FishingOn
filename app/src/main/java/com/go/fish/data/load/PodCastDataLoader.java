@@ -60,10 +60,9 @@ public class PodCastDataLoader {
 	public static void getNetPodList(final ListView fNListView,final String mobileNum,final boolean pullRefresh) {
 		JSONObject jsonObject = new JSONObject();
 		try {
-			int count = fNListView.getAdapter() != null ? fNListView.getAdapter().getCount() : 0;
-//			count = 0;
-			jsonObject.put(Const.STA_START_INDEX, count);
-//			jsonObject.put(Const.STA_SIZE, 4);
+			int startIndex = fNListView.getAdapter() != null ? fNListView.getAdapter().getCount() : 0;
+			startIndex = pullRefresh ? 0 : startIndex;
+			jsonObject.put(Const.STA_START_INDEX, startIndex);
 			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
 			jsonObject.put(Const.STA_MOBILE, mobileNum);//默认所有钓播
 		} catch (JSONException e1) {

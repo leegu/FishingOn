@@ -31,32 +31,37 @@ public class PersonData implements IBaseData {
     public double lng = 0;
     public double lat = 0;
     
-    public static PersonData newInstance(JSONObject member){
-        PersonData personData = new PersonData();
-        if(member != null){
-	        personData.id = member.optString(Const.STA_MEMBER_ID);
-	        personData.photoUrl = UrlUtils.self().getNetUrl(member.optString(Const.STA_IMGURL));
-	        personData.userName = member.optString(Const.STA_NAME);
-	//        personData.userName = "丰";
-	        personData.fYears = member.optString(Const.STA_FISH_YEAR);
-	        personData.mobileNum = member.optString(Const.STA_MOBILE);
-	        personData.fTimes = member.optString(Const.STA_FREQUENCY);
-	        personData.address = member.optString(Const.STA_ADDRESS);
-	        personData.tag = member.optString(Const.STA_TAG);
-	        personData.tagArray = BaseUtils.splitString(personData.tag);
-	        personData.lng = member.optDouble(Const.STA_LNG);
-	        personData.lat = member.optDouble(Const.STA_LAT);
-        }
-//        double d1 = new Random().nextDouble();
-//        d1 = d1 - (int)d1;
-//        double d2 = new Random().nextDouble();
-//        d2 = d2 - (int)d2;
-//        personData.lng =  User.self().userInfo.lng + d1;
-//        personData.lat = User.self().userInfo.lat + d2;
-        if(personData.lat > 0){
-        	personData.far = MapUtil.getDistance(personData.lat,personData.lng);
-        }
+    public PersonData updateData(JSONObject member){
+    	PersonData personData = this;
+    	 if(member != null){
+ 	        personData.id = member.optString(Const.STA_MEMBER_ID,personData.id);
+ 	        personData.photoUrl = UrlUtils.self().getNetUrl(member.optString(Const.STA_IMGURL,personData.photoUrl));
+ 	        personData.userName = member.optString(Const.STA_NAME,personData.userName);
+ 	//        personData.userName = "丰";
+ 	        personData.fYears = member.optString(Const.STA_FISH_YEAR,personData.fYears);
+ 	        personData.mobileNum = member.optString(Const.STA_MOBILE,personData.mobileNum);
+ 	        personData.fTimes = member.optString(Const.STA_FREQUENCY,personData.fTimes);
+ 	        personData.address = member.optString(Const.STA_ADDRESS,personData.address);
+ 	        personData.tag = member.optString(Const.STA_TAG,personData.tag);
+ 	        personData.tagArray = BaseUtils.splitString(personData.tag);
+ 	        personData.lng = member.optDouble(Const.STA_LNG,personData.lng);
+ 	        personData.lat = member.optDouble(Const.STA_LAT,personData.lat);
+         }
+         if(personData.lat > 0){
+         	personData.far = MapUtil.getDistance(personData.lat,personData.lng);
+         }
+         return personData;
+    }
+    public static PersonData updatePerson(PersonData personData,JSONObject member){
+    	if(personData == null){
+    		personData = new PersonData();
+    	}
+    	personData.updateData(member);
         return personData;
+    }
+    public static PersonData newInstance(JSONObject member){
+       
+        return updatePerson(new PersonData(), member);
     }
 
 	@Override

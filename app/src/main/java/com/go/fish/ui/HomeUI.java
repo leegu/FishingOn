@@ -231,7 +231,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		if(lastQueryMapTime == -1 || System.currentTimeMillis() - lastQueryMapTime > TIME_QUERYMAP_INTERVAL){
 			justUplocation = false;
 		}
-		if(mFragmentIndex == 0){//地图界面
+		if(mFragmentIndex == 0 && System.currentTimeMillis() - lastQueryMapTime > TIME_QUERYMAP_INTERVAL){//地图界面
 			updateLocation();
 		}/*else if(mFragmentIndex == 3){//钓播
 			
@@ -250,7 +250,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 				if (response != null ){
 					if(isRight(response)) {
 						JSONObject data = response.optJSONObject(Const.STA_DATA);
-						User.self().userInfo = PersonData.newInstance(data.optJSONObject(Const.STA_MEMBER));
+						User.self().userInfo = PersonData.updatePerson(User.self().userInfo,data.optJSONObject(Const.STA_MEMBER));
 					}
 				}
 			}

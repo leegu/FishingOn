@@ -310,7 +310,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 
 	}
 	public void onCareFieldClick(final View view) {
-		FieldUIOp.onCareFieldClick((ImageView)view, null, String.valueOf(view.getTag()));
+		FieldUIOp.onCareFieldClick((ImageView)view, null, String.valueOf(((FieldData)view.getTag()).sid));
 	}
 	public void onIconClick(final View view) {
 		int id = view.getId();
@@ -1019,8 +1019,8 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 							LocalMgr.self().saveUserInfo(Const.K_num, num);
 							LocalMgr.self().saveUserInfo(Const.K_pswd,
 									login_pswd_input);
-							User.self().userInfo = PersonData.newInstance(data
-									.optJSONObject(Const.STA_MEMBER));
+							UrlUtils.self().setToken(data.optString(Const.STA_TOKEN));
+							User.self().userInfo = PersonData.updatePerson(User.self().userInfo,data.optJSONObject(Const.STA_MEMBER));
 							User.self().userInfo.mobileNum = num;
 							showHomeUI();
 						} else {
@@ -1098,13 +1098,18 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 		titleView.setText(title);
 	}
 	public void onPersonClick(View view) {
-		PersonData personData = (PersonData)view.getTag();
-		Intent i = new Intent();
-		i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_podcast_person);
-		i.putExtra(Const.STA_TITLE, personData.userName + "钓播");
-		i.putExtra(Const.PRI_HIDE_PUBLISH, true);
-		i.putExtra(Const.STA_MOBILE, personData.mobileNum);
-		UIMgr.showActivity(this,i,BaseUI.class.getName());
+		Object obj = view.getTag();
+		if(obj != null && obj instanceof PersonData){
+			PersonData personData = (PersonData)obj;
+			if(!TextUtils.isEmpty(personData.mobileNum)){
+				Intent i = new Intent();
+				i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_podcast_person);
+				i.putExtra(Const.STA_TITLE, personData.userName + "钓播");
+				i.putExtra(Const.PRI_HIDE_PUBLISH, true);
+				i.putExtra(Const.STA_MOBILE, personData.mobileNum);
+				UIMgr.showActivity(this,i,BaseUI.class.getName());
+			}
+		}
 	}
 	@Override
 	public void onTagClick(View view) {
@@ -1125,6 +1130,11 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 	}
 	public void onFieldClick(View view) {
 		
+	}
+	
+	public void onPodCastTextClick(View view) {
+		Object[] obj = (Object[])view.getTag();
+		PodCastUIOp.onPodCastTextClick(this,(PersonData)obj[0], String.valueOf(obj[1]));
 	}
 
 	@Override

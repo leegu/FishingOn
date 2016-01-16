@@ -10,6 +10,7 @@ public interface Const {
 	String DEFT_GET_CHECK_CODE_SENDING = "验证码已发送";
 	String DEFT_GET_CHECK_CODE_FAILED = "验证码获取失败";
 	String DEFT_DEVING = "开发中";
+	String DEFT_CANCEL = "取消选择";
 	String DEFT_REQUESTING = "请求中...";
 	String DEFT_GETTING = "获取中...";
 	String DEFT_COMMITTING = "提交中...";
@@ -47,6 +48,7 @@ public interface Const {
 //	String PRI_WELCOME_ED = "welcome_ed";
 //	String PRI_WELCOME_ED = "welcome_ed";
 	String K_num = "num";
+	String K_photo_url = "num";
 	String K_account = "account";
 	String K_pswd = "pswd";
 	String K_Welcomed = "welcome_ed";

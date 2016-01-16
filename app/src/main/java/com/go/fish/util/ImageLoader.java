@@ -4,17 +4,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -190,17 +184,21 @@ public class ImageLoader
 	public void loadImage(final String path, final ImageView imageView){
 		loadNetImage(path, imageView, null,false,false);
 	}
+	public void loadImage(final String path, final ImageView imageView,final boolean allowNetLoad){
+		loadNetImage(path, imageView, null,allowNetLoad,false);
+	}
+	public static final int LOADING = 0;
+	public static final int LOADED = 1;
 	/**
 	 * 加载图片
-	 * 
 	 * @param url
 	 * @param imageView
 	 */
 	public void loadNetImage(final String url, final ImageView imageView,final ImageLoaderListener listener,final boolean allowNetLoad,boolean forBg)
 	{
 		d("ImageLoader", "loadNetImage url=" + url);
-		// set tag
-		imageView.setTag(url);
+//		// set tag
+//		imageView.setTag(url);
 		// UI线程
 		if (mHandler == null)
 		{
@@ -210,18 +208,34 @@ public class ImageLoader
 				public void handleMessage(Message msg)
 				{
 					ImgBeanHolder holder = (ImgBeanHolder) msg.obj;
-					ImageView imageView = holder.imageView;
-					Bitmap bm = holder.bitmap;
-					String path = holder.path;
-					d("ImageLoader", "handleMessage url=" + path + ";" + holder.forBg);
-					if (imageView.getTag().toString().equals(path))
-					{
-						d("ImageLoader", "handleMessage will set Bitmap ");
-						if(holder.forBg){
-							imageView.setBackgroundDrawable(new BitmapDrawable(bm));
-						}else{
-							imageView.setImageBitmap(bm);
+					switch (msg.what) {
+					case LOADED:{
+						ImageView imageView = holder.imageView;
+						Bitmap bm = holder.bitmap;
+						String path = holder.path;
+						d("ImageLoader", "handleMessage url=" + path + ";" + holder.forBg);
+//						if (imageView.getTag().toString().equals(path))
+						{
+							d("ImageLoader", "handleMessage will set Bitmap ");
+							if(holder.forBg){
+								imageView.setBackgroundDrawable(new BitmapDrawable(bm));
+							}else{
+								imageView.setImageBitmap(bm);
+							}
 						}
+						if(holder.listener != null){
+							holder.listener.onEnd(path, bm);
+						}
+						break;
+					}
+					case LOADING:
+						if(holder.listener != null){
+							holder.listener.onStart();
+						}
+						break;
+
+					default:
+						break;
 					}
 				}
 			};
@@ -233,14 +247,21 @@ public class ImageLoader
 		holder.imageView = imageView;
 		holder.path = url;
 		holder.forBg = forBg;
+		holder.listener = listener;
 		holder.allowNetLoad = allowNetLoad;
 		
 		if (bm != null)
 		{
 			Message message = Message.obtain();
 			message.obj = holder;
+			message.what = LOADED;
 			mHandler.sendMessage(message);
 		} else {
+			Message message = Message.obtain();
+			message.obj = holder;
+			message.what = LOADING;
+			mHandler.sendMessage(message);
+			
 			d("ImageLoader", "loadNetImage 0 addTask url=" + url);
 			LoadTask task = new LoadTask();
 			task.mImgBeanHolder = holder;
@@ -515,6 +536,7 @@ public class ImageLoader
 		String path;
 		boolean forBg = false;
 		boolean allowNetLoad = false;
+		ImageLoaderListener listener = null;
 	}
 
 	private class ImageSize

@@ -23,9 +23,12 @@ public class PersonDataLoader {
 	public static void loadPraiseList(final Activity activity,
 			final TextView callbackView, final AdapterExt ada, int fieldId) {
 		JSONObject jsonObject = new JSONObject();
+		int startIndex = ada != null ? ada.getCount() : 0;
+//		startIndex = pullRefresh ? 0 : startIndex;
+//		jsonObject.put(Const.STA_START_INDEX, startIndex);
 		try {
 			jsonObject.put(Const.STA_FIELDID, fieldId);
-			jsonObject.put(Const.STA_START_INDEX, 0);
+			jsonObject.put(Const.STA_START_INDEX, startIndex);
 			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
 		} catch (JSONException e) {
 			e.printStackTrace();

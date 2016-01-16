@@ -10,7 +10,8 @@
     <color name="calender_disable_bg_color">#f5f5f5</color>
     <color name="calender_disable_text_color">#cecece</color>
 
-    <color name="action_sheet_bg">#F0082a39</color>
+    <color name="action_sheet_bg">#Ff082a39</color>
+    <!-- <color name="action_sheet_bg">#F0082a39</color> -->
     <color name="action_sheet_item_text_color">#95dfff</color>
     <color name="my_listitem_text_color">#666666</color>
     <color name="my_listitem_sub_text_color">#999999</color>

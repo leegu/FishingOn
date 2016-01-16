@@ -201,13 +201,11 @@
 
                     <LinearLayout
                         android:id="@+id/care_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/care_container_height"
+                        android:layout_width="match_parent"                        android:layout_height="@dimen/care_container_height"
                         android:orientation="horizontal"
                         android:padding="@dimen/base_space" >
 
                         <LinearLayout style="@style/average_width_weight_1" >
-
                             <include layout="@layout/circle_image_view" >
                             </include>
                         </LinearLayout>
