@@ -8,25 +8,18 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 
-import com.go.fish.R;
 import com.go.fish.data.DataMgr;
 import com.go.fish.data.FieldData;
 import com.go.fish.op.OpBack;
-import com.go.fish.ui.HomeUI;
-import com.go.fish.ui.SearchUI;
-import com.go.fish.ui.UIMgr;
 import com.go.fish.user.User;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
 import com.go.fish.util.LogUtils;
 import com.go.fish.util.NetTool;
-import com.go.fish.util.UrlUtils;
 import com.go.fish.util.NetTool.RequestListener;
+import com.go.fish.util.UrlUtils;
 import com.go.fish.view.BaseFragmentPagerAdapter;
 import com.go.fish.view.FPlaceListAdapter;
 import com.go.fish.view.FPlaceListFragment;
@@ -68,17 +61,19 @@ public class FieldDataLoader {
 	}
 	public static void loadNetData(final Context context,final FPlaceListAdapter  listAdapter,
 			final int listitemLayoutid, final String searchTitle,
-			final int startIndex,String defaultTag) {
+			int startIndex,int resultCount,String defaultTag,final boolean pullRefresh, final LoaderListener loaderListener) {
     	JSONObject jsonObject = new JSONObject();
     	String url = null;
+    	startIndex = listAdapter != null ? listAdapter.getCount() : 0;
+		startIndex = pullRefresh ? 0 : startIndex;
     	try {
-    		if(listAdapter.isAttentionList){
+    		if(listAdapter != null && listAdapter.isAttentionList){
     			url = UrlUtils.self().getAttListForM();
     		}else{
     			url = UrlUtils.self().getQueryForMap();
 				jsonObject.put(Const.STA_LAT, String.valueOf(User.self().userInfo.lat));
 				jsonObject.put(Const.STA_LNG, String.valueOf(User.self().userInfo.lng));
-				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
+				jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_100);
 				jsonObject.put(Const.STA_START_INDEX, startIndex);
 				jsonObject.put(Const.STA_TAG, defaultTag);
 				jsonObject.put(Const.STA_TYPE, Const.DEFT_YC);
@@ -97,14 +92,19 @@ public class FieldDataLoader {
 			@Override
 			public void onEnd(byte[] data) {
 				JSONObject resultData = toJSONObject(data);
-				if (isRight(context,resultData,true)) {
-					JSONArray jsonArray = resultData.optJSONArray(Const.STA_DATA);
-					int count = jsonArray.length();
-					LogUtils.d("searchUI", "initAdapterByNetData tag=" + f_defaultTag +  "count=" + count);
-			        //不同tag的钓场 ；一个钓场可能有多个tag
-					if(count > 0){
-						listAdapter.updateAdapter(DataMgr.makeFPlaceDatas(listitemLayoutid, jsonArray));
+				if(loaderListener == null){
+					if (isRight(context,resultData,true)) {
+						JSONArray jsonArray = resultData.optJSONArray(Const.STA_DATA);
+						int count = jsonArray.length();
+						LogUtils.d("searchUI", "initAdapterByNetData tag=" + f_defaultTag +  "count=" + count);
+				        //不同tag的钓场 ；一个钓场可能有多个tag
+//						if(count > 0){
+							listAdapter.updateAdapter(DataMgr.makeFPlaceDatas(listitemLayoutid, jsonArray), pullRefresh);
+//						}
+						onEnd();
 					}
+				}else{
+					loaderListener.onCompleted(this, resultData);
 					onEnd();
 				}
 			}
@@ -121,7 +121,7 @@ public class FieldDataLoader {
     	int startIndex = listFragment.mListAdapter == null ? 0 : listFragment.mListAdapter.listDatas.size();
 		String defaultTag = null;
     	defaultTag = LocalMgr.getFPlaceType()[defaultIndex];
-    	loadNetData(viewPager.getContext(), listFragment.mListAdapter, listitemLayoutid, searchTitle, startIndex, defaultTag);
+    	loadNetData(viewPager.getContext(), listFragment.mListAdapter, listitemLayoutid, searchTitle, startIndex, Const.DEFT_REQ_COUNT_10, defaultTag, true, null);
 //    	JSONObject jsonObject = new JSONObject();
 //    	//活动聚焦页面的listFragment
 //		try {

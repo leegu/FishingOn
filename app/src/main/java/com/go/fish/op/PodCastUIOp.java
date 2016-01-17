@@ -213,7 +213,7 @@ public class PodCastUIOp extends Op{
 		},jsonObject, UrlUtils.self().getpPraisePod());
 	}
 	
-	public static void onCreatePodCastListView(final Activity activity,ViewGroup view) {//创建钓播列表 页面
+	public static void onCreatePodCastList(final Activity activity,ViewGroup view) {//创建钓播列表 页面
 		ViewGroup vg = (ViewGroup)view.findViewById(R.id.ui_fnews_list_root);
 		{//最新钓播
 //			final ListView fNewsList = new ReFreshListView(getActivity());
@@ -233,7 +233,7 @@ public class PodCastUIOp extends Op{
 		}
 	}
 	
-	public static void onShowPodCastListView(ViewGroup contentView){//显示钓播列表
+	public static void onShowPodCastList(ViewGroup contentView){//显示钓播列表
 		ViewGroup vg = (ViewGroup)contentView.findViewById(R.id.ui_fnews_list_root);
 		for(int i = 0;i < vg.getChildCount() ; i++){
 			ListView fNListView = (ListView)vg.getChildAt(i);

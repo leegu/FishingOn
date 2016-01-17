@@ -21,19 +21,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.data.DataMgr;
 import com.go.fish.data.FieldData;
-import com.go.fish.data.PersonData;
 import com.go.fish.data.load.FieldDataLoader;
 import com.go.fish.ui.BaseUI;
-import com.go.fish.ui.HomeUI;
 import com.go.fish.ui.SearchUI;
 import com.go.fish.ui.UIMgr;
 import com.go.fish.util.BaseUtils;
@@ -42,12 +42,11 @@ import com.go.fish.util.LocalMgr;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.UrlUtils;
 import com.go.fish.view.AutoLayoutViewGroup;
+import com.go.fish.view.BaseFragment.ResultForActivityCallback;
 import com.go.fish.view.FPlaceListAdapter;
-import com.go.fish.view.IBaseData;
 import com.go.fish.view.MyPagerAdapter;
 import com.go.fish.view.TextDrawable;
 import com.go.fish.view.ViewHelper;
-import com.go.fish.view.BaseFragment.ResultForActivityCallback;
 
 public class FieldUIOp {
 
@@ -76,7 +75,7 @@ public class FieldUIOp {
 				if(id == R.id.detail_bottom_bar_care_icon){
 					ImageView stateView = ((ImageView)((ViewGroup)v).getChildAt(0));
 					TextView textView = ((TextView) view.findViewById(R.id.detail_bottom_bar_care_number));
-					onCareFieldClick(stateView, textView, String.valueOf(fieldId));
+					onCareFieldClick(stateView, true, textView, true, String.valueOf(fieldId));
 				}else if(id == R.id.detail_bottom_bar_comment_icon){
 					v.setTag(fieldId);
 //					int oldCount = Integer.parseInt(((TextView) view.findViewById(R.id.detail_bottom_bar_comment_number)).getText().toString());
@@ -378,7 +377,7 @@ public class FieldUIOp {
 		}
 	}
 
-	public static void onCareFieldClick(final ImageView stateView,final TextView textView, String fieldId){
+	public static void onCareFieldClick(final ImageView stateView,final boolean netOverChangeState, final TextView textView,final boolean netOverChangeText,String fieldId){
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.put(Const.STA_FIELDID, fieldId);
@@ -393,8 +392,10 @@ public class FieldUIOp {
 				if (isRight(response)) {
 					JSONObject dataResult = response.optJSONObject(Const.STA_DATA);
 					int careCount = dataResult.optInt(Const.STA_CARE_COUNT);
-					stateView.setSelected(!stateView.isSelected());
-					if(textView != null){
+					if(stateView != null && netOverChangeState){
+						stateView.setSelected(!stateView.isSelected());
+					}
+					if(textView != null && netOverChangeText){
 						textView.setText(String.valueOf(careCount));
 					}
 //								((TextView) findViewById(R.id.checkCode)).setText(response.optJSONObject(Const.STA_DATA).optString(Const.STA_VALIDATECODE));
@@ -405,7 +406,7 @@ public class FieldUIOp {
 		},jsonObject, UrlUtils.self().getAttention());
 	}
 
-	public static void onCreateCareFieldView(final Activity activity,ViewGroup vg, OpBack backListener){
+	public static void onCreateCareFieldList(final Activity activity,ViewGroup vg, OpBack backListener){
 		onCreateCareFieldView(activity, vg, R.layout.listitem_field_3_rows, backListener);
 	}
 	/**
@@ -593,16 +594,19 @@ public class FieldUIOp {
 			}
 		},jsonObject, UrlUtils.self().getPraise());
 	}
-	public static void onShowCareFieldView(ViewGroup view){
-		onShowCareFieldView(view, R.layout.listitem_field_3_rows);
+	public static void onShowCareFieldList(ViewGroup view){
+		onShowCareFieldList(view, R.layout.listitem_field_3_rows);
 	}
-	public static void onShowCareFieldView(ViewGroup view,int layoutId){
+	public static void onShowCareFieldList(ViewGroup view,int layoutId){
 		ListView fPlaceList = (ListView)view.findViewById(R.id.ui_f_care_list);
 		// 网络数据抓取,进行更新
-		FPlaceListAdapter adapter = (FPlaceListAdapter)fPlaceList.getAdapter();
-		if(adapter.listDatas.size() == 0){
-			FieldDataLoader.loadNetData(fPlaceList.getContext(),adapter , layoutId, "", fPlaceList.getAdapter().getCount(), LocalMgr.getFPlaceTypes());
+		ListAdapter adapter = fPlaceList.getAdapter();
+		if(adapter instanceof HeaderViewListAdapter){
+			adapter = ((HeaderViewListAdapter)adapter).getWrappedAdapter();
 		}
+//		if(adapter.listDatas.size() == 0){
+			FieldDataLoader.loadNetData(fPlaceList.getContext(),(FPlaceListAdapter)adapter , layoutId, "", fPlaceList.getAdapter().getCount(), Const.DEFT_REQ_COUNT_10, LocalMgr.getFPlaceTypes(), true, null);
+//		}
 	}
 	private static void updateState(Activity activity,ViewGroup menu_contents,ViewGroup menu_item_contents,int postion,OnClickListener listener){
 		Resources res = activity.getResources();

@@ -70,8 +70,8 @@ public class FPlaceListFragment extends Fragment {
 		return mListView;
 	}
 	
-	public void updateData(ArrayList<FieldData> arr){
-		mListAdapter.updateAdapter(arr);
+	public void updateData(ArrayList<FieldData> arr,boolean pullRefresh){
+		mListAdapter.updateAdapter(arr, pullRefresh);
 	}
 
 	
@@ -88,7 +88,7 @@ public class FPlaceListFragment extends Fragment {
 					//构造钓场列表所需list 适配器
 					mListAdapter = FPlaceListAdapter.setAdapter(getActivity(), mListView, fPlaceArr);
 				} else {
-					updateData(fPlaceArr);
+					updateData(fPlaceArr,true);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();

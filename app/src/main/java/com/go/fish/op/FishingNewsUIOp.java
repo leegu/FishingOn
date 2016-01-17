@@ -32,7 +32,7 @@ import com.go.fish.view.ViewHelper;
 
 public class FishingNewsUIOp extends Op{
 
-	public static void onCreateFishingNewsView(final Activity activity,ViewGroup view){
+	public static void onCreateFishingNewsList(final Activity activity,ViewGroup view){
 		{//最新播况 撒鱼信息
 			final ListView lastNews = (ListView)view.findViewById(R.id.last_news);
 			//本地先获取显示
@@ -72,7 +72,7 @@ public class FishingNewsUIOp extends Op{
 		}
     }
 	
-	public static void onShowFishingNewsView(final ViewGroup view){
+	public static void onShowFishingNewsList(final ViewGroup view){
 		final ListView lastNews = (ListView)view.findViewById(R.id.last_news);
 		final AdapterExt mListAdapter = (AdapterExt)lastNews.getAdapter(); 
 		JSONObject jsonObject = new JSONObject();

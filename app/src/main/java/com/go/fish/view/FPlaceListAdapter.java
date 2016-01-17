@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.data.FieldData;
@@ -29,7 +31,7 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 	public boolean isAttentionList = false;
 	private LayoutInflater mInflater;
 	private ResultForActivityCallback mCallback;
-	View mFooterTextView = null;
+	TextView mFooterTextView = null;
 	ListView mListView = null;
 	public ArrayList<FieldData> listDatas = null;
 	/**
@@ -112,15 +114,28 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
         return item;
 	}
 
-	public void updateAdapter(ArrayList<FieldData> array){
+	public void updateAdapter(ArrayList<FieldData> array, boolean pullRefresh){
 		boolean hasListView = mListView != null;
-		if(hasListView){
-			if(mListView.getFooterViewsCount() > 0) {
-				mListView.removeFooterView(mFooterTextView);
-			}
+		if(pullRefresh){
+			listDatas.clear();
+			listDatas.addAll(0,array);
+		}else{
+			listDatas.addAll(listDatas.size(), array);
 		}
-		listDatas.addAll(0,array);
 		if(hasListView){
+			if(listDatas.size() > 0) {
+				if(mFooterTextView != null){
+					mListView.removeFooterView(mFooterTextView);
+				}
+			}else{
+				if(mFooterTextView == null){
+					mFooterTextView = new TextView((Activity)mListView.getContext());
+					mFooterTextView.setClickable(false);
+					mFooterTextView.setGravity(Gravity.CENTER);
+					mListView.addFooterView(mFooterTextView, null, false);
+				}
+				mFooterTextView.setText("无数据");
+			}
 			notifyDataSetChanged();
 		}
 	}

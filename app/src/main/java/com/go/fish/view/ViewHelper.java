@@ -368,7 +368,11 @@ public class ViewHelper {
 	}
 	public static void showGlobalWaiting(Context context,ProgressDialog.OnDismissListener listener,String text,int timeoutTime){
 		if(sPopupWindow != null){
-			sPopupWindow.dismiss();
+			try {
+				sPopupWindow.dismiss();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		Log.d("viewHelper","showGlobalWaiting " + text);
 //		sPopupWindow = new ProgressDialog(context);

@@ -53,7 +53,9 @@ import com.go.fish.R;
 import com.go.fish.data.FieldData;
 import com.go.fish.data.PersonData;
 import com.go.fish.data.load.FieldDataLoader;
+import com.go.fish.data.load.LoaderListener;
 import com.go.fish.data.load.PodCastDataLoader;
+import com.go.fish.data.load.UserDataLoader;
 import com.go.fish.op.FieldUIOp;
 import com.go.fish.op.OpBack;
 import com.go.fish.op.PodCastUIOp;
@@ -231,7 +233,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		if(lastQueryMapTime == -1 || System.currentTimeMillis() - lastQueryMapTime > TIME_QUERYMAP_INTERVAL){
 			justUplocation = false;
 		}
-		if(mFragmentIndex == 0 && System.currentTimeMillis() - lastQueryMapTime > TIME_QUERYMAP_INTERVAL){//地图界面
+		if(mFragmentIndex == 0 /*&& System.currentTimeMillis() - lastQueryMapTime > TIME_QUERYMAP_INTERVAL*/){//地图界面
 			updateLocation();
 		}/*else if(mFragmentIndex == 3){//钓播
 			
@@ -350,60 +352,67 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 			mOnGetLocationListener = new OnGetLocationListener() {
 				@Override
 				public void onGetLocation(LocationData data) {
+					//定位数据更新
 					User.self().userInfo.lng = data.lng;
 					User.self().userInfo.lat = data.lat;
 					User.self().userInfo.address = data.address;
-					LogUtils.d("homeui", "onGetLocation " + User.self().userInfo.lng + " " + User.self().userInfo.lat);
+					LogUtils.d("Location", "HomeUI.onGetLocation " + User.self().userInfo.lng + " " + User.self().userInfo.lat);
 					if (justUplocation) {// 更新实时位置
-						JSONObject jsonObject = new JSONObject();
-						try {
-							jsonObject.put(Const.STA_LAT, String.valueOf(data.lat));
-							jsonObject.put(Const.STA_LNG, String.valueOf(data.lng));
-							jsonObject.put(Const.STA_LOCATION, User.self().userInfo.address);
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						NetTool.data().http(null, jsonObject,
-								UrlUtils.self().getSetLocation());
+						UserDataLoader.updateUserLocation();
 						return;
 					}
-					JSONObject jsonObject = new JSONObject();
-					try {
-						jsonObject.put(Const.STA_LAT, String.valueOf(data.lat));
-						jsonObject.put(Const.STA_LNG, String.valueOf(data.lng));
-						jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_100);
-						String tags = LocalMgr.getFPlaceTypes();
-						jsonObject.put(Const.STA_TAG, tags);
-						jsonObject.put(Const.STA_TYPE, Const.DEFT_YC);
-						jsonObject.put(Const.STA_TITLE, "");
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					LogUtils.d("homeui", "onGetLocation request queryMap");
-					NetTool.data().http(new NetTool.RequestListener() {
+					FieldDataLoader.loadNetData(HomeUI.this, null, -1, null, 0, Const.DEFT_REQ_COUNT_100, LocalMgr.getFPlaceTypes(), true, new LoaderListener() {
 						@Override
-						public void onStart() {
-							// onStart(HomeUI.this);
-						}
-
-						@Override
-						public void onEnd(byte[] data) {
-							if (data != null) {
-								locationUpdateTime = System.currentTimeMillis();
-								JSONObject resultData = toJSONObject(data);
-								LogUtils.d("homeui", "onGetLocation request queryMap onEnd");
-								if (resultData != null) {
-									if (isRight(resultData)) {
-										justUplocation = true;
-										makeQueryMapResultMarkers(resultData);
-									} else {
-										ViewHelper.showToast(HomeUI.this,resultData.optString(Const.STA_MESSAGE));
-									}
+						public void onCompleted(RequestListener requestListener, JSONObject resultData) {
+							// TODO Auto-generated method stub
+							LogUtils.d("homeui", "onGetLocation request queryMap onEnd");
+							if (resultData != null) {
+								if (requestListener.isRight(resultData)) {
+									justUplocation = true;
+									makeQueryMapResultMarkers(resultData);
+								} else {
+									ViewHelper.showToast(HomeUI.this,resultData.optString(Const.STA_MESSAGE));
 								}
-								// onEnd();
 							}
 						}
-					}, jsonObject, UrlUtils.self().getQueryForMap());
+					});
+//					JSONObject jsonObject = new JSONObject();
+//					try {
+//						jsonObject.put(Const.STA_LAT, String.valueOf(data.lat));
+//						jsonObject.put(Const.STA_LNG, String.valueOf(data.lng));
+//						jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_100);
+//						String tags = LocalMgr.getFPlaceTypes();
+//						jsonObject.put(Const.STA_TAG, tags);
+//						jsonObject.put(Const.STA_TYPE, Const.DEFT_YC);
+//						jsonObject.put(Const.STA_TITLE, "");
+//					} catch (JSONException e) {
+//						e.printStackTrace();
+//					}
+//					LogUtils.d("homeui", "onGetLocation request queryMap");
+//					NetTool.data().http(new NetTool.RequestListener() {
+//						@Override
+//						public void onStart() {
+//							// onStart(HomeUI.this);
+//						}
+//
+//						@Override
+//						public void onEnd(byte[] data) {
+//							if (data != null) {
+//								locationUpdateTime = System.currentTimeMillis();
+//								JSONObject resultData = toJSONObject(data);
+//								LogUtils.d("homeui", "onGetLocation request queryMap onEnd");
+//								if (resultData != null) {
+//									if (isRight(resultData)) {
+//										justUplocation = true;
+//										makeQueryMapResultMarkers(resultData);
+//									} else {
+//										ViewHelper.showToast(HomeUI.this,resultData.optString(Const.STA_MESSAGE));
+//									}
+//								}
+//								// onEnd();
+//							}
+//						}
+//					}, jsonObject, UrlUtils.self().getQueryForMap());
 				}
 			};
 		}
@@ -723,7 +732,22 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		PodCastUIOp.onPraisePodCastClick((ImageView)view, null,String.valueOf(view.getTag()));
 	}
 	public void onCareFieldClick(View view) {
-		FieldUIOp.onCareFieldClick((ImageView)view, (TextView) mFloatViewInfo.findViewById(R.id.float_view_care_text), (String)view.getTag());
+		TextView textView = (TextView) mFloatViewInfo.findViewById(R.id.float_view_care_text);
+		FieldUIOp.onCareFieldClick((ImageView)view,false , textView, false, (String)view.getTag());
+		int count = Integer.parseInt(textView.getText().toString());
+		if(view.isSelected()){
+			count--;
+			if(mLastMarker != null && mFragmentIndex == 0){
+				mLastMarker.setIcon(mDefaultMarkerBD_focus);
+			}
+		}else{
+			count++;
+			if(mLastMarker != null && mFragmentIndex == 0){
+				mLastMarker.setIcon(mDefaultMarkerBD_care_focus);
+			}
+		}
+		view.setSelected(!view.isSelected());
+		textView.setText("" + count);
 	}
 	public void onMyClick(View view) {
 		int id = view.getId();

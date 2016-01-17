@@ -59,18 +59,18 @@ public class HomeFragment extends Fragment {
 		case R.id.home_care://关注
 			layoutId = R.layout.ui_f_care;
 			view = inflater.inflate(layoutId,container,false);
-			FieldUIOp.onCreateCareFieldView(getActivity(),(ViewGroup)view, null);
+			FieldUIOp.onCreateCareFieldList(getActivity(),(ViewGroup)view, null);
 			break;
 		case R.id.home_zixun:
 			layoutId = R.layout.ui_f_fishing_news;
 			view = inflater.inflate(layoutId,container,false);
-			FishingNewsUIOp.onCreateFishingNewsView(getActivity(),(ViewGroup) view);
+			FishingNewsUIOp.onCreateFishingNewsList(getActivity(),(ViewGroup) view);
 			break;
 		case R.id.home_fishing_news://钓播
 //			layoutId = R.layout.ui_f_fishing_news;
 			layoutId = R.layout.ui_podcast_all;
 			view = inflater.inflate(layoutId,container,false);
-			PodCastUIOp.onCreatePodCastListView(getActivity(),(ViewGroup) view);
+			PodCastUIOp.onCreatePodCastList(getActivity(),(ViewGroup) view);
 			break;
 		case R.id.home_my:
 			layoutId = R.layout.ui_my;
@@ -95,15 +95,15 @@ public class HomeFragment extends Fragment {
 		case R.layout.ui_f_fplace:
 			break;
 		case R.layout.ui_f_care:{//关注页面
-			FieldUIOp.onShowCareFieldView(contentView);
+			FieldUIOp.onShowCareFieldList(contentView);
 			break;
 		}
 		case R.layout.ui_f_fishing_news:{
-			FishingNewsUIOp.onShowFishingNewsView(contentView);
+			FishingNewsUIOp.onShowFishingNewsList(contentView);
 			break;
 		}
 		case R.layout.ui_podcast_all:
-			PodCastUIOp.onShowPodCastListView(contentView);
+			PodCastUIOp.onShowPodCastList(contentView);
 			break;
 		case R.layout.ui_my:
 			UserUIOp.onShowMyView(contentView);

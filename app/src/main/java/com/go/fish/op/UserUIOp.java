@@ -72,7 +72,7 @@ public class UserUIOp extends Op{
 //			FPlaceListAdapter.setAdapter(BaseUI.this.getApplicationContext(),fPlaceList,fPlaceArr, FieldUIOp.FLAG_CARE_RESULT);
 			// 网络数据抓取,进行更新
 			FieldUIOp.onCreateCareFieldView(activity, vg,R.layout.listitem_field, null);
-			FieldUIOp.onShowCareFieldView(vg,R.layout.listitem_field);
+			FieldUIOp.onShowCareFieldList(vg,R.layout.listitem_field);
 		}
 
 		{// 钓播

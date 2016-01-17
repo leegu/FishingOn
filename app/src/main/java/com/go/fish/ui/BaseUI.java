@@ -310,7 +310,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 
 	}
 	public void onCareFieldClick(final View view) {
-		FieldUIOp.onCareFieldClick((ImageView)view, null, String.valueOf(((FieldData)view.getTag()).sid));
+		FieldUIOp.onCareFieldClick((ImageView)view, true, null, true, String.valueOf(((FieldData)view.getTag()).sid));
 	}
 	public void onIconClick(final View view) {
 		int id = view.getId();
@@ -595,7 +595,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			}
 			try {
 				jsonObject.put(Const.STA_TO_ID, toId);
-				jsonObject.put(Const.STA_OBJECTID, objectId);// 可能是钓场，可能是评论
+				jsonObject.put(Const.STA_OBJECTID, objectId);// 可能是钓场id，可能是评论id
 				jsonObject.put(Const.STA_COMMENT_STR, replyText.getText());
 				jsonObject.put(Const.STA_TYPE, "field");
 			} catch (JSONException e) {
