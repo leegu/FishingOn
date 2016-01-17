@@ -361,21 +361,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 						UserDataLoader.updateUserLocation();
 						return;
 					}
-					FieldDataLoader.loadNetData(HomeUI.this, null, -1, null, 0, Const.DEFT_REQ_COUNT_100, LocalMgr.getFPlaceTypes(), true, new LoaderListener() {
-						@Override
-						public void onCompleted(RequestListener requestListener, JSONObject resultData) {
-							// TODO Auto-generated method stub
-							LogUtils.d("homeui", "onGetLocation request queryMap onEnd");
-							if (resultData != null) {
-								if (requestListener.isRight(resultData)) {
-									justUplocation = true;
-									makeQueryMapResultMarkers(resultData);
-								} else {
-									ViewHelper.showToast(HomeUI.this,resultData.optString(Const.STA_MESSAGE));
-								}
-							}
-						}
-					});
+					updateMapFieldList();
 //					JSONObject jsonObject = new JSONObject();
 //					try {
 //						jsonObject.put(Const.STA_LAT, String.valueOf(data.lat));
@@ -483,6 +469,9 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 					text.setTextColor(getResources().getColor( R.color.foot_bar_text_color));
 					icon.setImageResource(footItemIconIds[i]);
 				}
+			}
+			if(mFragmentIndex == 0){
+				updateMapFieldList();
 			}
 		}
 	}
@@ -1077,5 +1066,22 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 	@Override
 	public void onItemClick(View view, IBaseData data) {
 		data.OnClick(HomeUI.this, null, view);
+	}
+	public void updateMapFieldList() {
+		FieldDataLoader.loadNetData(HomeUI.this, null, -1, null, 0, Const.DEFT_REQ_COUNT_100, LocalMgr.getFPlaceTypes(), true, new LoaderListener() {
+			@Override
+			public void onCompleted(RequestListener requestListener, JSONObject resultData) {
+				// TODO Auto-generated method stub
+				LogUtils.d("homeui", "onGetLocation request queryMap onEnd");
+				if (resultData != null) {
+					if (requestListener.isRight(resultData)) {
+						justUplocation = true;
+						makeQueryMapResultMarkers(resultData);
+					} else {
+						ViewHelper.showToast(HomeUI.this,resultData.optString(Const.STA_MESSAGE));
+					}
+				}
+			}
+		});
 	}
 }
