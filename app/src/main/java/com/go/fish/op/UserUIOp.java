@@ -43,7 +43,6 @@ public class UserUIOp extends Op{
 	public static void onCreateNearFriend(final Activity activity) {// 创建附近钓友
 
 		MapUtil.getLocation(activity, new OnGetLocationListener() {
-
 			@Override
 			public void onGetLocation(LocationData data) {
 				User.self().userInfo.lng = data.lng;
@@ -56,7 +55,6 @@ public class UserUIOp extends Op{
 						data.OnClick(activity, null, view);
 					}};
 				final AdapterExt adapter = AdapterExt.newInstance(list, listener, new JSONArray(), R.layout.listitem_person_3_rows);
-				
 				PersonDataLoader.getAroundMember(activity, adapter);
 			}
 		});

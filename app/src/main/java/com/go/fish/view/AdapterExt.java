@@ -1,6 +1,9 @@
 package com.go.fish.view;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.json.JSONArray;
 
@@ -18,6 +21,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.go.fish.R;
+import com.go.fish.data.PersonData;
 import com.go.fish.data.PodCastData;
 import com.go.fish.data.load.CommentDataLoader;
 import com.go.fish.data.load.FishingNewsDataLoader;
@@ -78,6 +82,7 @@ public class AdapterExt extends BaseAdapter {
 		case R.layout.listitem_person_2_rows:
 		case R.layout.listitem_person_3_rows:
 			arr = PersonDataLoader.makePersonDataArray(array);
+			Collections.sort(arr, new SortByDistance());
 			break;
 		case R.layout.listitem_comment:
 			arr = CommentDataLoader.makeCommentDataArray(array);
@@ -87,6 +92,20 @@ public class AdapterExt extends BaseAdapter {
 			break;
 		}
 		return arr;
+	}
+	@SuppressWarnings("rawtypes")
+	class SortByDistance implements Comparator {
+
+		@Override
+		public int compare(Object lhs, Object rhs) {
+			PersonData p1 = (PersonData)lhs;
+			PersonData p2 = (PersonData)rhs;
+			if(p1.farLong > p2.farLong){
+				return 1;
+			}
+			return 0;
+		}
+		
 	}
 	public static AdapterExt newInstance(ListView listView,OnBaseDataClickListener listener,JSONArray array, int layoutId){
 		AdapterExt ada = new AdapterExt(listView, listener,array, layoutId);

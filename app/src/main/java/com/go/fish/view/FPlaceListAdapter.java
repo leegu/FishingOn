@@ -124,8 +124,12 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 		}
 		if(hasListView){
 			if(listDatas.size() > 0) {
-				if(mFooterTextView != null){
-					mListView.removeFooterView(mFooterTextView);
+				if(mFooterTextView != null && mListView.getFooterViewsCount() > 0){
+					try {
+						mListView.removeFooterView(mFooterTextView);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}else{
 				if(mFooterTextView == null){

@@ -120,7 +120,7 @@ public class PodCastUIOp extends Op{
 		t.setPadding(PADDING, PADDING, PADDING, PADDING);
 		t.setBackgroundResource(R.drawable.base_background);
 		int w = (activity.getResources().getDisplayMetrics().widthPixels - PADDING * 6) / 3;
-		if (filePath == null) {
+		if (filePath == null) {//设置添加图片按钮
 			t.setImageResource(resId);
 			t.setTag(resId);
 		} else {
@@ -129,6 +129,11 @@ public class PodCastUIOp extends Op{
 			t.setTag(filePath);
 		}
 		parent.addView(t,parent.getChildCount() - 1, new ViewGroup.LayoutParams(w, w));
+		if(parent.getChildCount() > 9){//大于10个图片时设置 添加图片 按钮不可见
+			parent.getChildAt(parent.getChildCount() - 1).setVisibility(View.GONE);
+		}else{
+			parent.getChildAt(parent.getChildCount() - 1).setVisibility(View.VISIBLE);
+		}
 	}
 	
 	public static void onCreatePodCastListView(Activity activity) {// 创建 我的钓播[钓友钓播]
@@ -170,14 +175,13 @@ public class PodCastUIOp extends Op{
 				if (isRight(response)) {
 					stateView.setSelected(!stateView.isSelected());
 					JSONObject dataResult = response.optJSONObject(Const.STA_DATA);
-					int careCount = Integer.parseInt(textView.getText().toString()) + 1;
-					if(dataResult != null){
-						careCount = dataResult.optInt(Const.STA_CARE_COUNT);
-					}
 					if(textView != null){
+						int careCount = Integer.parseInt(textView.getText().toString()) + 1;
+						if(dataResult != null){
+							careCount = dataResult.optInt(Const.STA_CARE_COUNT);
+						}
 						textView.setText(String.valueOf(careCount));
 					}
-					stateView.setSelected(!stateView.isSelected());
 				} else {
 				}
 			}
@@ -199,14 +203,13 @@ public class PodCastUIOp extends Op{
 				if (isRight(response)) {
 					stateView.setSelected(!stateView.isSelected());
 					JSONObject dataResult = response.optJSONObject(Const.STA_DATA);
-					int careCount = Integer.parseInt(textView.getText().toString()) + 1;
-					if(dataResult != null){
-						careCount = dataResult.optInt(Const.STA_ZANCOUNT);
-					}
 					if(textView != null){
+						int careCount = Integer.parseInt(textView.getText().toString()) + 1;
+						if(dataResult != null){
+							careCount = dataResult.optInt(Const.STA_ZANCOUNT);
+						}
 						textView.setText(String.valueOf(careCount));
 					}
-					stateView.setSelected(!stateView.isSelected());
 				} else {
 				}
 			}
@@ -289,8 +292,11 @@ public class PodCastUIOp extends Op{
 		} else {
 			holder = (PodCastViewHolder)convertView.getTag();
 		}
+		//钓播列表中
+		//关注按钮
 		holder.listitem_fnews_care.setSelected(newsData.isAttentaion);
 		holder.listitem_fnews_care.setTag(newsData.id);
+		//赞按钮		
 		holder.listitem_fnews_good.setTag(newsData.id);
 		holder.listitem_fnews_good.setSelected(newsData.isZan);
 		
@@ -361,7 +367,11 @@ public class PodCastUIOp extends Op{
 		if(holder.mHAutoAlign != null) holder.mHAutoAlign.scrollTo(0, 0);
 		holder.textView.setText(newsData.content);
 		holder.textView.setTag(new Object[]{newsData.authorData,newsData.id});
-		if(newsData.commentCount > 0){holder.listitem_fnews_comment_count.setText(""+newsData.commentCount);}else{holder.listitem_fnews_comment_count.setVisibility(View.GONE);}
+		if(newsData.commentCount > 0){
+			holder.listitem_fnews_comment_count.setText(""+newsData.commentCount);
+		}else{
+			holder.listitem_fnews_comment_count.setVisibility(View.GONE);
+		}
 		long curTime = System.currentTimeMillis();
 		LogUtils.d("podcast", "useTime = " + (curTime - startTime) + ";" + position + ";" + newsData.content + ";convertView=" + hasValue);
 		return convertView;

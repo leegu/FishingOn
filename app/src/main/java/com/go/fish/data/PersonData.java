@@ -24,6 +24,7 @@ public class PersonData implements IBaseData {
     public String mobileNum;
     public String[] tagArray = null;
     public String far = null;
+    public double farLong = 0;
     public String address = null;
     public String tag = null;
     public String fYears = null;
@@ -48,7 +49,8 @@ public class PersonData implements IBaseData {
  	        personData.lat = member.optDouble(Const.STA_LAT,personData.lat);
          }
          if(personData.lat > 0){
-         	personData.far = MapUtil.getDistance(personData.lat,personData.lng);
+        	 personData.farLong = MapUtil.getDistanceDoubleValue(personData.lat,personData.lng);
+         	personData.far = MapUtil.getDistance(personData.farLong);
          }
          return personData;
     }

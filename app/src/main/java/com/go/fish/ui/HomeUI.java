@@ -362,55 +362,12 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 						return;
 					}
 					updateMapFieldList();
-//					JSONObject jsonObject = new JSONObject();
-//					try {
-//						jsonObject.put(Const.STA_LAT, String.valueOf(data.lat));
-//						jsonObject.put(Const.STA_LNG, String.valueOf(data.lng));
-//						jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_100);
-//						String tags = LocalMgr.getFPlaceTypes();
-//						jsonObject.put(Const.STA_TAG, tags);
-//						jsonObject.put(Const.STA_TYPE, Const.DEFT_YC);
-//						jsonObject.put(Const.STA_TITLE, "");
-//					} catch (JSONException e) {
-//						e.printStackTrace();
-//					}
-//					LogUtils.d("homeui", "onGetLocation request queryMap");
-//					NetTool.data().http(new NetTool.RequestListener() {
-//						@Override
-//						public void onStart() {
-//							// onStart(HomeUI.this);
-//						}
-//
-//						@Override
-//						public void onEnd(byte[] data) {
-//							if (data != null) {
-//								locationUpdateTime = System.currentTimeMillis();
-//								JSONObject resultData = toJSONObject(data);
-//								LogUtils.d("homeui", "onGetLocation request queryMap onEnd");
-//								if (resultData != null) {
-//									if (isRight(resultData)) {
-//										justUplocation = true;
-//										makeQueryMapResultMarkers(resultData);
-//									} else {
-//										ViewHelper.showToast(HomeUI.this,resultData.optString(Const.STA_MESSAGE));
-//									}
-//								}
-//								// onEnd();
-//							}
-//						}
-//					}, jsonObject, UrlUtils.self().getQueryForMap());
 				}
 			};
 		}
 		return mOnGetLocationListener;
 	}
 
-	// private static final int TAG_YD = 1;
-	// private static final int TAG_BD = 2;
-	// private static final int TAG_HK = 3;
-	// private static final int TAG_GD = 4;
-	// private static final int TAG_SSJRX = 5;
-	// private static final int TAG_YD = 1;
 	private int convertInt(String tag) {
 		String totalTags[] = LocalMgr.getFPlaceType();
 		for (int i = 0; i < totalTags.length; i++) {
@@ -727,11 +684,13 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		if(view.isSelected()){
 			count--;
 			if(mLastMarker != null && mFragmentIndex == 0){
+				mLastMarker.getExtraInfo().putBoolean(Const.STA_IS_ATTENTION, false);
 				mLastMarker.setIcon(mDefaultMarkerBD_focus);
 			}
 		}else{
 			count++;
 			if(mLastMarker != null && mFragmentIndex == 0){
+				mLastMarker.getExtraInfo().putBoolean(Const.STA_IS_ATTENTION, true);
 				mLastMarker.setIcon(mDefaultMarkerBD_care_focus);
 			}
 		}

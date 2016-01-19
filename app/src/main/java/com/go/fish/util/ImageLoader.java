@@ -1,6 +1,8 @@
 package com.go.fish.util;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -291,11 +293,9 @@ public class ImageLoader
 			d("ImageLoader", "NetTask 1 url=" + mImgBeanHolder.path + ";filePath=" + path);
 			if(bm == null && mImgBeanHolder.allowNetLoad && URLUtil.isNetworkUrl(mImgBeanHolder.path) ){
 				d("ImageLoader", "NetTask 2 url=" + mImgBeanHolder.path);
-				bm = downloadBitmap(mImgBeanHolder.path);
+				String filePath = downloadBitmap(mImgBeanHolder.path);
+				bm = decodeSampledBitmapFromResource(filePath, reqWidth, reqHeight);
 				d("ImageLoader", "NetTask 3 url=" + mImgBeanHolder.path);
-				if(bm != null){
-					LocalMgr.self().save(mImgBeanHolder.path, bm);
-				}
 			}
 			if(bm != null){
 				mImgBeanHolder.bitmap = bm;
@@ -304,8 +304,8 @@ public class ImageLoader
 			}
 		}
 		
-		private Bitmap downloadBitmap(String imageUrl) {
-			Bitmap bitmap = null;
+		private String downloadBitmap(String imageUrl) {
+			String bitmapFilePath = null;
 			HttpURLConnection conn = null;
 			try {
 				conn = createConnection(imageUrl);
@@ -314,7 +314,8 @@ public class ImageLoader
 					conn = createConnection(conn.getHeaderField("Location"));
 					redirectCount++;
 				}
-				bitmap = BitmapFactory.decodeStream(conn.getInputStream());
+				;
+				bitmapFilePath = LocalMgr.self().save(mImgBeanHolder.path, conn.getInputStream()).getAbsolutePath();
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -322,7 +323,7 @@ public class ImageLoader
 					conn.disconnect();
 				}
 			}
-			return bitmap;
+			return bitmapFilePath;
 		}
 
 		static final int connectTimeout = 5 * 1000;

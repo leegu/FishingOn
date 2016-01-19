@@ -52,9 +52,14 @@ public class PodCastData implements IBaseData{
 		}
 		newsData.content =jsonObject.optString(Const.STA_CONTENT);
 		newsData.publishTime =jsonObject.optString(Const.STA_CREATED_AT_TIME);
+		newsData.isZan =jsonObject.optBoolean(Const.STA_IS_ZAN);
 		newsData.goodCount =jsonObject.optInt(Const.STA_GOOD_COUNT);
+		
 		newsData.commentCount =jsonObject.optInt(Const.STA_COMMENT_COUNT);
+		
+		newsData.isAttentaion =jsonObject.optBoolean(Const.STA_IS_ATTENTION);
 		newsData.careCount =jsonObject.optInt(Const.STA_CARE_COUNT);
+		
 		newsData.id =jsonObject.optInt(Const.STA_ID);
 		newsData.newsId =jsonObject.optInt(Const.STA_NEWS_ID);
 		newsData.authorData = PersonData.newInstance(jsonObject.optJSONObject(Const.STA_MEMBER));
