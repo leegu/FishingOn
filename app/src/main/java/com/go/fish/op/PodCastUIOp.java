@@ -387,12 +387,13 @@ public class PodCastUIOp extends Op{
 				if(view == null){//新创建
 					view = mInflater.inflate(R.layout.h_image_view_item, null);
 					im = (ImageView)((ViewGroup)view).getChildAt(0);
-					imgParent.addView(view,new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT));
+					imgParent.addView(view);
 				}else{
 					im = (ImageView)((ViewGroup)view).getChildAt(0);
 					im.setImageResource(R.drawable.pic);
 					view.setVisibility(View.VISIBLE);
 				}
+				view.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT));
 				String url = newsData.netPicUrl[j];
 				view.setOnClickListener(newsData.clickListener);
 				ImageViewUIOption tvOption = new ImageViewUIOption(newsData.netPicUrl,j);

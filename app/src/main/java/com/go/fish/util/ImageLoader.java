@@ -254,12 +254,13 @@ public class ImageLoader
 		
 		if (bm != null)
 		{
-			Message message = Message.obtain();
+//			Message message = Message.obtain();
+			Message message = new Message();
 			message.obj = holder;
 			message.what = LOADED;
 			mHandler.sendMessage(message);
 		} else {
-			Message message = Message.obtain();
+			Message message = new Message();
 			message.obj = holder;
 			message.what = LOADING;
 			mHandler.sendMessage(message);
@@ -340,8 +341,9 @@ public class ImageLoader
 		}
 		private void end(Bitmap bm){
 			addBitmapToLruCache(mImgBeanHolder.path, bm);
-			Message message = Message.obtain();
+			Message message = new Message();
 			message.obj = mImgBeanHolder;
+			message.what = LOADED;
 			// Log.e("TAG", "mHandler.sendMessage(message);");
 			mHandler.sendMessage(message);
 //			mPoolSemaphore.release();
@@ -424,8 +426,7 @@ public class ImageLoader
 		int width = 0;
 		int height = 0;
 		if(params != null ){
-			width = params.width == LayoutParams.WRAP_CONTENT ? 0 : imageView
-					.getWidth(); // Get actual image width
+			width = params.width == LayoutParams.WRAP_CONTENT ? 0 : imageView.getWidth(); // Get actual image width
 			if (width <= 0)
 				width = params.width; // Get layout width parameter
 			
@@ -438,14 +439,17 @@ public class ImageLoader
 			width = getImageViewFieldValue(imageView, "mMaxWidth"); // Check
 																	// maxWidth
 																	// parameter
+		height = getImageViewFieldValue(imageView, "mMaxHeight"); // Check
+		// maxHeight
+		// parameter
+		if(width == LayoutParams.MATCH_PARENT){
+			
+		}
 		if (width <= 0)
 			width = displayMetrics.widthPixels;
 		
 		
 		if (height <= 0)
-			height = getImageViewFieldValue(imageView, "mMaxHeight"); // Check
-																		// maxHeight
-																		// parameter
 		if (height <= 0)
 			height = displayMetrics.heightPixels;
 		
@@ -535,6 +539,7 @@ public class ImageLoader
 		Bitmap bitmap;
 		ImageView imageView;
 		String path;
+		int w,h;
 		boolean forBg = false;
 		boolean allowNetLoad = false;
 		ImageLoaderListener listener = null;

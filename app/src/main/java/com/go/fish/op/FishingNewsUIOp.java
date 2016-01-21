@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -131,7 +132,7 @@ public class FishingNewsUIOp extends Op{
 					for(int i = 0; i < imgUrls.length(); i++){
 						String url = imgUrls.optString(i);
 						ViewGroup vg = (ViewGroup)inflater.inflate(R.layout.fishing_news_image, null);
-						imgs.addView(vg);
+						imgs.addView(vg,new LayoutParams(-1, -2));
 						ImageView iv = (ImageView)vg.getChildAt(0);
 						ViewHelper.load(iv, url, true,false);
 					}

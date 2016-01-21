@@ -72,7 +72,9 @@ public class PodCastDataLoader {
 		NetTool.data().http(new NetTool.RequestListener() {
 			@Override
 			public void onStart() {
-				onStart(fNListView.getContext());
+				if(!pullRefresh){
+					onStart(fNListView.getContext());
+				}
 			}
 			@Override
 			public void onEnd(byte[] data) {
@@ -103,7 +105,9 @@ public class PodCastDataLoader {
 					}else{
 						ViewHelper.showToast(fNListView.getContext(), Const.DEFT_NO_DATA);
 					}
-					onEnd();
+					if(!pullRefresh){
+						onEnd();
+					}
 				}
 			}
 		}, jsonObject, UrlUtils.self().getPodCastList());
