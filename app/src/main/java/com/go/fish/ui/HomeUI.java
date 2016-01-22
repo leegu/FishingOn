@@ -244,6 +244,11 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		updateUserData();
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		MapUtil.stopLocation(this);
+	}
 	private void updateUserData(){
 		NetTool.data().http(new NetTool.RequestListener() {//刷新用户信息
 			@Override
@@ -357,8 +362,8 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 					User.self().userInfo.lat = data.lat;
 					User.self().userInfo.address = data.address;
 					LogUtils.d("Location", "HomeUI.onGetLocation " + User.self().userInfo.lng + " " + User.self().userInfo.lat);
+					UserDataLoader.updateUserLocation();
 					if (justUplocation) {// 更新实时位置
-						UserDataLoader.updateUserLocation();
 						return;
 					}
 					updateMapFieldList();

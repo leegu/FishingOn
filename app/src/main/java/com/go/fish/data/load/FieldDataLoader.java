@@ -1,6 +1,8 @@
 package com.go.fish.data.load;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +14,8 @@ import android.support.v4.view.ViewPager;
 
 import com.go.fish.data.DataMgr;
 import com.go.fish.data.FieldData;
+import com.go.fish.data.PersonData;
+import com.go.fish.data.load.PersonDataLoader.SortByDistance;
 import com.go.fish.op.OpBack;
 import com.go.fish.user.User;
 import com.go.fish.util.Const;
@@ -23,6 +27,7 @@ import com.go.fish.util.UrlUtils;
 import com.go.fish.view.BaseFragmentPagerAdapter;
 import com.go.fish.view.FPlaceListAdapter;
 import com.go.fish.view.FPlaceListFragment;
+import com.go.fish.view.IBaseData;
 
 public class FieldDataLoader {
 
@@ -122,46 +127,23 @@ public class FieldDataLoader {
 		String defaultTag = null;
     	defaultTag = LocalMgr.getFPlaceType()[defaultIndex];
     	loadNetData(viewPager.getContext(), listFragment.mListAdapter, listitemLayoutid, searchTitle, startIndex, Const.DEFT_REQ_COUNT_10, defaultTag, true, null);
-//    	JSONObject jsonObject = new JSONObject();
-//    	//活动聚焦页面的listFragment
-//		try {
-//			jsonObject.put(Const.STA_LAT, String.valueOf(User.self().userInfo.lat));
-//			jsonObject.put(Const.STA_LNG, String.valueOf(User.self().userInfo.lng));
-//			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT);
-//			jsonObject.put(Const.STA_START_INDEX, startIndex);
-//			jsonObject.put(Const.STA_TAG, defaultTag);
-//			jsonObject.put(Const.STA_TYPE, Const.DEFT_YC);
-//			jsonObject.put(Const.STA_TITLE, searchTitle);
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//		LogUtils.d("Search", "search " + searchTitle + ";tag:" + defaultTag + ";startIndex=" + startIndex);
-//		final String f_defaultTag = defaultTag;
-//		NetTool.data().http(new NetTool.RequestListener() {
-//			@Override
-//			public void onStart() {
-//				// onStart(HomeUI.this);
-//			}
-//			@Override
-//			public void onEnd(byte[] data) {
-//				if (data != null) {
-//					JSONObject resultData = toJSONObject(data);
-//					if (resultData != null) {
-//						if (isRight(resultData)) {
-//							JSONArray jsonArray = resultData.optJSONArray(Const.STA_DATA);
-//							int count = jsonArray.length();
-//							LogUtils.d("searchUI", "initAdapterByNetData tag=" + f_defaultTag +  "count=" + count);
-//					        //不同tag的钓场 ；一个钓场可能有多个tag
-//							if(count > 0){
-//								listFragment.updateData(DataMgr.makeFPlaceDatas(listitemLayoutid, jsonArray));
-//							}
-//						}
-//					} else {
-//						ViewHelper.showToast(viewPager.getContext(),resultData.optString(Const.STA_MESSAGE));
-//					}
-//					// onEnd();
-//				}
-//			}
-//		}, jsonObject, UrlUtils.self().getQueryForMap());
+	}
+    
+    public static void sortArrayList(ArrayList<FieldData> arr){
+		Collections.sort(arr,new SortByDistance());
+	}
+	@SuppressWarnings("rawtypes")
+	static class SortByDistance implements Comparator {
+
+		@Override
+		public int compare(Object lhs, Object rhs) {
+			FieldData p1 = (FieldData)lhs;
+			FieldData p2 = (FieldData)rhs;
+			if(p1.farLong > p2.farLong){
+				return 1;
+			}
+			return -1;
+		}
+		
 	}
 }

@@ -57,7 +57,7 @@ public class UserUIOp extends Op{
 				final AdapterExt adapter = AdapterExt.newInstance(list, listener, new JSONArray(), R.layout.listitem_person_3_rows);
 				PersonDataLoader.getAroundMember(activity, adapter);
 			}
-		});
+		},2000);
 	}
 	
 	public static void onCreateUserCare(final Activity activity) {// 创建我的关注 钓场 钓友

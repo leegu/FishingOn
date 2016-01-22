@@ -33,7 +33,7 @@ public class PodCastData implements IBaseData{
 	public int goodCount,careCount,commentCount,shareCount;
 	public boolean isAttentaion,isZan;
 	public String[] netPicUrl = null;
-	public View rootView = null;
+	public Object mTag = null;
 	public OnClickListener clickListener = null;
 //	public String[] localPicUrl = null;
 	

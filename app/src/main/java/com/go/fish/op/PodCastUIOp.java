@@ -104,12 +104,13 @@ public class PodCastUIOp extends Op{
 							@Override
 							public void onCompleted(String[] filePaths,
 									Bitmap bitmap0) {
-								if (!(v.getTag() instanceof Integer)) {
+								if (!(v.getTag() instanceof Integer)) {//更新选取的图片
 									int w = (activity.getResources().getDisplayMetrics().widthPixels - PADDING * 4) / 3;
+									//TODO 可以使用内存的bitmap
 									Bitmap bitmap = LocalMgr.self().getSuitBimap(filePaths[0], w, w);
 									((ImageView) v).setImageDrawable(new BitmapDrawable(bitmap));
 									// bitmap.recycle();
-									((ImageView) v).setTag(filePath);
+									((ImageView) v).setTag(filePaths[0]);
 								} else if (filePaths != null) {
 									addImageView(activity,parent, filePaths[0], -1);
 								}
@@ -303,7 +304,6 @@ public class PodCastUIOp extends Op{
 		if(newsData.netPicUrl != null && newsData.netPicUrl.length > 0){//当有钓播图片时
 			int size = newsData.netPicUrl.length;
 			holder.mHAutoAlign.setVisibility(View.VISIBLE);
-			
 			if(newsData.clickListener == null){
 				newsData.clickListener = new OnClickListener() {
 					@Override
@@ -319,8 +319,8 @@ public class PodCastUIOp extends Op{
 			ViewGroup imgParent = ((ViewGroup)holder.mHAutoAlign.getChildAt(0));
 			int oldCount = imgParent.getChildCount();
 			LogUtils.d("PodCast", "onGetView position=" + position + ";oldCount=" + oldCount + ";size=" + size);
-			newsData.rootView = imgParent;
-			updateList(mInflater,listDatas, position, 1);
+			newsData.mTag = holder;
+			updateList(mInflater,listDatas, position, 1, false);
 			for(int i = size; i < oldCount; i++){//隐藏多余的imageview
 				View view = imgParent.getChildAt(i);
 				view.setVisibility(View.GONE);
@@ -354,12 +354,6 @@ public class PodCastUIOp extends Op{
 					}
 				}
 			}
-			
-			if(!TextUtils.isEmpty(newsData.authorData.photoUrl)){
-				String url = newsData.authorData.photoUrl;
-				ViewHelper.load(holder.userIcon,  UrlUtils.self().getNetUrl(url),true,false);
-			}
-//			holder.publish_time.setVisibility(View.GONE);
 			holder.nameView.setText(newsData.authorData.userName + "--" + position);
 			holder.fYearView.setText(""+newsData.authorData.fYears);
 			holder.fTimesView.setText(""+newsData.authorData.fTimes);
@@ -376,29 +370,45 @@ public class PodCastUIOp extends Op{
 		LogUtils.d("podcast", "useTime = " + (curTime - startTime) + ";" + position + ";" + newsData.content + ";convertView=" + hasValue);
 		return convertView;
 	}
-	public static void updateList(LayoutInflater mInflater,ArrayList<IBaseData> listData, int firstVisibleItem, int visibleItemCount) {
+	public static void updateList(LayoutInflater mInflater,ArrayList<IBaseData> listData, int firstVisibleItem, int visibleItemCount, boolean immLoadImage) {
 		LogUtils.d("PodCast","updateList    " + firstVisibleItem  +" ------ " + visibleItemCount);
 		for (int i = firstVisibleItem; i < firstVisibleItem + visibleItemCount; i++) {
 			PodCastData newsData = (PodCastData)listData.get(i);
-			ViewGroup imgParent = (ViewGroup)newsData.rootView;
+			PodCastViewHolder holder = (PodCastViewHolder)newsData.mTag;
+			ViewGroup imgParentContainer = (ViewGroup)holder.mHAutoAlign.getChildAt(0);
 			for(int j = 0; j < newsData.netPicUrl.length; j++){
-				View view = imgParent.getChildAt(j);
-				ImageView im = null;
-				if(view == null){//新创建
-					view = mInflater.inflate(R.layout.h_image_view_item, null);
-					im = (ImageView)((ViewGroup)view).getChildAt(0);
-					imgParent.addView(view);
-				}else{
-					im = (ImageView)((ViewGroup)view).getChildAt(0);
-					im.setImageResource(R.drawable.pic);
-					view.setVisibility(View.VISIBLE);
-				}
-				view.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT));
+				View imParentView = imgParentContainer.getChildAt(j);
+				ImageView imgView = null;
 				String url = newsData.netPicUrl[j];
-				view.setOnClickListener(newsData.clickListener);
+				boolean imHasSameUrl = false;
+				if(imParentView == null){//需要新创建
+					imParentView = mInflater.inflate(R.layout.h_image_view_item, null);
+					imgView = (ImageView)((ViewGroup)imParentView).getChildAt(0);
+					imgParentContainer.addView(imParentView);
+				}else{
+					imgView = (ImageView)((ViewGroup)imParentView).getChildAt(0);
+					imHasSameUrl = url.equals(imgView.getTag());
+					if(!imHasSameUrl){//当保存标记与url不一致时，需要显示默认值图片
+						imgView.setImageResource(R.drawable.pic);
+					}
+					imParentView.setVisibility(View.VISIBLE);
+				}
+				//更新imageView的布局
+				imParentView.setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT));
+				//设置点击图片监听，进入到ImageViewUI界面
+				imParentView.setOnClickListener(newsData.clickListener);
 				ImageViewUIOption tvOption = new ImageViewUIOption(newsData.netPicUrl,j);
-				view.setTag(tvOption);
-				ViewHelper.load(im, url, true,false);
+				imParentView.setTag(tvOption);
+				if(!imHasSameUrl && immLoadImage){
+					ViewHelper.load(imgView, url, true,false);
+				}
+			}
+			if(!TextUtils.isEmpty(newsData.authorData.photoUrl)){
+				String url = newsData.authorData.photoUrl;
+				if(!url.equals(holder.userIcon.getTag())){
+					holder.userIcon.setImageResource(R.drawable.icon);
+					ViewHelper.load(holder.userIcon,  UrlUtils.self().getNetUrl(url),true,false);
+				}
 			}
 		}
 	}

@@ -1,6 +1,8 @@
 package com.go.fish.data.load;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -100,4 +102,21 @@ public class PersonDataLoader {
 		return arr;
 	}
 
+	public static void sortArrayList(ArrayList<IBaseData> arr){
+		Collections.sort(arr,new SortByDistance());
+	}
+	@SuppressWarnings("rawtypes")
+	static class SortByDistance implements Comparator {
+
+		@Override
+		public int compare(Object lhs, Object rhs) {
+			PersonData p1 = (PersonData)lhs;
+			PersonData p2 = (PersonData)rhs;
+			if(p1.farLong > p2.farLong){
+				return 1;
+			}
+			return -1;
+		}
+		
+	}
 }

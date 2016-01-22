@@ -748,7 +748,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 					ViewHelper.closeGlobalWaiting();
 					((TextView) view).setText(data.address);
 				}
-			});
+			},2000);
 			break;
 		}
 	}

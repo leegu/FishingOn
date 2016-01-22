@@ -200,7 +200,7 @@ public class ImageLoader
 	{
 		d("ImageLoader", "loadNetImage url=" + url);
 //		// set tag
-//		imageView.setTag(url);
+		imageView.setTag(url);
 		// UI线程
 		if (mHandler == null)
 		{
@@ -216,7 +216,7 @@ public class ImageLoader
 						Bitmap bm = holder.bitmap;
 						String path = holder.path;
 						d("ImageLoader", "handleMessage url=" + path + ";" + holder.forBg);
-//						if (imageView.getTag().toString().equals(path))
+						if (imageView.getTag().toString().equals(path))
 						{
 							d("ImageLoader", "handleMessage will set Bitmap ");
 							if(holder.forBg){
@@ -254,13 +254,12 @@ public class ImageLoader
 		
 		if (bm != null)
 		{
-//			Message message = Message.obtain();
-			Message message = new Message();
+			Message message = newMessage();
 			message.obj = holder;
 			message.what = LOADED;
 			mHandler.sendMessage(message);
 		} else {
-			Message message = new Message();
+			Message message = newMessage();
 			message.obj = holder;
 			message.what = LOADING;
 			mHandler.sendMessage(message);
@@ -272,6 +271,10 @@ public class ImageLoader
 			d("ImageLoader", "loadNetImage 1 addTask url=" + url);
 		}
 
+	}
+	
+	public static Message newMessage(){
+		return Message.obtain();
 	}
 	public static void d(String tag,String msg){
 		LogUtils.d(tag, msg);
@@ -341,7 +344,7 @@ public class ImageLoader
 		}
 		private void end(Bitmap bm){
 			addBitmapToLruCache(mImgBeanHolder.path, bm);
-			Message message = new Message();
+			Message message = newMessage();
 			message.obj = mImgBeanHolder;
 			message.what = LOADED;
 			// Log.e("TAG", "mHandler.sendMessage(message);");

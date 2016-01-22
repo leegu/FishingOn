@@ -31,7 +31,7 @@ public class PersonData implements IBaseData {
     public String fTimes = null;
     public double lng = 0;
     public double lat = 0;
-    
+    public static int count = 0;
     public PersonData updateData(JSONObject member){
     	PersonData personData = this;
     	 if(member != null){
@@ -50,6 +50,7 @@ public class PersonData implements IBaseData {
          }
          if(personData.lat > 0){
         	 personData.farLong = MapUtil.getDistanceDoubleValue(personData.lat,personData.lng);
+//        	 personData.farLong = count++ * 10;
          	personData.far = MapUtil.getDistance(personData.farLong);
          }
          return personData;
@@ -62,7 +63,6 @@ public class PersonData implements IBaseData {
         return personData;
     }
     public static PersonData newInstance(JSONObject member){
-       
         return updatePerson(new PersonData(), member);
     }
 

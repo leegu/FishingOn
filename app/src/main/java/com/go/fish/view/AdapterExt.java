@@ -82,7 +82,7 @@ public class AdapterExt extends BaseAdapter {
 		case R.layout.listitem_person_2_rows:
 		case R.layout.listitem_person_3_rows:
 			arr = PersonDataLoader.makePersonDataArray(array);
-			Collections.sort(arr, new SortByDistance());
+			PersonDataLoader.sortArrayList(arr);
 			break;
 		case R.layout.listitem_comment:
 			arr = CommentDataLoader.makeCommentDataArray(array);
@@ -93,20 +93,7 @@ public class AdapterExt extends BaseAdapter {
 		}
 		return arr;
 	}
-	@SuppressWarnings("rawtypes")
-	class SortByDistance implements Comparator {
-
-		@Override
-		public int compare(Object lhs, Object rhs) {
-			PersonData p1 = (PersonData)lhs;
-			PersonData p2 = (PersonData)rhs;
-			if(p1.farLong > p2.farLong){
-				return 1;
-			}
-			return 0;
-		}
-		
-	}
+	
 	public static AdapterExt newInstance(ListView listView,OnBaseDataClickListener listener,JSONArray array, int layoutId){
 		AdapterExt ada = new AdapterExt(listView, listener,array, layoutId);
 		return ada;
@@ -210,26 +197,31 @@ public class AdapterExt extends BaseAdapter {
 	}
 	
 	private class ScrollListenerImpl implements OnScrollListener {
+		boolean isFirstShow = true;
 		boolean isLastRow = false;
 		boolean isFirstRow = false;
 		int firstVisibleItem, visibleItemCount;
         @Override    
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {    
-            //滚动时一直回调，直到停止滚动时才停止回调。单击时回调一次。    
-            //firstVisibleItem：当前能看见的第一个列表项ID（从0开始）    
-            //visibleItemCount：当前能看见的列表项个数（小半个也算）    
-            //totalItemCount：列表项共数    
+            //滚动时一直回调，直到停止滚动时才停止回调。单击时回调一次
+            //firstVisibleItem：当前能看见的第一个列表项ID（从0开始）
+            //visibleItemCount：当前能看见的列表项个数（小半个也算）
+            //totalItemCount：列表项共数
+        	if(isFirstShow && visibleItemCount > 0){
+        		update(firstVisibleItem, visibleItemCount);
+        		isFirstShow = false;
+        	}
         	if(this.firstVisibleItem != firstVisibleItem && firstVisibleItem == 0){
         		isFirstRow = true;
         	}
         	this.firstVisibleItem = firstVisibleItem;
         	this.visibleItemCount = visibleItemCount;
             //判断是否滚到最后一行    
-            if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount > 0) {    
+            if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount > 0) {
                 isLastRow = true;    
-            }    
-        }    
-        @Override    
+            }
+        }
+        @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {    
             //正在滚动时回调，回调2-3次，手指没抛则回调2次。scrollState = 2的这次不回调    
             //回调顺序如下    
@@ -248,9 +240,8 @@ public class AdapterExt extends BaseAdapter {
 	            }else if(isFirstRow){
 	            	loadRecent();
 	            	isFirstRow = false;
-	            }else{
-            		update(firstVisibleItem, visibleItemCount);
 	            }
+            	update(firstVisibleItem, visibleItemCount);
         	}
         }    
 		
@@ -273,7 +264,7 @@ public class AdapterExt extends BaseAdapter {
 		private void update(int firstVisibleItem,int visibleItemCount){
 			if(layout_id == R.layout.listitem_podcast){
 				ArrayList<IBaseData> listData = AdapterExt.this.listDatas;
-//				PodCastUIOp.updateList(AdapterExt.this.mInflater,listData, firstVisibleItem, visibleItemCount);
+				PodCastUIOp.updateList(AdapterExt.this.mInflater,listData, firstVisibleItem, visibleItemCount, true);
 			}
 			LogUtils.d(TAG,"update    " + firstVisibleItem  +" ------ " + visibleItemCount);
 		}

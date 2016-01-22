@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.data.FieldData;
+import com.go.fish.data.load.FieldDataLoader;
 import com.go.fish.op.FieldUIOp;
 import com.go.fish.view.BaseFragment.ResultForActivityCallback;
 
@@ -44,6 +45,9 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 		mListView = listView;
 		this.flag = resultFlag;
 		listDatas = array;
+		if(listDatas != null && listDatas.size() > 1){
+			FieldDataLoader.sortArrayList(listDatas);
+		}
 		mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if(listView != null){
 			attachToListView(mListView);
@@ -124,6 +128,7 @@ public class FPlaceListAdapter extends BaseAdapter implements OnItemClickListene
 		}
 		if(hasListView){
 			if(listDatas.size() > 0) {
+				FieldDataLoader.sortArrayList(listDatas);
 				if(mFooterTextView != null && mListView.getFooterViewsCount() > 0){
 					try {
 						mListView.removeFooterView(mFooterTextView);

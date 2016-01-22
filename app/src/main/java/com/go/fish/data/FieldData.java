@@ -14,7 +14,7 @@ import com.go.fish.view.IBaseData;
 public class FieldData implements IBaseData{
 	public int layout_id ;
 	public String title = null,desp = null,phoneNum = null,sid = null,distance = null,imgUrl = null,tag = null;
-	public double lng,alt;
+	public double lng,alt,farLong;
 	public boolean isAttentionByUser = false;
 	private JSONObject mData = null;
 	public String[] tagArray;
@@ -26,7 +26,8 @@ public class FieldData implements IBaseData{
 		ret.isAttentionByUser = json.optBoolean(Const.STA_IS_ATTENTION);
 		ret.alt = json.optDouble(Const.STA_LAT);
 		ret.lng = json.optDouble(Const.STA_LNG);
-		ret.distance = MapUtil.getDistance(ret.alt, ret.lng);
+		ret.farLong = MapUtil.getDistanceDoubleValue(ret.alt, ret.lng);
+		ret.distance = MapUtil.getDistance(ret.farLong);
 		ret.tag = json.optString(Const.STA_TAG);
 		ret.tagArray = BaseUtils.splitString(ret.tag);
 		ret.title = json.optString(Const.STA_NAME);
