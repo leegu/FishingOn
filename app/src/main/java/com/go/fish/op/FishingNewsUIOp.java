@@ -8,12 +8,15 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,6 +25,8 @@ import com.go.fish.R;
 import com.go.fish.data.FishingNewsData;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
+import com.go.fish.util.ImageLoader;
+import com.go.fish.util.ImageLoader.ImageLoaderListener;
 import com.go.fish.util.LocalMgr;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.NetTool.RequestListener;
@@ -132,9 +137,29 @@ public class FishingNewsUIOp extends Op{
 					for(int i = 0; i < imgUrls.length(); i++){
 						String url = imgUrls.optString(i);
 						ViewGroup vg = (ViewGroup)inflater.inflate(R.layout.fishing_news_image, null);
-						imgs.addView(vg,new LayoutParams(-1, -2));
-						ImageView iv = (ImageView)vg.getChildAt(0);
-						ViewHelper.load(iv, url, true,false);
+						imgs.addView(vg/*,new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)*/);
+						final ImageView iv = (ImageView)vg.getChildAt(0);
+//						ImageView iv = new ImageView(activity);
+//						imgs.addView(iv,new LayoutParams(activity.getResources().getDisplayMetrics().widthPixels, LayoutParams.WRAP_CONTENT));
+						if(Build.VERSION.SDK_INT < 19){
+							ImageLoader.self().loadNetImage(url, iv, new ImageLoaderListener() {
+								@Override
+								public void onStart() {
+								}
+								
+								@Override
+								public void onEnd(String downUrl, Bitmap bitmap) {
+									int height = bitmap.getHeight() * iv.getWidth() / bitmap.getWidth();
+									LayoutParams lp = iv.getLayoutParams();
+									lp.width = LayoutParams.MATCH_PARENT;
+									lp.height = height;
+									iv.setLayoutParams(lp);
+								}
+							}, true, false);
+						}else{
+							ViewHelper.load(iv, url, true,false);
+						}
+						
 					}
 					onEnd();
 				}

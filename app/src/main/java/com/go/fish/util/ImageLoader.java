@@ -443,6 +443,7 @@ public class ImageLoader
 																	// maxWidth
 																	// parameter
 		height = getImageViewFieldValue(imageView, "mMaxHeight"); // Check
+        
 		// maxHeight
 		// parameter
 		if(width == LayoutParams.MATCH_PARENT){
@@ -453,9 +454,7 @@ public class ImageLoader
 		
 		
 		if (height <= 0)
-		if (height <= 0)
 			height = displayMetrics.heightPixels;
-		
 		
 		imageSize.width = width;
 		imageSize.height = height;
