@@ -48,30 +48,6 @@
         layout="@layout/listitem_person_2_rows" >
     </include>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/base_background"
-        android:orientation="horizontal"
-        android:padding="@dimen/base_space" >
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/base_background"
-            android:text="Large TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge Text"
-            android:textColor="#888888"
-            android:textSize="@dimen/base_font_size_h3" />
-    </LinearLayout>
-
-    <LinearLayout
-         android:id="@+id/imgs"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:orientation="vertical" >
-     </LinearLayout>
-                
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
@@ -164,6 +140,30 @@
                 android:background="@color/base_bg_color"
                 android:orientation="vertical" >
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/base_background"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/base_space" >
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/base_background"
+                        android:text="Large TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge TextLarge Text"
+                        android:textColor="#888888"
+                        android:textSize="@dimen/base_font_size_h3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/imgs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
                 <!-- 关注 begin -->
 
                 <LinearLayout
@@ -201,11 +201,13 @@
 
                     <LinearLayout
                         android:id="@+id/care_container"
-                        android:layout_width="match_parent"                        android:layout_height="@dimen/care_container_height"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/care_container_height"
                         android:orientation="horizontal"
                         android:padding="@dimen/base_space" >
 
                         <LinearLayout style="@style/average_width_weight_1" >
+
                             <include layout="@layout/circle_image_view" >
                             </include>
                         </LinearLayout>
@@ -318,11 +320,6 @@
                         </LinearLayout>
                     </FrameLayout>
                 </RelativeLayout>
-                <!--
-                     <EditText
-                     android:layout_width="match_parent"
-                     android:layout_height="@dimen/head_bar_height" />
-                -->
             </LinearLayout>
         </com.go.fish.view.ObservableScrollView>
     </RelativeLayout>

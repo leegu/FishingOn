@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -495,6 +496,9 @@ public class PodCastUIOp extends Op{
 						ViewGroup vg = (ViewGroup)inflater.inflate(R.layout.fishing_news_image, null);
 						imgs.addView(vg);
 						ImageView iv = (ImageView)vg.getChildAt(0);
+						if(!URLUtil.isNetworkUrl(url) && !url.startsWith("http://115.29.51.39:8080//statics/upload/")){
+							url = "http://115.29.51.39:8080//statics/upload/" + url;
+						}
 						ViewHelper.load(iv, UrlUtils.self().getNetUrl(url), true,false);
 					}
 				}

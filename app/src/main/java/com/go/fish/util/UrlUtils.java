@@ -113,7 +113,7 @@ public class UrlUtils {
     		while(url.startsWith("/")){
     			url = url.substring(1);
     		}
-    		return getHost() + "/" + url;
+    		return getHost() + "//" + url;
     	}
     }
     String memberLogin = "/member/memberLogin";

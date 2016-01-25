@@ -103,7 +103,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="Ig7ZotTv7lAjIzvCm3u98vI3" />
+            android:value="0ByhEGDFPEuV7VOvfm8ih0HS" />
        <!--   relese - Ig7ZotTv7lAjIzvCm3u98vI3 ||| debug - 0ByhEGDFPEuV7VOvfm8ih0HS-->
     </application>
 

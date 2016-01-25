@@ -594,7 +594,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 				objectId = commentData.id;// 评论的id
 			}
 			try {
-				jsonObject.put(Const.STA_TO_ID, toId);
+				jsonObject.put(Const.STA_TO_ID, toId == null ? "" : toId);
 				jsonObject.put(Const.STA_OBJECTID, objectId);// 可能是钓场id，可能是评论id
 				jsonObject.put(Const.STA_COMMENT_STR, replyText.getText());
 				jsonObject.put(Const.STA_TYPE, "field");
