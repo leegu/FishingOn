@@ -184,7 +184,7 @@ public class FieldUIOp {
 				item.findViewById(R.id.comment_listitem_reply).setVisibility(View.GONE);
 				ImageView iv = (ImageView)item.findViewById(R.id.comment_listitem_icon);
 				String url = commentJson.optString(Const.STA_IMGURL);
-				if(!TextUtils.isEmpty(url)){
+				if(!TextUtils.isEmpty(url) && !url.equals(iv.getTag())){
 					ViewHelper.load(iv, url, true, false);
 				}
 				TextView comment_listitem_name = (TextView)item.findViewById(R.id.comment_listitem_name);
@@ -422,7 +422,7 @@ public class FieldUIOp {
     	FPlaceListAdapter adapter = FPlaceListAdapter.setAdapter(activity,fPlaceList,fPlaceArr, FieldUIOp.FLAG_CARE_RESULT);
     	adapter.setmResultForActivityCallback(new ResultForActivityCallback() {
 			@Override
-			public void onItemClick(View view, FieldData data) {
+			public void onItemClick(View view, final FieldData data) {
 				String fPlaceId = data.sid;
 				FieldDataLoader.loadFieldInfo(fPlaceId, new OpBack() {
 					@Override
@@ -430,6 +430,7 @@ public class FieldUIOp {
 						// TODO Auto-generated method stub
 						Bundle newBundle = new Bundle();
 						newBundle.putString(Const.PRI_JSON_DATA, json.toString());
+						newBundle.putString(Const.STA_ID, String.valueOf(data.sid));
 						newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_detail_field);
 						Intent i = new Intent();
 						i.putExtras(newBundle);
@@ -443,31 +444,35 @@ public class FieldUIOp {
 //		HomeFragment.getNetPodList(fPlaceList, "0");
     }
 
+	public static void onCreateFieldDetail(Activity activity,final View view,JSONObject resultData) {
+		showFieldDetail(activity, view, resultData, true);
+	}
 	/**
 	 * 创建钓场详情页
 	 * @param activity
 	 * @param view
 	 * @param resultData
 	 */
-	public static void onCreateFieldDetail(Activity activity,final View view,JSONObject resultData) {
+	public static void showFieldDetail(Activity activity,final View view,JSONObject resultData,boolean updateContent) {
 		try{
 			if(resultData != null && Const.DEFT_1.equals(resultData.optString(Const.STA_CODE))){
 				JSONObject json = resultData.optJSONObject(Const.STA_DATA);
 				final int fieldId = json.optInt(Const.STA_ID);
-				((TextView) view.findViewById(R.id.search_item_detail_title)).setText(json.optString(Const.STA_NAME));
-
-				View bannerParent = view.findViewById(R.id.search_item_detail_banner_parent);
-				makeDetailBanner(activity,view, json, bannerParent);
-				makeMenuView(activity,view, json);
-
-				//关注
+				if(updateContent){
+					((TextView) view.findViewById(R.id.search_item_detail_title)).setText(json.optString(Const.STA_NAME));
+	
+					View bannerParent = view.findViewById(R.id.search_item_detail_banner_parent);
+					makeDetailBanner(activity,view, json, bannerParent);
+					makeMenuView(activity,view, json);
+				}
 				int careCount = json.optInt(Const.STA_CARE_COUNT);//总关注数
+				//关注
 				if(json.has(Const.STA_MEMBERS)){
 					JSONArray members = json.optJSONArray(Const.STA_MEMBERS);
 					makeCareView(activity,view.findViewById(R.id.care_container), fieldId, members);
 				}
-				//评论
 				int commentSize = json.optInt(Const.STA_COMCOUNT);//总评论数
+				//评论
 				if(json.has(Const.STA_COMMENTS)){
 					JSONArray comments = json.optJSONArray(Const.STA_COMMENTS);
 					ViewGroup commentListView = (ViewGroup) view.findViewById(R.id.last_comment);

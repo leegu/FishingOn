@@ -269,7 +269,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		case R.id.float_view_detail_btn:// 钓场详情
 			View titleView = mFloatViewInfo.findViewById(R.id.float_view_title);
 			final Bundle b = (Bundle) titleView.getTag();
-			int fPlaceId = b.getInt(Const.STA_ID);
+			final int fPlaceId = b.getInt(Const.STA_ID);
 			FieldDataLoader.loadFieldInfo(String.valueOf(fPlaceId), new OpBack() {
 				
 				@Override
@@ -277,6 +277,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 					Bundle newBundle = new Bundle();
 					if(suc){
 						newBundle.putString(Const.PRI_JSON_DATA, json.toString());
+						newBundle.putString(Const.STA_ID, String.valueOf(fPlaceId));
 						newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_detail_field);
 						Intent i = new Intent();
 						i.putExtras(newBundle);

@@ -3,10 +3,12 @@ package com.go.fish.view;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +19,10 @@ import android.widget.TextView;
 import com.baidu.mapapi.map.MapView;
 import com.go.fish.R;
 import com.go.fish.data.FieldData;
+import com.go.fish.data.load.FieldDataLoader;
 import com.go.fish.op.FieldUIOp;
+import com.go.fish.op.OpBack;
+import com.go.fish.ui.SearchUI;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
 import com.go.fish.util.MapUtil;
@@ -43,6 +48,23 @@ public class BaseFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		Bundle b = getArguments();
+		int layoutId = b.getInt(Const.PRI_LAYOUT_ID);
+		String fieldId = b.getString(Const.STA_ID);
+		if(!TextUtils.isEmpty(fieldId) && layoutId == R.layout.ui_detail_field){
+			FieldDataLoader.loadFieldInfo(fieldId, new OpBack() {
+				@Override
+				public void onBack(boolean suc, JSONObject json, Activity activity) {
+					if(suc){
+						FieldUIOp.showFieldDetail(activity, getView(), json, false);
+					}
+				}
+			}, getActivity());
+		}
+	}
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

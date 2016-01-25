@@ -41,10 +41,10 @@ public class CommentUIOp extends Op{
 		ListView listView = (ListView) activity.findViewById(R.id.comment_list);
 		listView.setDividerHeight(0);
 		listView.setTag(fieldId);
-		View textView = findViewById(activity,R.id.comment_list_reply_text);//设置评论输入框默认回复钓场，并设置回复id数据等
-		CommentData commentData = new CommentData();
-		commentData.id = fieldId;
-		textView.setTag(commentData);
+//		View textView = findViewById(activity,R.id.comment_list_reply_text);//设置评论输入框默认回复钓场，并设置回复id数据等
+//		CommentData commentData = new CommentData();
+//		commentData.id = fieldId;
+//		textView.setTag(commentData);//屏蔽为了解决
 		OnBaseDataClickListener listener = null;
 //		listener = new OnBaseDataClickListener() {
 //			@Override

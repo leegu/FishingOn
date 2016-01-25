@@ -184,7 +184,11 @@ public class AdapterExt extends BaseAdapter {
 		updateAdapter(data,true);
 	}
 	public void updateAdapter(IBaseData data, boolean pullRefresh){
-		listDatas.add(0, data);
+		if(pullRefresh){
+			listDatas.add(0, data);
+		}else{
+			listDatas.add(data);
+		}
 		updateAdapter();
 	}
 	

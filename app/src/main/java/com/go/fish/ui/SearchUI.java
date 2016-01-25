@@ -3,6 +3,7 @@ package com.go.fish.ui;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,8 +16,10 @@ import android.widget.Toast;
 
 import com.go.fish.R;
 import com.go.fish.data.FieldData;
+import com.go.fish.data.load.FieldDataLoader;
 import com.go.fish.op.CommentUIOp;
 import com.go.fish.op.FieldUIOp;
+import com.go.fish.op.OpBack;
 import com.go.fish.util.Const;
 import com.go.fish.util.IME;
 import com.go.fish.util.NetTool;
@@ -44,6 +47,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 			detailFragment.isFront = true;
 			Bundle dataBundle = getIntent().getExtras();
 			Bundle b = detailFragment.getArguments();
+			b.putString(Const.STA_ID, dataBundle.getString(Const.STA_ID));
 			b.putString(Const.PRI_JSON_DATA, dataBundle.getString(Const.PRI_JSON_DATA));
 			detailFragment.setArguments(b);
 			fragmentMgr.beginTransaction().add(R.id.search_content, detailFragment).commit();
@@ -100,45 +104,26 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 	}
 
 	@Override
-	public void onItemClick(View view, FieldData data) {
+	public void onItemClick(View view,final FieldData data) {
 		initDetailFragment(R.layout.ui_detail_field);
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put(Const.STA_FIELDID, data.sid);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		NetTool.data().http(new RequestListener() {
+		
+		FieldDataLoader.loadFieldInfo(String.valueOf(data.sid), new OpBack() {
 			@Override
-			public void onStart() {
-				onStart(SearchUI.this);
-			}
-
-			@Override
-			public void onEnd(byte[] data) {
-				try {
-					if (isOver()) {// 返回键取消联网之后不应该继续处理
-
-					} else {
-						JSONObject response = toJSONObject(data);
-						if (isRight(SearchUI.this,response,true)) {
-							String jsonStr = new String(data, "UTF-8");
-							Bundle newBundle = new Bundle();
-							newBundle.putString(Const.PRI_JSON_DATA, jsonStr);
-							newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_detail_field);//搜索列表进入到钓场详情页
-//								Bundle bundle = searchFragment.getArguments();
-//								bundle.putString(Const.PRI_JSON_DATA, jsonStr);
-//								bundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
-							detailFragment.setArguments(newBundle);
-							showFragment(detailFragment);
-						} 
-					}
-					onEnd();
-				} catch (Exception e) {
+			public void onBack(boolean suc, JSONObject json, Activity activity) {
+				Bundle newBundle = new Bundle();
+				if(suc){
+					newBundle.putString(Const.PRI_JSON_DATA, json.toString());
+					newBundle.putString(Const.STA_ID, String.valueOf(data.sid));
+					newBundle.putInt(Const.PRI_LAYOUT_ID, R.layout.ui_detail_field);//搜索列表进入到钓场详情页
+//						Bundle bundle = searchFragment.getArguments();
+//						bundle.putString(Const.PRI_JSON_DATA, jsonStr);
+//						bundle.putInt(Const.PRI_EXTRA_LAYOUT_ID, R.layout.ui_f_search_item_detail);
+					detailFragment.setArguments(newBundle);
+					showFragment(detailFragment);
+					
 				}
 			}
-		}, jsonObject, UrlUtils.self().getFieldInfo());
-		
+		}, SearchUI.this);
 	}
 	
 	private void showFragment(Fragment f){

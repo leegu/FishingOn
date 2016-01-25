@@ -583,7 +583,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 			// view.setBackgroundResource(R.drawable.base_border_bg);
 			break;
 		case R.id.comment_list_publish: {// 回复时
-			String objectId = String.valueOf(getIntent().getIntExtra(Const.STA_ID, 0));
+			String objectId = String.valueOf(getIntent().getStringExtra(Const.STA_ID));
 			final TextView replyText = ((TextView) findViewById(R.id.comment_list_reply_text));
 			IME.hideIME(findViewById(R.id.comment_list_reply_text));
 			JSONObject jsonObject = new JSONObject();
