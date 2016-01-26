@@ -19,6 +19,11 @@ public class FieldData implements IBaseData{
 	private JSONObject mData = null;
 	public String[] tagArray;
 	FieldData(){}
+	public static FieldData newInstance(String fieldId){
+		FieldData ret = new FieldData();
+		ret.sid = fieldId;
+		return ret;
+	}
 	public static FieldData newInstance(JSONObject json){
 		FieldData ret = new FieldData();
 		ret.mData = json;
@@ -39,6 +44,10 @@ public class FieldData implements IBaseData{
 	}
 	public String toJSONString(){
 		return mData.toString();
+	}
+	
+	public JSONObject getJSONData(){
+		return mData;
 	}
 	@Override
 	public void OnClick(Activity activity, IBaseDataHandledCallback handledCallback, View attachedView) {

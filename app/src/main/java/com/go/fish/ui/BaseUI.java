@@ -310,7 +310,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 
 	}
 	public void onCareFieldClick(final View view) {
-		FieldUIOp.onCareFieldClick((ImageView)view, true, null, true, String.valueOf(((FieldData)view.getTag()).sid));
+		FieldUIOp.onCareFieldClick(view, (ImageView)view, true, null, true);
 	}
 	public void onIconClick(final View view) {
 		int id = view.getId();

@@ -685,7 +685,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 	}
 	public void onCareFieldClick(View view) {
 		TextView textView = (TextView) mFloatViewInfo.findViewById(R.id.float_view_care_text);
-		FieldUIOp.onCareFieldClick((ImageView)view,false , textView, false, (String)view.getTag());
+		FieldUIOp.onCareFieldClick(view,(ImageView)view , false, textView, false);
 		int count = Integer.parseInt(textView.getText().toString());
 		if(view.isSelected()){
 			count--;
@@ -855,7 +855,8 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		care_text.setText(String.valueOf(data.getInt(Const.STA_CARE_COUNT)));
 		View stateView = mFloatViewInfo.findViewById(R.id.listitem_fplace_care);
 		stateView.setSelected(data.getBoolean(Const.STA_IS_ATTENTION,false));
-		stateView.setTag(String.valueOf(data.getInt(Const.STA_ID)));
+		FieldData fieldData = FieldData.newInstance(String.valueOf(data.getInt(Const.STA_ID)));
+		stateView.setTag(fieldData);
 		{
 //			showOrHidePrice(data);
 		}
