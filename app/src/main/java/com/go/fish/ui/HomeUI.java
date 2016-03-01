@@ -243,6 +243,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		}
 		updateUserData();
 	}
+	
 
 	@Override
 	protected void onDestroy() {
@@ -367,7 +368,9 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 					if (justUplocation) {// 更新实时位置
 						return;
 					}
-					updateMapFieldList();
+					if(System.currentTimeMillis() - lastQueryMapTime > TIME_QUERYMAP_INTERVAL){
+						updateMapFieldList();
+					}
 				}
 			};
 		}
@@ -611,7 +614,10 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 			break;
 		}
 		case R.id.base_head_bar_publish: {
-			UIMgr.showActivity(HomeUI.this, R.layout.ui_comment_publish);
+			Intent i = new Intent();
+			i.setClassName(getApplicationContext(), BaseUI.class.getName());
+			i.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_comment_publish);
+			UIMgr.showActivity(HomeUI.this, i,UICode.RequestCode.REQUEST_PODCAST_PUBLISH);
 			break;
 		}
 		}
@@ -685,7 +691,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 	}
 	public void onCareFieldClick(View view) {
 		TextView textView = (TextView) mFloatViewInfo.findViewById(R.id.float_view_care_text);
-		FieldUIOp.onCareFieldClick(view,(ImageView)view , false, textView, false);
+		FieldUIOp.onCareFieldClick((ImageView)view,false , textView, false, (String)view.getTag());
 		int count = Integer.parseInt(textView.getText().toString());
 		if(view.isSelected()){
 			count--;
@@ -730,7 +736,9 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 				}
 			}
 			break;
-
+		case UICode.RequestCode.REQUEST_PODCAST_PUBLISH:
+			PodCastUIOp.onShowPodCastList((ViewGroup)currentFragment.getView(),true);
+			break;
 		default:
 			break;
 		}
@@ -855,8 +863,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		care_text.setText(String.valueOf(data.getInt(Const.STA_CARE_COUNT)));
 		View stateView = mFloatViewInfo.findViewById(R.id.listitem_fplace_care);
 		stateView.setSelected(data.getBoolean(Const.STA_IS_ATTENTION,false));
-		FieldData fieldData = FieldData.newInstance(String.valueOf(data.getInt(Const.STA_ID)));
-		stateView.setTag(fieldData);
+		stateView.setTag(String.valueOf(data.getInt(Const.STA_ID)));
 		{
 //			showOrHidePrice(data);
 		}
@@ -1034,6 +1041,7 @@ public class HomeUI extends FragmentActivity implements IHasHeadBar,OnBaseDataCl
 		data.OnClick(HomeUI.this, null, view);
 	}
 	public void updateMapFieldList() {
+		lastQueryMapTime = System.currentTimeMillis();
 		FieldDataLoader.loadNetData(HomeUI.this, null, -1, null, 0, Const.DEFT_REQ_COUNT_100, LocalMgr.getFPlaceTypes(), true, new LoaderListener() {
 			@Override
 			public void onCompleted(RequestListener requestListener, JSONObject resultData) {

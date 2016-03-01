@@ -9,11 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -38,7 +36,6 @@ import com.go.fish.data.load.FieldDataLoader;
 import com.go.fish.ui.BaseUI;
 import com.go.fish.ui.SearchUI;
 import com.go.fish.ui.UIMgr;
-import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 import com.go.fish.util.LocalMgr;
@@ -70,7 +67,7 @@ public class FieldUIOp {
 	
 	//构造渔场详情页，底部栏
 	private static void  makeBottomView(final Activity activity,final View view, JSONObject json,
-			final FieldData fieldData, int careCount, int commentSize, int zanCount) {
+			final int fieldId, int careCount, int commentSize, int zanCount) {
 		OnClickListener clickListener = new OnClickListener() {
 			@Override
 			public void onClick(final View v) {
@@ -78,15 +75,16 @@ public class FieldUIOp {
 				if(id == R.id.detail_bottom_bar_care_icon){
 					ImageView stateView = ((ImageView)((ViewGroup)v).getChildAt(0));
 					TextView textView = ((TextView) view.findViewById(R.id.detail_bottom_bar_care_number));
-					onCareFieldClick(v, stateView, true, textView, true);
+					onCareFieldClick(stateView, true, textView, true, String.valueOf(fieldId));
 				}else if(id == R.id.detail_bottom_bar_comment_icon){
+					v.setTag(fieldId);
 //					int oldCount = Integer.parseInt(((TextView) view.findViewById(R.id.detail_bottom_bar_comment_number)).getText().toString());
 //					((TextView) view.findViewById(R.id.detail_bottom_bar_comment_number)).setText(String.valueOf(oldCount + 1));
 					((BaseUI)activity).onCommentReplyClick(v);
 				}else if(id == R.id.detail_bottom_bar_zan_icon){//点赞
 					ImageView stateView = (ImageView)((ViewGroup)v).getChildAt(0);
 					TextView textView = ((TextView) view.findViewById(R.id.detail_bottom_bar_zan_number));
-					onPriseFieldClick(v, stateView, textView);
+					onPriseFieldClick(stateView, textView, String.valueOf(fieldId));
 				}
 			}
 		};
@@ -102,21 +100,17 @@ public class FieldUIOp {
 		( view.findViewById(R.id.detail_bottom_bar_care_icon)).setOnClickListener(clickListener);
 		( view.findViewById(R.id.detail_bottom_bar_comment_icon)).setOnClickListener(clickListener);
 		( view.findViewById(R.id.detail_bottom_bar_zan_icon)).setOnClickListener(clickListener);
-		
-		( view.findViewById(R.id.detail_bottom_bar_care_icon)).setTag(fieldData);
-		( view.findViewById(R.id.detail_bottom_bar_comment_icon)).setTag(fieldData);
-		( view.findViewById(R.id.detail_bottom_bar_zan_icon)).setTag(fieldData);
 
 		((TextView) view.findViewById(R.id.detail_bottom_bar_care_number)).setText(String.valueOf(careCount));
 		((TextView)view.findViewById(R.id.detail_bottom_bar_comment_number)).setText(String.valueOf(commentSize));
 		((TextView)view.findViewById(R.id.detail_bottom_bar_zan_number)).setText(String.valueOf(zanCount));
 	}
 
-	private static void  makeCareView(final Activity activity,final View view) {//构造关注栏
-		FieldData fieldData = (FieldData)view.getTag();
-		JSONArray members = fieldData.getJSONData().optJSONArray(Const.STA_MEMBERS);
+	private static void  makeCareView(final Activity activity,final View view, final int fieldId,
+			JSONArray members) {//构造关注栏
 		int careCountThumb = members.length();//详情页待会关注数，永远小于关注数
 		ViewGroup care_container = (ViewGroup)view;
+		care_container.setTag(fieldId);
 		for (int i = 0 ; i < 7; i++){
 			ImageView careItem = (ImageView) ((ViewGroup)care_container.getChildAt(i)).getChildAt(0);
 //			careItem.setOnClickListener(careIcon);
@@ -144,9 +138,7 @@ public class FieldUIOp {
 					if(member.has(Const.STA_IMGURL)){
 //						String imgUrl = "http://images.banma.com/v0/app-feed/soft/icons/_bigIcon76e029e26dce486c9c969c23b99bf31f.png";
 						String imgUrl = member.optString(Const.STA_IMGURL);
-						if(!TextUtils.isEmpty(imgUrl) && !imgUrl.equals(careItem.getTag())){
-							ViewHelper.load(careItem, imgUrl, true, false);
-						}
+						ViewHelper.load(careItem, imgUrl);
 					}
 					int id = member.optInt(Const.STA_ID);
 					careItem.setTag(id);
@@ -159,9 +151,7 @@ public class FieldUIOp {
 					if(member.has(Const.STA_IMGURL)){
 //						String imgUrl = "http://images.banma.com/v0/app-feed/soft/icons/_bigIcon76e029e26dce486c9c969c23b99bf31f.png";
 						String imgUrl = member.optString(Const.STA_IMGURL);
-						if(!TextUtils.isEmpty(imgUrl) && !imgUrl.equals(careItem.getTag())){
-							ViewHelper.load(careItem, imgUrl, true, false);
-						}
+						ViewHelper.load(careItem, imgUrl);
 					}
 					int id = member.optInt(Const.STA_ID);
 					careItem.setTag(id);
@@ -170,7 +160,7 @@ public class FieldUIOp {
 		}
 	}
 
-	private static void  makeCommentView(JSONArray comments, ViewGroup commentListView, FieldData fieldData) {
+	private static void  makeCommentView(JSONArray comments, ViewGroup commentListView, int fieldId) {
 		int commentSizeThumb = comments.length();//详情页返回评论数
 		for(int i = 0; i < 3;  i++){
 			boolean able = true;
@@ -190,16 +180,14 @@ public class FieldUIOp {
 				item.findViewById(R.id.comment_listitem_reply).setVisibility(View.GONE);
 				ImageView iv = (ImageView)item.findViewById(R.id.comment_listitem_icon);
 				String url = commentJson.optString(Const.STA_IMGURL);
-				if(!TextUtils.isEmpty(url) && !url.equals(iv.getTag())){
-					ViewHelper.load(iv, url, true, false);
-				}
+				ViewHelper.load(iv, url);
 				TextView comment_listitem_name = (TextView)item.findViewById(R.id.comment_listitem_name);
 				comment_listitem_name.setText(commentJson.optString(Const.STA_NAME));
 				TextView comment_listitem_time = (TextView)item.findViewById(R.id.comment_listitem_time);
 				String str_time = commentJson.optString(Const.STA_CREATED_AT_TIME);
 				comment_listitem_time.setText(BaseUtils.getTimeShow(str_time));
 				TextView comment_listitem_text = (TextView)item.findViewById(R.id.comment_listitem_text);
-				comment_listitem_text.setTag(fieldData);
+				comment_listitem_text.setTag(fieldId);
 				comment_listitem_text.setText(commentJson.optString(Const.STA_COMMENT_STR));
 			}
 		}
@@ -383,9 +371,7 @@ public class FieldUIOp {
 		}
 	}
 
-	@SuppressLint("NewApi")
-	public static void onCareFieldClick(final View clickView,final ImageView stateView, final boolean netOverChangeState,final TextView textView,final boolean netOverChangeText){
-		final String fieldId = ((FieldData)clickView.getTag()).sid;
+	public static void onCareFieldClick(final ImageView stateView,final boolean netOverChangeState, final TextView textView,final boolean netOverChangeText,String fieldId){
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.put(Const.STA_FIELDID, fieldId);
@@ -401,32 +387,11 @@ public class FieldUIOp {
 					JSONObject dataResult = response.optJSONObject(Const.STA_DATA);
 					int careCount = dataResult.optInt(Const.STA_CARE_COUNT);
 					if(stateView != null && netOverChangeState){
-						View care_container = clickView.getRootView().findViewById(R.id.care_container);
-						if(care_container != null){//点击底部关注按钮之后更新关注栏数据
-							FieldData fieldData = (FieldData)care_container.getTag();
-							JSONArray members = fieldData.getJSONData().optJSONArray(Const.STA_MEMBERS);
-							if(!stateView.isSelected()){//添加关注人员
-								JSONObject member = new JSONObject();
-								try {
-									member.put(Const.STA_IMGURL,User.self().userInfo.photoUrl);
-									members.put(0, member);
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-							}else{
-								JSONObject json = members.optJSONObject(0);
-								if(json.optString(Const.STA_ID).equals(User.self().userInfo.id) && Build.VERSION.SDK_INT >= 19){
-									members.remove(0);
-								}
-							}
-							makeCareView((Activity)stateView.getContext(),care_container);
-						}
 						stateView.setSelected(!stateView.isSelected());
 					}
 					if(textView != null && netOverChangeText){
 						textView.setText(String.valueOf(careCount));
 					}
-					
 //								((TextView) findViewById(R.id.checkCode)).setText(response.optJSONObject(Const.STA_DATA).optString(Const.STA_VALIDATECODE));
 				} else {
 //								ViewHelper .showToast(getActivity(), Const.DEFT_GET_CHECK_CODE_FAILED);
@@ -486,7 +451,6 @@ public class FieldUIOp {
 		try{
 			if(resultData != null && Const.DEFT_1.equals(resultData.optString(Const.STA_CODE))){
 				JSONObject json = resultData.optJSONObject(Const.STA_DATA);
-				FieldData fieldData = FieldData.newInstance(json);
 				final int fieldId = json.optInt(Const.STA_ID);
 				if(updateContent){
 					((TextView) view.findViewById(R.id.search_item_detail_title)).setText(json.optString(Const.STA_NAME));
@@ -498,21 +462,20 @@ public class FieldUIOp {
 				int careCount = json.optInt(Const.STA_CARE_COUNT);//总关注数
 				//关注
 				if(json.has(Const.STA_MEMBERS)){
-					View care_container = view.findViewById(R.id.care_container);
-					care_container.setTag(fieldData);
-					makeCareView(activity,care_container);
+					JSONArray members = json.optJSONArray(Const.STA_MEMBERS);
+					makeCareView(activity,view.findViewById(R.id.care_container), fieldId, members);
 				}
 				int commentSize = json.optInt(Const.STA_COMCOUNT);//总评论数
 				//评论
 				if(json.has(Const.STA_COMMENTS)){
 					JSONArray comments = json.optJSONArray(Const.STA_COMMENTS);
 					ViewGroup commentListView = (ViewGroup) view.findViewById(R.id.last_comment);
-					makeCommentView(comments, commentListView, fieldData);
+					makeCommentView(comments, commentListView, fieldId);
 				}
 				//构造详情底部栏
 				int zanCount = json.optInt(Const.STA_ZANCOUNT);
 				{
-					makeBottomView(activity,view, json, fieldData, careCount, commentSize, zanCount);
+					makeBottomView(activity,view, json, fieldId, careCount, commentSize, zanCount);
 				}
 //				view.postDelayed(new Runnable() {
 //					@Override
@@ -570,9 +533,7 @@ public class FieldUIOp {
 			item = (ViewGroup)convertView;
 			mViewHolder = (FPlaceViewHolder)item.getTag();
 		}
-		if(!TextUtils.isEmpty(fPlace.imgUrl)){
-			ViewHelper.load(mViewHolder.listitem_fplace_icon,fPlace.imgUrl,true,false);
-		}
+		ViewHelper.load(mViewHolder.listitem_fplace_icon,fPlace.imgUrl);
 		mViewHolder.float_view_detail_btn.setTag(fPlace);
 		mViewHolder.listitem_fplace_title.setText(fPlace.title);
 		mViewHolder.fplace_desc.setText(fPlace.desp);
@@ -606,8 +567,7 @@ public class FieldUIOp {
 		}
 		return item;
 	}
-	public static void onPriseFieldClick(View clickView,final ImageView stateView, final TextView textView){
-		String fieldId = ((FieldData)clickView.getTag()).sid;
+	public static void onPriseFieldClick(final ImageView stateView,final TextView textView, String fieldId){
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.put(Const.STA_FIELDID, fieldId);

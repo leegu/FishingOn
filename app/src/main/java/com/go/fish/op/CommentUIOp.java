@@ -35,7 +35,13 @@ public class CommentUIOp extends Op{
 	
 	public static void onCreateCommentList(final Activity activity) {
 		Intent intent = activity.getIntent();
-		String fieldId = intent.getStringExtra(Const.STA_ID);
+		String fieldId = null;
+		try {
+			fieldId = intent.getStringExtra(Const.STA_ID);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fieldId = String.valueOf(intent.getIntExtra(Const.STA_ID,-1));
+		}
 		if (fieldId == null)
 			activity.finish();
 		ListView listView = (ListView) activity.findViewById(R.id.comment_list);
@@ -82,9 +88,7 @@ public class CommentUIOp extends Op{
 			item = (ViewGroup)convertView;
 			holder = (CommentViewHolder)convertView.getTag();
 		}
-		if(!TextUtils.isEmpty(commentData.imgUrl)){
-			ViewHelper.load(holder.comment_listitem_icon, commentData.imgUrl, true, false);
-		}
+		ViewHelper.load(holder.comment_listitem_icon, commentData.imgUrl);
 		holder.comment_listitem_name.setText(commentData.memberName);
 		holder.comment_listitem_name.setTag(commentData.memberId);
 		holder.comment_listitem_time_right_of.setText(BaseUtils.getTimeShow(commentData.commentTime));//设置日期

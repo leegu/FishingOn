@@ -31,7 +31,7 @@ import com.go.fish.view.IBaseData;
 
 public class FieldDataLoader {
 
-	public static void loadFieldInfo(String fPlaceId,final OpBack backListener,final Activity activity){
+	public static void loadFieldInfo(final String fPlaceId,final OpBack backListener,final Activity activity){
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.put(Const.STA_FIELDID, fPlaceId);
@@ -52,7 +52,11 @@ public class FieldDataLoader {
 							String jsonStr = new String(data, "UTF-8");
 							JSONObject response = toJSONObject(jsonStr);
 							if(backListener != null){
-								backListener.onBack(isRight(response), response, activity);
+								boolean suc = isRight(response);
+								if(!suc){
+									onDataError(activity,response.optString(Const.STA_MESSAGE) + "(" + fPlaceId + ")");
+								}
+								backListener.onBack(suc, response, activity);
 							}
 						} else {
 							onDataError(activity);

@@ -98,7 +98,7 @@ public class SearchUI extends BaseUI implements ResultForActivityCallback,IHasHe
 	@Override
 	public void onCommentReplyClick(View view) {
 		Intent intent = new Intent();
-		intent.putExtra(Const.STA_ID, ((FieldData)view.getTag()).sid);
+		intent.putExtra(Const.STA_ID, String.valueOf(view.getTag()));
 		intent.putExtra(Const.PRI_LAYOUT_ID, R.layout.ui_comment_list);// 跳转到评论列表页面
 		UIMgr.showActivity(this, intent);
 	}

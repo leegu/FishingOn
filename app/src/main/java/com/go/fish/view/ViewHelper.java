@@ -357,7 +357,7 @@ public class ViewHelper {
 	}
 
 	public static void showToast(Context context,String text){
-		Toast.makeText(context,text,Toast.LENGTH_LONG).show();
+		Toast.makeText(context,text,Toast.LENGTH_SHORT).show();
 	}
 	public static ProgressDialog sPopupWindow = null;
 	public static void showGlobalWaiting(Context context,ProgressDialog.OnDismissListener listener){
@@ -405,7 +405,7 @@ public class ViewHelper {
 	}
 	
 	public static void load(ImageView view,String url){
-		load(view, url, true);
+		load(view, url, R.drawable.pic);
 	}
 	public static void load(ImageView view,String url,boolean allowNetLoad){
 		load(view, url, allowNetLoad, false);
@@ -414,6 +414,12 @@ public class ViewHelper {
 		ImageLoader.self().loadNetImage(url,view,null,allowNetLoad,forBg);
 	}
 	
+	public static void load(ImageView view,String url,int defaultPic){
+		if(!TextUtils.isEmpty(url) && !TextUtils.equals(url,String.valueOf(view.getTag()))){
+			view.setImageResource(defaultPic);
+			ViewHelper.load(view,url,true,false);
+		}
+	}
 
 	public static void share(Activity activity,String text){
 		Intent sendIntent = new Intent(android.content.Intent.ACTION_SEND);

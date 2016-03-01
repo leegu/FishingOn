@@ -60,6 +60,8 @@ public class BaseFragment extends Fragment {
 				public void onBack(boolean suc, JSONObject json, Activity activity) {
 					if(suc){
 						FieldUIOp.showFieldDetail(activity, getView(), json, false);
+					}else{//已处理错误信息
+						getActivity().finish();
 					}
 				}
 			}, getActivity());

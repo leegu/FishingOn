@@ -174,7 +174,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 					ViewHelper.load(
 							userIcon,
 							UrlUtils.self().getNetUrl(
-									User.self().userInfo.photoUrl), true,false);
+									User.self().userInfo.photoUrl));
 				}
 
 				TextView reg_next_location_input = (TextView) findViewById(R.id.reg_next_location_input);
@@ -310,7 +310,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 
 	}
 	public void onCareFieldClick(final View view) {
-		FieldUIOp.onCareFieldClick(view, (ImageView)view, true, null, true);
+		FieldUIOp.onCareFieldClick((ImageView)view, true, null, true, String.valueOf(((FieldData)view.getTag()).sid));
 	}
 	public void onIconClick(final View view) {
 		int id = view.getId();
@@ -415,7 +415,11 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 						View view = findViewById(R.id.userIcon);
 						if (TextUtils.isEmpty((String) view.getTag()) || !view.isSelected()) {
 							onEnd();
-							showHomeUI();
+							if(getIntent().hasExtra(Const.PRI_REG_OP) && getIntent().getBooleanExtra(Const.PRI_REG_OP, false)){
+								showHomeUI();
+							}else{
+								finish();
+							}
 							return;
 						}
 						JSONObject jsonObject = new JSONObject();
@@ -427,7 +431,11 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 										JSONObject response = toJSONObject(data);
 										if (isRight(BaseUI.this,response,true)) {// 头像数据提交成功
 											onEnd();
-											showHomeUI();
+											if(getIntent().hasExtra(Const.PRI_REG_OP) && getIntent().getBooleanExtra(Const.PRI_REG_OP, false)){
+												showHomeUI();
+											}else{
+												finish();
+											}
 										}
 									}
 								}, jsonObject, UrlUtils.self().getUploadUserImg());
@@ -483,6 +491,7 @@ public class BaseUI extends FragmentActivity implements IHasHeadBar, IHasTag,
 					JSONObject response = toJSONObject(data);
 					if (isRight(BaseUI.this, response, true)) {
 						//更新前界面界面数据
+						setResult(UICode.RequestCode.REQUEST_PODCAST_PUBLISH, new Intent("ccc"));
 						finish();
 						ViewHelper.showToast(BaseUI.this, Const.DEFT_PUBLISH_COMPLETED);
 					}else{

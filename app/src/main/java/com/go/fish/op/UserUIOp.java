@@ -127,7 +127,7 @@ public class UserUIOp extends Op{
 			
 			if(!TextUtils.isEmpty(User.self().userInfo.photoUrl)){
 				ImageView userIcon = (ImageView)view.findViewById(R.id.userIcon);
-				ViewHelper.load(userIcon, UrlUtils.self().getNetUrl(User.self().userInfo.photoUrl), true,false);
+				ViewHelper.load(userIcon, UrlUtils.self().getNetUrl(User.self().userInfo.photoUrl));
 			}
 		}
 	}

@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -37,10 +38,12 @@ import com.go.fish.ui.pics.GalleryUtils;
 import com.go.fish.user.User;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
+import com.go.fish.util.ImageLoader;
 import com.go.fish.util.LocalMgr;
 import com.go.fish.util.LogUtils;
 import com.go.fish.util.NetTool;
 import com.go.fish.util.UrlUtils;
+import com.go.fish.util.ImageLoader.ImageLoaderListener;
 import com.go.fish.view.AdapterExt;
 import com.go.fish.view.AutoLayoutViewGroup;
 import com.go.fish.view.IBaseData;
@@ -239,10 +242,13 @@ public class PodCastUIOp extends Op{
 	}
 	
 	public static void onShowPodCastList(ViewGroup contentView){//显示钓播列表
+		onShowPodCastList(contentView, false);
+	}
+	public static void onShowPodCastList(ViewGroup contentView,boolean force){//显示钓播列表
 		ViewGroup vg = (ViewGroup)contentView.findViewById(R.id.ui_fnews_list_root);
 		for(int i = 0;i < vg.getChildCount() ; i++){
 			ListView fNListView = (ListView)vg.getChildAt(i);
-			if(fNListView.getVisibility() == View.VISIBLE && fNListView.getAdapter().getCount() == 0 ){
+			if(fNListView.getVisibility() == View.VISIBLE && (force ||fNListView.getAdapter().getCount() == 0 )){
 				PodCastDataLoader.getNetPodList(fNListView,String.valueOf(fNListView.getTag()), true);
 			}
 		}
@@ -401,14 +407,14 @@ public class PodCastUIOp extends Op{
 				ImageViewUIOption tvOption = new ImageViewUIOption(newsData.netPicUrl,j);
 				imParentView.setTag(tvOption);
 				if(!imHasSameUrl && immLoadImage){
-					ViewHelper.load(imgView, url, true,false);
+					ViewHelper.load(imgView, url);
 				}
 			}
 			if(!TextUtils.isEmpty(newsData.authorData.photoUrl)){
 				String url = newsData.authorData.photoUrl;
 				if(!url.equals(holder.userIcon.getTag())){
 					holder.userIcon.setImageResource(R.drawable.icon);
-					ViewHelper.load(holder.userIcon,  UrlUtils.self().getNetUrl(url),true,false);
+					ViewHelper.load(holder.userIcon,  UrlUtils.self().getNetUrl(url));
 				}
 			}
 		}
@@ -443,7 +449,7 @@ public class PodCastUIOp extends Op{
 	 * @param view
 	 * @param resultData
 	 */
-	public static void onCreatePodCastDetail(Activity activity,Bundle data) {
+	public static void onCreatePodCastDetail(final Activity activity,Bundle data) {
 		try{
 			JSONObject resultData = new JSONObject(data.getString(Const.PRI_JSON_DATA));
 			String userName = data.getString(Const.STA_NAME);
@@ -457,7 +463,7 @@ public class PodCastUIOp extends Op{
 				if(!TextUtils.isEmpty(photoUrl)){
 					String url = photoUrl;
 					ImageView userIcon = (ImageView)activity.findViewById(R.id.user_icon);
-					ViewHelper.load(userIcon,  UrlUtils.self().getNetUrl(url),true,false);
+					ViewHelper.load(userIcon,  UrlUtils.self().getNetUrl(url));
 				}
 				
 				((TextView)activity.findViewById(R.id.listitem_friend_name)).setText(userName);
@@ -483,9 +489,7 @@ public class PodCastUIOp extends Op{
 				JSONObject json = resultData.optJSONObject(Const.STA_DATA);
 				final int podcast_id = json.optInt(Const.STA_ID);
 				((TextView) activity.findViewById(R.id.textView)).setText(json.optString(Const.STA_TITLE));
-
 				LinearLayout imgs = (LinearLayout)activity.findViewById(R.id.imgs);
-				
 				String imgUrl = json.optString(Const.STA_IMGURL);
 //				JSONArray imgUrls = json.optJSONArray(Const.STA_IMGURL);
 				String[] imgUrls = BaseUtils.splitString(imgUrl);
@@ -494,14 +498,36 @@ public class PodCastUIOp extends Op{
 					for(int i = 0; i < imgUrls.length; i++){
 						String url = imgUrls[i];
 						ViewGroup vg = (ViewGroup)inflater.inflate(R.layout.fishing_news_image, null);
-						imgs.addView(vg);
-						ImageView iv = (ImageView)vg.getChildAt(0);
+						imgs.addView(vg/*,new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)*/);
+						final ImageView iv = (ImageView)vg.getChildAt(0);
 						if(!URLUtil.isNetworkUrl(url) && !url.startsWith("http://115.29.51.39:8080//statics/upload/")){
 							url = "http://115.29.51.39:8080//statics/upload/" + url;
 						}
-						ViewHelper.load(iv, UrlUtils.self().getNetUrl(url), true,false);
+						if(Build.VERSION.SDK_INT < 19){
+							if(!TextUtils.equals(url,String.valueOf(iv.getTag()))){
+								iv.setImageResource(R.drawable.pic);
+								ImageLoader.self().loadNetImage(url, iv, new ImageLoaderListener() {
+									@Override
+									public void onStart() {
+									}
+									
+									@Override
+									public void onEnd(String downUrl, Bitmap bitmap) {
+										int bh = bitmap.getHeight();
+										int height = bh * activity.getResources().getDisplayMetrics().widthPixels / bitmap.getWidth();
+										ViewGroup.LayoutParams lp = iv.getLayoutParams();
+										lp.width = LayoutParams.MATCH_PARENT;
+										lp.height = height;
+										iv.setLayoutParams(lp);
+									}	
+								}, true, false);
+							}
+						}else{
+							ViewHelper.load(iv, url);
+						}
 					}
 				}
+				
 //				View bannerParent = activity.findViewById(R.id.search_item_detail_banner_parent);
 //				makeDetailBanner(activity,json, bannerParent);
 
@@ -610,7 +636,7 @@ public class PodCastUIOp extends Op{
 						if(!TextUtils.isEmpty(member.optString(Const.STA_IMGURL))){
 //							String imgUrl = "http://images.banma.com/v0/app-feed/soft/icons/_bigIcon76e029e26dce486c9c969c23b99bf31f.png";
 							String imgUrl = member.optString(Const.STA_IMGURL, member.optString(Const.STA_IMGURL));
-							ViewHelper.load(careItem, imgUrl, true, false);
+							ViewHelper.load(careItem, imgUrl);
 						}
 						int id = member.optInt(Const.STA_ID);
 						careItem.setTag(id);
@@ -623,7 +649,7 @@ public class PodCastUIOp extends Op{
 						if(!TextUtils.isEmpty(member.optString(Const.STA_IMGURL))){
 //							String imgUrl = "http://images.banma.com/v0/app-feed/soft/icons/_bigIcon76e029e26dce486c9c969c23b99bf31f.png";
 							String imgUrl = member.optString(Const.STA_IMGURL, member.optString(Const.STA_IMGURL));
-							ViewHelper.load(careItem, imgUrl, true, false);
+							ViewHelper.load(careItem, imgUrl);
 						}
 						int id = member.optInt(Const.STA_ID);
 						careItem.setTag(id);
@@ -652,9 +678,7 @@ public class PodCastUIOp extends Op{
 					item.findViewById(R.id.comment_listitem_reply).setVisibility(View.GONE);
 					ImageView iv = (ImageView)item.findViewById(R.id.comment_listitem_icon);
 					String url = commentJson.optString(Const.STA_IMGURL);
-					if(!TextUtils.isEmpty(url)){
-						ViewHelper.load(iv, url, true, false);
-					}
+					ViewHelper.load(iv, url);
 					TextView comment_listitem_name = (TextView)item.findViewById(R.id.comment_listitem_name);
 					comment_listitem_name.setText(commentJson.optString(Const.STA_NAME));
 					TextView comment_listitem_time = (TextView)item.findViewById(R.id.comment_listitem_time);

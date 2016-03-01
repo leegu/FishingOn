@@ -9,6 +9,7 @@ public interface UICode {
 		int REQUEST_CROP_IMAGE = 1004;
 		int REQUEST_PICK_CAPTURE = 1005;
 		int REQUEST_BARCODE = 1;
+		int REQUEST_PODCAST_PUBLISH = 2;
 	}
 	
 	public static interface ResultCode{

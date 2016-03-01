@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import android.app.Application;
 import android.app.Service;
+import android.content.Context;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -37,9 +39,6 @@ public class MainApplication extends Application {
         setInstance(this);
      // 在使用 SDK 各组间之前初始化 context 信息，传入 ApplicationContext
  		SDKInitializer.initialize(this);
-        mLocationClient = new LocationClient(this.getApplicationContext());
-        mMyLocationListener = new MyLocationListener();
-        mLocationClient.registerLocationListener(mMyLocationListener);
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
         LocalMgr.initEnv(this);
         UrlUtils.initEnv(this);
@@ -88,6 +87,7 @@ public class MainApplication extends Application {
 			case START_OP:
 				initLocation();
 				if(!mLocationClient.isStarted()){
+					mLocationClient.registerLocationListener(mMyLocationListener);
 					mLocationClient.start();
 				}
 				break;
@@ -113,8 +113,18 @@ public class MainApplication extends Application {
 	};
 
 	private void initLocation(){
-		LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+		if(mLocationClient == null){
+			mLocationClient = new LocationClient(this.getApplicationContext());
+	        mMyLocationListener = new MyLocationListener();
+	        mLocationClient.setLocOption(new LocationClientOption());
+		}
+		LocationClientOption option = mLocationClient.getLocOption();
+		LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+			option.setLocationMode(LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+		}else{
+			
+		}
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系，
         option.setScanSpan(2000);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
@@ -124,7 +134,6 @@ public class MainApplication extends Application {
 //        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
 //        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
 //        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
-        mLocationClient.setLocOption(option);
 	}
 	/**
      * 实现实时位置回调监听
@@ -133,6 +142,7 @@ public class MainApplication extends Application {
 
         @Override
         public void onReceiveLocation(BDLocation location) {
+        	Log.d("application", "MyLocationListener onReceiveLocation " + location.getLocType());
         	Message m = Message.obtain();
         	m.what = UPDATE_OP;
         	m.obj = location;

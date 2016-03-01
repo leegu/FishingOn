@@ -149,7 +149,8 @@ public class FishingNewsUIOp extends Op{
 								
 								@Override
 								public void onEnd(String downUrl, Bitmap bitmap) {
-									int height = bitmap.getHeight() * iv.getWidth() / bitmap.getWidth();
+									int bh = bitmap.getHeight();
+									int height = bh * activity.getResources().getDisplayMetrics().widthPixels / bitmap.getWidth();
 									LayoutParams lp = iv.getLayoutParams();
 									lp.width = LayoutParams.MATCH_PARENT;
 									lp.height = height;
@@ -157,7 +158,7 @@ public class FishingNewsUIOp extends Op{
 								}
 							}, true, false);
 						}else{
-							ViewHelper.load(iv, url, true,false);
+							ViewHelper.load(iv, url);
 						}
 						
 					}
@@ -191,9 +192,7 @@ public class FishingNewsUIOp extends Op{
 			item = (ViewGroup)convertView;
 			holder = (ZixunViewHolder)convertView.getTag();
 		}
-		if(!TextUtils.isEmpty(fPlaceZixunData.imgUrl)){
-			ViewHelper.load(holder.listitem_fplace_icon, fPlaceZixunData.imgUrl, true, false);
-		}
+		ViewHelper.load(holder.listitem_fplace_icon, fPlaceZixunData.imgUrl);
 		holder.listitem_zixun_title.setText(fPlaceZixunData.title);
 		holder.listitem_zixun_desc.setText(fPlaceZixunData.content);
 		holder.listitem_zixun_field_name.setText(fPlaceZixunData.fieldName);

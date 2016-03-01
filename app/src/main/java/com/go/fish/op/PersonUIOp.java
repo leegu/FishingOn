@@ -61,9 +61,7 @@ public class PersonUIOp extends Op{
 			item = (ViewGroup)convertView;
 			holder = (FriendViewHolder)convertView.getTag();
 		}
-		if(!TextUtils.isEmpty(personData.photoUrl)){
-			ViewHelper.load(holder.userIcon, UrlUtils.self().getNetUrl(personData.photoUrl), true, false);
-		}
+		ViewHelper.load(holder.userIcon, UrlUtils.self().getNetUrl(personData.photoUrl));
 		holder.user_detail.setTag(personData);
 		holder.listitem_friend_last_info.setVisibility(View.GONE);
 		holder.nameView.setText(personData.userName);
