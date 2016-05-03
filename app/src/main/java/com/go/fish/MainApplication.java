@@ -19,6 +19,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 import com.baidu.mapapi.SDKInitializer;
+import com.go.fish.util.ImageLoaderUtil;
 import com.go.fish.util.LocalMgr;
 import com.go.fish.util.MapUtil.LocationData;
 import com.go.fish.util.MapUtil.OnGetLocationListener;
@@ -42,6 +43,7 @@ public class MainApplication extends Application {
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
         LocalMgr.initEnv(this);
         UrlUtils.initEnv(this);
+        ImageLoaderUtil.initImageLoader(this);
 //        String umkey = "5627058667e58e29b9002f81";
 //		AnalyticsConfig.setAppkey(this, umkey);
 //		AnalyticsConfig.setChannel(getPackageName().replace(".", "_"));
@@ -116,9 +118,8 @@ public class MainApplication extends Application {
 		if(mLocationClient == null){
 			mLocationClient = new LocationClient(this.getApplicationContext());
 	        mMyLocationListener = new MyLocationListener();
-	        mLocationClient.setLocOption(new LocationClientOption());
 		}
-		LocationClientOption option = mLocationClient.getLocOption();
+		LocationClientOption option = new LocationClientOption();
 		LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 			option.setLocationMode(LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
@@ -129,6 +130,7 @@ public class MainApplication extends Application {
         option.setScanSpan(2000);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        mLocationClient.setLocOption(option);
 //        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
 //        option.setIgnoreKillProcess(true);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
 //        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要

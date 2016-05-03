@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.go.fish.R;
 import com.go.fish.data.FishingNewsData;
+import com.go.fish.data.load.FishingNewsDataLoader;
 import com.go.fish.util.BaseUtils;
 import com.go.fish.util.Const;
 import com.go.fish.util.ImageLoader;
@@ -81,26 +82,28 @@ public class FishingNewsUIOp extends Op{
 	public static void onShowFishingNewsList(final ViewGroup view){
 		final ListView lastNews = (ListView)view.findViewById(R.id.last_news);
 		final AdapterExt mListAdapter = (AdapterExt)lastNews.getAdapter(); 
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put(Const.STA_START_INDEX, 0);
-			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		NetTool.data().http(new RequestListener() {
-			@Override
-			public void onEnd(byte[] data) {
-				// TODO Auto-generated method stub
-				JSONObject json = toJSONObject(data);
-				if(isRight(view.getContext(),json,true)){
-					JSONArray arr = json.optJSONArray(Const.STA_DATA);
-					if(arr != null && arr.length() > 0) {
-						mListAdapter.updateAdapter(arr);
-					}
-				}
-			}
-		}, jsonObject, UrlUtils.self().getPriceList());
+		
+		FishingNewsDataLoader.loadList(view.getContext(), mListAdapter, true);
+//		JSONObject jsonObject = new JSONObject();
+//		try {
+//			jsonObject.put(Const.STA_START_INDEX, 0);
+//			jsonObject.put(Const.STA_SIZE, Const.DEFT_REQ_COUNT_10);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		NetTool.data().http(new RequestListener() {
+//			@Override
+//			public void onEnd(byte[] data) {
+//				// TODO Auto-generated method stub
+//				JSONObject json = toJSONObject(data);
+//				if(isRight(view.getContext(),json,true)){
+//					JSONArray arr = json.optJSONArray(Const.STA_DATA);
+//					if(arr != null && arr.length() > 0) {
+//						mListAdapter.updateAdapter(arr);
+//					}
+//				}
+//			}
+//		}, jsonObject, UrlUtils.self().getPriceList());
 	}
 	
 	public static void onCreateFishingNewsDetail(final Activity activity) {

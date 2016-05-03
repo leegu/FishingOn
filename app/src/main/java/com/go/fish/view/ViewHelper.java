@@ -37,8 +37,9 @@ import android.widget.Toast;
 import com.go.fish.R;
 import com.go.fish.util.Const;
 import com.go.fish.util.ImageLoader;
-import com.go.fish.util.LocalMgr;
 import com.go.fish.view.BaseFragment.ResultForActivityCallback;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 public class ViewHelper {
 
@@ -410,14 +411,44 @@ public class ViewHelper {
 	public static void load(ImageView view,String url,boolean allowNetLoad){
 		load(view, url, allowNetLoad, false);
 	}
-	public static void load(ImageView view,String url,boolean allowNetLoad,final boolean forBg){
+	public static void load(final ImageView view,String url,boolean allowNetLoad,final boolean forBg){
 		ImageLoader.self().loadNetImage(url,view,null,allowNetLoad,forBg);
+//		com.nostra13.universalimageloader.core.ImageLoader.getInstance().loadImage(url,new ImageLoadingListener() {
+//			
+//			@Override
+//			public void onLoadingStarted(String arg0, View arg1) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//			
+//			@Override
+//			public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//			
+//			@Override
+//			public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
+//				// TODO Auto-generated method stub
+//				if(forBg){
+//					view.setBackgroundDrawable(new BitmapDrawable(arg2));
+//				}else{
+//					view.setImageBitmap(arg2);
+//				}
+//			}
+//			
+//			@Override
+//			public void onLoadingCancelled(String arg0, View arg1) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//		});
 	}
 	
 	public static void load(ImageView view,String url,int defaultPic){
 		if(!TextUtils.isEmpty(url) && !TextUtils.equals(url,String.valueOf(view.getTag()))){
 			view.setImageResource(defaultPic);
-			ViewHelper.load(view,url,true,false);
+			load(view,url,true,false);
 		}
 	}
 

@@ -255,6 +255,8 @@ public class AdapterExt extends BaseAdapter {
         		PodCastDataLoader.getNetPodList(mListView, String.valueOf(mListView.getTag()), true);
         	}else if(layout_id == R.layout.listitem_comment){
         		CommentDataLoader.loadList(mListView.getContext(), AdapterExt.this, String.valueOf(mListView.getTag()),true);
+        	}else if(layout_id == R.layout.listitem_fishing_news_3_row){
+        		FishingNewsDataLoader.loadList(mListView.getContext(), AdapterExt.this, true);
         	}
         }
         private void loadMore(){
@@ -263,6 +265,8 @@ public class AdapterExt extends BaseAdapter {
         		PodCastDataLoader.getNetPodList(mListView,String.valueOf(mListView.getTag()), false);
         	}else if(layout_id == R.layout.listitem_comment){
         		CommentDataLoader.loadList(mListView.getContext(), AdapterExt.this,String.valueOf(mListView.getTag()),false);
+        	}else if(layout_id == R.layout.listitem_fishing_news_3_row){
+        		FishingNewsDataLoader.loadList(mListView.getContext(), AdapterExt.this, false);
         	}
         }
 		private void update(int firstVisibleItem,int visibleItemCount){
